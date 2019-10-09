@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Link from "next/link"
-import { Form, FormGroup, Label, Input, Button } from "reactstrap"
+import { Alert, Form, FormGroup, Label, Input, Button } from "reactstrap"
 import fetch from "isomorphic-unfetch"
 import { login } from "../utils/auth"
 
@@ -22,6 +22,7 @@ const LoginPage = () => {
    const [userData, setUserData] = useState({
       email: "michel.martin@caramail.fr",
       password: "",
+      error: "",
    })
 
    const onChange = e => {
@@ -32,42 +33,50 @@ const LoginPage = () => {
       setUserData({ ...userData, password: e.target.value })
    }
 
+   const isValidUserData = ({ email, password }) => !!(email && password)
+
    const onSubmit = async e => {
       e.preventDefault()
       console.log("dans onsubmit", userData)
 
       setUserData(Object.assign({}, userData, { error: "" }))
 
-      const { email, password } = userData
-      const url = "/api/login"
+      const valid = isValidUserData(userData)
 
-      try {
-         const response = await fetch(url, {
-            method: "POST",
+      if (!valid) {
+         setUserData({ ...userData, error: "Problème d'authentification" })
+      } else {
+         const { email, password } = userData
+         const url = "/api/login"
 
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-         })
-         if (response.status === 200) {
-            const { token } = await response.json()
-            console.log("token", token)
-            await login({ token })
-         } else {
-            console.log("Login failed.")
-            // https://github.com/developit/unfetch#caveats
-            const error = new Error(response.statusText)
-            error.response = response
-            throw error
+         try {
+            const response = await fetch(url, {
+               method: "POST",
+
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({ email, password }),
+            })
+            if (response.status === 200) {
+               const { token } = await response.json()
+               console.log("token", token)
+               await login({ token })
+            } else {
+               console.log("Login failed.")
+               // https://github.com/developit/unfetch#caveats
+               const error = new Error(response.statusText)
+               error.response = response
+               throw error
+            }
+         } catch (error) {
+            console.error("You have an error in your code or there are Network issues.", error)
+
+            const { response } = error
+            setUserData(
+               Object.assign({}, userData, {
+                  error: response ? response.statusText : error.message,
+               }),
+            )
          }
-      } catch (error) {
-         console.error("You have an error in your code or there are Network issues.", error)
-
-         const { response } = error
-         setUserData(
-            Object.assign({}, userData, {
-               error: response ? response.statusText : error.message,
-            }),
-         )
       }
    }
 
@@ -104,6 +113,9 @@ const LoginPage = () => {
                      />
                   </FormGroup>
                   <Button block>Se connecter</Button>
+                  <Alert color="danger" isOpen={userData.error} style={{ marginTop: 10 }}>
+                     {userData.error}
+                  </Alert>
                </Form>
             </div>
             <div style={{ ...styleEncadre, marginTop: 20 }}>
