@@ -1,0 +1,21 @@
+{
+  "name": "medle",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "9.1.1",
+    "react": "16.10.2",
+    "react-dom": "16.10.2"
+  },
+  "devDependencies": {
+    "@socialgouv/eslint-config-react": "^0.10.0",
+    "@socialgouv/eslint-config-recommended": "^0.10.0",
+    "eslint": "^6.5.1",
+    "prettier": "^1.18.2"
+  }
+}
