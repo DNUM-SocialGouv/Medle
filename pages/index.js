@@ -4,7 +4,7 @@ import Nav from "../components/nav"
 
 const Home = () => (
    <div>
-           <Head>
+      <Head>
          <title>Home</title>
          <link rel="icon" href="/favicon.ico" />
       </Head>
