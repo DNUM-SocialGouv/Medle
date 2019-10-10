@@ -26,3 +26,8 @@ yarn-error.log*
 
 # next
 .next
+
+# Other #
+#########
+.idea
+.vscode
