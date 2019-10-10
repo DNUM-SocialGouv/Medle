@@ -8,11 +8,11 @@ const stylePage = {
    display: "flex",
    justifyContent: "center",
    alignItems: "center",
-   backgroundColor: "rgb(249, 249, 249)",
+   backgroundColor: "white",
 }
 
 const styleEncadre = {
-   backgroundColor: "white",
+   backgroundColor: "rgb(249, 249, 249)",
    border: "1px solid lightgrey",
    padding: 20,
    borderRadius: 10,
@@ -80,7 +80,8 @@ const LoginPage = () => {
    return (
       <div style={stylePage}>
          <div>
-            <h1 style={{ textAlign: "center", margin: "30px 0" }}>Connexion</h1>
+            <img src={"/images/logo.png"} alt="logo" width="300" style={{ margin: "80px 0 50px 35px" }} />
+            {/* <h1 style={{ textAlign: "center", margin: "25px 0", color: "#122c48" }}>Connexion</h1> */}
             <div style={styleEncadre}>
                <Form onSubmit={onSubmit}>
                   <FormGroup>
@@ -92,6 +93,7 @@ const LoginPage = () => {
                         placeholder="michel.martin@caramail.fr"
                         value={userData.email}
                         onChange={onChange}
+                        autoFocus
                      />
                   </FormGroup>
                   <FormGroup>
