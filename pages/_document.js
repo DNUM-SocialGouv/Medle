@@ -1,6 +1,5 @@
 import React from "react"
 import Document, { Html, Head, Main, NextScript } from "next/document"
-//import "@socialgouv/bootstrap.core/dist/socialgouv-bootstrap.css"
 
 class MyDocument extends Document {
    static async getInitialProps(ctx) {
