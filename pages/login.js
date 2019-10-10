@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Head from "next/head"
 import Link from "next/link"
 import { Alert, Form, FormGroup, Label, Input, Button } from "reactstrap"
 import fetch from "isomorphic-unfetch"
@@ -78,53 +79,60 @@ const LoginPage = () => {
    }
 
    return (
-      <div style={stylePage}>
-         <div>
-            <img src={"/images/logo.png"} alt="logo" width="300" style={{ margin: "80px 0 50px 35px" }} />
-            {/* <h1 style={{ textAlign: "center", margin: "25px 0", color: "#122c48" }}>Connexion</h1> */}
-            <div style={styleEncadre}>
-               <Form onSubmit={onSubmit}>
-                  <FormGroup>
-                     <Label for="email">Adresse courriel</Label>
-                     <Input
-                        type="email"
-                        name="email"
-                        id="email"
-                        placeholder="michel.martin@caramail.fr"
-                        value={userData.email}
-                        onChange={onChange}
-                        autoFocus
-                     />
-                  </FormGroup>
-                  <FormGroup>
-                     <Label for="password">Mot de passe</Label>
-                     <div style={{ float: "right" }}>
-                        <Link href="forgotPassword">
-                           <a>Mot de passe oublié&nbsp;?</a>
-                        </Link>
-                     </div>
-                     <Input
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="Mot de passe"
-                        onChange={onChangePassword}
-                     />
-                  </FormGroup>
-                  <Button block>Se connecter</Button>
-                  <Alert color="danger" isOpen={userData.error} style={{ marginTop: 10 }}>
-                     {userData.error}
-                  </Alert>
-               </Form>
-            </div>
-            <div style={{ ...styleEncadre, marginTop: 20 }}>
-               Vous êtes nouveau sur Medlé&nbsp;?{" "}
-               <Link href="createAccount">
-                  <a>Créer un compte</a>
-               </Link>
+      <>
+         <Head>
+            <title>Medlé : connexion</title>
+            <link rel="icon" href="/favicon.ico" />
+         </Head>
+
+         <div style={stylePage}>
+            <div>
+               <img src={"/images/logo.png"} alt="logo" width="300" style={{ margin: "80px 0 50px 35px" }} />
+               {/* <h1 style={{ textAlign: "center", margin: "25px 0", color: "#122c48" }}>Connexion</h1> */}
+               <div style={styleEncadre}>
+                  <Form onSubmit={onSubmit}>
+                     <FormGroup>
+                        <Label for="email">Adresse courriel</Label>
+                        <Input
+                           type="email"
+                           name="email"
+                           id="email"
+                           placeholder="michel.martin@caramail.fr"
+                           value={userData.email}
+                           onChange={onChange}
+                           autoFocus
+                        />
+                     </FormGroup>
+                     <FormGroup>
+                        <Label for="password">Mot de passe</Label>
+                        <div style={{ float: "right" }}>
+                           <Link href="forgotPassword">
+                              <a>Mot de passe oublié&nbsp;?</a>
+                           </Link>
+                        </div>
+                        <Input
+                           type="password"
+                           name="password"
+                           id="password"
+                           placeholder="Mot de passe"
+                           onChange={onChangePassword}
+                        />
+                     </FormGroup>
+                     <Button block>Se connecter</Button>
+                     <Alert color="danger" isOpen={userData.error} style={{ marginTop: 10 }} fade="true">
+                        {userData.error}
+                     </Alert>
+                  </Form>
+               </div>
+               <div style={{ ...styleEncadre, marginTop: 20 }}>
+                  Vous êtes nouveau sur Medlé&nbsp;?{" "}
+                  <Link href="createAccount">
+                     <a>Créer un compte</a>
+                  </Link>
+               </div>
             </div>
          </div>
-      </div>
+      </>
    )
 }
 
