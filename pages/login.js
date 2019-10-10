@@ -52,30 +52,27 @@ const LoginPage = () => {
          try {
             const response = await fetch(url, {
                method: "POST",
-
                headers: { "Content-Type": "application/json" },
                body: JSON.stringify({ email, password }),
             })
+            const json = await response.json()
             if (response.status === 200) {
-               const { token } = await response.json()
+               const { token } = json
                console.log("token", token)
                await login({ token })
             } else {
-               console.log("Login failed.")
-               // https://github.com/developit/unfetch#caveats
-               const error = new Error(response.statusText)
-               error.response = response
-               throw error
+               console.error("Login failed.")
+               throw {
+                  httpStatusCode: response.status,
+                  httpStatusText: response.statusText,
+                  json,
+               }
             }
          } catch (error) {
             console.error("You have an error in your code or there are Network issues.", error)
 
-            const { response } = error
-            setUserData(
-               Object.assign({}, userData, {
-                  error: response ? response.statusText : error.message,
-               }),
-            )
+            const { json } = error
+            setUserData({ ...userData, error: json.message })
          }
       }
    }

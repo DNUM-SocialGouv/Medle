@@ -10,6 +10,5 @@ export default async (req, res) => {
       console.error("Erreur de requête")
    }
 
-   // res.status(200).json({ knex })
    res.status(200).json({ users })
 }
