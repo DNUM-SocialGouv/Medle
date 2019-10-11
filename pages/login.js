@@ -119,7 +119,7 @@ const LoginPage = () => {
                         />
                      </FormGroup>
                      <Button block>Se connecter</Button>
-                     <Alert color="danger" isOpen={userData.error} style={{ marginTop: 10 }} fade="true">
+                     <Alert color="danger" isOpen={!!userData.error} style={{ marginTop: 10 }} fade={true}>
                         {userData.error}
                      </Alert>
                   </Form>
