@@ -17,7 +17,7 @@ export default async (req, res) => {
       let type
 
       try {
-         type = await knex("type_acte")
+         type = await knex("type_cause")
             .where("id", id)
             .first()
       } catch (err) {
@@ -25,7 +25,7 @@ export default async (req, res) => {
       }
 
       if (type) {
-         return res.status(200).json({ typesActe: [type] })
+         return res.status(200).json({ typesCause: [type] })
       } else {
          return res.status(404).end("")
       }
