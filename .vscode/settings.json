@@ -1,29 +1,40 @@
 {
   "eslint.enable": true,
-    "eslint.validate": [
-      "javascript",
-      "javascriptreact",
-      {
-        "language": "typescript",
-        "autoFix": true
-      },
-      {
-        "language": "typescriptreact",
-        "autoFix": true
-      }
-    ],
-    "editor.formatOnSave": true,
-    "[javascript]": {
-      "editor.formatOnSave": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "typescript",
+      "autoFix": true
     },
-    "[javascriptreact]": {
-      "editor.formatOnSave": false,
-    },
-    "[typescript]": {
-      "editor.formatOnSave": false,
-    },
-    "[typescriptreact]": {
-      "editor.formatOnSave": false,
-    },
-    "eslint.autoFixOnSave": true,
+    {
+      "language": "typescriptreact",
+      "autoFix": true
+    }
+  ],
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": false,
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": false,
+  },
+  "[typescript]": {
+    "editor.formatOnSave": false,
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": false,
+  },
+  "eslint.autoFixOnSave": true,
+  "workbench.colorCustomizations": {
+    "statusBar.background" : "#5fba7d",
+    "statusBar.noFolderBackground" : "#212121",
+    "statusBar.debuggingBackground": "#263238"
+  },
+  "files.associations": {
+    "*.js": "javascriptreact"
+  },
+  "emmet.syntaxProfiles": {
+      "javascript": "jsx"
   }
+}
