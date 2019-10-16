@@ -18,3 +18,9 @@ I.e, you must specify a type in prefix position, for the message using one of th
 - test: Adding missing tests or correcting existing tests
 
 as a reference see https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-angular
+
+## Close automatically issues
+
+Add in commit message "Closes #123" where 123 is the issues's id to close.
+
+For example, This closes #34, closes #23, and closes example_user/example_repo#42 would close issues #34 and #23 in the same repository, and issue #42 in the "example_user/example_repo" repository.
