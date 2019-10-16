@@ -86,13 +86,13 @@ const Footer = () => (
             <Col>
                <ul style={{ listStyleType: "none" }}>
                   <li>
-                     <Link>{"Conditions générales d'utilisation"}</Link>
+                     <Link href={"/"}>{"Conditions générales d'utilisation"}</Link>
                   </li>
                   <li>
-                     <Link>Statistiques</Link>
+                     <Link href={"/"}>Statistiques</Link>
                   </li>
                   <li>
-                     <Link>Contactez-nous</Link>
+                     <Link href={"/"}>Contactez-nous</Link>
                   </li>
                </ul>
             </Col>
