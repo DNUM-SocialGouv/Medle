@@ -18,70 +18,83 @@ import {
    DropdownMenu,
    DropdownItem,
 } from "reactstrap"
-import LockIcon from "@material-ui/icons/Lock"
-import colors from "../constants/colors"
+// import LockIcon from "@material-ui/icons/Lock"
+import { colors } from "../theme"
 
 const Header = () => {
-   const [headerData, setHeaderData] = useState(false)
+   const [isOpen, setIsOpen] = useState(false)
 
-   const toggle = () => {
-      setHeaderData(!this.state.isOpen)
-   }
+   const toggle = () => setIsOpen(!isOpen)
 
    return (
       <header>
-         <div style={{ backgroundColor: "white" }}>
-            <Container>
-               <Row>
-                  <Col>
-                     <Navbar expand="md">
-                        <NavbarBrand href="/">
-                           <img src={"/images/logo.png"} alt="Medlé logo" width="100"></img>
-                        </NavbarBrand>
-                        <NavbarToggler onClick={toggle} />
-                        <Collapse isOpen={headerData} navbar>
-                           <Nav className="ml-auto" navbar>
-                              <NavItem>
-                                 <NavLink href="/components/">Actes médico-légales</NavLink>
-                              </NavItem>
-                              <NavItem>
-                                 <NavLink href="https://github.com/reactstrap/reactstrap">ETP</NavLink>
-                              </NavItem>
-                              <NavItem>
-                                 <NavLink href="https://github.com/reactstrap/reactstrap">Statistiques</NavLink>
-                              </NavItem>
-                              <UncontrolledDropdown nav inNavbar>
-                                 <Button outline color="primary">
-                                    <DropdownToggle nav caret>
-                                       <LockIcon></LockIcon>
-                                       &nbsp;Compte
-                                    </DropdownToggle>
-                                 </Button>
-                                 <DropdownMenu right>
-                                    <DropdownItem>Profil</DropdownItem>
-                                    <DropdownItem>Administration</DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem>Se déconnecter</DropdownItem>
-                                 </DropdownMenu>
-                              </UncontrolledDropdown>
-                           </Nav>
-                        </Collapse>
-                     </Navbar>
-                  </Col>
-               </Row>
-            </Container>
-         </div>
+         <Navbar color="light" light expand="md" className="navbar-medle">
+            <NavbarBrand href="/">
+               <img src={"/images/logo.png"} alt="Logo MedLé" title="Logo MedLé" width="100"></img>&nbsp; Plateforme de
+               médecine légale
+            </NavbarBrand>
+            <NavbarToggler onClick={toggle} />
+            <Collapse isOpen={isOpen} navbar>
+               <Nav className="ml-auto" navbar>
+                  <NavItem>
+                     <NavLink href="/aide/">Aide</NavLink>
+                  </NavItem>
+                  <UncontrolledDropdown nav inNavbar>
+                     <Button outline className="account">
+                        <DropdownToggle nav caret>
+                           Mon compte&nbsp;
+                        </DropdownToggle>
+                     </Button>
+                     <DropdownMenu right>
+                        <DropdownItem>Profil</DropdownItem>
+                        <DropdownItem>Administration</DropdownItem>
+                        <DropdownItem divider />
+                        <DropdownItem>Se déconnecter</DropdownItem>
+                     </DropdownMenu>
+                  </UncontrolledDropdown>
+               </Nav>
+            </Collapse>
+         </Navbar>
+         <style jsx global>{`
+            header {
+               border-bottom: 1px solid #f3f3f3;
+            }
+            .navbar-medle button.account {
+               padding: 0;
+            }
+            .navbar-medle button.account:hover {
+               background-color: ${colors.header.background} !important;
+            }
+
+            .navbar-medle .navbar-brand {
+               color: ${colors.header.color} !important;
+            }
+            .navbar-medle .nav-link {
+               color: ${colors.header.color} !important;
+            }
+         `}</style>
       </header>
    )
 }
 
 const Footer = () => (
-   <footer style={{ backgroundColor: colors.bgFooter, color: "white", padding: 30 }}>
+   <footer>
       <Container>
          <Row>
             <Col>
                <h4>Medle.incubateur.social.gouv.fr</h4>
-               Un service proposé par la DGOS
+               Un service proposé par la{" "}
+               <a
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  href="https://solidarites-sante.gouv.fr/ministere/organisation/directions/article/dgos-direction-generale-de-l-offre-de-soins"
+               >
+                  DGOS
+               </a>{" "}
+               et{" "}
+               <a target="_blank" href="https://incubateur.social.gouv.fr/" rel="noopener noreferrer">
+                  {" l'incubateur des Affaires sociales"}
+               </a>
             </Col>
             <Col>
                <ul style={{ listStyleType: "none" }}>
@@ -98,6 +111,18 @@ const Footer = () => (
             </Col>
          </Row>
       </Container>
+      <style jsx global>{`
+         footer {
+            background-color: ${colors.footer.background};
+            color: ${colors.footer.color};
+            margin: 50px 0 0;
+            padding: 30px 30px 40px;
+         }
+         footer a,
+         footer a:hover {
+            color: ${colors.footer.color};
+         }
+      `}</style>
    </footer>
 )
 
