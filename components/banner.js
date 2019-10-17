@@ -1,6 +1,7 @@
 import React from "react"
 import { Container } from "reactstrap"
 import PropTypes from "prop-types"
+import { colors } from "../theme"
 
 const Banner = ({ title }) => (
    <>
@@ -11,9 +12,9 @@ const Banner = ({ title }) => (
       </div>
       <style jsx>{`
          div {
-            border: 1px solid lightgray;
-            background-color: #0069e1;
-            color: white;
+            border: 1px solid ${colors.banner.border};
+            background-color: ${colors.banner.background};
+            color: ${colors.banner.color};
             height: 100px;
             display: flex;
             align-items: center;

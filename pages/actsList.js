@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { withAuthSync } from "../utils/auth"
 import Layout from "../components/layout"
 import Banner from "../components/banner"
-import { Button, Col, Container, Form, FormGroup, Label, Input, Row, Table } from "reactstrap"
+import { Button, Col, Container, Form, FormGroup, Label, Input, Table } from "reactstrap"
 
 const ActsListPage = () => {
    const [healthCenter, setHealthCenter] = useState("")
