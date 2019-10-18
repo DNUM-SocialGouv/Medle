@@ -5,7 +5,6 @@ export default async (req, res) => {
 
    try {
       users = await knex("users").debug()
-      console.log("knex 2", users)
    } catch (error) {
       console.error("Erreur de requête")
    }

@@ -3,10 +3,6 @@ import knex from "../../../lib/knex/knexfile"
 export const validate = input => (/^[0-9]*$/.test(input) ? parseInt(input, 10) : false)
 
 export default async (req, res) => {
-   //    console.log("body", req.body)
-   //    console.log("query", req.query)
-   //    console.log("cookies", req.cookies)
-
    if (req.query.id) {
       const id = validate(req.query.id)
 

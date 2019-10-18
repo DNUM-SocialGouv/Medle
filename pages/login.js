@@ -29,7 +29,6 @@ const LoginPage = () => {
             const json = await response.json()
             if (response.status === 200) {
                const { token } = json
-               console.log("token", token)
                await login({ token })
             } else {
                console.error("Login failed.")

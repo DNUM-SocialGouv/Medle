@@ -22,8 +22,6 @@ export default async (req, res) => {
       return res.status(500).json({ message: "Erreur serveur base de données" })
    }
 
-   console.log("user", user)
-
    if (user) {
       return res.status(200).json({ token: "1234", role: user.role })
    } else {
