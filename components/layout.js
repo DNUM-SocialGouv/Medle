@@ -49,7 +49,11 @@ const Header = () => {
                         <DropdownItem>Profil</DropdownItem>
                         <DropdownItem>Administration</DropdownItem>
                         <DropdownItem divider />
-                        <DropdownItem>Se déconnecter</DropdownItem>
+                        <DropdownItem>
+                           <Link href="/login">
+                              <a className="menu-link">Se déconnecter</a>
+                           </Link>
+                        </DropdownItem>
                      </DropdownMenu>
                   </UncontrolledDropdown>
                </Nav>
@@ -71,6 +75,19 @@ const Header = () => {
             }
             .navbar-medle .nav-link {
                color: ${colors.header.color} !important;
+            }
+            .menu-link,
+            .menu-link:hover,
+            .menu-link:link,
+            .menu-link:visited,
+            .menu-link:active {
+               color: ${colors.header.color} !important;
+               text-decoration: none;
+            }
+            header .dropdown-item {
+               color: ${colors.header.color} !important;
+               text-decoration: none;
+               background-color: ${colors.header.background} !important;
             }
          `}</style>
       </header>
