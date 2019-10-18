@@ -30,8 +30,7 @@ const Header = () => {
       <header>
          <Navbar color="light" light expand="md" className="navbar-medle">
             <NavbarBrand href="/">
-               <img src={"/images/logo.png"} alt="Logo MedLé" title="Logo MedLé" width="100"></img>&nbsp; Plateforme de
-               médecine légale
+               <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>&nbsp; Plateforme de médecine légale
             </NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
@@ -62,6 +61,9 @@ const Header = () => {
          <style jsx global>{`
             header {
                border-bottom: 1px solid #f3f3f3;
+            }
+            img[alt="Logo"] {
+               width: 100px;
             }
             .navbar-medle button.account {
                padding: 0;
