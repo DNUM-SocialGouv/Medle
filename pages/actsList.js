@@ -1,15 +1,38 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { withAuthSync } from "../utils/auth"
 import Layout from "../components/layout"
 import Banner from "../components/banner"
-import { Button, Col, Container, Form, FormGroup, Label, Input, Table } from "reactstrap"
+import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, Table } from "reactstrap"
 
 const ActsListPage = () => {
    const [healthCenter, setHealthCenter] = useState("")
+   const [acts, setActs] = useState([])
+   const [isError, setIsError] = useState(false)
+   const [isLoading, setIsLoading] = useState(false)
 
    const onChange = e => {
       setHealthCenter(e.target.value)
    }
+
+   useEffect(() => {
+      const fetchData = async () => {
+         const url = "/api/actsList"
+         let json
+         try {
+            const res = await fetch(url)
+            json = await res.json()
+            setActs(json.actes)
+         } catch (error) {
+            console.error(error)
+            setIsError(true)
+         }
+         setIsLoading(false)
+      }
+
+      setIsLoading(true)
+      setIsError(false)
+      fetchData()
+   }, [])
 
    return (
       <Layout>
@@ -36,75 +59,47 @@ const ActsListPage = () => {
                   </Col>
                </FormGroup>
             </Form>
-            <Table striped bordered responsive className="mt-5">
-               <thead>
-                  <tr>
-                     <th>N° procédure</th>
-                     <th>{"Type d'acte"}</th>
-                     <th>Date</th>
-                     <th>Heure</th>
-                     <th>{"Lieu d'acte"}</th>
-                     <th>{"Nb d'examens"}</th>
-                     <th>Nb de radios</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr>
-                     <td>2019/32418</td>
-                     <td>Examen somatique de victime</td>
-                     <td>11/10/2019</td>
-                     <td>15:03</td>
-                     <td>Établissement de santé</td>
-                     <td>2</td>
-                     <td></td>
-                  </tr>
-                  <tr>
-                     <td>2019/032798</td>
-                     <td>Autopsie</td>
-                     <td>11/10/2019</td>
-                     <td>13:22</td>
-                     <td>Police/gendarmerie</td>
-                     <td></td>
-                     <td></td>
-                  </tr>
-                  <tr>
-                     <td>2019/032536</td>
-                     <td>Examen somatique de gardé à vue</td>
-                     <td>11/10/2019</td>
-                     <td>17:13</td>
-                     <td>Établissement de santé</td>
-                     <td></td>
-                     <td></td>
-                  </tr>
-                  <tr>
-                     <td>2019/32418</td>
-                     <td>Examen somatique de victime</td>
-                     <td>11/10/2019</td>
-                     <td>15:03</td>
-                     <td>Établissement de santé</td>
-                     <td>2</td>
-                     <td></td>
-                  </tr>
-                  <tr>
-                     <td>2019/32418</td>
-                     <td>Examen somatique de victime</td>
-                     <td>11/10/2019</td>
-                     <td>15:03</td>
-                     <td>Établissement de santé</td>
-                     <td>2</td>
-                     <td></td>
-                  </tr>
-                  <tr>
-                     <td>2019/032798</td>
-                     <td>Autopsie</td>
-                     <td>11/10/2019</td>
-                     <td>13:22</td>
-                     <td>Police/gendarmerie</td>
-                     <td></td>
-                     <td></td>
-                  </tr>
-               </tbody>
-            </Table>
+
+            {isLoading && (
+               <div style={{ width: 100 }} className="mx-auto mt-5 mb-3">
+                  <Spinner color="primary">Loading...</Spinner>
+               </div>
+            )}
+
+            {isError && (
+               <Alert color="danger" className="mt-5 mb-5">
+                  Erreur de base de données
+               </Alert>
+            )}
+
+            {!isError && !isLoading && (
+               <Table striped bordered responsive className="mt-5">
+                  <thead>
+                     <tr>
+                        <th>N° procédure</th>
+                        <th>{"Type d'acte"}</th>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>{"Lieu d'acte"}</th>
+                        <th>{"Nb d'examens"}</th>
+                        <th>Nb de radios</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {acts.map(act => (
+                        <tr key={act.id}>
+                           <td>{act.num_procedure}</td>
+                           <td>{act.type_acte}</td>
+                           <td>{act.date_creation}</td>
+                           <td></td>
+                           <td>{act.lieu_acte}</td>
+                           <td></td>
+                           <td></td>
+                        </tr>
+                     ))}
+                  </tbody>
+               </Table>
+            )}
          </Container>
       </Layout>
    )
