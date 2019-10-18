@@ -36,5 +36,6 @@
   },
   "emmet.syntaxProfiles": {
       "javascript": "jsx"
-  }
+  },
+  "css.lint.emptyRules": "ignore"
 }

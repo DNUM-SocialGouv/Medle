@@ -99,33 +99,41 @@ const Footer = () => (
             <Col>
                <ul>
                   <li>
-                     <Link href={"/conditions"}>{"Conditions générales d'utilisation"}</Link>
+                     <Link href={"/conditions"}>
+                        <a>{"Conditions générales d'utilisation"}</a>
+                     </Link>
                   </li>
                   <li>
-                     <Link href={"/statistics"}>Statistiques</Link>
+                     <Link href={"/statistics"}>
+                        <a>Statistiques</a>
+                     </Link>
                   </li>
                   <li>
-                     <Link href={"/contact"}>Contactez-nous</Link>
+                     <Link href={"/contact"}>
+                        <a>Contactez-nous</a>
+                     </Link>
                   </li>
                </ul>
             </Col>
          </Row>
       </Container>
-      <style jsx global>{`
+      <style jsx>{`
+         footer {
+            margin: 50px 0 0;
+            padding: 30px 30px 40px;
+         }
+         ul {
+            list-style-type: none;
+         }
+      `}</style>
+      <style jsx>{`
          footer {
             background-color: ${colors.footer.background};
             color: ${colors.footer.color};
-            margin: 50px 0 0;
-            padding: 30px 30px 40px;
          }
          footer a,
          footer a:hover {
             color: ${colors.footer.color};
-         }
-      `}</style>
-      <style jsx>{`
-         ul {
-            list-style-type: none;
          }
       `}</style>
    </footer>
