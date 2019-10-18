@@ -121,19 +121,15 @@ const Footer = () => (
          footer {
             margin: 50px 0 0;
             padding: 30px 30px 40px;
-         }
-         ul {
-            list-style-type: none;
-         }
-      `}</style>
-      <style jsx>{`
-         footer {
             background-color: ${colors.footer.background};
             color: ${colors.footer.color};
          }
          footer a,
          footer a:hover {
             color: ${colors.footer.color};
+         }
+         ul {
+            list-style-type: none;
          }
       `}</style>
    </footer>
