@@ -5,20 +5,6 @@ import { Alert, Form, FormGroup, Label, Input, Button } from "reactstrap"
 import fetch from "isomorphic-unfetch"
 import { login } from "../utils/auth"
 
-const stylePage = {
-   display: "flex",
-   justifyContent: "center",
-   alignItems: "center",
-   backgroundColor: "white",
-}
-
-const styleEncadre = {
-   backgroundColor: "rgb(249, 249, 249)",
-   border: "1px solid lightgrey",
-   padding: 20,
-   borderRadius: 10,
-}
-
 const LoginPage = () => {
    const [userData, setUserData] = useState({
       email: "michel.martin@caramail.fr",
@@ -38,7 +24,6 @@ const LoginPage = () => {
 
    const onSubmit = async e => {
       e.preventDefault()
-      console.log("dans onsubmit", userData)
 
       setUserData(Object.assign({}, userData, { error: "" }))
 
@@ -82,14 +67,13 @@ const LoginPage = () => {
       <>
          <Head>
             <title>Medlé : connexion</title>
-            <link rel="icon" href="/favicon.ico" />
+            {/* <link rel="icon" href="/favicon.ico" /> */}
          </Head>
 
-         <div style={stylePage}>
+         <div className="page">
             <div>
-               <img src={"/images/logo.png"} alt="logo" width="300" style={{ margin: "80px 0 50px 35px" }} />
-               {/* <h1 style={{ textAlign: "center", margin: "25px 0", color: "#122c48" }}>Connexion</h1> */}
-               <div style={styleEncadre}>
+               <img src={"/images/logo.png"} alt="logo" />
+               <div className="encadre">
                   <Form onSubmit={onSubmit}>
                      <FormGroup>
                         <Label for="email">Adresse courriel</Label>
@@ -105,7 +89,7 @@ const LoginPage = () => {
                      </FormGroup>
                      <FormGroup>
                         <Label for="password">Mot de passe</Label>
-                        <div style={{ float: "right" }}>
+                        <div className="float-right">
                            <Link href="forgotPassword">
                               <a>Mot de passe oublié&nbsp;?</a>
                            </Link>
@@ -119,12 +103,12 @@ const LoginPage = () => {
                         />
                      </FormGroup>
                      <Button block>Se connecter</Button>
-                     <Alert color="danger" isOpen={!!userData.error} style={{ marginTop: 10 }} fade={true}>
+                     <Alert color="danger" isOpen={!!userData.error} className="mt-3 mb-0" fade={true}>
                         {userData.error}
                      </Alert>
                   </Form>
                </div>
-               <div style={{ ...styleEncadre, marginTop: 20 }}>
+               <div className="encadre mt-4">
                   Vous êtes nouveau sur Medlé&nbsp;?{" "}
                   <Link href="createAccount">
                      <a>Créer un compte</a>
@@ -132,6 +116,24 @@ const LoginPage = () => {
                </div>
             </div>
          </div>
+         <style jsx>{`
+            div.page {
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               background-color: white;
+            }
+            div.encadre {
+               background-color: rgb(249, 249, 249);
+               border: 1px solid lightgrey;
+               padding: 20px;
+               border-radius: 10px;
+            }
+            img[alt="logo"] {
+               margin: 80px 0 50px 35px;
+               width: 300px;
+            }
+         `}</style>
       </>
    )
 }

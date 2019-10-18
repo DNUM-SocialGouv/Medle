@@ -97,7 +97,7 @@ const Footer = () => (
                </a>
             </Col>
             <Col>
-               <ul style={{ listStyleType: "none" }}>
+               <ul>
                   <li>
                      <Link href={"/conditions"}>{"Conditions générales d'utilisation"}</Link>
                   </li>
@@ -121,6 +121,11 @@ const Footer = () => (
          footer a,
          footer a:hover {
             color: ${colors.footer.color};
+         }
+      `}</style>
+      <style jsx>{`
+         ul {
+            list-style-type: none;
          }
       `}</style>
    </footer>
