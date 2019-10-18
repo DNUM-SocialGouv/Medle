@@ -1,7 +1,21 @@
 # medle
 MedLé :  plateforme permettant aux établissements de santé de déclarer leur activité médico-légale
 
-## Type for commit messagee
+## Install
+
+Prerequisite : install a Postgres DB, named `medle`.
+
+```js
+yarn install
+```
+
+## Run
+
+```js
+yarn dev
+```
+
+## Type for commit messages
 
 You need to use the commit lint convention for commit message.
 
