@@ -3,12 +3,12 @@ import PropTypes from "prop-types"
 import Link from "next/link"
 import { Alert, Label, Button, Form, FormGroup, Input, Spinner } from "reactstrap"
 
-const Login = ({ onSubmit }) => {
+const Login = ({ authentication, error }) => {
+   const [isLoading, setIsLoading] = useState(false)
+
    const [userData, setUserData] = useState({
       email: "michel.martin@caramail.fr",
       password: "",
-      error: "",
-      isLoading: false,
    })
 
    const onChange = e => {
@@ -19,12 +19,24 @@ const Login = ({ onSubmit }) => {
       setUserData({ ...userData, password: e.target.value })
    }
 
+   const onSubmit = async e => {
+      e.preventDefault()
+
+      setIsLoading(true)
+      try {
+         await authentication(userData)
+      } catch (error) {
+         console.error(error)
+      }
+      setIsLoading(false)
+   }
+
    return (
       <>
          <img src={"/images/logo.png"} alt="logo" title="logo" />
          <div>
             <div className="encadre">
-               <Form onSubmit={e => onSubmit(e, userData, setUserData)}>
+               <Form onSubmit={onSubmit} data-testid="authent-form" method="post">
                   <FormGroup>
                      <Label for="email">Adresse courriel</Label>
                      <Input
@@ -52,11 +64,9 @@ const Login = ({ onSubmit }) => {
                         onChange={onChangePassword}
                      />
                   </FormGroup>
-                  <Button block>
-                     {userData.isLoading ? <Spinner color="light">Loading...</Spinner> : "Se connecter"}
-                  </Button>
-                  <Alert color="danger" isOpen={!!userData.error} className="mt-3 mb-0" fade={false}>
-                     {userData.error}
+                  <Button block>{isLoading ? <Spinner color="light" data-testid="loading" /> : "Se connecter"}</Button>
+                  <Alert color="danger" isOpen={!!error} className="mt-3 mb-0" fade={false}>
+                     {error}
                   </Alert>
                </Form>
             </div>
@@ -84,7 +94,8 @@ const Login = ({ onSubmit }) => {
 }
 
 Login.propTypes = {
-   onSubmit: PropTypes.func.isRequired,
+   authentication: PropTypes.func.isRequired,
+   error: PropTypes.string,
 }
 
 export default Login

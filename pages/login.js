@@ -1,51 +1,52 @@
-import React from "react"
+import React, { useState } from "react"
 import Head from "next/head"
 import fetch from "isomorphic-unfetch"
 import { login } from "../utils/auth"
 import Login from "../components/login"
 
 const LoginPage = () => {
+   const [error, setError] = useState("")
    const isValidUserData = ({ email, password }) => !!(email && password)
 
-   const onSubmit = async (e, userData, setUserData) => {
-      e.preventDefault()
-      setUserData({ ...userData, error: "", isLoading: true })
+   const authentication = userData => {
+      return new Promise((resolve, reject) => {
+         setError("")
 
-      setTimeout(async () => {
-         const valid = isValidUserData(userData)
+         setTimeout(async () => {
+            const valid = isValidUserData(userData)
 
-         if (!valid) {
-            setUserData({ ...userData, error: "Problème d'authentification" })
-         } else {
-            const { email, password } = userData
-            const url = "/api/login"
+            if (!valid) {
+               setError("Problème d'authentification")
+               reject(error)
+            } else {
+               const { email, password } = userData
+               const url = "/api/login"
 
-            try {
-               const response = await fetch(url, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ email, password }),
-               })
-               const json = await response.json()
-               if (response.status === 200) {
-                  const { token } = json
-                  await login({ token })
-               } else {
-                  console.error("Login failed.")
-                  throw {
-                     httpStatusCode: response.status,
-                     httpStatusText: response.statusText,
-                     json,
+               try {
+                  const response = await fetch(url, {
+                     method: "POST",
+                     headers: { "Content-Type": "application/json" },
+                     body: JSON.stringify({ email, password }),
+                  })
+                  const json = await response.json()
+                  if (response.status === 200) {
+                     const { token } = json
+                     await login({ token })
+                     resolve("OK")
+                  } else {
+                     throw {
+                        response,
+                        json,
+                     }
                   }
+               } catch (error) {
+                  const message = error && error.json ? error.json.message : "Erreur serveur"
+                  setError(message)
+                  reject(message)
                }
-            } catch (error) {
-               console.error("You have an error in your code or there are Network issues.", error)
-
-               const { json } = error
-               setUserData({ ...userData, error: json.message, isLoading: false })
             }
-         }
-      }, 1000)
+         }, 1000)
+      })
    }
 
    return (
@@ -55,7 +56,7 @@ const LoginPage = () => {
          </Head>
 
          <div>
-            <Login onSubmit={onSubmit} />
+            <Login authentication={authentication} error={error} />
          </div>
 
          <style jsx>{`
