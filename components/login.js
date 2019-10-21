@@ -1,13 +1,14 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import Link from "next/link"
-import { Alert, Label, Button, Form, FormGroup, Input } from "reactstrap"
+import { Alert, Label, Button, Form, FormGroup, Input, Spinner } from "reactstrap"
 
 const Login = ({ onSubmit }) => {
    const [userData, setUserData] = useState({
       email: "michel.martin@caramail.fr",
       password: "",
       error: "",
+      isLoading: false,
    })
 
    const onChange = e => {
@@ -51,8 +52,10 @@ const Login = ({ onSubmit }) => {
                         onChange={onChangePassword}
                      />
                   </FormGroup>
-                  <Button block>Se connecter</Button>
-                  <Alert color="danger" isOpen={!!userData.error} className="mt-3 mb-0" fade={true}>
+                  <Button block>
+                     {userData.isLoading ? <Spinner color="light">Loading...</Spinner> : "Se connecter"}
+                  </Button>
+                  <Alert color="danger" isOpen={!!userData.error} className="mt-3 mb-0" fade={false}>
                      {userData.error}
                   </Alert>
                </Form>
