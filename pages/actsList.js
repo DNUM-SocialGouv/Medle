@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { withAuthSync } from "../utils/auth"
-import Layout from "../components/layout"
-import Banner from "../components/banner"
+import Layout from "../components/Layout"
+import Banner from "../components/Banner"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, Table } from "reactstrap"
 
 const ActsListPage = () => {
