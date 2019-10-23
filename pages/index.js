@@ -1,85 +1,75 @@
-import React from "react"
+import React, { useState } from "react"
 import Head from "next/head"
-import Nav from "../components/nav"
+import fetch from "isomorphic-unfetch"
+import { login } from "../utils/auth"
+import Login from "../components/login"
 
-const Home = () => (
-   <div>
-      <Head>
-         <title>Home</title>
-         <link rel="icon" href="/favicon.ico" />
-      </Head>
+const LoginPage = () => {
+   const [error, setError] = useState("")
+   const isValidUserData = ({ email, password }) => !!(email && password)
 
-      <Nav />
+   const authentication = userData => {
+      return new Promise((resolve, reject) => {
+         setError("")
 
-      <div className="hero">
-         <h1 className="title">Welcome to Next.js!</h1>
-         <p className="description">
-            To get started, edit <code>pages/index.js</code> and save to reload.
-         </p>
+         setTimeout(async () => {
+            const valid = isValidUserData(userData)
 
-         <div className="row">
-            <a href="https://nextjs.org/docs" className="card">
-               <h3>Documentation &rarr;</h3>
-               <p>Learn more about Next.js in the documentation.</p>
-            </a>
-            <a href="https://nextjs.org/learn" className="card">
-               <h3>Next.js Learn &rarr;</h3>
-               <p>Learn about Next.js by following an interactive tutorial!</p>
-            </a>
-            <a href="https://github.com/zeit/next.js/tree/master/examples" className="card">
-               <h3>Examples &rarr;</h3>
-               <p>Find other example boilerplates on the Next.js GitHub.</p>
-            </a>
+            if (!valid) {
+               setError("Problème d'authentification")
+               reject(error)
+            } else {
+               const { email, password } = userData
+               const url = "/api/login"
+
+               try {
+                  const response = await fetch(url, {
+                     method: "POST",
+                     headers: { "Content-Type": "application/json" },
+                     body: JSON.stringify({ email, password }),
+                  })
+                  const json = await response.json()
+                  if (response.status === 200) {
+                     const { token } = json
+                     await login({ token })
+                     resolve("OK")
+                  } else {
+                     throw {
+                        response,
+                        json,
+                     }
+                  }
+               } catch (error) {
+                  const message = error && error.json ? error.json.message : "Erreur serveur"
+                  setError(message)
+                  reject(message)
+               }
+            }
+         }, 1000)
+      })
+   }
+
+   return (
+      <>
+         <Head>
+            <title>Medlé : connexion</title>
+         </Head>
+
+         <div>
+            <Login authentication={authentication} error={error} />
          </div>
-      </div>
 
-      <style jsx>{`
-         .hero {
-            width: 100%;
-            color: #333;
-         }
-         .title {
-            margin: 0;
-            width: 100%;
-            padding-top: 80px;
-            line-height: 1.15;
-            font-size: 48px;
-         }
-         .title,
-         .description {
-            text-align: center;
-         }
-         .row {
-            max-width: 880px;
-            margin: 80px auto 40px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-         }
-         .card {
-            padding: 18px 18px 24px;
-            width: 220px;
-            text-align: left;
-            text-decoration: none;
-            color: #434343;
-            border: 1px solid #9b9b9b;
-         }
-         .card:hover {
-            border-color: #067df7;
-         }
-         .card h3 {
-            margin: 0;
-            color: #067df7;
-            font-size: 18px;
-         }
-         .card p {
-            margin: 0;
-            padding: 12px 0 0;
-            font-size: 13px;
-            color: #333;
-         }
-      `}</style>
-   </div>
-)
+         <style jsx>{`
+            div {
+               margin-top: 20vh;
+               display: flex;
+               justify-content: center;
+               align-items: flex-start;
+               background-color: white;
+            }
+         `}</style>
+      </>
+   )
+}
 
-export default Home
+export default LoginPage

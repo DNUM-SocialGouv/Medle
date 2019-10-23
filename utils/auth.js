@@ -5,14 +5,14 @@ import cookie from "js-cookie"
 
 export const login = ({ token }) => {
    cookie.set("token", token, { expires: 1 })
-   Router.push("/actsList")
+   Router.push("/home")
 }
 
 export const logout = () => {
    cookie.remove("token")
    // to support logging out from all windows
    window.localStorage.setItem("logout", Date.now())
-   Router.push("/login")
+   Router.push("/index")
 }
 
 export const auth = ctx => {
@@ -23,7 +23,7 @@ export const auth = ctx => {
     * Additionally if there's no token it means the user is not logged in.
     */
    if (ctx.req && !token) {
-      ctx.res.writeHead(302, { Location: "/login" })
+      ctx.res.writeHead(302, { Location: "/index" })
       ctx.res.end()
    }
 
@@ -39,7 +39,7 @@ export const withAuthSync = WrappedComponent => {
    const Wrapper = props => {
       const syncLogout = event => {
          if (event.key === "logout") {
-            Router.push("/login")
+            Router.push("/index")
          }
       }
 

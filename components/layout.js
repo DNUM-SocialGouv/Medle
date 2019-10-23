@@ -49,7 +49,7 @@ const Header = () => {
                         <DropdownItem>Administration</DropdownItem>
                         <DropdownItem divider />
                         <DropdownItem>
-                           <Link href="/login">
+                           <Link href="/index">
                               <a className="menu-link">Se déconnecter</a>
                            </Link>
                         </DropdownItem>
@@ -97,7 +97,7 @@ const Header = () => {
 }
 
 const Footer = () => (
-   <footer>
+   <footer className="fixed-bottom">
       <Container>
          <Row>
             <Col>
