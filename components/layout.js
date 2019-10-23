@@ -97,7 +97,7 @@ const Header = () => {
 }
 
 const Footer = () => (
-   <footer className="fixed-bottom">
+   <footer className="static-bottom">
       <Container>
          <Row>
             <Col>
