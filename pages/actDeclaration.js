@@ -11,12 +11,11 @@ import {
    Form,
    FormGroup,
    Input,
-   Label,
    Row,
 } from "reactstrap"
 import Layout from "../components/Layout"
 import Banner from "../components/Banner"
-import "../theme/theme.css"
+import { Title1, Title2, Label } from "../components/StyledComponents"
 
 const ActDeclaration = () => {
    const [dropdownOpen, setOpen] = React.useState(false)
@@ -25,22 +24,22 @@ const ActDeclaration = () => {
 
    return (
       <Layout>
-         <Banner title="Déclaration d'acte"></Banner>
-         <Container>
-            <div className="text-center mb-5">{"Données d'identification du dossier"}</div>
+         <Title1 className="mt-5 mb-5">Déclaration d'acte</Title1>
+         <Container className="w-75">
+            <Title2 className="mb-4">{"Données d'identification du dossier"}</Title2>
 
             <Form>
                <FormGroup row>
                   <Col className="mr-3">
-                     <Label for="num_interne">Numéro de dossier interne</Label>
+                     <Label htmlFor="num_interne">Numéro de dossier interne</Label>
                      <Input id="num_interne" placeholder="Ex: 2019-23091" />
                   </Col>
                   <Col className="mr-3">
-                     <Label for="num_pv">Numéro de PV</Label>
+                     <Label htmlFor="num_pv">Numéro de PV</Label>
                      <Input id="num_pv" placeholder="Optionnel" />
                   </Col>
                   <Col>
-                     <Label for="demandeur">Demandeur</Label>
+                     <Label htmlFor="demandeur">Demandeur</Label>
                      <CustomInput type="select" id="demandeur" name="demandeur">
                         <option>TGI Marseille</option>
                         <option>TGI Avignon</option>
@@ -50,7 +49,7 @@ const ActDeclaration = () => {
                </FormGroup>
             </Form>
 
-            <div className="text-center mb-5 mt-5">Qui a été examiné?</div>
+            <Title2 className="mb-4 mt-5">Qui a été examiné?</Title2>
 
             <Row>
                <Col sm="3">
@@ -69,8 +68,10 @@ const ActDeclaration = () => {
                   </Button>
                </Col>
                <Col sm="3">
-                  <ButtonDropdown outline color="primary" block isOpen={dropdownOpen} toggle={toggle}>
-                     <DropdownToggle caret>{"Pas d'examen"}</DropdownToggle>
+                  <ButtonDropdown className="btn-block " isOpen={dropdownOpen} toggle={toggle}>
+                     <DropdownToggle outline color="secondary" caret>
+                        {"Pas d'examen"}
+                     </DropdownToggle>
                      <DropdownMenu>
                         <DropdownItem>Radio</DropdownItem>
                         <DropdownItem>Autre</DropdownItem>

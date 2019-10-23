@@ -1,6 +1,6 @@
 import React from "react"
-import Layout from "../components/layout"
-import Banner from "../components/banner"
+import Layout from "../components/Layout"
+import Banner from "../components/Banner"
 import Link from "next/link"
 import { Button, Card, CardText, CardTitle, Col, Container, Row } from "reactstrap"
 
@@ -28,7 +28,9 @@ const Home = () => (
                      <h4>Voir et éditer ses actes</h4>
                   </CardTitle>
                   <CardText>{"Voir et modifier les actes passés pour mon établissement de santé."}</CardText>
-                  <Button>Voir les actes</Button>
+                  <Link href="/actsList">
+                     <Button>Voir les actes</Button>
+                  </Link>
                </Card>
             </Col>
             <Col sm="4">

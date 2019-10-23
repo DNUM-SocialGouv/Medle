@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import Head from "next/head"
 import fetch from "isomorphic-unfetch"
 import { login } from "../utils/auth"
-import Login from "../components/login"
+import Login from "../components/Login"
 
 const LoginPage = () => {
    const [error, setError] = useState("")

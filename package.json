@@ -23,7 +23,8 @@
     "pg": "^7.12.1",
     "react": "16.10.2",
     "react-dom": "16.10.2",
-    "reactstrap": "^8.0.1"
+    "reactstrap": "^8.0.1",
+    "styled-components": "^4.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
