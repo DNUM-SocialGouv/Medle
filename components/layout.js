@@ -97,7 +97,7 @@ const Header = () => {
 }
 
 const Footer = () => (
-   <footer className="static-bottom">
+   <footer>
       <Container>
          <Row>
             <Col>
@@ -155,11 +155,11 @@ const Footer = () => (
 )
 
 const Layout = ({ children }) => (
-   <>
+   <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between" }}>
       <Header />
-      <main>{children}</main>
+      <main style={{ flexGrow: 1 }}>{children}</main>
       <Footer />
-   </>
+   </div>
 )
 
 Layout.propTypes = { children: PropTypes.node.isRequired }
