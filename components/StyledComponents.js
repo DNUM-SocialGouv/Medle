@@ -1,13 +1,16 @@
-import styled from "styled-components"
-import { Button } from "reactstrap"
+import styled, { css } from "styled-components"
+import { Button as BSButton } from "reactstrap"
 
-export const NewButton = styled.button`
-   background: transparent;
-   border-radius: 3px;
-   border: 2px solid palevioletred;
-   color: palevioletred;
-   margin: 0 1em;
-   padding: 0.25em 1em;
+export const Button = styled(BSButton)`
+   background: white;
+   color: #6c757d;
+
+   ${props =>
+      props.invert &&
+      css`
+         background: #6c757d;
+         color: white;
+      `}
 `
 
 export const ValidationButton = styled(Button)`
