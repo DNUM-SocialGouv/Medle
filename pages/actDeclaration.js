@@ -1,4 +1,5 @@
 import React from "react"
+import Router from "next/router"
 import {
    Alert,
    ButtonDropdown,
@@ -78,6 +79,13 @@ const ActDeclaration = () => {
 
       if (response.status === STATUS_200_OK) {
          setIsSuccess("Déclaration envoyée")
+         Router.push({
+            pathname: "/actConfirmation",
+            query: {
+               id: data.num_interne,
+               num_pv: data.num_pv,
+            },
+         })
       } else {
          setIsError(json && json.message ? json.message : "Problème de base de données")
       }
