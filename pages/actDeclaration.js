@@ -18,6 +18,7 @@ import { Button, Title1, Title2, Label, ValidationButton } from "../components/S
 const ActDeclaration = () => {
    const [dropdownOpen, setOpen] = React.useState(false)
    const [actTypeSelected, setActTypeSelected] = React.useState(false)
+   const [choices, setChoices] = React.useState({})
 
    const toggle = () => setOpen(!dropdownOpen)
 
@@ -25,6 +26,7 @@ const ActDeclaration = () => {
 
    const handleClick = type => {
       setActTypeSelected(type)
+      setChoices({})
 
       ref.current.scrollIntoView({
          behavior: "smooth",
@@ -34,7 +36,7 @@ const ActDeclaration = () => {
 
    return (
       <Layout>
-         <Title1 className="mt-5 mb-5">Déclaration d'acte</Title1>
+         <Title1 className="mt-5 mb-5">{"Déclaration d'acte"}</Title1>
          <Container className="w-75">
             <Title2 className="mb-4">{"Données d'identification du dossier"}</Title2>
 
@@ -66,7 +68,7 @@ const ActDeclaration = () => {
             <Row>
                <Col>
                   <Button
-                     invert={actTypeSelected === "VICTIME"}
+                     invert={actTypeSelected === "VICTIME" ? 1 : 0}
                      outline
                      color="secondary"
                      block
@@ -77,7 +79,7 @@ const ActDeclaration = () => {
                </Col>
                <Col>
                   <Button
-                     invert={actTypeSelected === "GAV"}
+                     invert={actTypeSelected === "GAV" ? 1 : 0}
                      outline
                      color="secondary"
                      block
@@ -88,7 +90,7 @@ const ActDeclaration = () => {
                </Col>
                <Col>
                   <Button
-                     invert={actTypeSelected === "MORT"}
+                     invert={actTypeSelected === "MORT" ? 1 : 0}
                      outline
                      color="secondary"
                      block
@@ -100,7 +102,7 @@ const ActDeclaration = () => {
                <Col>
                   <ButtonDropdown className="btn-block " isOpen={dropdownOpen} toggle={toggle}>
                      <DropdownToggle outline color="secondary" caret>
-                        {"Pas d'examen"}
+                        {"Autres cas"}
                      </DropdownToggle>
                      <DropdownMenu>
                         <DropdownItem onClick={() => setActTypeSelected("RADIO")}>Radio</DropdownItem>
@@ -116,17 +118,35 @@ const ActDeclaration = () => {
                   <Title2 className="mb-4 mt-5">{"Type(s) d'examen"}</Title2>
                   <Row>
                      <Col sm={3}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeExamen === "Somatique" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeExamen: "Somatique" })}
+                        >
                            Somatique
                         </Button>
                      </Col>
                      <Col sm={3}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeExamen === "Psychiatrique" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeExamen: "Psychiatrique" })}
+                        >
                            Psychiatrique
                         </Button>
                      </Col>
                      <Col sm={3}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeExamen === "Psychologique" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeExamen: "Psychologique" })}
+                        >
                            Psychologique
                         </Button>
                      </Col>
@@ -134,29 +154,59 @@ const ActDeclaration = () => {
                   <Title2 className="mb-4 mt-5">{"Type(s) de violence"}</Title2>
                   <Row>
                      <Col sm={3}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Agression sexuelle" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Agression sexuelle" })}
+                        >
                            Agression sexuelle
                         </Button>
                      </Col>
                      <Col sm={3}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Violence conjugale" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Violence conjugale" })}
+                        >
                            Violence conjugale
                         </Button>
                      </Col>
                      <Col sm={3}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Violence en réunion" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Violence en réunion" })}
+                        >
                            Violence en réunion
                         </Button>
                      </Col>
                      <Col sm={3}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Familiale" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Familiale" })}
+                        >
                            Familiale
                         </Button>
                      </Col>
                   </Row>
                   <Row className="mt-2">
                      <Col sm={3}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Autre" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Autre" })}
+                        >
                            Autre
                         </Button>
                      </Col>
@@ -165,18 +215,45 @@ const ActDeclaration = () => {
                   <Title2 className="mb-4 mt-5">{"Heure de l'examen"}</Title2>
                   <Row>
                      <Col>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           title="de 8h-8h30 à 18h-18h30 samedi de 8h-8h30 à 12h-12h30"
+                           invert={choices.heureExamen === "Jour" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, heureExamen: "Jour" })}
+                        >
                            Jour
+                           <br />
+                           (de 8h-8h30 à 18h-18h30, sauf samedi de 8h-8h30 à 12h-12h30)
                         </Button>
                      </Col>
                      <Col>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           title="de 18h-18h30 à 22h"
+                           invert={choices.heureExamen === "Nuit" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, heureExamen: "Nuit" })}
+                        >
                            Nuit
+                           <br />
+                           (de 18h-18h30 à 22h)
                         </Button>
                      </Col>
                      <Col>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           title="de 22h à 8h-8h30"
+                           invert={choices.heureExamen === "Nuit profonde" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, heureExamen: "Nuit profonde" })}
+                        >
                            Nuit profonde
+                           <br />
+                           (de 22h à 8h-8h30)
                         </Button>
                      </Col>
                   </Row>
@@ -189,17 +266,35 @@ const ActDeclaration = () => {
                   </Row>
                   <Row>
                      <Col sm={4}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.profilGenre === "Féminin" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, profilGenre: "Féminin" })}
+                        >
                            Féminin
                         </Button>
                      </Col>
                      <Col sm={4}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.profilGenre === "Masculin" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, profilGenre: "Masculin" })}
+                        >
                            Masculin
                         </Button>
                      </Col>
                      <Col sm={4}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.profilGenre === "Autre" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, profilGenre: "Autre" })}
+                        >
                            Autre
                         </Button>
                      </Col>
@@ -211,17 +306,35 @@ const ActDeclaration = () => {
                   </Row>
                   <Row>
                      <Col sm={4}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.profilAge === "0-3 ans" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, profilAge: "0-3 ans" })}
+                        >
                            0-3 ans
                         </Button>
                      </Col>
                      <Col sm={4}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.profilAge === "3-18 ans" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, profilAge: "3-18 ans" })}
+                        >
                            3-18 ans
                         </Button>
                      </Col>
                      <Col sm={4}>
-                        <Button outline color="secondary" block>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.profilAge === "Adulte majeur" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, profilAge: "Adulte majeur" })}
+                        >
                            Adulte majeur
                         </Button>
                      </Col>
