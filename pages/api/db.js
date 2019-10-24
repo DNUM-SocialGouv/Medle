@@ -1,4 +1,5 @@
 import knex from "../../lib/knex/knexfile"
+import { STATUS_200_OK } from "../../../utils/HttpStatus"
 
 export default async (req, res) => {
    let users
@@ -9,5 +10,5 @@ export default async (req, res) => {
       console.error("Erreur de requête")
    }
 
-   res.status(200).json({ users })
+   res.status(STATUS_200_OK).json({ users })
 }

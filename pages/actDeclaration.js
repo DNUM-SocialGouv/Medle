@@ -1,5 +1,6 @@
 import React from "react"
 import {
+   Alert,
    ButtonDropdown,
    Col,
    Container,
@@ -7,18 +8,20 @@ import {
    DropdownItem,
    DropdownMenu,
    DropdownToggle,
-   Form,
-   FormGroup,
    Input,
    Row,
 } from "reactstrap"
 import Layout from "../components/Layout"
 import { Button, Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
+import { STATUS_200_OK } from "../utils/HttpStatus"
 
 const ActDeclaration = () => {
    const [dropdownOpen, setOpen] = React.useState(false)
-   const [actTypeSelected, setActTypeSelected] = React.useState(false)
+   const [dataReport, setDataReport] = React.useState({})
+   const [typePersonExaminee, setActTypeSelected] = React.useState(false)
    const [choices, setChoices] = React.useState({})
+   const [isError, setIsError] = React.useState(false)
+   const [isSuccess, setIsSuccess] = React.useState(false)
 
    const toggle = () => setOpen(!dropdownOpen)
 
@@ -34,32 +37,79 @@ const ActDeclaration = () => {
       })
    }
 
+   const handleChange = e => {
+      setDataReport({ ...dataReport, [e.target.id]: e.target.value })
+   }
+
+   const validAct = async () => {
+      setIsError(false)
+      setIsSuccess(false)
+
+      const data = {
+         num_pv: dataReport.num_pv,
+         num_interne: dataReport.num_interne,
+         demandeur: dataReport.demandeur,
+         periode_journee: choices.periodeJournee,
+         type_personne_examinee: typePersonExaminee,
+         age_personne_examinee: choices.profilAge,
+         genre_personne_examinee: choices.profilGenre,
+         type_examen: choices.typeExamen,
+         type_violence: choices.typeViolence,
+         duree: 0, // TODO ajuster la durée ? À demander à Sania
+         etablissement_sante_id: 1, // TODO : à récupérer du user courant
+      }
+
+      const api = "/api/actDeclaration"
+
+      let response, json
+
+      try {
+         response = await fetch(api, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+         })
+         json = await response.json()
+      } catch (error) {
+         console.error(error)
+         setIsError(true)
+         return
+      }
+
+      if (response.status === STATUS_200_OK) {
+         setIsSuccess("Déclaration envoyée")
+      } else {
+         setIsError(json && json.message ? json.message : "Problème de base de données")
+      }
+   }
+
    return (
       <Layout>
          <Title1 className="mt-5 mb-5">{"Déclaration d'acte"}</Title1>
          <Container className="w-75">
             <Title2 className="mb-4">{"Données d'identification du dossier"}</Title2>
 
-            <Form>
-               <FormGroup row>
-                  <Col className="mr-3">
-                     <Label htmlFor="num_interne">Numéro de dossier interne</Label>
-                     <Input id="num_interne" placeholder="Ex: 2019-23091" />
-                  </Col>
-                  <Col className="mr-3">
-                     <Label htmlFor="num_pv">Numéro de PV</Label>
-                     <Input id="num_pv" placeholder="Optionnel" />
-                  </Col>
-                  <Col>
-                     <Label htmlFor="demandeur">Demandeur</Label>
-                     <CustomInput type="select" id="demandeur" name="demandeur">
-                        <option>TGI Marseille</option>
-                        <option>TGI Avignon</option>
-                        <option>TGI Nîmes</option>
-                     </CustomInput>
-                  </Col>
-               </FormGroup>
-            </Form>
+            {isError && <Alert color="danger">{isError}</Alert>}
+            {isSuccess && <Alert color="primary">{isSuccess}</Alert>}
+
+            <Row>
+               <Col className="mr-3">
+                  <Label htmlFor="num_interne">Numéro de dossier interne</Label>
+                  <Input id="num_interne" placeholder="Ex: 2019-23091" onChange={e => handleChange(e)} />
+               </Col>
+               <Col className="mr-3">
+                  <Label htmlFor="num_pv">Numéro de PV</Label>
+                  <Input id="num_pv" placeholder="Optionnel" onChange={e => handleChange(e)} />
+               </Col>
+               <Col>
+                  <Label htmlFor="demandeur">Demandeur</Label>
+                  <CustomInput type="select" id="demandeur" name="demandeur" onChange={e => handleChange(e)}>
+                     <option>TGI Marseille</option>
+                     <option>TGI Avignon</option>
+                     <option>TGI Nîmes</option>
+                  </CustomInput>
+               </Col>
+            </Row>
 
             <Title2 className="mb-4 mt-5" ref={ref}>
                Qui a été examiné?
@@ -68,18 +118,18 @@ const ActDeclaration = () => {
             <Row>
                <Col>
                   <Button
-                     invert={actTypeSelected === "VICTIME" ? 1 : 0}
+                     invert={typePersonExaminee === "Victime" ? 1 : 0}
                      outline
                      color="secondary"
                      block
-                     onClick={() => handleClick("VICTIME")}
+                     onClick={() => handleClick("Victime")}
                   >
                      Victime
                   </Button>
                </Col>
                <Col>
                   <Button
-                     invert={actTypeSelected === "GAV" ? 1 : 0}
+                     invert={typePersonExaminee === "GAV" ? 1 : 0}
                      outline
                      color="secondary"
                      block
@@ -90,7 +140,7 @@ const ActDeclaration = () => {
                </Col>
                <Col>
                   <Button
-                     invert={actTypeSelected === "MORT" ? 1 : 0}
+                     invert={typePersonExaminee === "MORT" ? 1 : 0}
                      outline
                      color="secondary"
                      block
@@ -113,7 +163,7 @@ const ActDeclaration = () => {
                </Col>
             </Row>
 
-            {actTypeSelected === "VICTIME" && (
+            {typePersonExaminee === "Victime" && (
                <>
                   <Title2 className="mb-4 mt-5">{"Type(s) d'examen"}</Title2>
                   <Row>
@@ -220,8 +270,8 @@ const ActDeclaration = () => {
                            color="secondary"
                            block
                            title="de 8h-8h30 à 18h-18h30 samedi de 8h-8h30 à 12h-12h30"
-                           invert={choices.heureExamen === "Jour" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, heureExamen: "Jour" })}
+                           invert={choices.periodeJournee === "Jour" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, periodeJournee: "Jour" })}
                         >
                            Jour
                            <br />
@@ -234,8 +284,8 @@ const ActDeclaration = () => {
                            color="secondary"
                            block
                            title="de 18h-18h30 à 22h"
-                           invert={choices.heureExamen === "Nuit" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, heureExamen: "Nuit" })}
+                           invert={choices.periodeJournee === "Nuit" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, periodeJournee: "Nuit" })}
                         >
                            Nuit
                            <br />
@@ -248,8 +298,8 @@ const ActDeclaration = () => {
                            color="secondary"
                            block
                            title="de 22h à 8h-8h30"
-                           invert={choices.heureExamen === "Nuit profonde" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, heureExamen: "Nuit profonde" })}
+                           invert={choices.periodeJournee === "Nuit profonde" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, periodeJournee: "Nuit profonde" })}
                         >
                            Nuit profonde
                            <br />
@@ -340,7 +390,7 @@ const ActDeclaration = () => {
                      </Col>
                   </Row>
                   <div className="text-center mt-5">
-                     <ValidationButton color="primary" size="lg" className="center">
+                     <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
                         Valider
                      </ValidationButton>
                   </div>

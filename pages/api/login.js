@@ -1,4 +1,10 @@
 import knex from "../../lib/knex/knexfile"
+import {
+   STATUS_200_OK,
+   STATUS_400_BAD_REQUEST,
+   STATUS_401_UNAUTHORIZED,
+   STATUS_500_INTERNAL_SERVER_ERROR,
+} from "../../utils/HttpStatus"
 
 const validPassword = password => {
    return password.length
@@ -8,7 +14,7 @@ export default async (req, res) => {
    const { email, password } = await req.body
 
    if (!validPassword(password)) {
-      return res.status(400).json({ message: "Incorrect password" })
+      return res.status(STATUS_400_BAD_REQUEST).json({ message: "Incorrect password" })
    }
 
    let user
@@ -19,12 +25,12 @@ export default async (req, res) => {
          .andWhere("password", password)
          .first()
    } catch (error) {
-      return res.status(500).json({ message: "Erreur serveur base de données" })
+      return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({ message: "Erreur serveur base de données" })
    }
 
    if (user) {
-      return res.status(200).json({ token: "1234", role: user.role })
+      return res.status(STATUS_200_OK).json({ token: "1234", role: user.role })
    } else {
-      return res.status(401).json({ message: "Erreur d'authenfication" })
+      return res.status(STATUS_401_UNAUTHORIZED).json({ message: "Erreur d'authenfication" })
    }
 }

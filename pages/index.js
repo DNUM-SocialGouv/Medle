@@ -3,6 +3,7 @@ import Head from "next/head"
 import fetch from "isomorphic-unfetch"
 import { login } from "../utils/auth"
 import Login from "../components/Login"
+import { STATUS_200_OK } from "../utils/HttpStatus"
 
 const LoginPage = () => {
    const [error, setError] = useState("")
@@ -29,7 +30,7 @@ const LoginPage = () => {
                      body: JSON.stringify({ email, password }),
                   })
                   const json = await response.json()
-                  if (response.status === 200) {
+                  if (response.status === STATUS_200_OK) {
                      const { token } = json
                      await login({ token })
                      resolve("OK")
