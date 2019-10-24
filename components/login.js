@@ -46,7 +46,6 @@ const Login = ({ authentication, error }) => {
                         placeholder="michel.martin@caramail.fr"
                         value={userData.email}
                         onChange={onChange}
-                        autoFocus
                      />
                   </FormGroup>
                   <FormGroup>

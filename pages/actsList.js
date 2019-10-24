@@ -51,7 +51,6 @@ const ActsListPage = () => {
                         placeholder="Ex: Nice"
                         value={healthCenter}
                         onChange={onChange}
-                        autoFocus
                      />
                   </Col>
                   <Col sm={2} className="text-align-right">
