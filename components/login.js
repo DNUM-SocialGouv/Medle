@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import Link from "next/link"
-import { Alert, Label, Button, Form, FormGroup, Input, Spinner } from "reactstrap"
+import { Alert, Label, Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, Spinner } from "reactstrap"
 
 const Login = ({ authentication, error }) => {
    const [isLoading, setIsLoading] = useState(false)
@@ -39,14 +39,17 @@ const Login = ({ authentication, error }) => {
                <Form onSubmit={onSubmit} data-testid="authent-form" method="post">
                   <FormGroup>
                      <Label for="email">Adresse courriel</Label>
-                     <Input
-                        type="email"
-                        name="email"
-                        id="email"
-                        placeholder="michel.martin@caramail.fr"
-                        value={userData.email}
-                        onChange={onChange}
-                     />
+                     <InputGroup>
+                        <InputGroupAddon addonType="prepend">@</InputGroupAddon>
+                        <Input
+                           type="email"
+                           name="email"
+                           id="email"
+                           placeholder="michel.martin@caramail.fr"
+                           value={userData.email}
+                           onChange={onChange}
+                        />
+                     </InputGroup>
                   </FormGroup>
                   <FormGroup>
                      <Label for="password">Mot de passe</Label>
@@ -55,13 +58,16 @@ const Login = ({ authentication, error }) => {
                            <a>Mot de passe oublié&nbsp;?</a>
                         </Link>
                      </div>
-                     <Input
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="Mot de passe"
-                        onChange={onChangePassword}
-                     />
+                     <InputGroup>
+                        <Input
+                           type="password"
+                           name="password"
+                           id="password"
+                           placeholder="Mot de passe"
+                           onChange={onChangePassword}
+                        />
+                        <InputGroupAddon addonType="append">...</InputGroupAddon>
+                     </InputGroup>
                   </FormGroup>
                   <Button block>{isLoading ? <Spinner color="light" data-testid="loading" /> : "Se connecter"}</Button>
                   <Alert color="danger" isOpen={!!error} className="mt-3 mb-0" fade={false}>

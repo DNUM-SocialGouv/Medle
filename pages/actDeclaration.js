@@ -13,6 +13,7 @@ import {
    Row,
 } from "reactstrap"
 import Layout from "../components/Layout"
+import Counter from "../components/Counter"
 import { Button, Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
 
@@ -109,6 +110,10 @@ const ActDeclaration = () => {
                   <Label htmlFor="num_pv">Numéro de PV</Label>
                   <Input id="num_pv" placeholder="Optionnel" onChange={e => handleChange(e)} />
                </Col>
+               <Col className="mr-3">
+                  <Label htmlFor="date_examen">{"Date d'examen"}</Label>
+                  <Input id="date_examen" type="date" onChange={e => handleChange(e)} />
+               </Col>
                <Col>
                   <Label htmlFor="demandeur">Demandeur</Label>
                   <CustomInput type="select" id="demandeur" name="demandeur" onChange={e => handleChange(e)}>
@@ -160,12 +165,12 @@ const ActDeclaration = () => {
                <Col>
                   <ButtonDropdown className="btn-block " isOpen={dropdownOpen} toggle={toggle}>
                      <DropdownToggle outline color="secondary" caret>
-                        {"Autres cas"}
+                        {"Pas d'examen"}
                      </DropdownToggle>
                      <DropdownMenu>
-                        <DropdownItem onClick={() => setActTypeSelected("RADIO")}>Radio</DropdownItem>
-                        <DropdownItem>Autre</DropdownItem>
-                        <DropdownItem>Encore un autre</DropdownItem>
+                        <DropdownItem onClick={() => setActTypeSelected("ASSISES")}>Assises</DropdownItem>
+                        <DropdownItem onClick={() => setActTypeSelected("RECONSTITUTION")}>Reconstitution</DropdownItem>
+                        <DropdownItem onClick={() => setActTypeSelected("EXPERTISE")}>Expertise</DropdownItem>
                      </DropdownMenu>
                   </ButtonDropdown>
                </Col>
@@ -211,6 +216,72 @@ const ActDeclaration = () => {
                   </Row>
                   <Title2 className="mb-4 mt-5">{"Type(s) de violence"}</Title2>
                   <Row>
+                     <Col sm={3} className="mb-4">
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Conjugale" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Conjugale" })}
+                        >
+                           Conjugale
+                        </Button>
+                     </Col>
+                     <Col sm={3}>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Urbaine" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Urbaine" })}
+                        >
+                           Urbaine
+                        </Button>
+                     </Col>
+                     <Col sm={3}>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "En réunion" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "En réunion" })}
+                        >
+                           En réunion
+                        </Button>
+                     </Col>
+                     <Col sm={3}>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Scolaire" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Scolaire" })}
+                        >
+                           Scolaire
+                        </Button>
+                     </Col>
+                     <Col sm={3}>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Familiale" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Familiale" })}
+                        >
+                           Familiale
+                        </Button>
+                     </Col>
+                     <Col sm={3}>
+                        <Button
+                           outline
+                           color="secondary"
+                           block
+                           invert={choices.typeViolence === "Sur ascendant" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Sur ascendant" })}
+                        >
+                           Sur ascendant
+                        </Button>
+                     </Col>
                      <Col sm={3}>
                         <Button
                            outline
@@ -227,45 +298,10 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "Violence conjugale" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Violence conjugale" })}
+                           invert={choices.typeViolence === "Attentat" ? 1 : 0}
+                           onClick={() => setChoices({ ...choices, typeViolence: "Attentat" })}
                         >
-                           Violence conjugale
-                        </Button>
-                     </Col>
-                     <Col sm={3}>
-                        <Button
-                           outline
-                           color="secondary"
-                           block
-                           invert={choices.typeViolence === "Violence en réunion" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Violence en réunion" })}
-                        >
-                           Violence en réunion
-                        </Button>
-                     </Col>
-                     <Col sm={3}>
-                        <Button
-                           outline
-                           color="secondary"
-                           block
-                           invert={choices.typeViolence === "Familiale" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Familiale" })}
-                        >
-                           Familiale
-                        </Button>
-                     </Col>
-                  </Row>
-                  <Row className="mt-2">
-                     <Col sm={3}>
-                        <Button
-                           outline
-                           color="secondary"
-                           block
-                           invert={choices.typeViolence === "Autre" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Autre" })}
-                        >
-                           Autre
+                           Attentat
                         </Button>
                      </Col>
                   </Row>
@@ -397,6 +433,20 @@ const ActDeclaration = () => {
                         </Button>
                      </Col>
                   </Row>
+
+                  <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
+                  <Row>
+                     <Col sm={4}>
+                        <Counter onClick={() => setChoices({ ...choices, typeExamen: "Somatique" })}>Sanguins</Counter>
+                     </Col>
+                     <Col sm={4}>
+                        <Counter onClick={() => setChoices({ ...choices, typeExamen: "Somatique" })}>Radios</Counter>
+                     </Col>
+                     <Col sm={4}>
+                        <Counter onClick={() => setChoices({ ...choices, typeExamen: "Somatique" })}>IRM</Counter>
+                     </Col>
+                  </Row>
+
                   <div className="text-center mt-5">
                      <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
                         Valider
