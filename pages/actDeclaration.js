@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useReducer } from "react"
 import Router from "next/router"
 import {
    Alert,
@@ -17,46 +17,82 @@ import Counter from "../components/Counter"
 import { Button, Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
 
+const reducer = (state, action) => {
+   switch (action.type) {
+      case "internalNum":
+         return { ...state, internalNum: action.payload }
+      case "pvNum":
+         return { ...state, pvNum: action.payload }
+      case "examinationDate":
+         return { ...state, examinationDate: action.payload }
+      case "asker":
+         return { ...state, asker: action.payload }
+      case "examinedPersonType":
+         action.payload.ref.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+         })
+
+         return { ...state, examinedPersonType: action.payload.value }
+      case "examinationType":
+         return { ...state, examinationType: action.payload }
+      case "violenceType":
+         return { ...state, violenceType: action.payload }
+      case "periodOfDay":
+         return { ...state, periodOfDay: action.payload }
+      case "examinedPersonGender":
+         return { ...state, examinedPersonGender: action.payload }
+      case "examinedPersonAge":
+         return { ...state, examinedPersonAge: action.payload }
+      default:
+         throw new Error("Action.type inconnu")
+   }
+}
+
 const ActDeclaration = () => {
-   const [dropdownOpen, setOpen] = React.useState(false)
-   const [dataReport, setDataReport] = React.useState({})
-   const [typePersonExaminee, setActTypeSelected] = React.useState(false)
-   const [choices, setChoices] = React.useState({})
-   const [isError, setIsError] = React.useState(false)
-   const [isSuccess, setIsSuccess] = React.useState(false)
+   const [dropdownOpen, setOpen] = useState(false)
+   const [isError, setIsError] = useState(false)
+   const [isSuccess, setIsSuccess] = useState(false)
+
+   // const [dataReport, setDataReport] = useState({})
+   // const [typePersonExaminee, setActTypeSelected] = useState(false)
+   // const [choices, setChoices] = useState({})
+
+   const initialState = {
+      pvNum: "",
+      internalNum: "",
+      examinationDate: "",
+      asker: "",
+      examinedPersonType: "",
+      examinedPersonGender: "",
+      examinedPersonAge: "",
+      examinationType: "",
+      violenceType: "",
+      periodOfDay: "",
+      bloodExaminationsNb: 0,
+   }
+
+   const [state, dispatch] = useReducer(reducer, initialState)
 
    const toggle = () => setOpen(!dropdownOpen)
 
    const ref = React.createRef()
-
-   const handleClick = type => {
-      setActTypeSelected(type)
-      setChoices({})
-
-      ref.current.scrollIntoView({
-         behavior: "smooth",
-         block: "start",
-      })
-   }
-
-   const handleChange = e => {
-      setDataReport({ ...dataReport, [e.target.id]: e.target.value })
-   }
 
    const validAct = async () => {
       setIsError(false)
       setIsSuccess(false)
 
       const data = {
-         num_pv: dataReport.num_pv,
-         num_interne: dataReport.num_interne,
-         demandeur: dataReport.demandeur,
-         periode_journee: choices.periodeJournee,
-         type_personne_examinee: typePersonExaminee,
-         age_personne_examinee: choices.profilAge,
-         genre_personne_examinee: choices.profilGenre,
-         type_examen: choices.typeExamen,
-         type_violence: choices.typeViolence,
+         num_pv: state.pvNum,
+         num_interne: state.internalNum,
+         date_examen: state.examinationDate,
+         demandeur: state.asker,
+         periode_journee: state.periodOfDay,
+         type_personne_examinee: state.typePersonExaminee,
+         age_personne_examinee: state.profilAge,
+         genre_personne_examinee: state.profilGenre,
+         type_examen: state.typeExamen,
+         type_violence: state.typeViolence,
          duree: 0, // TODO ajuster la durée ? À demander à Sania
          etablissement_sante_id: 1, // TODO : à récupérer du user courant
       }
@@ -103,20 +139,37 @@ const ActDeclaration = () => {
 
             <Row>
                <Col className="mr-3">
-                  <Label htmlFor="num_interne">Numéro de dossier interne</Label>
-                  <Input id="num_interne" placeholder="Ex: 2019-23091" onChange={e => handleChange(e)} />
+                  <Label htmlFor="internalNum">Numéro de dossier interne</Label>
+                  <Input
+                     id="internalNum"
+                     placeholder="Ex: 2019-23091"
+                     onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
+                  />
                </Col>
                <Col className="mr-3">
-                  <Label htmlFor="num_pv">Numéro de PV</Label>
-                  <Input id="num_pv" placeholder="Optionnel" onChange={e => handleChange(e)} />
+                  <Label htmlFor="pvNum">Numéro de PV</Label>
+                  <Input
+                     id="pvNum"
+                     placeholder="Optionnel"
+                     onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
+                  />
                </Col>
                <Col className="mr-3">
-                  <Label htmlFor="date_examen">{"Date d'examen"}</Label>
-                  <Input id="date_examen" type="date" onChange={e => handleChange(e)} />
+                  <Label htmlFor="examinationDate">{"Date d'examen"}</Label>
+                  <Input
+                     id="examinationDate"
+                     type="date"
+                     onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
+                  />
                </Col>
                <Col>
-                  <Label htmlFor="demandeur">Demandeur</Label>
-                  <CustomInput type="select" id="demandeur" name="demandeur" onChange={e => handleChange(e)}>
+                  <Label htmlFor="asker">Demandeur</Label>
+                  <CustomInput
+                     type="select"
+                     id="asker"
+                     name="asker"
+                     onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
+                  >
                      <option>TGI Marseille</option>
                      <option>TGI Avignon</option>
                      <option>TGI Nîmes</option>
@@ -131,33 +184,33 @@ const ActDeclaration = () => {
             <Row>
                <Col>
                   <Button
-                     invert={typePersonExaminee === "Victime" ? 1 : 0}
+                     invert={state.examinedPersonType === "Victime" ? 1 : 0}
                      outline
                      color="secondary"
                      block
-                     onClick={() => handleClick("Victime")}
+                     onClick={() => dispatch({ type: "examinedPersonType", payload: { value: "Victime", ref } })}
                   >
                      Victime
                   </Button>
                </Col>
                <Col>
                   <Button
-                     invert={typePersonExaminee === "GAV" ? 1 : 0}
+                     invert={state.examinedPersonType === "GAV" ? 1 : 0}
                      outline
                      color="secondary"
                      block
-                     onClick={() => setActTypeSelected("GAV")}
+                     onClick={() => dispatch({ type: "examinedPersonType", payload: { value: "GAV", ref } })}
                   >
                      Garde à vue
                   </Button>
                </Col>
                <Col>
                   <Button
-                     invert={typePersonExaminee === "MORT" ? 1 : 0}
+                     invert={state.examinedPersonType === "MORT" ? 1 : 0}
                      outline
                      color="secondary"
                      block
-                     onClick={() => setActTypeSelected("MORT")}
+                     onClick={() => dispatch({ type: "examinedPersonType", payload: { value: "MORT", ref } })}
                   >
                      Mort
                   </Button>
@@ -168,15 +221,31 @@ const ActDeclaration = () => {
                         {"Pas d'examen"}
                      </DropdownToggle>
                      <DropdownMenu>
-                        <DropdownItem onClick={() => setActTypeSelected("ASSISES")}>Assises</DropdownItem>
-                        <DropdownItem onClick={() => setActTypeSelected("RECONSTITUTION")}>Reconstitution</DropdownItem>
-                        <DropdownItem onClick={() => setActTypeSelected("EXPERTISE")}>Expertise</DropdownItem>
+                        <DropdownItem
+                           onClick={() => dispatch({ type: "examinedPersonType", payload: { value: "Assises", ref } })}
+                        >
+                           Assises
+                        </DropdownItem>
+                        <DropdownItem
+                           onClick={() =>
+                              dispatch({ type: "examinedPersonType", payload: { value: "Reconstitution", ref } })
+                           }
+                        >
+                           Reconstitution
+                        </DropdownItem>
+                        <DropdownItem
+                           onClick={() =>
+                              dispatch({ type: "examinedPersonType", payload: { value: "Expertise", ref } })
+                           }
+                        >
+                           Expertise
+                        </DropdownItem>
                      </DropdownMenu>
                   </ButtonDropdown>
                </Col>
             </Row>
 
-            {typePersonExaminee === "Victime" && (
+            {state.examinedPersonType === "Victime" && (
                <>
                   <Title2 className="mb-4 mt-5">{"Type(s) d'examen"}</Title2>
                   <Row>
@@ -185,8 +254,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeExamen === "Somatique" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeExamen: "Somatique" })}
+                           invert={state.examinationType === "Somatique" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinationType", payload: "Somatique" })}
                         >
                            Somatique
                         </Button>
@@ -196,8 +265,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeExamen === "Psychiatrique" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeExamen: "Psychiatrique" })}
+                           invert={state.examinationType === "Psychiatrique" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinationType", payload: "Psychiatrique" })}
                         >
                            Psychiatrique
                         </Button>
@@ -207,8 +276,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeExamen === "Psychologique" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeExamen: "Psychologique" })}
+                           invert={state.examinationType === "Psychologique" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinationType", payload: "Psychologique" })}
                         >
                            Psychologique
                         </Button>
@@ -221,8 +290,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "Conjugale" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Conjugale" })}
+                           invert={state.violenceType === "Conjugale" ? 1 : 0}
+                           onClick={() => dispatch({ type: "violenceType", payload: "Conjugale" })}
                         >
                            Conjugale
                         </Button>
@@ -232,8 +301,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "Urbaine" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Urbaine" })}
+                           invert={state.violenceType === "Urbaine" ? 1 : 0}
+                           onClick={() => dispatch({ type: "violenceType", payload: "Urbaine" })}
                         >
                            Urbaine
                         </Button>
@@ -243,8 +312,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "En réunion" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "En réunion" })}
+                           invert={state.violenceType === "En réunion" ? 1 : 0}
+                           onClick={() => dispatch({ type: "violenceType", payload: "En réunion" })}
                         >
                            En réunion
                         </Button>
@@ -254,8 +323,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "Scolaire" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Scolaire" })}
+                           invert={state.violenceType === "Scolaire" ? 1 : 0}
+                           onClick={() => dispatch({ type: "violenceType", payload: "Scolaire" })}
                         >
                            Scolaire
                         </Button>
@@ -265,8 +334,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "Familiale" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Familiale" })}
+                           invert={state.violenceType === "Familiale" ? 1 : 0}
+                           onClick={() => dispatch({ type: "violenceType", payload: "Familiale" })}
                         >
                            Familiale
                         </Button>
@@ -276,8 +345,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "Sur ascendant" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Sur ascendant" })}
+                           invert={state.violenceType === "Sur ascendant" ? 1 : 0}
+                           onClick={() => dispatch({ type: "violenceType", payload: "Sur ascendant" })}
                         >
                            Sur ascendant
                         </Button>
@@ -287,8 +356,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "Agression sexuelle" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Agression sexuelle" })}
+                           invert={state.violenceType === "Agression sexuelle" ? 1 : 0}
+                           onClick={() => dispatch({ type: "violenceType", payload: "Agression sexuelle" })}
                         >
                            Agression sexuelle
                         </Button>
@@ -298,8 +367,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.typeViolence === "Attentat" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, typeViolence: "Attentat" })}
+                           invert={state.violenceType === "Attentat" ? 1 : 0}
+                           onClick={() => dispatch({ type: "violenceType", payload: "Attentat" })}
                         >
                            Attentat
                         </Button>
@@ -314,8 +383,8 @@ const ActDeclaration = () => {
                            color="secondary"
                            block
                            title="de 8h-8h30 à 18h-18h30 samedi de 8h-8h30 à 12h-12h30"
-                           invert={choices.periodeJournee === "Jour" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, periodeJournee: "Jour" })}
+                           invert={state.periodOfDay === "Jour" ? 1 : 0}
+                           onClick={() => dispatch({ type: "periodOfDay", payload: "Jour" })}
                         >
                            Jour
                            <br />
@@ -328,8 +397,8 @@ const ActDeclaration = () => {
                            color="secondary"
                            block
                            title="de 18h-18h30 à 22h"
-                           invert={choices.periodeJournee === "Nuit" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, periodeJournee: "Nuit" })}
+                           invert={state.periodOfDay === "Nuit" ? 1 : 0}
+                           onClick={() => dispatch({ type: "periodOfDay", payload: "Nuit" })}
                         >
                            Nuit
                            <br />
@@ -342,8 +411,8 @@ const ActDeclaration = () => {
                            color="secondary"
                            block
                            title="de 22h à 8h-8h30"
-                           invert={choices.periodeJournee === "Nuit profonde" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, periodeJournee: "Nuit profonde" })}
+                           invert={state.periodOfDay === "Nuit profonde" ? 1 : 0}
+                           onClick={() => dispatch({ type: "periodOfDay", payload: "Nuit profonde" })}
                         >
                            Nuit profonde
                            <br />
@@ -364,8 +433,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.profilGenre === "Féminin" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, profilGenre: "Féminin" })}
+                           invert={state.examinedPersonGender === "Féminin" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinedPersonGender", payload: "Féminin" })}
                         >
                            Féminin
                         </Button>
@@ -375,8 +444,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.profilGenre === "Masculin" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, profilGenre: "Masculin" })}
+                           invert={state.examinedPersonGender === "Masculin" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinedPersonGender", payload: "Masculin" })}
                         >
                            Masculin
                         </Button>
@@ -386,8 +455,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.profilGenre === "Autre" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, profilGenre: "Autre" })}
+                           invert={state.examinedPersonGender === "Autre" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinedPersonGender", payload: "Autre" })}
                         >
                            Autre
                         </Button>
@@ -404,8 +473,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.profilAge === "0-3 ans" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, profilAge: "0-3 ans" })}
+                           invert={state.examinedPersonAge === "0-3 ans" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinedPersonAge", payload: "0-3 ans" })}
                         >
                            0-3 ans
                         </Button>
@@ -415,8 +484,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.profilAge === "3-18 ans" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, profilAge: "3-18 ans" })}
+                           invert={state.examinedPersonAge === "3-18 ans" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinedPersonAge", payload: "3-18 ans" })}
                         >
                            3-18 ans
                         </Button>
@@ -426,8 +495,8 @@ const ActDeclaration = () => {
                            outline
                            color="secondary"
                            block
-                           invert={choices.profilAge === "Adulte majeur" ? 1 : 0}
-                           onClick={() => setChoices({ ...choices, profilAge: "Adulte majeur" })}
+                           invert={state.examinedPersonAge === "Adulte majeur" ? 1 : 0}
+                           onClick={() => dispatch({ type: "examinedPersonAge", payload: "Adulte majeur" })}
                         >
                            Adulte majeur
                         </Button>
@@ -437,13 +506,13 @@ const ActDeclaration = () => {
                   <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
                   <Row>
                      <Col sm={4}>
-                        <Counter onClick={() => setChoices({ ...choices, typeExamen: "Somatique" })}>Sanguins</Counter>
+                        <Counter>Sanguins</Counter>
                      </Col>
                      <Col sm={4}>
-                        <Counter onClick={() => setChoices({ ...choices, typeExamen: "Somatique" })}>Radios</Counter>
+                        <Counter>Radios</Counter>
                      </Col>
                      <Col sm={4}>
-                        <Counter onClick={() => setChoices({ ...choices, typeExamen: "Somatique" })}>IRM</Counter>
+                        <Counter>IRM</Counter>
                      </Col>
                   </Row>
 
