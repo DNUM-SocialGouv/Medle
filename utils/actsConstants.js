@@ -1,3 +1,22 @@
+import moment from "moment"
+import { FRENCH_PUBLIC_HOLIDAY_ENDPOINT } from "../config"
+
+const initFetchFrenchPublicHoliday = async () => {
+   try {
+      const res = await fetch(FRENCH_PUBLIC_HOLIDAY_ENDPOINT)
+      const json = await res.json()
+      console.log("Jours fériés chargés")
+      frenchPublicHoliday = json.map(elt => elt.date)
+   } catch (error) {
+      console.error("Erreur chargment jours fériés", error)
+      frenchPublicHoliday = []
+   }
+}
+
+let frenchPublicHoliday
+
+initFetchFrenchPublicHoliday()
+
 const examinedPersonTypeValues = [
    "Victime",
    "Garde à vue",
@@ -24,6 +43,7 @@ const examinedPersonAgeValues = ["0-3 ans", "3-18 ans", "Adulte majeur"]
 
 const periodOfDayValues = {
    week: {
+      title: "lun-ven",
       period: [
          {
             title: "Nuit profonde",
@@ -45,6 +65,7 @@ const periodOfDayValues = {
       dutyDoctorOnly: true,
    },
    saturday: {
+      title: "sam",
       period: [
          {
             title: "Nuit profonde",
@@ -71,6 +92,7 @@ const periodOfDayValues = {
       dutyDoctorOnly: false,
    },
    sunday: {
+      title: "dim",
       period: [
          {
             title: "Nuit profonde",
@@ -93,6 +115,7 @@ const periodOfDayValues = {
       dutyDoctorOnly: false,
    },
    publicHoliday: {
+      title: "férié",
       period: [
          {
             title: "Journée",
@@ -112,6 +135,23 @@ const periodOfDayValues = {
    },
 }
 
+const getSituationDate = dateStr => {
+   if (!frenchPublicHoliday) {
+      console.warn("Les jours fériés n'ont pas été rapatriés")
+   } else if (frenchPublicHoliday.includes(dateStr)) {
+      return "publicHoliday"
+   }
+
+   const dayInt = moment(dateStr).day()
+   switch (dayInt) {
+      case 0:
+         return "sunday"
+      case 6:
+         return "saturday"
+      default:
+         return "week"
+   }
+}
 const doctorWorkFormatValues = ["Médecin de garde", "Médecin d'astreinte", "Demie garde", "Demie astreinte"]
 
 export {
@@ -122,4 +162,5 @@ export {
    examinedPersonAgeValues,
    periodOfDayValues,
    doctorWorkFormatValues,
+   getSituationDate,
 }

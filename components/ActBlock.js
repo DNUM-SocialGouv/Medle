@@ -27,22 +27,20 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state }) => {
                if (val.subValues) {
                   const isClicked = state[type] && val.subValues.includes(state[type])
                   return (
-                     <>
-                        <Col key={index} {...nbColumns} className="mb-4">
-                           <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
-                              <DropdownToggle outline color="secondary" invert={isClicked} caret>
-                                 {isClicked ? state[type] : val.title}
-                              </DropdownToggle>
-                              <DropdownMenu>
-                                 {val.subValues.map((sub, indexS) => (
-                                    <DropdownItem key={indexS} onClick={() => dispatch({ type, payload: sub })}>
-                                       {sub}
-                                    </DropdownItem>
-                                 ))}
-                              </DropdownMenu>
-                           </ButtonDropdown>
-                        </Col>
-                     </>
+                     <Col key={index} {...nbColumns} className="mb-4">
+                        <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
+                           <DropdownToggle outline color="secondary" invert={isClicked} caret>
+                              {isClicked ? state[type] : val.title}
+                           </DropdownToggle>
+                           <DropdownMenu>
+                              {val.subValues.map((sub, indexS) => (
+                                 <DropdownItem key={indexS} onClick={() => dispatch({ type, payload: sub })}>
+                                    {sub}
+                                 </DropdownItem>
+                              ))}
+                           </DropdownMenu>
+                        </ButtonDropdown>
+                     </Col>
                   )
                } else if (val.subTitle) {
                   return (

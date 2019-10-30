@@ -1,6 +1,7 @@
 import React, { useState, useReducer } from "react"
 import Router from "next/router"
 import { Alert, Col, Container, CustomInput, Input, Row } from "reactstrap"
+import { ACT_DECLARATION_ENDPOINT } from "../config"
 import Layout from "../components/Layout"
 import Counter from "../components/Counter"
 import ActBlock from "../components/ActBlock"
@@ -14,6 +15,7 @@ import {
    examinedPersonAgeValues,
    periodOfDayValues,
    doctorWorkFormatValues,
+   getSituationDate,
 } from "../utils/actsConstants"
 
 const initialState = {
@@ -34,6 +36,8 @@ const initialState = {
 
 const ref = React.createRef()
 
+let dayInWeekOrPublicHoliday = "saturday"
+
 const reducer = (state, action) => {
    switch (action.type) {
       case "internalNum":
@@ -41,6 +45,7 @@ const reducer = (state, action) => {
       case "pvNum":
          return { ...state, pvNum: action.payload }
       case "examinationDate":
+         dayInWeekOrPublicHoliday = getSituationDate(action.payload)
          return { ...state, examinationDate: action.payload }
       case "asker":
          return { ...state, asker: action.payload }
@@ -96,12 +101,10 @@ const ActDeclaration = () => {
          etablissement_sante_id: 1, // TODO : à récupérer du user courant
       }
 
-      const api = "/api/actDeclaration"
-
       let response, json
 
       try {
-         response = await fetch(api, {
+         response = await fetch(ACT_DECLARATION_ENDPOINT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -201,9 +204,9 @@ const ActDeclaration = () => {
                   />
 
                   <ActBlock
-                     title={"Heure de l'examen"}
+                     title={`Heure de l'examen (${periodOfDayValues[dayInWeekOrPublicHoliday].title})`}
                      type="periodOfDay"
-                     values={periodOfDayValues.week.period}
+                     values={periodOfDayValues[dayInWeekOrPublicHoliday].period}
                      dispatch={dispatch}
                      state={state}
                   />
