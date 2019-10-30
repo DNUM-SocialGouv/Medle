@@ -1,7 +1,16 @@
 import styled, { css } from "styled-components"
-import { Button as BSButton } from "reactstrap"
+import { Button as RSButton, DropdownToggle as RSDropdownToggle } from "reactstrap"
 
-export const Button = styled(BSButton)`
+export const DropdownToggle = styled(RSDropdownToggle)`
+   ${props =>
+      props.invert &&
+      css`
+         background: #6c757d;
+         color: white;
+      `}
+`
+
+export const Button = styled(RSButton)`
    background: white;
    color: #6c757d;
 

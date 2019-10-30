@@ -34,9 +34,9 @@ const Counter = ({ children, dispatch, state, type }) => {
 
 Counter.propTypes = {
    children: PropTypes.node,
-   dispatch: PropTypes.func,
-   state: {},
-   type: PropTypes.string,
+   dispatch: PropTypes.func.isRequired,
+   state: PropTypes.object.isRequired,
+   type: PropTypes.string.isRequired,
 }
 
 export default Counter
