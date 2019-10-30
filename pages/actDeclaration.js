@@ -29,7 +29,7 @@ const initialState = {
    examinationType: "",
    violenceType: "",
    periodOfDay: "",
-   doctorWorkFormat: "Médecin de garde",
+   doctorWorkFormat: "",
    bloodExaminationsNb: 0,
    radioExaminationsNb: 0,
 }
@@ -37,6 +37,19 @@ const initialState = {
 const ref = React.createRef()
 
 let dayInWeekOrPublicHoliday = "saturday"
+
+const reset = state => ({
+   ...state,
+   examinedPersonType: "",
+   examinedPersonGender: "",
+   examinedPersonAge: "",
+   examinationType: "",
+   violenceType: "",
+   periodOfDay: "",
+   doctorWorkFormat: "",
+   bloodExaminationsNb: 0,
+   radioExaminationsNb: 0,
+})
 
 const reducer = (state, action) => {
    switch (action.type) {
@@ -46,6 +59,8 @@ const reducer = (state, action) => {
          return { ...state, pvNum: action.payload }
       case "examinationDate":
          dayInWeekOrPublicHoliday = getSituationDate(action.payload)
+         // state.periodOfDay = ""
+         // state.doctorWorkFormat = ""
          return { ...state, examinationDate: action.payload }
       case "asker":
          return { ...state, asker: action.payload }
@@ -54,7 +69,7 @@ const reducer = (state, action) => {
             behavior: "smooth",
             block: "start",
          })
-         state = initialState
+         state = reset(state)
          return { ...state, examinedPersonType: action.payload }
       case "examinationType":
          return { ...state, examinationType: action.payload }
@@ -62,6 +77,8 @@ const reducer = (state, action) => {
          return { ...state, violenceType: action.payload }
       case "periodOfDay":
          return { ...state, periodOfDay: action.payload }
+      case "doctorWorkFormat":
+         return { ...state, doctorWorkFormat: action.payload }
       case "examinedPersonGender":
          return { ...state, examinedPersonGender: action.payload }
       case "examinedPersonAge":
@@ -91,7 +108,7 @@ const ActDeclaration = () => {
          date_examen: state.examinationDate,
          demandeur: state.asker,
          periode_journee: state.periodOfDay,
-         doctor_work_format: state.doctorWorkFormat,
+         doctor_work_format: state.doctorWorkFormat ? state.doctorWorkFormat : "Médecin de garde",
          type_personne_examinee: state.typePersonExaminee,
          age_personne_examinee: state.profilAge,
          genre_personne_examinee: state.profilGenre,
@@ -211,22 +228,14 @@ const ActDeclaration = () => {
                      state={state}
                   />
 
-                  <Title2 className="mb-2 mt-5">{"Profil de la victime"}</Title2>
-
-                  <ActBlock
-                     subTitle={"Genre"}
-                     type="examinedPersonGender"
-                     values={examinedPersonGenderValues}
-                     dispatch={dispatch}
-                     state={state}
-                  />
-                  <ActBlock
-                     subTitle={"Âge"}
-                     type="examinedPersonAge"
-                     values={examinedPersonAgeValues}
-                     dispatch={dispatch}
-                     state={state}
-                  />
+                  {dayInWeekOrPublicHoliday !== "week" && (
+                     <ActBlock
+                        type="doctorWorkFormat"
+                        values={doctorWorkFormatValues}
+                        dispatch={dispatch}
+                        state={state}
+                     />
+                  )}
 
                   <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
 
@@ -243,6 +252,22 @@ const ActDeclaration = () => {
                      </Col>
                   </Row>
 
+                  <Title2 className="mb-2 mt-5">{"Profil de la victime"}</Title2>
+
+                  <ActBlock
+                     subTitle={"Genre"}
+                     type="examinedPersonGender"
+                     values={examinedPersonGenderValues}
+                     dispatch={dispatch}
+                     state={state}
+                  />
+                  <ActBlock
+                     subTitle={"Âge"}
+                     type="examinedPersonAge"
+                     values={examinedPersonAgeValues}
+                     dispatch={dispatch}
+                     state={state}
+                  />
                   <div className="text-center mt-5">
                      <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
                         Valider
