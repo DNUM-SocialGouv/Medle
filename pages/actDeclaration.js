@@ -16,6 +16,13 @@ import Layout from "../components/Layout"
 import Counter from "../components/Counter"
 import { Button, Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
+import {
+   examinedPersonValues,
+   examinationTypeValues,
+   violenceTypeValues,
+   examinedPersonGenderValues,
+   examinedPersonAge,
+} from "../utils/actsConstants"
 
 const reducer = (state, action) => {
    switch (action.type) {
@@ -44,6 +51,10 @@ const reducer = (state, action) => {
          return { ...state, examinedPersonGender: action.payload }
       case "examinedPersonAge":
          return { ...state, examinedPersonAge: action.payload }
+      case "bloodExaminationsNb":
+         return { ...state, bloodExaminationsNb: action.payload }
+      case "radioExaminationsNb":
+         return { ...state, radioExaminationsNb: action.payload }
       default:
          throw new Error("Action.type inconnu")
    }
@@ -53,10 +64,6 @@ const ActDeclaration = () => {
    const [dropdownOpen, setOpen] = useState(false)
    const [isError, setIsError] = useState(false)
    const [isSuccess, setIsSuccess] = useState(false)
-
-   // const [dataReport, setDataReport] = useState({})
-   // const [typePersonExaminee, setActTypeSelected] = useState(false)
-   // const [choices, setChoices] = useState({})
 
    const initialState = {
       pvNum: "",
@@ -70,6 +77,7 @@ const ActDeclaration = () => {
       violenceType: "",
       periodOfDay: "",
       bloodExaminationsNb: 0,
+      radioExaminationsNb: 0,
    }
 
    const [state, dispatch] = useReducer(reducer, initialState)
@@ -506,13 +514,14 @@ const ActDeclaration = () => {
                   <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
                   <Row>
                      <Col sm={4}>
-                        <Counter>Sanguins</Counter>
+                        <Counter dispatch={dispatch} state={state} type={"bloodExaminationsNb"}>
+                           Sanguins
+                        </Counter>
                      </Col>
                      <Col sm={4}>
-                        <Counter>Radios</Counter>
-                     </Col>
-                     <Col sm={4}>
-                        <Counter>IRM</Counter>
+                        <Counter dispatch={dispatch} state={state} type={"radioExaminationsNb"}>
+                           Radios
+                        </Counter>
                      </Col>
                   </Row>
 
