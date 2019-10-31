@@ -106,6 +106,7 @@ const ActDeclaration = () => {
          case "asker":
             return { ...state, asker: action.payload }
          case "examinedPersonType":
+            setErrors({})
             if (preValidate(state)) {
                ref.current.scrollIntoView({
                   behavior: "smooth",
@@ -147,7 +148,16 @@ const ActDeclaration = () => {
    const [state, dispatch] = useReducer(reducer, initialState)
 
    const validAct = async () => {
-      setErrors(deleteProperty(errors, "general"))
+      setErrors({})
+
+      if (!preValidate(state)) {
+         return
+      }
+
+      if (!state.periodOfDay) {
+         setErrors(errors => ({ ...errors, periodOfDay: "Obligatoire" }))
+         return
+      }
 
       const data = {
          num_pv: state.pvNum,
@@ -187,7 +197,7 @@ const ActDeclaration = () => {
          }
       } catch (error) {
          console.error(error)
-         setErrors({ ...errors, general: json && json.message ? json.message : "Erreur backoffice" })
+         setErrors(errors => ({ ...errors, general: json && json.message ? json.message : "Erreur backoffice" }))
       }
    }
 
@@ -272,6 +282,7 @@ const ActDeclaration = () => {
                      values={periodOfDayValues[dayInWeek].period}
                      dispatch={dispatch}
                      state={state}
+                     invalid={errors && errors.periodOfDay}
                   />
 
                   <ActBlock

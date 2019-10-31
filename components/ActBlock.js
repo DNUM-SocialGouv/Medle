@@ -18,15 +18,20 @@ const makeColOptions = values => {
    }
    return {}
 }
-const ActBlock = ({ title, subTitle, type, values, dispatch, state }) => {
+const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) => {
    const [dropdownOpen, setOpen] = useState(false)
    const toggle = () => setOpen(!dropdownOpen)
 
    const colOptions = makeColOptions(values)
+   const colorOptions = invalid ? { color: "red" } : {}
 
    return (
       <>
-         {title && <Title2 className="mb-4 mt-5">{title}</Title2>}
+         {title && (
+            <Title2 className="mb-4 mt-5" style={colorOptions}>
+               {title}
+            </Title2>
+         )}
 
          {subTitle && (
             <Row className="mt-3">
@@ -107,6 +112,7 @@ ActBlock.propTypes = {
    values: PropTypes.array.isRequired,
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
+   invalid: PropTypes.bool,
 }
 
 export default ActBlock
