@@ -50,7 +50,15 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state }) => {
                            color="secondary"
                            block
                            invert={state[type] === val.title ? 1 : 0}
-                           onClick={() => dispatch({ type, payload: val.title })}
+                           onClick={() =>
+                              dispatch({
+                                 type,
+                                 payload: {
+                                    periodOfDay: val.title,
+                                    doctorWorkStatusValues: val.doctorWorkStatusValues,
+                                 },
+                              })
+                           }
                         >
                            {val.title}
                            <br />
@@ -60,11 +68,12 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state }) => {
                   )
                } else
                   return (
-                     <Col key={index} {...nbColumns} className="mb-4">
+                     <Col key={index} {...nbColumns} className="mb-4 text-center">
                         <Button
                            outline
                            color="secondary"
-                           block
+                           block={values.length && values.length > 1}
+                           size={values.length && values.length === 1 ? "lg" : ""}
                            invert={state[type] === val ? 1 : 0}
                            onClick={() => dispatch({ type, payload: val })}
                         >

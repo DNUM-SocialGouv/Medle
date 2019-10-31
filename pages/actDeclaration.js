@@ -14,7 +14,7 @@ import {
    examinedPersonGenderValues,
    examinedPersonAgeValues,
    periodOfDayValues,
-   doctorWorkFormatValues,
+   doctorWorkStatusValues,
    getSituationDate,
 } from "../utils/actsConstants"
 
@@ -29,7 +29,8 @@ const initialState = {
    examinationType: "",
    violenceType: "",
    periodOfDay: "",
-   doctorWorkFormat: "",
+   doctorWorkStatusValues,
+   doctorWorkStatus: "",
    bloodExaminationsNb: 0,
    radioExaminationsNb: 0,
    boneExaminationNb: 0,
@@ -47,7 +48,8 @@ const reset = state => ({
    examinationType: "",
    violenceType: "",
    periodOfDay: "",
-   doctorWorkFormat: "",
+   doctorWorkStatusValues,
+   doctorWorkStatus: "",
    bloodExaminationsNb: 0,
    radioExaminationsNb: 0,
    boneExaminationNb: 0,
@@ -62,7 +64,7 @@ const reducer = (state, action) => {
       case "examinationDate":
          dayInWeek = getSituationDate(action.payload)
          state.periodOfDay = ""
-         state.doctorWorkFormat = ""
+         state.doctorWorkStatus = ""
          return { ...state, examinationDate: action.payload }
       case "asker":
          return { ...state, asker: action.payload }
@@ -78,9 +80,15 @@ const reducer = (state, action) => {
       case "violenceType":
          return { ...state, violenceType: action.payload }
       case "periodOfDay":
-         return { ...state, periodOfDay: action.payload }
-      case "doctorWorkFormat":
-         return { ...state, doctorWorkFormat: action.payload }
+         return {
+            ...state,
+            doctorWorkStatus:
+               action.payload.doctorWorkStatusValues.length === 1 ? action.payload.doctorWorkStatusValues[0] : "",
+            doctorWorkStatusValues: action.payload.doctorWorkStatusValues,
+            periodOfDay: action.payload.periodOfDay,
+         }
+      case "doctorWorkStatus":
+         return { ...state, doctorWorkStatus: action.payload }
       case "examinedPersonGender":
          return { ...state, examinedPersonGender: action.payload }
       case "examinedPersonAge":
@@ -112,7 +120,7 @@ const ActDeclaration = () => {
          date_examen: state.examinationDate,
          demandeur: state.asker,
          periode_journee: state.periodOfDay,
-         doctor_work_format: state.doctorWorkFormat ? state.doctorWorkFormat : "Médecin de garde",
+         doctor_work_format: state.doctorWorkStatus,
          type_personne_examinee: state.typePersonExaminee,
          age_personne_examinee: state.profilAge,
          genre_personne_examinee: state.profilGenre,
@@ -234,8 +242,8 @@ const ActDeclaration = () => {
 
                   <ActBlock
                      title={`Statut du médecin`}
-                     type="doctorWorkFormat"
-                     values={doctorWorkFormatValues}
+                     type="doctorWorkStatus"
+                     values={state.doctorWorkStatusValues}
                      dispatch={dispatch}
                      state={state}
                   />

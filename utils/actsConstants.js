@@ -42,6 +42,9 @@ const examinedPersonGenderValues = ["Féminin", "Masculin", "Autre"]
 
 const examinedPersonAgeValues = ["0-3 ans", "3-18 ans", "Adulte majeur"]
 
+const doctorWorkStatusValues = ["Garde", "Astreinte", "Demie garde"]
+const doctorWorkStatusDefault = ["Classique"]
+
 const periodOfDayValues = {
    week: {
       title: "lun.-ven.",
@@ -49,18 +52,22 @@ const periodOfDayValues = {
          {
             title: "Nuit profonde",
             subTitle: "(00h-8h30)",
+            doctorWorkStatusValues,
          },
          {
             title: "Journée",
             subTitle: "(8h30-18h30)",
+            doctorWorkStatusValues: doctorWorkStatusDefault,
          },
          {
             title: "Soirée",
             subTitle: "(18h30-22h)",
+            doctorWorkStatusValues: doctorWorkStatusDefault,
          },
          {
             title: "Nuit",
             subTitle: "(22h-00h)",
+            doctorWorkStatusValues,
          },
       ],
       dutyDoctorOnly: true,
@@ -71,18 +78,22 @@ const periodOfDayValues = {
          {
             title: "Nuit profonde",
             subTitle: "(00h-8h30)",
+            doctorWorkStatusValues,
          },
          {
             title: "Matin",
             subTitle: "(8h30-12h30)",
+            doctorWorkStatusValues: doctorWorkStatusDefault,
          },
          {
             title: "Après-midi",
             subTitle: "(12h30-18h)",
+            doctorWorkStatusValues,
          },
          {
             title: "Soirée et nuit",
             subTitle: "(18h-00h)",
+            doctorWorkStatusValues,
          },
       ],
 
@@ -94,18 +105,22 @@ const periodOfDayValues = {
          {
             title: "Nuit profonde",
             subTitle: "(00h-8h30)",
+            doctorWorkStatusValues,
          },
          {
             title: "Journée",
             subTitle: "(08h30-18h30)",
+            doctorWorkStatusValues,
          },
          {
             title: "Soirée",
             subTitle: "(18h30-22h)",
+            doctorWorkStatusValues,
          },
          {
             title: "Nuit",
             subTitle: "(22h-00h)",
+            doctorWorkStatusValues,
          },
       ],
 
@@ -130,8 +145,6 @@ const getSituationDate = dateStr => {
          return "week"
    }
 }
-const doctorWorkFormatValues = ["Garde", "Astreinte", "Demie garde", "Demie astreinte"]
-const doctorWorkFormatDefaultValues = ["Classique"]
 
 export {
    examinedPersonTypeValues,
@@ -140,7 +153,7 @@ export {
    examinedPersonGenderValues,
    examinedPersonAgeValues,
    periodOfDayValues,
-   doctorWorkFormatValues,
+   doctorWorkStatusValues,
    getSituationDate,
-   doctorWorkFormatDefaultValues,
+   doctorWorkStatusDefault,
 }
