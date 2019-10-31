@@ -161,14 +161,12 @@ const ActDeclaration = () => {
          genre_personne_examinee: state.profilGenre,
          type_examen: state.typeExamen,
          type_violence: state.typeViolence,
-         duree: 0, // TODO ajuster la durée ? À demander à Sania
-         etablissement_sante_id: 1, // TODO : à récupérer du user courant
       }
 
       let response, json
 
       try {
-         response = await fetch(ACT_DECLARATION_ENDPOINT + "iuoiu", {
+         response = await fetch(ACT_DECLARATION_ENDPOINT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
