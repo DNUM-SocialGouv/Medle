@@ -58,16 +58,13 @@ const Login = ({ authentication, error }) => {
                            <a>Mot de passe oublié&nbsp;?</a>
                         </Link>
                      </div>
-                     <InputGroup>
-                        <Input
-                           type="password"
-                           name="password"
-                           id="password"
-                           placeholder="Mot de passe"
-                           onChange={onChangePassword}
-                        />
-                        <InputGroupAddon addonType="append">...</InputGroupAddon>
-                     </InputGroup>
+                     <Input
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="Mot de passe"
+                        onChange={onChangePassword}
+                     />
                   </FormGroup>
                   <Button block>{isLoading ? <Spinner color="light" data-testid="loading" /> : "Se connecter"}</Button>
                   <Alert color="danger" isOpen={!!error} className="mt-3 mb-0" fade={false}>

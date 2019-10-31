@@ -2,8 +2,9 @@ import moment from "moment"
 import { FRENCH_PUBLIC_HOLIDAY_ENDPOINT } from "../config"
 
 const initFetchFrenchPublicHoliday = async () => {
+   const currentYear = moment().year()
    try {
-      const res = await fetch(FRENCH_PUBLIC_HOLIDAY_ENDPOINT)
+      const res = await fetch(FRENCH_PUBLIC_HOLIDAY_ENDPOINT + currentYear)
       const json = await res.json()
       console.log("Jours fériés chargés")
       frenchPublicHoliday = json.map(elt => elt.date)
@@ -34,7 +35,7 @@ const violenceTypeValues = [
    "Familiale",
    "Sur ascendant",
    "Agression sexuelle",
-   { title: "Attentat", subValues: ["toto", "titi"] },
+   { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] },
 ]
 
 const examinedPersonGenderValues = ["Féminin", "Masculin", "Autre"]
@@ -43,7 +44,7 @@ const examinedPersonAgeValues = ["0-3 ans", "3-18 ans", "Adulte majeur"]
 
 const periodOfDayValues = {
    week: {
-      title: "lun-ven",
+      title: "lun.-ven.",
       period: [
          {
             title: "Nuit profonde",
@@ -65,7 +66,7 @@ const periodOfDayValues = {
       dutyDoctorOnly: true,
    },
    saturday: {
-      title: "sam",
+      title: "sam.",
       period: [
          {
             title: "Nuit profonde",
@@ -80,19 +81,15 @@ const periodOfDayValues = {
             subTitle: "(12h30-18h)",
          },
          {
-            title: "Soirée",
-            subTitle: "(18h-22h)",
-         },
-         {
-            title: "Nuit",
-            subTitle: "(22h-00h)",
+            title: "Soirée et nuit",
+            subTitle: "(18h-00h)",
          },
       ],
 
       dutyDoctorOnly: false,
    },
    sunday: {
-      title: "dim",
+      title: "dim. et férié",
       period: [
          {
             title: "Nuit profonde",
@@ -114,32 +111,13 @@ const periodOfDayValues = {
 
       dutyDoctorOnly: false,
    },
-   publicHoliday: {
-      title: "férié",
-      period: [
-         {
-            title: "Journée",
-            subTitle: "(08h30-18h)",
-         },
-         {
-            title: "Soirée",
-            subTitle: "(18h-22h)",
-         },
-         {
-            title: "Nuit profonde",
-            subTitle: "(22h-08h)",
-         },
-      ],
-
-      dutyDoctorOnly: false,
-   },
 }
 
 const getSituationDate = dateStr => {
    if (!frenchPublicHoliday) {
       console.warn("Les jours fériés n'ont pas été rapatriés")
    } else if (frenchPublicHoliday.includes(dateStr)) {
-      return "publicHoliday"
+      return "sunday"
    }
 
    const dayInt = moment(dateStr).day()
@@ -152,7 +130,8 @@ const getSituationDate = dateStr => {
          return "week"
    }
 }
-const doctorWorkFormatValues = ["Médecin de garde", "Médecin d'astreinte", "Demie garde", "Demie astreinte"]
+const doctorWorkFormatValues = ["Garde", "Astreinte", "Demie garde", "Demie astreinte"]
+const doctorWorkFormatDefaultValues = ["Classique"]
 
 export {
    examinedPersonTypeValues,
@@ -163,4 +142,5 @@ export {
    periodOfDayValues,
    doctorWorkFormatValues,
    getSituationDate,
+   doctorWorkFormatDefaultValues,
 }

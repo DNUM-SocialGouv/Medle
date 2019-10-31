@@ -32,11 +32,12 @@ const initialState = {
    doctorWorkFormat: "",
    bloodExaminationsNb: 0,
    radioExaminationsNb: 0,
+   boneExaminationNb: 0,
 }
 
 const ref = React.createRef()
 
-let dayInWeekOrPublicHoliday = "saturday"
+let dayInWeek = "week"
 
 const reset = state => ({
    ...state,
@@ -49,6 +50,7 @@ const reset = state => ({
    doctorWorkFormat: "",
    bloodExaminationsNb: 0,
    radioExaminationsNb: 0,
+   boneExaminationNb: 0,
 })
 
 const reducer = (state, action) => {
@@ -58,9 +60,9 @@ const reducer = (state, action) => {
       case "pvNum":
          return { ...state, pvNum: action.payload }
       case "examinationDate":
-         dayInWeekOrPublicHoliday = getSituationDate(action.payload)
-         // state.periodOfDay = ""
-         // state.doctorWorkFormat = ""
+         dayInWeek = getSituationDate(action.payload)
+         state.periodOfDay = ""
+         state.doctorWorkFormat = ""
          return { ...state, examinationDate: action.payload }
       case "asker":
          return { ...state, asker: action.payload }
@@ -87,6 +89,8 @@ const reducer = (state, action) => {
          return { ...state, bloodExaminationsNb: action.payload }
       case "radioExaminationsNb":
          return { ...state, radioExaminationsNb: action.payload }
+      case "boneExaminationNb":
+         return { ...state, boneExaminationNb: action.payload }
       default:
          throw new Error("Action.type inconnu")
    }
@@ -221,21 +225,20 @@ const ActDeclaration = () => {
                   />
 
                   <ActBlock
-                     title={`Heure de l'examen (${periodOfDayValues[dayInWeekOrPublicHoliday].title})`}
+                     title={`Heure de l'examen`}
                      type="periodOfDay"
-                     values={periodOfDayValues[dayInWeekOrPublicHoliday].period}
+                     values={periodOfDayValues[dayInWeek].period}
                      dispatch={dispatch}
                      state={state}
                   />
 
-                  {dayInWeekOrPublicHoliday !== "week" && (
-                     <ActBlock
-                        type="doctorWorkFormat"
-                        values={doctorWorkFormatValues}
-                        dispatch={dispatch}
-                        state={state}
-                     />
-                  )}
+                  <ActBlock
+                     title={`Statut du médecin`}
+                     type="doctorWorkFormat"
+                     values={doctorWorkFormatValues}
+                     dispatch={dispatch}
+                     state={state}
+                  />
 
                   <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
 
@@ -248,6 +251,11 @@ const ActDeclaration = () => {
                      <Col sm={4}>
                         <Counter dispatch={dispatch} state={state} type={"radioExaminationsNb"}>
                            Radios
+                        </Counter>
+                     </Col>
+                     <Col sm={4}>
+                        <Counter dispatch={dispatch} state={state} type={"boneExaminationNb"}>
+                           Osseux
                         </Counter>
                      </Col>
                   </Row>
