@@ -4,11 +4,25 @@ import { ButtonDropdown, Col, DropdownItem, DropdownMenu, Row } from "reactstrap
 
 import { Button, DropdownToggle, Title2 } from "./StyledComponents"
 
+const makeColOptions = values => {
+   if (values.length) {
+      if (values.length === 1) {
+         return {
+            sm: 3,
+         }
+      } else if (values.length >= 4) {
+         return {
+            sm: 3,
+         }
+      }
+   }
+   return {}
+}
 const ActBlock = ({ title, subTitle, type, values, dispatch, state }) => {
    const [dropdownOpen, setOpen] = useState(false)
    const toggle = () => setOpen(!dropdownOpen)
 
-   const nbColumns = values.length && values.length >= 4 ? { sm: 3 } : {}
+   const colOptions = makeColOptions(values)
 
    return (
       <>
@@ -27,7 +41,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state }) => {
                if (val.subValues) {
                   const isClicked = state[type] && val.subValues.includes(state[type])
                   return (
-                     <Col key={index} {...nbColumns} className="mb-4">
+                     <Col key={index} {...colOptions} className="mb-4">
                         <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
                            <DropdownToggle outline color="secondary" invert={isClicked} caret>
                               {isClicked ? state[type] : val.title}
@@ -44,7 +58,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state }) => {
                   )
                } else if (val.subTitle) {
                   return (
-                     <Col key={index} {...nbColumns} className="mb-4">
+                     <Col key={index} {...colOptions} className="mb-4">
                         <Button
                            outline
                            color="secondary"
@@ -68,12 +82,11 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state }) => {
                   )
                } else
                   return (
-                     <Col key={index} {...nbColumns} className="mb-4 text-center">
+                     <Col key={index} {...colOptions} className="mb-4 mx-auto">
                         <Button
                            outline
                            color="secondary"
-                           block={values.length && values.length > 1}
-                           size={values.length && values.length === 1 ? "lg" : ""}
+                           block
                            invert={state[type] === val ? 1 : 0}
                            onClick={() => dispatch({ type, payload: val })}
                         >
