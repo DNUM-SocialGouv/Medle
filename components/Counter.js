@@ -12,13 +12,26 @@ const Counter = ({ children, dispatch, state, type }) => {
       dispatch({ type, payload: res })
    }
 
+   const keyPress = (event, fn) => event.key === "Enter" && fn(event)
+
    return (
       <>
          <div className="text-center title">{children}</div>
          <div className="mt-3 text-center content">
-            <RemoveCircleOutline onClick={substract} className="mr-3" />
+            <RemoveCircleOutline
+               onClick={substract}
+               className="mr-3"
+               tabIndex="0"
+               onKeyPress={e => keyPress(e, substract)}
+            />
             {state[type]}
-            <AddCircleOutline onClick={add} className="ml-3" />
+            <AddCircleOutline
+               onClick={add}
+               className="ml-3"
+               tabIndex="0"
+               onSelect={() => console.log("selected!")}
+               onKeyPress={e => keyPress(e, add)}
+            />
          </div>
          <style jsx>{`
             .title {
