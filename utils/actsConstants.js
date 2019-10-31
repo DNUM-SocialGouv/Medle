@@ -4,6 +4,7 @@ import { FRENCH_PUBLIC_HOLIDAY_ENDPOINT } from "../config"
 const initFetchFrenchPublicHoliday = async () => {
    const currentYear = moment().year()
    try {
+      // TODO : cache data for some duration and refresh after time elapsed
       const res = await fetch(FRENCH_PUBLIC_HOLIDAY_ENDPOINT + currentYear)
       const json = await res.json()
       console.log("Jours fériés chargés")
