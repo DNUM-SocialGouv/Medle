@@ -2,13 +2,14 @@ import knex from "../../lib/knex/knexfile"
 import { STATUS_200_OK } from "../../utils/HttpStatus"
 
 export default async (req, res) => {
-   let users
+   let columns
 
    try {
-      users = await knex("users").debug()
+      // users = await knex("users").debug()
+      columns = await knex.table("users").columnInfo()
    } catch (error) {
       console.error("Erreur de requête")
    }
 
-   res.status(STATUS_200_OK).json({ users })
+   res.status(STATUS_200_OK).json({ columns })
 }
