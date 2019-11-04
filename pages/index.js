@@ -36,8 +36,8 @@ const LoginPage = () => {
                      resolve("OK")
                   } else {
                      throw {
-                        response,
-                        json,
+                        status: response.status,
+                        error: json.error,
                      }
                   }
                } catch (error) {

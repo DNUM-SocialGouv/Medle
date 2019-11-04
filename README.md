@@ -38,3 +38,11 @@ as a reference see https://github.com/conventional-changelog/commitlint/tree/mas
 Add in commit message "Closes #123" where 123 is the issues's id to close.
 
 For example, This closes #34, closes #23, and closes example_user/example_repo#42 would close issues #34 and #23 in the same repository, and issue #42 in the "example_user/example_repo" repository.
+
+
+## Docker build
+
+```shell
+docker build  --build-arg SENTRY_DSN="https://[hash]@url.sentry.com/42" --build-arg SENTRY_TOKEN="1234" --build-arg MATOMO_URL="https://url.matomo.com" --build-arg MATOMO_SITE_ID=42 --build-arg POSTGRES_HOST="127.0.0.1" . -t medle
+  ```
+

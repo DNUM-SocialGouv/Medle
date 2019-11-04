@@ -1,5 +1,6 @@
 import moment from "moment"
 import { FRENCH_PUBLIC_HOLIDAY_ENDPOINT } from "../config"
+import fetch from "isomorphic-unfetch"
 
 const initFetchFrenchPublicHoliday = async () => {
    const currentYear = moment().year()

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { withAuthSync } from "../utils/auth"
 import { ACT_LIST_ENDPOINT } from "../config"
+import fetch from "isomorphic-unfetch"
 import Layout from "../components/Layout"
 import Banner from "../components/Banner"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, Table } from "reactstrap"

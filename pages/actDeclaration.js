@@ -1,5 +1,6 @@
 import React, { useReducer, useState } from "react"
 import Router from "next/router"
+import fetch from "isomorphic-unfetch"
 import { Alert, Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
 import { ACT_DECLARATION_ENDPOINT } from "../config"

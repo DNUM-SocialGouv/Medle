@@ -3,16 +3,16 @@ import Router from "next/router"
 import nextCookie from "next-cookies"
 import cookie from "js-cookie"
 
-export const login = ({ token }) => {
+export const login = async ({ token }) => {
    cookie.set("token", token, { expires: 1 })
-   Router.push("/home")
+   await Router.push("/home")
 }
 
-export const logout = () => {
+export const logout = async () => {
    cookie.remove("token")
    // to support logging out from all windows
    window.localStorage.setItem("logout", Date.now())
-   Router.push("/index")
+   await Router.push("/index")
 }
 
 export const auth = ctx => {

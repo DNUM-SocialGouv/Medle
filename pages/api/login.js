@@ -25,7 +25,12 @@ export default async (req, res) => {
          .andWhere("password", password)
          .first()
    } catch (error) {
-      return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({ message: "Erreur serveur base de données" })
+      return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({
+         error: {
+            message: "Erreur serveur base de données",
+            detail: error,
+         },
+      })
    }
 
    if (user) {

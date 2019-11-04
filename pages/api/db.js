@@ -1,5 +1,5 @@
 import knex from "../../lib/knex/knexfile"
-import { STATUS_200_OK } from "../../../utils/HttpStatus"
+import { STATUS_200_OK } from "../../utils/HttpStatus"
 
 export default async (req, res) => {
    let users
