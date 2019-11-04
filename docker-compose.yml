@@ -1,0 +1,37 @@
+version: "3"
+services:
+   db:
+      restart: always
+      image: postgres:10.7
+      healthcheck:
+         test: ["CMD-SHELL", "pg_isready -U postgres"]
+         interval: 5s
+         timeout: 5s
+         retries: 10
+      environment:
+         # master password
+         - POSTGRES_USER=${POSTGRES_USER:-user}
+         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+         # API dedicated password
+         - POSTGRES_MEDLE_USER=medle
+         - POSTGRES_MEDLE_PASSWORD=test
+      ports:
+         - 5434:5432
+      volumes:
+         - medle-pgdata:/var/lib/postgresql/data
+   app:
+      restart: always
+      build:
+         context: .
+         # build-time variables
+         args:
+            - SENTRY_DSN=https://75f34cada95a4c189d69bc05e8aa324f@sentry.tools.factory.social.gouv.fr/29
+            - SENTRY_TOKEN:1234
+            - MATOMO_URL=https://matomo.tools.factory.social.gouv.fr
+            - MATOMO_SITE_ID=16
+            - POSTGRES_HOST=db
+      ports:
+         - 80:3000
+
+volumes:
+   medle-pgdata:
