@@ -25,9 +25,8 @@ const Login = ({ authentication, error }) => {
       setIsLoading(true)
       try {
          await authentication(userData)
-      } catch (error) {
-         console.error(error)
-      }
+         // eslint-disable-next-line no-empty
+      } catch (ignore) {}
       setIsLoading(false)
    }
 

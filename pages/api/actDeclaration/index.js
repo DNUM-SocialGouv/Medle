@@ -3,7 +3,7 @@ import {
    STATUS_405_METHOD_NOT_ALLOWED,
    STATUS_500_INTERNAL_SERVER_ERROR,
 } from "../../../utils/HttpStatus"
-import knex from "../../../lib/knex/knexfile"
+import knex from "../../../lib/knex/knex"
 
 export default async (req, res) => {
    res.setHeader("Content-Type", "application/json")

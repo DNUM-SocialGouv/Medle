@@ -1,4 +1,4 @@
-import knex from "../../lib/knex/knexfile"
+import knex from "../../lib/knex/knex"
 import {
    STATUS_200_OK,
    STATUS_400_BAD_REQUEST,

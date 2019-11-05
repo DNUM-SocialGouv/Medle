@@ -37,13 +37,15 @@ const LoginPage = () => {
                   } else {
                      throw {
                         status: response.status,
-                        error: json.error,
+                        message: json.error && json.error.message ? json.error.message : "Erreur serveur",
+                        detail: json.error.detail,
                      }
                   }
                } catch (error) {
-                  const message = error && error.json ? error.json.message : "Erreur serveur"
-                  setError(message)
-                  reject(message)
+                  console.error(error.message)
+                  if (error.detail) console.error("Details", error.detail)
+                  setError(error.message)
+                  reject(error.message)
                }
             }
          }, 1000)

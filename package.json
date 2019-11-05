@@ -3,11 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "migrate:make": "NODE_ENV=development yarn knex migrate:make name_migration",
+    "migrate:latest": "yarn knex migrate:latest",
+    "migrate:rollback": "yarn knex migrate:rollback",
+    "migrate:list": "yarn knex migrate:list",
+    "seed:make": "NODE_ENV=development yarn knex seed:make name_seed"
   },
   "dependencies": {
     "@material-ui/core": "^4.5.0",

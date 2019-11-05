@@ -1,4 +1,4 @@
-import knex from "../../../lib/knex/knexfile"
+import knex from "../../../lib/knex/knex"
 import { STATUS_200_OK, STATUS_404_NOT_FOUND, STATUS_500_INTERNAL_SERVER_ERROR } from "../../../utils/HttpStatus"
 
 export default async (req, res) => {
