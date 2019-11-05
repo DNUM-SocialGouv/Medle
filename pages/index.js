@@ -36,14 +36,14 @@ const LoginPage = () => {
                      resolve("OK")
                   } else {
                      throw {
-                        status: response.status,
+                        httpStatus: response.status,
                         message: json.error && json.error.message ? json.error.message : "Erreur serveur",
                         detail: json.error.detail,
                      }
                   }
                } catch (error) {
-                  console.error(error.message)
-                  if (error.detail) console.error("Details", error.detail)
+                  //console.error(error.message)
+                  console.error(error.message ? error.message : "Erreur", error)
                   setError(error.message)
                   reject(error.message)
                }

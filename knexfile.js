@@ -1,5 +1,8 @@
 require("dotenv").config()
 
+console.log("process.env.NODE_ENV", process.env.NODE_ENV)
+console.log("Database URL", process.env.DATABASE_URL)
+
 const { join } = require("path")
 
 const knexConfig = {
