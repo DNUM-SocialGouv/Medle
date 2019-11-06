@@ -7,7 +7,7 @@ const Login = ({ authentication, error }) => {
    const [isLoading, setIsLoading] = useState(false)
 
    const [userData, setUserData] = useState({
-      email: "michel.martin@caramail.fr",
+      email: "",
       password: "",
    })
 
@@ -44,7 +44,7 @@ const Login = ({ authentication, error }) => {
                            type="email"
                            name="email"
                            id="email"
-                           placeholder="michel.martin@caramail.fr"
+                           placeholder="spike.spiegel@cowboy.fr"
                            value={userData.email}
                            onChange={onChange}
                         />

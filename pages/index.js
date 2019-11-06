@@ -18,7 +18,12 @@ const LoginPage = () => {
             const valid = isValidUserData(userData)
 
             if (!valid) {
-               setError("Problème d'authentification")
+               const error = {
+                  message: "Problème d'authentification",
+                  detail: "Contrôle de forme KO",
+               }
+               console.error(error)
+               setError(error.message)
                reject(error)
             } else {
                const { email, password } = userData
@@ -42,7 +47,6 @@ const LoginPage = () => {
                      }
                   }
                } catch (error) {
-                  //console.error(error.message)
                   console.error(error.message ? error.message : "Erreur", error)
                   setError(error.message)
                   reject(error.message)

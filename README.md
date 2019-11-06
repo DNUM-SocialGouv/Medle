@@ -43,6 +43,30 @@ For example, This closes #34, closes #23, and closes example_user/example_repo#4
 ## Docker build
 
 ```shell
-docker build  --build-arg SENTRY_DSN="https://[hash]@url.sentry.com/42" --build-arg SENTRY_TOKEN="1234" --build-arg MATOMO_URL="https://url.matomo.com" --build-arg MATOMO_SITE_ID=42 --build-arg POSTGRES_HOST="127.0.0.1" . -t medle
-  ```
+docker build --build-arg SENTRY_DSN="https://[hash]@url.sentry.com/42" --build-arg SENTRY_TOKEN="1234" --build-arg MATOMO_URL="https://url.matomo.com" --build-arg MATOMO_SITE_ID=42 --build-arg POSTGRES_HOST="192.168.1.18" . -t medle
+```
 
+## Docker run
+
+```shell
+docker run -it --init --rm -p 3001:3000 medle
+```
+
+## Create knex migration file
+
+```shell
+NODE_ENV=development yarn knex migrate:make init_schema --cwd ./lib/knex
+```
+
+## Run migrations
+
+```
+git pull
+sudo docker-compose up --build -d
+sudo docker-compose exec app yarn migrate:latest
+```
+
+## Run seeds
+
+
+sudo docker-compose exec app yarn seed:run

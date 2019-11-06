@@ -34,8 +34,12 @@ export default async (req, res) => {
    }
 
    if (user) {
-      return res.status(STATUS_200_OK).json({ token: "1234", role: user.role })
+      return res.status(STATUS_200_OK).json({ token: "1234", profile: user.profile })
    } else {
-      return res.status(STATUS_401_UNAUTHORIZED).json({ message: "Erreur d'authenfication" })
+      return res.status(STATUS_401_UNAUTHORIZED).json({
+         error: {
+            message: "Erreur d'authentification",
+         },
+      })
    }
 }
