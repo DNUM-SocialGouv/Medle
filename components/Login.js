@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import PropTypes from "prop-types"
 import Link from "next/link"
 import { Alert, Label, Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, Spinner } from "reactstrap"
@@ -6,25 +6,31 @@ import { Alert, Label, Button, Form, FormGroup, Input, InputGroup, InputGroupAdd
 const Login = ({ authentication, error }) => {
    const [isLoading, setIsLoading] = useState(false)
 
-   const [userData, setUserData] = useState({
-      email: "",
-      password: "",
-   })
+   // const [userData, setUserData] = useState({
+   //    email: "",
+   //    password: "",
+   // })
 
-   const onChange = e => {
-      setUserData({ ...userData, email: e.target.value })
-   }
+   const emailRef = useRef(null)
+   const passwordRef = useRef(null)
 
-   const onChangePassword = e => {
-      setUserData({ ...userData, password: e.target.value })
-   }
+   // const onChange = e => {
+   //    setUserData({ ...userData, email: e.target.value })
+   // }
+
+   // const onChangePassword = e => {
+   //    setUserData({ ...userData, password: e.target.value })
+   // }
 
    const onSubmit = async e => {
       e.preventDefault()
+      console.log("email", emailRef.current.value)
+      console.log("password", passwordRef.current.value)
 
       setIsLoading(true)
       try {
-         await authentication(userData)
+         // await authentication(userData)
+         await authentication({ email: emailRef.current.value, password: passwordRef.current.value })
          // eslint-disable-next-line no-empty
       } catch (ignore) {}
       setIsLoading(false)
@@ -40,13 +46,15 @@ const Login = ({ authentication, error }) => {
                      <Label for="email">Adresse courriel</Label>
                      <InputGroup>
                         <InputGroupAddon addonType="prepend">@</InputGroupAddon>
-                        <Input
+                        <input
                            type="email"
                            name="email"
                            id="email"
                            placeholder="spike.spiegel@cowboy.fr"
-                           value={userData.email}
-                           onChange={onChange}
+                           // value={userData.email}
+                           // onChange={onChange}
+                           ref={emailRef}
+                           className={"form-control"}
                         />
                      </InputGroup>
                   </FormGroup>
@@ -57,12 +65,14 @@ const Login = ({ authentication, error }) => {
                            <a>Mot de passe oublié&nbsp;?</a>
                         </Link>
                      </div>
-                     <Input
+                     <input
                         type="password"
                         name="password"
                         id="password"
                         placeholder="Mot de passe"
-                        onChange={onChangePassword}
+                        ref={passwordRef}
+                        className={"form-control"}
+                        // onChange={onChangePassword}
                      />
                   </FormGroup>
                   <Button block>{isLoading ? <Spinner color="light" data-testid="loading" /> : "Se connecter"}</Button>
