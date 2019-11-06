@@ -127,7 +127,10 @@ const ActDeclaration = () => {
             return {
                ...state,
                doctorWorkStatus:
-                  action.payload.doctorWorkStatusValues.length === 1 ? action.payload.doctorWorkStatusValues[0] : "",
+                  action.payload.doctorWorkStatusValues.length &&
+                  action.payload.doctorWorkStatusValues.includes(state.doctorWorkStatus)
+                     ? state.doctorWorkStatus
+                     : "",
                periodOfDay: action.payload.periodOfDay,
             }
          case "doctorWorkStatus":
