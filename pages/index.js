@@ -9,10 +9,12 @@ import { STATUS_200_OK } from "../utils/HttpStatus"
 const LoginPage = () => {
    const [error, setError] = useState("")
    const isValidUserData = ({ email, password }) => !!(email && password)
+   let isMounted = false
 
    const authentication = userData => {
+      isMounted = true
       return new Promise((resolve, reject) => {
-         setError("")
+         if (isMounted) setError("")
 
          setTimeout(async () => {
             const valid = isValidUserData(userData)
@@ -23,7 +25,7 @@ const LoginPage = () => {
                   detail: "Contrôle de forme KO",
                }
                console.error(error)
-               setError(error.message)
+               if (isMounted) setError(error.message)
                reject(error)
             } else {
                const { email, password } = userData
@@ -48,7 +50,7 @@ const LoginPage = () => {
                   }
                } catch (error) {
                   console.error(error.message ? error.message : "Erreur", error)
-                  setError(error.message)
+                  if (isMounted) setError(error.message)
                   reject(error.message)
                }
             }
