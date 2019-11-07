@@ -1,10 +1,11 @@
-import React, { useReducer, useState } from "react"
+import React, { useReducer, useRef, useState } from "react"
+import PropTypes from "prop-types"
 import Router from "next/router"
 import fetch from "isomorphic-unfetch"
 import { Alert, Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
 import { ACT_DECLARATION_ENDPOINT } from "../config"
-import { isEmpty } from "../utils/misc"
+import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import Counter from "../components/Counter"
 import ActBlock from "../components/ActBlock"
@@ -14,56 +15,57 @@ import {
    examinedPersonTypeValues,
    examinationTypeValues,
    violenceTypeValues,
-   examinedPersonGenderValues,
-   examinedPersonAgeValues,
+   personGenderValues,
+   personAgeTagValues,
    periodOfDayValues,
    getSituationDate,
    doctorWorkStatusValues as defaultValuesForDoctor,
 } from "../utils/actsConstants"
 
-const initialState = {
-   pvNum: "",
-   internalNum: "",
+const getIinitialState = asker => ({
+   pvNumber: "",
+   internalNumber: "",
    examinationDate: "",
-   asker: "",
+   asker: asker ? asker : "",
    examinedPersonType: "",
-   examinedPersonGender: "",
-   examinedPersonAge: "",
+   personGender: "",
+   personAgeTag: "",
    examinationType: "",
    violenceType: "",
    periodOfDay: "",
    doctorWorkStatus: "",
-   bloodExaminationsNb: 0,
-   radioExaminationsNb: 0,
-   boneExaminationNb: 0,
-}
-
-const ref = React.createRef()
+   bloodExaminationsNumber: 0,
+   xrayExaminationsNumber: 0,
+   boneExaminationNumber: 0,
+})
 
 let dayInWeek = "week"
 
 const reset = state => ({
    ...state,
    examinedPersonType: "",
-   examinedPersonGender: "",
-   examinedPersonAge: "",
+   personGender: "",
+   personAgeTag: "",
    examinationType: "",
    violenceType: "",
    periodOfDay: "",
    doctorWorkStatus: "",
-   bloodExaminationsNb: 0,
-   radioExaminationsNb: 0,
-   boneExaminationNb: 0,
+   bloodExaminationsNumber: 0,
+   xrayExaminationsNumber: 0,
+   boneExaminationNumber: 0,
 })
 
-const ActDeclaration = () => {
+const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
+
+const ActDeclaration = ({ askerValues }) => {
+   const refPersonType = useRef()
    const [errors, setErrors] = useState({})
    const [doctorWorkStatusValues, setDoctorWorkStatusValues] = useState(defaultValuesForDoctor)
 
    const preValidate = state => {
       let errors = {}
-      if (!state.internalNum) {
-         errors = { ...errors, internalNum: "Obligatoire" }
+      if (!state.internalNumber) {
+         errors = { ...errors, internalNumber: "Obligatoire" }
       }
       if (!state.examinationDate) {
          errors = { ...errors, examinationDate: "Obligatoire" }
@@ -77,6 +79,7 @@ const ActDeclaration = () => {
             }
          }
       }
+
       setErrors(precedentState => ({
          ...precedentState,
          ...errors,
@@ -85,19 +88,49 @@ const ActDeclaration = () => {
       return isEmpty(errors)
    }
 
-   const deleteProperty = (obj, property) => {
-      const res = { ...obj }
-      delete res[property]
-      return res
+   const fullValidate = state => {
+      if (!preValidate(state)) {
+         return false
+      }
+      let errors = {}
+
+      if (!state.examinedPersonType) {
+         errors = { ...errors, examinedPersonType: "Obligatoire" }
+      }
+      if (!state.personGender) {
+         errors = { ...errors, personGender: "Obligatoire" }
+      }
+      if (!state.personAgeTag) {
+         errors = { ...errors, personAgeTag: "Obligatoire" }
+      }
+      if (!state.examinationType) {
+         errors = { ...errors, examinationType: "Obligatoire" }
+      }
+      if (!state.violenceType) {
+         errors = { ...errors, violenceType: "Obligatoire" }
+      }
+      if (!state.periodOfDay) {
+         errors = { ...errors, periodOfDay: "Obligatoire" }
+      }
+      if (!state.doctorWorkStatus) {
+         errors = { ...errors, doctorWorkStatus: "Obligatoire" }
+      }
+
+      setErrors(precedentState => ({
+         ...precedentState,
+         ...errors,
+      }))
+
+      return isEmpty(errors)
    }
 
    const reducer = (state, action) => {
       switch (action.type) {
-         case "internalNum":
-            setErrors(deleteProperty(errors, "internalNum"))
-            return { ...state, internalNum: action.payload }
-         case "pvNum":
-            return { ...state, pvNum: action.payload }
+         case "internalNumber":
+            setErrors(deleteProperty(errors, "internalNumber"))
+            return { ...state, internalNumber: action.payload }
+         case "pvNumber":
+            return { ...state, pvNumber: action.payload }
          case "examinationDate":
             setErrors(deleteProperty(errors, "examinationDate"))
             dayInWeek = getSituationDate(action.payload)
@@ -109,7 +142,7 @@ const ActDeclaration = () => {
          case "examinedPersonType":
             setErrors({})
             if (preValidate(state)) {
-               ref.current.scrollIntoView({
+               refPersonType.current.scrollIntoView({
                   behavior: "smooth",
                   block: "start",
                })
@@ -135,46 +168,27 @@ const ActDeclaration = () => {
             }
          case "doctorWorkStatus":
             return { ...state, doctorWorkStatus: action.payload }
-         case "examinedPersonGender":
-            return { ...state, examinedPersonGender: action.payload }
-         case "examinedPersonAge":
-            return { ...state, examinedPersonAge: action.payload }
-         case "bloodExaminationsNb":
-            return { ...state, bloodExaminationsNb: action.payload }
-         case "radioExaminationsNb":
-            return { ...state, radioExaminationsNb: action.payload }
-         case "boneExaminationNb":
-            return { ...state, boneExaminationNb: action.payload }
+         case "personGender":
+            return { ...state, personGender: action.payload }
+         case "personAgeTag":
+            return { ...state, personAgeTag: action.payload }
+         case "bloodExaminationsNumber":
+            return { ...state, bloodExaminationsNumber: action.payload }
+         case "xrayExaminationsNumber":
+            return { ...state, xrayExaminationsNumber: action.payload }
+         case "boneExaminationNumber":
+            return { ...state, boneExaminationNumber: action.payload }
          default:
             throw new Error("Action.type inconnu")
       }
    }
-   const [state, dispatch] = useReducer(reducer, initialState)
+   const [state, dispatch] = useReducer(reducer, getIinitialState(askerValues ? askerValues[0] : ""))
 
    const validAct = async () => {
       setErrors({})
 
-      if (!preValidate(state)) {
+      if (!fullValidate(state)) {
          return
-      }
-
-      if (!state.periodOfDay) {
-         setErrors(errors => ({ ...errors, periodOfDay: "Obligatoire" }))
-         return
-      }
-
-      const data = {
-         num_pv: state.pvNum,
-         num_interne: state.internalNum,
-         date_examen: state.examinationDate,
-         demandeur: state.asker,
-         periode_journee: state.periodOfDay,
-         doctor_work_format: state.doctorWorkStatus,
-         type_personne_examinee: state.typePersonExaminee,
-         age_personne_examinee: state.profilAge,
-         genre_personne_examinee: state.profilGenre,
-         type_examen: state.typeExamen,
-         type_violence: state.typeViolence,
       }
 
       let response, json
@@ -183,7 +197,7 @@ const ActDeclaration = () => {
          response = await fetch(ACT_DECLARATION_ENDPOINT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
+            body: JSON.stringify(state),
          })
          json = await response.json()
 
@@ -191,11 +205,11 @@ const ActDeclaration = () => {
             throw new Error(json && json.message ? json.message : "")
          } else {
             console.log("Déclaration d'acte envoyée")
-            Router.push({
+            return Router.push({
                pathname: "/actConfirmation",
                query: {
-                  id: data.num_interne,
-                  num_pv: data.num_pv,
+                  internalNumber: state.internalNumber,
+                  pvNumber: state.pvNumber,
                },
             })
          }
@@ -211,22 +225,22 @@ const ActDeclaration = () => {
          <Container style={{ maxWidth: 720 }}>
             <Title2 className="mb-4">{"Données d'identification du dossier"}</Title2>
 
-            {errors && errors.general && <Alert color="danger">{errors.general}</Alert>}
+            {!isEmpty(errors) && <Alert color="danger">{errors.general || "Erreur dans le formulaire"}</Alert>}
             <Row>
                <Col className="mr-3">
-                  <Label htmlFor="internalNum">Numéro interne</Label>
+                  <Label htmlFor="internalNumber">Numéro interne</Label>
                   <Input
-                     id="internalNum"
-                     invalid={errors && errors.internalNum}
+                     id="internalNumber"
+                     invalid={errors && !!errors.internalNumber}
                      placeholder="Ex: 2019-23091"
                      onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
                   />
-                  <FormFeedback>{errors && errors.internalNum}</FormFeedback>
+                  <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
                <Col className="mr-3">
-                  <Label htmlFor="pvNum">Numéro de PV</Label>
+                  <Label htmlFor="pvNumber">Numéro de PV</Label>
                   <Input
-                     id="pvNum"
+                     id="pvNumber"
                      placeholder="Optionnel"
                      onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
                   />
@@ -235,7 +249,7 @@ const ActDeclaration = () => {
                   <Label htmlFor="examinationDate">{"Date d'examen"}</Label>
                   <Input
                      id="examinationDate"
-                     invalid={errors && errors.examinationDate}
+                     invalid={errors && !!errors.examinationDate}
                      type="date"
                      onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
                   />
@@ -249,14 +263,14 @@ const ActDeclaration = () => {
                      name="asker"
                      onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
                   >
-                     <option>TGI Marseille</option>
-                     <option>TGI Avignon</option>
-                     <option>TGI Nîmes</option>
+                     {askerValues.map((elt, index) => (
+                        <option key={index}>{elt}</option>
+                     ))}
                   </CustomInput>
                </Col>
             </Row>
 
-            <Title2 className="mb-4 mt-5" ref={ref}>
+            <Title2 className="mb-4 mt-5" ref={refPersonType}>
                Qui a été examiné?
             </Title2>
 
@@ -270,6 +284,7 @@ const ActDeclaration = () => {
                      values={examinationTypeValues}
                      dispatch={dispatch}
                      state={state}
+                     invalid={errors && !!errors.examinationType}
                   />
 
                   <ActBlock
@@ -278,6 +293,7 @@ const ActDeclaration = () => {
                      values={violenceTypeValues}
                      dispatch={dispatch}
                      state={state}
+                     invalid={errors && !!errors.violenceType}
                   />
 
                   <ActBlock
@@ -286,7 +302,7 @@ const ActDeclaration = () => {
                      values={periodOfDayValues[dayInWeek].period}
                      dispatch={dispatch}
                      state={state}
-                     invalid={errors && errors.periodOfDay}
+                     invalid={errors && !!errors.periodOfDay}
                   />
 
                   <ActBlock
@@ -295,23 +311,24 @@ const ActDeclaration = () => {
                      values={doctorWorkStatusValues}
                      dispatch={dispatch}
                      state={state}
+                     invalid={errors && !!errors.doctorWorkStatus}
                   />
 
                   <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
 
                   <Row>
                      <Col sm={4}>
-                        <Counter dispatch={dispatch} state={state} type={"bloodExaminationsNb"}>
+                        <Counter dispatch={dispatch} state={state} type={"bloodExaminationsNumber"}>
                            Sanguins
                         </Counter>
                      </Col>
                      <Col sm={4}>
-                        <Counter dispatch={dispatch} state={state} type={"radioExaminationsNb"}>
+                        <Counter dispatch={dispatch} state={state} type={"xrayExaminationsNumber"}>
                            Radios
                         </Counter>
                      </Col>
                      <Col sm={4}>
-                        <Counter dispatch={dispatch} state={state} type={"boneExaminationNb"}>
+                        <Counter dispatch={dispatch} state={state} type={"boneExaminationNumber"}>
                            Osseux
                         </Counter>
                      </Col>
@@ -321,17 +338,19 @@ const ActDeclaration = () => {
 
                   <ActBlock
                      subTitle={"Genre"}
-                     type="examinedPersonGender"
-                     values={examinedPersonGenderValues}
+                     type="personGender"
+                     values={personGenderValues}
                      dispatch={dispatch}
                      state={state}
+                     invalid={errors && !!errors.personGender}
                   />
                   <ActBlock
                      subTitle={"Âge"}
-                     type="examinedPersonAge"
-                     values={examinedPersonAgeValues}
+                     type="personAgeTag"
+                     values={personAgeTagValues}
                      dispatch={dispatch}
                      state={state}
+                     invalid={errors && !!errors.personAgeTag}
                   />
                   <div className="text-center mt-5">
                      <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
@@ -343,6 +362,14 @@ const ActDeclaration = () => {
          </Container>
       </Layout>
    )
+}
+
+ActDeclaration.propTypes = {
+   askerValues: PropTypes.array,
+}
+
+ActDeclaration.getInitialProps = async () => {
+   return { askerValues: getAskers() }
 }
 
 export default ActDeclaration

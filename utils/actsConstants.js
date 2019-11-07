@@ -40,9 +40,9 @@ const violenceTypeValues = [
    { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] },
 ]
 
-const examinedPersonGenderValues = ["Féminin", "Masculin", "Autre"]
+const personGenderValues = ["Féminin", "Masculin", "Autre"]
 
-const examinedPersonAgeValues = ["0-3 ans", "3-18 ans", "Adulte majeur"]
+const personAgeTagValues = ["0-3 ans", "3-18 ans", "Adulte majeur"]
 
 const doctorWorkStatusValues = ["Garde", "Astreinte", "Demie garde"]
 const doctorWorkStatusDefault = ["Classique"]
@@ -152,8 +152,8 @@ export {
    examinedPersonTypeValues,
    examinationTypeValues,
    violenceTypeValues,
-   examinedPersonGenderValues,
-   examinedPersonAgeValues,
+   personGenderValues,
+   personAgeTagValues,
    periodOfDayValues,
    doctorWorkStatusValues,
    getSituationDate,
