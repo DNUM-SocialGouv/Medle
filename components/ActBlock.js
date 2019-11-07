@@ -35,7 +35,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
 
          {subTitle && (
             <Row className="mt-3">
-               <Col sm={4} className="mb-1">
+               <Col sm={4} className="mb-1" style={colorOptions}>
                   {subTitle}
                </Col>
             </Row>
@@ -48,7 +48,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
                   return (
                      <Col key={index} {...colOptions} className="mb-4">
                         <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
-                           <DropdownToggle outline color="secondary" invert={isClicked} caret>
+                           <DropdownToggle outline color="secondary" invert={isClicked ? isClicked : undefined} caret>
                               {isClicked ? state[type] : val.title}
                            </DropdownToggle>
                            <DropdownMenu>
