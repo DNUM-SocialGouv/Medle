@@ -1,6 +1,14 @@
+import React from "react"
+import ActBlock from "../components/ActBlock"
+import Counter from "../components/Counter"
+import { Col, Row } from "reactstrap"
+
 import moment from "moment"
+import { Title2 } from "../components/StyledComponents"
+
 import { FRENCH_PUBLIC_HOLIDAY_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
+import { isEmpty } from "./misc"
 
 const initFetchFrenchPublicHoliday = async () => {
    const currentYear = moment().year()
@@ -20,29 +28,208 @@ let frenchPublicHoliday
 
 initFetchFrenchPublicHoliday()
 
+const blockBuilder = (type, values) => {
+   switch (type) {
+      case "examinationType":
+         return {
+            type,
+            title: "Type(s) d'examen",
+            getValues: () => values,
+            render: function render(props) {
+               return <ActBlock {...props} />
+            },
+            validate: x => !!x,
+            errorMessage: "Obligatoire",
+         }
+
+      case "counters":
+         return {
+            type,
+            render: function render({ dispatch, state }) {
+               return (
+                  <>
+                     <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
+                     <Row>
+                        <Col>
+                           <Counter dispatch={dispatch} state={state} type={"bloodExaminationsNumber"}>
+                              Sanguins
+                           </Counter>
+                        </Col>
+                        <Col>
+                           <Counter dispatch={dispatch} state={state} type={"xrayExaminationsNumber"}>
+                              Radios
+                           </Counter>
+                        </Col>
+                        <Col>
+                           <Counter dispatch={dispatch} state={state} type={"boneExaminationNumber"}>
+                              Osseux
+                           </Counter>
+                        </Col>
+                     </Row>
+                  </>
+               )
+            },
+         }
+      case "periodOfDay":
+         return {
+            type: "periodOfDay",
+            title: "Heure de l'examen",
+            getValues: ({ situationDate }) =>
+               periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle })),
+            render: function render(props) {
+               return <ActBlock {...props} />
+            },
+            validate: x => !!x,
+            errorMessage: "Obligatoire",
+         }
+      case "doctorWorkStatus":
+         return {
+            type: "doctorWorkStatus",
+            title: "Statut médecin",
+            getValues: ({ situationDate, periodOfDay }) =>
+               periodOfDay ? getDoctorWorkStatusValues({ situationDate, periodOfDay }) : doctorWorkStatusValues,
+            render: function render(props) {
+               return <ActBlock {...props} />
+            },
+            validate: x => !!x,
+            errorMessage: "Obligatoire",
+         }
+      case "personGender":
+         return {
+            type: "personGender",
+            subTitle: "Genre",
+            getValues: () => ["Féminin", "Masculin", "Autre"],
+            render: function render(props) {
+               return <ActBlock {...props} />
+            },
+            validate: x => !!x,
+            errorMessage: "Obligatoire",
+         }
+      case "personAgeTag":
+         return {
+            type: "personAgeTag",
+            subTitle: "Âge",
+            getValues: () => ["0-3 ans", "3-18 ans", "Adulte majeur"],
+            render: function render(props) {
+               return <ActBlock {...props} />
+            },
+            validate: x => !!x,
+            errorMessage: "Obligatoire",
+         }
+   }
+}
+
+const profiles = {
+   Victime: [
+      blockBuilder("examinationType", ["Somatique", "Psychiatrique", "Psychologique"]),
+      {
+         type: "violenceType",
+         title: "Type(s) de violence",
+         getValues: () => [
+            "Conjuguale",
+            "Urbaine",
+            "En réunion",
+            "Scolaire",
+            "Familiale",
+            "Sur ascendant",
+            "Agression sexuelle",
+            { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] },
+         ],
+         render: function render(props) {
+            return <ActBlock {...props} />
+         },
+         validate: x => !!x,
+         errorMessage: "Obligatoire",
+      },
+      blockBuilder("counters"),
+      blockBuilder("periodOfDay"),
+      blockBuilder("doctorWorkStatus"),
+      {
+         type: "rawContent",
+         render: function render() {
+            return <Title2 className="mb-2 mt-5">{"Profil de la victime"}</Title2>
+         },
+      },
+      blockBuilder("personGender"),
+      blockBuilder("personAgeTag"),
+   ],
+   "Gardé.e à vue": [
+      blockBuilder("examinationType", ["Somatique", "Psychiatrique", "Âge osseux"]),
+      blockBuilder("counters"),
+      blockBuilder("periodOfDay"),
+      {
+         type: "multipleVisits",
+         title: "Plusieurs passages nécessaires",
+         getValues: () => ["Oui", "Non"],
+         render: function render(props) {
+            return <ActBlock {...props} />
+         },
+         validate: x => !!x,
+         errorMessage: "Obligatoire",
+      },
+      blockBuilder("doctorWorkStatus"),
+      {
+         type: "rawContent",
+         render: function render() {
+            return <Title2 className="mb-2 mt-5">{"Profil de la personne gardée à vue"}</Title2>
+         },
+      },
+      blockBuilder("personGender"),
+      blockBuilder("personAgeTag"),
+   ],
+   Mort: [
+      blockBuilder("examinationType", ["Autopsie", "Levée de corps"]),
+      blockBuilder("counters"),
+      blockBuilder("periodOfDay"),
+      blockBuilder("doctorWorkStatus"),
+      {
+         type: "rawContent",
+         render: function render() {
+            return <Title2 className="mb-2 mt-5">{"Profil de la personne examinée"}</Title2>
+         },
+      },
+      blockBuilder("personGender"),
+      blockBuilder("personAgeTag"),
+   ],
+}
+
+const getProfiledBlocks = (examinedPersonType, dispatch, state, errors) => {
+   const res = profiles[examinedPersonType].map(elt =>
+      elt.type === "rawContent"
+         ? elt.render({ key: elt.type })
+         : elt.type === "counters"
+         ? elt.render({ key: elt.type, dispatch, state })
+         : elt.render({
+              key: elt.type,
+              title: elt.title,
+              subTitle: elt.subTitle,
+              type: elt.type,
+              values: elt.getValues(state),
+              dispatch,
+              state,
+              invalid: errors && errors[elt.type],
+           }),
+   )
+
+   return res
+}
+
+const runProfiledValidation = (examinedPersonType, state, setErrors) => {
+   let errors = {}
+   profiles[examinedPersonType].forEach(elt => {
+      errors = !elt.validate || elt.validate(state[elt.type]) ? errors : { ...errors, [elt.type]: elt.errorMessage }
+   })
+   setErrors(prev => ({ ...prev, ...errors }))
+
+   return isEmpty(errors)
+}
+
 const examinedPersonTypeValues = [
    "Victime",
-   "Garde à vue",
+   "Gardé.e à vue",
    "Mort",
    { title: "Pas d'examens", subValues: ["Assises", "Reconstitution", "Expertise"] },
 ]
-
-const examinationTypeValues = ["Somatique", "Psychiatrique", "Psychologique"]
-
-const violenceTypeValues = [
-   "Conjuguale",
-   "Urbaine",
-   "En réunion",
-   "Scolaire",
-   "Familiale",
-   "Sur ascendant",
-   "Agression sexuelle",
-   { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] },
-]
-
-const personGenderValues = ["Féminin", "Masculin", "Autre"]
-
-const personAgeTagValues = ["0-3 ans", "3-18 ans", "Adulte majeur"]
 
 const doctorWorkStatusValues = ["Garde", "Astreinte", "Demie garde"]
 const doctorWorkStatusDefault = ["Classique"]
@@ -130,6 +317,9 @@ const periodOfDayValues = {
    },
 }
 
+const getDoctorWorkStatusValues = ({ situationDate, periodOfDay }) =>
+   periodOfDayValues[situationDate].period.filter(elt => elt.title === periodOfDay)[0].doctorWorkStatusValues
+
 const getSituationDate = dateStr => {
    if (!frenchPublicHoliday) {
       console.warn("Les jours fériés n'ont pas été rapatriés")
@@ -150,12 +340,11 @@ const getSituationDate = dateStr => {
 
 export {
    examinedPersonTypeValues,
-   examinationTypeValues,
-   violenceTypeValues,
-   personGenderValues,
-   personAgeTagValues,
    periodOfDayValues,
    doctorWorkStatusValues,
    getSituationDate,
    doctorWorkStatusDefault,
+   getProfiledBlocks,
+   runProfiledValidation,
+   getDoctorWorkStatusValues,
 }

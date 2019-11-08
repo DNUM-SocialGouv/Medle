@@ -7,39 +7,24 @@ import moment from "moment"
 import { ACT_DECLARATION_ENDPOINT } from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
-import Counter from "../components/Counter"
 import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
 import {
    examinedPersonTypeValues,
-   examinationTypeValues,
-   violenceTypeValues,
-   personGenderValues,
-   personAgeTagValues,
-   periodOfDayValues,
+   getProfiledBlocks,
+   runProfiledValidation,
    getSituationDate,
-   doctorWorkStatusValues as defaultValuesForDoctor,
 } from "../utils/actsConstants"
 
-const getIinitialState = asker => ({
+const getInitialState = asker => ({
    pvNumber: "",
    internalNumber: "",
    examinationDate: "",
    asker: asker ? asker : "",
-   examinedPersonType: "",
-   personGender: "",
-   personAgeTag: "",
-   examinationType: "",
-   violenceType: "",
-   periodOfDay: "",
-   doctorWorkStatus: "",
-   bloodExaminationsNumber: 0,
-   xrayExaminationsNumber: 0,
-   boneExaminationNumber: 0,
+   situationDate: "week",
+   ...reset({}),
 })
-
-let dayInWeek = "week"
 
 const reset = state => ({
    ...state,
@@ -53,6 +38,7 @@ const reset = state => ({
    bloodExaminationsNumber: 0,
    xrayExaminationsNumber: 0,
    boneExaminationNumber: 0,
+   multipleVisits: undefined,
 })
 
 const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
@@ -60,7 +46,6 @@ const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
 const ActDeclaration = ({ askerValues }) => {
    const refPersonType = useRef()
    const [errors, setErrors] = useState({})
-   const [doctorWorkStatusValues, setDoctorWorkStatusValues] = useState(defaultValuesForDoctor)
 
    const preValidate = state => {
       let errors = {}
@@ -92,36 +77,8 @@ const ActDeclaration = ({ askerValues }) => {
       if (!preValidate(state)) {
          return false
       }
-      let errors = {}
 
-      if (!state.examinedPersonType) {
-         errors = { ...errors, examinedPersonType: "Obligatoire" }
-      }
-      if (!state.personGender) {
-         errors = { ...errors, personGender: "Obligatoire" }
-      }
-      if (!state.personAgeTag) {
-         errors = { ...errors, personAgeTag: "Obligatoire" }
-      }
-      if (!state.examinationType) {
-         errors = { ...errors, examinationType: "Obligatoire" }
-      }
-      if (!state.violenceType) {
-         errors = { ...errors, violenceType: "Obligatoire" }
-      }
-      if (!state.periodOfDay) {
-         errors = { ...errors, periodOfDay: "Obligatoire" }
-      }
-      if (!state.doctorWorkStatus) {
-         errors = { ...errors, doctorWorkStatus: "Obligatoire" }
-      }
-
-      setErrors(precedentState => ({
-         ...precedentState,
-         ...errors,
-      }))
-
-      return isEmpty(errors)
+      return runProfiledValidation(state.examinedPersonType, state, setErrors)
    }
 
    const reducer = (state, action) => {
@@ -133,10 +90,9 @@ const ActDeclaration = ({ askerValues }) => {
             return { ...state, pvNumber: action.payload }
          case "examinationDate":
             setErrors(deleteProperty(errors, "examinationDate"))
-            dayInWeek = getSituationDate(action.payload)
             state.periodOfDay = ""
             state.doctorWorkStatus = ""
-            return { ...state, examinationDate: action.payload }
+            return { ...state, situationDate: getSituationDate(action.payload), examinationDate: action.payload }
          case "asker":
             return { ...state, asker: action.payload }
          case "examinedPersonType":
@@ -147,7 +103,6 @@ const ActDeclaration = ({ askerValues }) => {
                   block: "start",
                })
                state = reset(state)
-               setDoctorWorkStatusValues(defaultValuesForDoctor)
                return { ...state, examinedPersonType: action.payload }
             }
             return state
@@ -156,15 +111,10 @@ const ActDeclaration = ({ askerValues }) => {
          case "violenceType":
             return { ...state, violenceType: action.payload }
          case "periodOfDay":
-            setDoctorWorkStatusValues(action.payload.doctorWorkStatusValues)
             return {
                ...state,
-               doctorWorkStatus:
-                  action.payload.doctorWorkStatusValues.length &&
-                  action.payload.doctorWorkStatusValues.includes(state.doctorWorkStatus)
-                     ? state.doctorWorkStatus
-                     : "",
-               periodOfDay: action.payload.periodOfDay,
+               doctorWorkStatus: "",
+               periodOfDay: action.payload,
             }
          case "doctorWorkStatus":
             return { ...state, doctorWorkStatus: action.payload }
@@ -178,11 +128,13 @@ const ActDeclaration = ({ askerValues }) => {
             return { ...state, xrayExaminationsNumber: action.payload }
          case "boneExaminationNumber":
             return { ...state, boneExaminationNumber: action.payload }
+         case "multipleVisits":
+            return { ...state, multipleVisits: action.payload }
          default:
             throw new Error("Action.type inconnu")
       }
    }
-   const [state, dispatch] = useReducer(reducer, getIinitialState(askerValues ? askerValues[0] : ""))
+   const [state, dispatch] = useReducer(reducer, getInitialState(askerValues ? askerValues[0] : ""))
 
    const validAct = async () => {
       setErrors({})
@@ -225,7 +177,9 @@ const ActDeclaration = ({ askerValues }) => {
          <Container style={{ maxWidth: 720 }}>
             <Title2 className="mb-4">{"Données d'identification du dossier"}</Title2>
 
-            {!isEmpty(errors) && <Alert color="danger">{errors.general || "Erreur dans le formulaire"}</Alert>}
+            {!isEmpty(errors) && (
+               <Alert color="danger">{errors.general || "Veuillez renseigner les éléments en rouge"}</Alert>
+            )}
             <Row>
                <Col className="mr-3">
                   <Label htmlFor="internalNumber">Numéro interne</Label>
@@ -276,89 +230,13 @@ const ActDeclaration = ({ askerValues }) => {
 
             <ActBlock type="examinedPersonType" values={examinedPersonTypeValues} dispatch={dispatch} state={state} />
 
-            {state.examinedPersonType === "Victime" && (
-               <>
-                  <ActBlock
-                     title={"Type(s) d'examen"}
-                     type="examinationType"
-                     values={examinationTypeValues}
-                     dispatch={dispatch}
-                     state={state}
-                     invalid={errors && !!errors.examinationType}
-                  />
+            {state.examinedPersonType && getProfiledBlocks(state.examinedPersonType, dispatch, state, errors)}
 
-                  <ActBlock
-                     title={"Type(s) de violence"}
-                     type="violenceType"
-                     values={violenceTypeValues}
-                     dispatch={dispatch}
-                     state={state}
-                     invalid={errors && !!errors.violenceType}
-                  />
-
-                  <ActBlock
-                     title={`Heure de l'examen`}
-                     type="periodOfDay"
-                     values={periodOfDayValues[dayInWeek].period}
-                     dispatch={dispatch}
-                     state={state}
-                     invalid={errors && !!errors.periodOfDay}
-                  />
-
-                  <ActBlock
-                     title={`Statut du médecin`}
-                     type="doctorWorkStatus"
-                     values={doctorWorkStatusValues}
-                     dispatch={dispatch}
-                     state={state}
-                     invalid={errors && !!errors.doctorWorkStatus}
-                  />
-
-                  <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
-
-                  <Row>
-                     <Col sm={4}>
-                        <Counter dispatch={dispatch} state={state} type={"bloodExaminationsNumber"}>
-                           Sanguins
-                        </Counter>
-                     </Col>
-                     <Col sm={4}>
-                        <Counter dispatch={dispatch} state={state} type={"xrayExaminationsNumber"}>
-                           Radios
-                        </Counter>
-                     </Col>
-                     <Col sm={4}>
-                        <Counter dispatch={dispatch} state={state} type={"boneExaminationNumber"}>
-                           Osseux
-                        </Counter>
-                     </Col>
-                  </Row>
-
-                  <Title2 className="mb-2 mt-5">{"Profil de la victime"}</Title2>
-
-                  <ActBlock
-                     subTitle={"Genre"}
-                     type="personGender"
-                     values={personGenderValues}
-                     dispatch={dispatch}
-                     state={state}
-                     invalid={errors && !!errors.personGender}
-                  />
-                  <ActBlock
-                     subTitle={"Âge"}
-                     type="personAgeTag"
-                     values={personAgeTagValues}
-                     dispatch={dispatch}
-                     state={state}
-                     invalid={errors && !!errors.personAgeTag}
-                  />
-                  <div className="text-center mt-5">
-                     <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
-                        Valider
-                     </ValidationButton>
-                  </div>
-               </>
-            )}
+            <div className="text-center mt-5">
+               <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
+                  Valider
+               </ValidationButton>
+            </div>
          </Container>
       </Layout>
    )

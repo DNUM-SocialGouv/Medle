@@ -48,7 +48,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
                   return (
                      <Col key={index} {...colOptions} className="mb-4">
                         <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
-                           <DropdownToggle outline color="secondary" invert={isClicked ? isClicked : undefined} caret>
+                           <DropdownToggle outline color="secondary" invert={isClicked ? 1 : 0} caret>
                               {isClicked ? state[type] : val.title}
                            </DropdownToggle>
                            <DropdownMenu>
@@ -69,15 +69,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
                            color="secondary"
                            block
                            invert={state[type] === val.title ? 1 : 0}
-                           onClick={() =>
-                              dispatch({
-                                 type,
-                                 payload: {
-                                    periodOfDay: val.title,
-                                    doctorWorkStatusValues: val.doctorWorkStatusValues,
-                                 },
-                              })
-                           }
+                           onClick={() => dispatch({ type, payload: val.title })}
                         >
                            {val.title}
                            <br />

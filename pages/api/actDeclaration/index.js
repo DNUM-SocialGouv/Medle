@@ -23,6 +23,7 @@ const getDataActsDetails = data => ({
    blood_examination_number: data.bloodExaminationsNumber,
    xray_examination_number: data.xrayExaminationsNumber,
    bone_examination_number: data.boneExaminationNumber,
+   multiple_visits: data.multipleVisits === "Oui" ? true : false,
 })
 
 export default async (req, res) => {
