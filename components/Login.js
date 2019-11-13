@@ -18,7 +18,9 @@ const Login = ({ authentication, error }) => {
       try {
          await authentication({ email: emailRef.current.value, password: passwordRef.current.value })
          // eslint-disable-next-line no-empty
-      } catch (ignore) {}
+      } catch (ignore) {
+         setIsLoading(false)
+      }
    }
 
    return (
