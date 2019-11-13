@@ -31,8 +31,8 @@ const reset = state => ({
    examinedPersonType: "",
    personGender: "",
    personAgeTag: "",
-   examinationType: "",
-   violenceType: "",
+   examinationTypes: [],
+   violenceTypes: [],
    periodOfDay: "",
    doctorWorkStatus: "",
    bloodExaminationsNumber: 0,
@@ -81,6 +81,27 @@ const ActDeclaration = ({ askerValues }) => {
       return runProfiledValidation(state.examinedPersonType, state, setErrors)
    }
 
+   // TODO : à tester
+   const removePrecedentValueWithPrefix = (prefix, arr) => {
+      const index = arr.findIndex(elt => elt.match(new RegExp(prefix + "/")))
+
+      return index === -1 ? arr : [...arr.slice(0, index), ...arr.slice(index + 1)]
+   }
+
+   // TODO à tester
+   const addOrRemoveInArr = (value, arr) => {
+      const index = arr.indexOf(value)
+      if (index !== -1) {
+         return [...arr.slice(0, index), ...arr.slice(index + 1)]
+      } else {
+         const prefixChunks = value.split("/")
+         if (prefixChunks.length) {
+            arr = removePrecedentValueWithPrefix(prefixChunks[0], arr)
+         }
+         return [...arr, value]
+      }
+   }
+
    const reducer = (state, action) => {
       switch (action.type) {
          case "internalNumber":
@@ -106,10 +127,10 @@ const ActDeclaration = ({ askerValues }) => {
                return { ...state, examinedPersonType: action.payload }
             }
             return state
-         case "examinationType":
-            return { ...state, examinationType: action.payload }
-         case "violenceType":
-            return { ...state, violenceType: action.payload }
+         case "examinationTypes":
+            return { ...state, examinationTypes: addOrRemoveInArr(action.payload, state.examinationTypes) }
+         case "violenceTypes":
+            return { ...state, violenceTypes: addOrRemoveInArr(action.payload, state.violenceTypes) }
          case "periodOfDay":
             return {
                ...state,

@@ -18,6 +18,26 @@ const makeColOptions = values => {
    }
    return {}
 }
+
+const isSelected = (stateType, val) => {
+   if (stateType instanceof Array) {
+      return stateType.includes(val) ? 1 : 0
+   } else {
+      return stateType === val ? 1 : 0
+   }
+}
+
+const hasCommonElement = (prefix, stateTypes, subValues) => {
+   if (!(stateTypes instanceof Array) || !(subValues instanceof Array)) return false
+
+   for (let i = 0; i < stateTypes.length; i++) {
+      for (let j = 0; j < subValues.length; j++) {
+         if (stateTypes[i] === prefix + "/" + subValues[j]) return stateTypes[i]
+      }
+   }
+   return false
+}
+
 const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) => {
    const [dropdownOpen, setOpen] = useState(false)
    const toggle = () => setOpen(!dropdownOpen)
@@ -44,16 +64,19 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
          <Row>
             {values.map((val, index) => {
                if (val.subValues) {
-                  const isClicked = state[type] && val.subValues.includes(state[type])
+                  const commonElement = hasCommonElement(val.title, state[type], val.subValues)
                   return (
                      <Col key={index} {...colOptions} className="mb-4">
                         <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
-                           <DropdownToggle outline color="secondary" invert={isClicked ? 1 : 0} caret>
-                              {isClicked ? state[type] : val.title}
+                           <DropdownToggle outline color="secondary" invert={commonElement ? 1 : 0} caret>
+                              {commonElement ? commonElement : val.title}
                            </DropdownToggle>
                            <DropdownMenu>
                               {val.subValues.map((sub, indexS) => (
-                                 <DropdownItem key={indexS} onClick={() => dispatch({ type, payload: sub })}>
+                                 <DropdownItem
+                                    key={indexS}
+                                    onClick={() => dispatch({ type, payload: val.title + "/" + sub })}
+                                 >
                                     {sub}
                                  </DropdownItem>
                               ))}
@@ -68,7 +91,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
                            outline
                            color="secondary"
                            block
-                           invert={state[type] === val.title ? 1 : 0}
+                           invert={isSelected(state[type], val.title)}
                            onClick={() => dispatch({ type, payload: val.title })}
                         >
                            {val.title}
@@ -84,7 +107,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
                            outline
                            color="secondary"
                            block
-                           invert={state[type] === val ? 1 : 0}
+                           invert={isSelected(state[type], val)}
                            onClick={() => dispatch({ type, payload: val })}
                         >
                            {val}

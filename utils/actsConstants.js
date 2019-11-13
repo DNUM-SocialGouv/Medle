@@ -30,7 +30,7 @@ initFetchFrenchPublicHoliday()
 
 const blockBuilder = (type, values) => {
    switch (type) {
-      case "examinationType":
+      case "examinationTypes":
          return {
             type,
             title: "Type(s) d'examen",
@@ -121,9 +121,9 @@ const blockBuilder = (type, values) => {
 
 const profiles = {
    Victime: [
-      blockBuilder("examinationType", ["Somatique", "Psychiatrique", "Psychologique"]),
+      blockBuilder("examinationTypes", ["Somatique", "Psychiatrique", "Psychologique"]),
       {
-         type: "violenceType",
+         type: "violenceTypes",
          title: "Type(s) de violence",
          getValues: () => [
             "Conjuguale",
@@ -154,7 +154,7 @@ const profiles = {
       blockBuilder("personAgeTag"),
    ],
    "Gardé.e à vue": [
-      blockBuilder("examinationType", ["Somatique", "Psychiatrique", "Âge osseux"]),
+      blockBuilder("examinationTypes", ["Somatique", "Psychiatrique", "Âge osseux"]),
       blockBuilder("counters"),
       blockBuilder("periodOfDay"),
       {
@@ -178,7 +178,7 @@ const profiles = {
       blockBuilder("personAgeTag"),
    ],
    Mort: [
-      blockBuilder("examinationType", ["Autopsie", "Levée de corps"]),
+      blockBuilder("examinationTypes", ["Autopsie", "Levée de corps"]),
       blockBuilder("counters"),
       blockBuilder("periodOfDay"),
       blockBuilder("doctorWorkStatus"),
