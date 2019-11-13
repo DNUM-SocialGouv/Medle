@@ -109,7 +109,7 @@ const blockBuilder = (type, values) => {
          return {
             type: "personAgeTag",
             subTitle: "Âge",
-            getValues: () => ["0-3 ans", "3-18 ans", "Adulte majeur"],
+            getValues: () => ["0-2 ans", "3-17 ans", "+ de 18 ans"],
             render: function render(props) {
                return <ActBlock {...props} />
             },
@@ -227,8 +227,11 @@ const runProfiledValidation = (examinedPersonType, state, setErrors) => {
 const examinedPersonTypeValues = [
    "Victime",
    "Gardé.e à vue",
-   "Mort",
-   { title: "Pas d'examens", subValues: ["Assises", "Reconstitution", "Expertise"] },
+   "Personne décédée",
+   {
+      title: "Autre",
+      subValues: ["Personne retenue", "Blessé route", "Âge osseux hors GAV", "Assises", "Reconstitution", "Expertise"],
+   },
 ]
 
 const doctorWorkStatusValues = ["Garde", "Astreinte", "Demie garde"]
