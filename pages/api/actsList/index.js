@@ -5,7 +5,9 @@ export default async (req, res) => {
    let acts
 
    try {
-      acts = await knex("acts").select("*")
+      acts = await knex("acts")
+         .join("acts_details", "acts.id", "acts_details.acts_id")
+         .select("*")
    } catch (err) {
       return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({ message: `Erreur de base de donnée / ${err}` })
    }
