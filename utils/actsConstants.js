@@ -177,7 +177,7 @@ const profiles = {
       blockBuilder("personGender"),
       blockBuilder("personAgeTag"),
    ],
-   Mort: [
+   "Personne décédée": [
       blockBuilder("examinationTypes", ["Autopsie", "Levée de corps"]),
       blockBuilder("counters"),
       blockBuilder("periodOfDay"),

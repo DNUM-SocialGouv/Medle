@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react"
+import Link from "next/link"
 import { withAuthSync } from "../utils/auth"
 import { ACT_LIST_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
 import Layout from "../components/Layout"
 import Banner from "../components/Banner"
+import moment from "moment"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, Table } from "reactstrap"
 
 const ActsListPage = () => {
@@ -22,7 +24,7 @@ const ActsListPage = () => {
          try {
             const res = await fetch(ACT_LIST_ENDPOINT)
             json = await res.json()
-            setActs(json.actes)
+            setActs(json)
          } catch (error) {
             console.error(error)
             setIsError(true)
@@ -76,25 +78,25 @@ const ActsListPage = () => {
                <Table striped bordered responsive className="mt-5">
                   <thead>
                      <tr>
-                        <th>N° procédure</th>
-                        <th>{"Type d'acte"}</th>
+                        <th>N° interne</th>
+                        <th>N° PV</th>
                         <th>Date</th>
-                        <th>Heure</th>
-                        <th>{"Lieu d'acte"}</th>
-                        <th>{"Nb d'examens"}</th>
-                        <th>Nb de radios</th>
+                        <th>Type de profil</th>
+                        <th></th>
                      </tr>
                   </thead>
                   <tbody>
                      {acts.map(act => (
                         <tr key={act.id}>
-                           <td>{act.num_procedure}</td>
-                           <td>{act.type_acte}</td>
-                           <td>{act.date_creation}</td>
-                           <td></td>
-                           <td>{act.lieu_acte}</td>
-                           <td></td>
-                           <td></td>
+                           <td>{act.internal_number}</td>
+                           <td>{act.details.length === 1 ? act.pv_number : "Comprend plusieurs actes"}</td>
+                           <td>{moment(act.examination_date).format("DD/MM/YYYY")}</td>
+                           <td>{act.examined_person_type}</td>
+                           <td>
+                              <Link href={`/actDetail/${act.id}`}>
+                                 <a>{act.details.length === 1 ? "Modifier / voir" : ">"}</a>
+                              </Link>
+                           </td>
                         </tr>
                      ))}
                   </tbody>
