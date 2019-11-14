@@ -15,7 +15,15 @@ const knexConfig = {
          database: "medlexxx",
          port: "5432",
       },
-      pool: { min: 0, max: 7 },
+      pool: {
+         min: 0,
+         max: 7,
+         afterCreate: function(connection, callback) {
+            connection.query("SET timezone = 'posix/Europe/Paris';", function(err) {
+               callback(err, connection)
+            })
+         },
+      },
       migrations: {
          directory: join(__dirname, "lib/knex/migrations"),
       },
@@ -26,7 +34,15 @@ const knexConfig = {
    staging: {
       client: "pg",
       connection: process.env.DATABASE_URL,
-      pool: { min: 0, max: 7 },
+      pool: {
+         min: 0,
+         max: 7,
+         afterCreate: function(connection, callback) {
+            connection.query("SET timezone = 'posix/Europe/Paris';", function(err) {
+               callback(err, connection)
+            })
+         },
+      },
       migrations: {
          directory: join(__dirname, "lib/knex/migrations"),
       },
@@ -37,7 +53,15 @@ const knexConfig = {
    production: {
       client: "pg",
       connection: process.env.DATABASE_URL,
-      pool: { min: 0, max: 7 },
+      pool: {
+         min: 0,
+         max: 7,
+         afterCreate: function(connection, callback) {
+            connection.query("SET timezone = 'posix/Europe/Paris';", function(err) {
+               callback(err, connection)
+            })
+         },
+      },
       migrations: {
          directory: join(__dirname, "lib/knex/migrations"),
       },
