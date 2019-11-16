@@ -29,9 +29,9 @@ export default async (req, res) => {
       if (type) {
          return res.status(STATUS_200_OK).json({ typesActe: [type] })
       } else {
-         return res.status(STATUS_404_NOT_FOUND).end("")
+         return res.status(STATUS_404_NOT_FOUND).end()
       }
    } else {
-      return res.status(STATUS_404_NOT_FOUND).end("")
+      return res.status(STATUS_404_NOT_FOUND).end()
    }
 }

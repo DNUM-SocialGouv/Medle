@@ -64,6 +64,6 @@ export default async (req, res) => {
    if (result) {
       return res.status(STATUS_200_OK).json(result)
    } else {
-      return res.status(STATUS_404_NOT_FOUND).end("")
+      return res.status(STATUS_404_NOT_FOUND).end()
    }
 }

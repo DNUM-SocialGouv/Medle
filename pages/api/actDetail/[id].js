@@ -12,7 +12,7 @@ export default async (req, res) => {
    const { id } = req.query
 
    if (!id) {
-      return res.status(STATUS_400_BAD_REQUEST).end("")
+      return res.status(STATUS_400_BAD_REQUEST).end()
    }
 
    try {
@@ -34,6 +34,6 @@ export default async (req, res) => {
    if (act) {
       return res.status(STATUS_200_OK).json({ act })
    } else {
-      return res.status(STATUS_404_NOT_FOUND).end("")
+      return res.status(STATUS_404_NOT_FOUND).end()
    }
 }

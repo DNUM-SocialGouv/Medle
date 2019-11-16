@@ -13,6 +13,6 @@ export default async (req, res) => {
    if (types) {
       return res.status(STATUS_200_OK).json({ typesLieu: types })
    } else {
-      return res.status(STATUS_404_NOT_FOUND).end("")
+      return res.status(STATUS_404_NOT_FOUND).end()
    }
 }
