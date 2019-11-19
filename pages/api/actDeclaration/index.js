@@ -7,7 +7,7 @@ import knex from "../../../lib/knex/knex"
 
 const getDataActs = data => ({
    internal_number: data.internalNumber,
-   examined_person_type: data.examinedPersonType,
+   case_type: data.caseType,
    person_gender: data.personGender,
    person_age_tag: data.personAgeTag,
 })

@@ -27,11 +27,11 @@ export default async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    const data = await req.body
-   const { cid: id } = req.query
+   const { cid } = req.query
 
    try {
-      const result = await knex("acts").insert(buildActFromJSON(data), "id")
-      res.setHeader("Location", `/api/cases/${id}/acts/${result[0]}`)
+      const result = await knex("acts").insert(buildActFromJSON({ ...data, casesFk: cid }), "id")
+      res.setHeader("Location", `/api/cases/${cid}/acts/${result[0]}`)
       return res.status(STATUS_201_CREATED).json({ message: `Acte créé`, detail: result[0] })
    } catch (error) {
       console.error(JSON.stringify(error))

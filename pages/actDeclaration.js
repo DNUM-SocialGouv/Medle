@@ -10,12 +10,7 @@ import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
-import {
-   examinedPersonTypeValues,
-   getProfiledBlocks,
-   runProfiledValidation,
-   getSituationDate,
-} from "../utils/actsConstants"
+import { caseTypeValues, getProfiledBlocks, runProfiledValidation, getSituationDate } from "../utils/actsConstants"
 
 const getInitialState = asker => ({
    pvNumber: "",
@@ -28,7 +23,7 @@ const getInitialState = asker => ({
 
 const reset = state => ({
    ...state,
-   examinedPersonType: "",
+   caseType: "",
    personGender: "",
    personAgeTag: "",
    examinationTypes: [],
@@ -78,7 +73,7 @@ const ActDeclaration = ({ askerValues }) => {
          return false
       }
 
-      return runProfiledValidation(state.examinedPersonType, state, setErrors)
+      return runProfiledValidation(state.caseType, state, setErrors)
    }
 
    // TODO : à tester
@@ -116,7 +111,7 @@ const ActDeclaration = ({ askerValues }) => {
             return { ...state, situationDate: getSituationDate(action.payload), examinationDate: action.payload }
          case "asker":
             return { ...state, asker: action.payload }
-         case "examinedPersonType":
+         case "caseType":
             setErrors({})
             if (preValidate(state)) {
                refPersonType.current.scrollIntoView({
@@ -124,7 +119,7 @@ const ActDeclaration = ({ askerValues }) => {
                   block: "start",
                })
                state = reset(state)
-               return { ...state, examinedPersonType: action.payload }
+               return { ...state, caseType: action.payload }
             }
             return state
          case "examinationTypes":
@@ -249,9 +244,9 @@ const ActDeclaration = ({ askerValues }) => {
                Qui a été examiné?
             </Title2>
 
-            <ActBlock type="examinedPersonType" values={examinedPersonTypeValues} dispatch={dispatch} state={state} />
+            <ActBlock type="caseType" values={caseTypeValues} dispatch={dispatch} state={state} />
 
-            {state.examinedPersonType && getProfiledBlocks(state.examinedPersonType, dispatch, state, errors)}
+            {/* {state.caseType && getProfiledBlocks(state.caseType, dispatch, state, errors)} */}
 
             <div className="text-center mt-5">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>

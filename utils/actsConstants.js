@@ -193,8 +193,8 @@ const profiles = {
    ],
 }
 
-const getProfiledBlocks = (examinedPersonType, dispatch, state, errors) => {
-   const res = profiles[examinedPersonType].map(elt =>
+const getProfiledBlocks = (caseType, dispatch, state, errors) => {
+   const res = profiles[caseType].map(elt =>
       elt.type === "rawContent"
          ? elt.render({ key: elt.type })
          : elt.type === "counters"
@@ -214,9 +214,9 @@ const getProfiledBlocks = (examinedPersonType, dispatch, state, errors) => {
    return res
 }
 
-const runProfiledValidation = (examinedPersonType, state, setErrors) => {
+const runProfiledValidation = (caseType, state, setErrors) => {
    let errors = {}
-   profiles[examinedPersonType].forEach(elt => {
+   profiles[caseType].forEach(elt => {
       errors = !elt.validate || elt.validate(state[elt.type]) ? errors : { ...errors, [elt.type]: elt.errorMessage }
    })
    setErrors(prev => ({ ...prev, ...errors }))
@@ -224,7 +224,7 @@ const runProfiledValidation = (examinedPersonType, state, setErrors) => {
    return isEmpty(errors)
 }
 
-const examinedPersonTypeValues = [
+const caseTypeValues = [
    "Victime",
    "Gardé.e à vue",
    "Personne décédée",
@@ -342,7 +342,7 @@ const getSituationDate = dateStr => {
 }
 
 export {
-   examinedPersonTypeValues,
+   caseTypeValues,
    periodOfDayValues,
    doctorWorkStatusValues,
    getSituationDate,
