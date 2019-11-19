@@ -39,7 +39,9 @@ const Home = () => (
                      <h4>ETP</h4>
                   </CardTitle>
                   <CardText>{"Renseigner les emplois temps plein de son établissement de santé par mois"}.</CardText>
-                  <Button>Voir et renseigner mes ETP</Button>
+                  <Link href="/fillEmployments">
+                     <Button>Voir et renseigner mes ETP</Button>
+                  </Link>
                </Card>
             </Col>
          </Row>
