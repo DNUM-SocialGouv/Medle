@@ -3,8 +3,12 @@ import Router from "next/router"
 import nextCookie from "next-cookies"
 import cookie from "js-cookie"
 
-export const login = async ({ token }) => {
+export const login = async ({ token, role, hospitalId }) => {
    cookie.set("token", token, { expires: 1 })
+   cookie.set("role", role, { expires: 1 })
+   if (hospitalId) {
+      cookie.set("hospitalId", hospitalId, { expires: 1 })
+   }
    await Router.push("/home")
 }
 
