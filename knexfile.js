@@ -65,6 +65,9 @@ const knexConfig = {
       migrations: {
          directory: join(__dirname, "lib/knex/migrations"),
       },
+      seeds: {
+         directory: join(__dirname, "lib/knex/seeds/production"),
+      },
    },
 }
 
