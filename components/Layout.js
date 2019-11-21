@@ -29,7 +29,7 @@ const Header = () => {
    return (
       <header>
          <Navbar color="light" light expand="md" className="navbar-medle">
-            <NavbarBrand href="/">
+            <NavbarBrand href="/home">
                <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>&nbsp; Plateforme de médecine légale
             </NavbarBrand>
             <NavbarToggler onClick={toggle} />

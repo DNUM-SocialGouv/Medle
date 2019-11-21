@@ -52,7 +52,7 @@ const Home = () => (
                      <h4>{"Profil"}</h4>
                   </CardTitle>
                   <CardText>{"Voir le profil de mon établissement de santé."}</CardText>
-                  <Link href="/actsList">
+                  <Link href="/home">
                      <Button>Voir mon profil</Button>
                   </Link>
                </Card>
@@ -65,7 +65,7 @@ const Home = () => (
                   <CardText>
                      {"Voir les différentes statistiques de son établissement et des statistiques générales."}
                   </CardText>
-                  <Link href="/actsList">
+                  <Link href="/home">
                      <Button>Voir les statistiques</Button>
                   </Link>
                </Card>
