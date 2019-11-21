@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import Link from "next/link"
+import PropTypes from "prop-types"
 import { withAuthSync } from "../utils/auth"
-import { ACT_LIST_ENDPOINT } from "../config"
+import { APP_URL, ACT_LIST_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
 import Layout from "../components/Layout"
 import Banner from "../components/Banner"
@@ -9,40 +10,46 @@ import moment from "moment"
 import { FORMAT_DATE } from "../utils/constants"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, Table } from "reactstrap"
 
-const ActsListPage = () => {
-   const [healthCenter, setHealthCenter] = useState("")
-   const [cases, setCases] = useState([])
+const fetchData = async search => {
+   const bonus = search ? `?fuzzy=${search}` : ""
+   const res = await fetch(`${APP_URL}${ACT_LIST_ENDPOINT}${bonus}`)
+   return await res.json()
+}
+
+const ActsListPage = ({ initialActs }) => {
+   const [search, setSearch] = useState("")
+   const [acts, setActs] = useState(initialActs || [])
    const [isError, setIsError] = useState(false)
    const [isLoading, setIsLoading] = useState(false)
 
    const onChange = e => {
-      setHealthCenter(e.target.value)
+      setSearch(e.target.value)
    }
 
-   useEffect(() => {
-      const fetchData = async () => {
-         let json
-         try {
-            const res = await fetch(ACT_LIST_ENDPOINT)
-            json = await res.json()
-            setCases(json)
-         } catch (error) {
-            console.error(error)
-            setIsError(true)
-         }
-         setIsLoading(false)
-      }
+   const onSubmit = e => {
+      e.preventDefault()
+      handleSearch()
+   }
 
+   const handleSearch = async () => {
       setIsLoading(true)
       setIsError(false)
-      fetchData()
-   }, [])
+      try {
+         setActs(await fetchData(search))
+         setIsLoading(false)
+      } catch (error) {
+         console.error(error)
+         setIsError(true)
+         setActs([])
+         setIsLoading(false)
+      }
+   }
 
    return (
       <Layout>
          <Banner title="Actes d'un établissement de santé" />
          <Container>
-            <Form>
+            <Form onSubmit={onSubmit}>
                <FormGroup row inline>
                   <Label for="email" sm={"auto"}>
                      Établissement de santé
@@ -52,8 +59,8 @@ const ActsListPage = () => {
                         type="text"
                         name="es"
                         id="es"
-                        placeholder="Ex: Nice"
-                        value={healthCenter}
+                        placeholder="Rechercher un dossier par numéro, type de profil examiné, ..."
+                        value={search}
                         onChange={onChange}
                      />
                   </Col>
@@ -87,19 +94,15 @@ const ActsListPage = () => {
                      </tr>
                   </thead>
                   <tbody>
-                     {cases.map(aCase => (
-                        <tr key={aCase.id}>
-                           <td>{aCase.internal_number}</td>
+                     {acts.map(act => (
+                        <tr key={act.id}>
+                           <td>{act.internal_number}</td>
+                           <td>{act.pv_number}</td>
+                           <td>{act.examination_date && moment(act.examination_date).format(FORMAT_DATE)}</td>
+                           <td>{act.profile}</td>
                            <td>
-                              {aCase.acts && aCase.acts.length === 1
-                                 ? aCase.acts[0].pv_number
-                                 : "Comprend plusieurs actes"}
-                           </td>
-                           <td>{aCase.acts && aCase.acts.length === 1 ? aCase.acts[0].examination_date : ""}</td>
-                           <td>{aCase.case_type}</td>
-                           <td>
-                              <Link href={`/actDetail/${aCase.id}`}>
-                                 <a>{aCase.acts && aCase.acts.length === 1 ? "Modifier / voir" : ">"}</a>
+                              <Link href={`/actDetail/${act.id}`}>
+                                 <a>{"Modifier / voir >"}</a>
                               </Link>
                            </td>
                         </tr>
@@ -110,6 +113,14 @@ const ActsListPage = () => {
          </Container>
       </Layout>
    )
+}
+
+ActsListPage.getInitialProps = async () => {
+   return { initialActs: await fetchData() }
+}
+
+ActsListPage.propTypes = {
+   initialActs: PropTypes.array,
 }
 
 export default withAuthSync(ActsListPage)

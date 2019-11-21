@@ -10,7 +10,7 @@ import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
-import { caseTypeValues, getProfiledBlocks, runProfiledValidation, getSituationDate } from "../utils/actsConstants"
+import { profileValues, getProfiledBlocks, runProfiledValidation, getSituationDate } from "../utils/actsConstants"
 
 const getInitialState = asker => ({
    pvNumber: "",
@@ -23,13 +23,12 @@ const getInitialState = asker => ({
 
 const reset = state => ({
    ...state,
-   caseType: "",
+   profile: "",
    personGender: "",
    personAgeTag: "",
    examinationTypes: [],
    violenceTypes: [],
    periodOfDay: "",
-   doctorWorkStatus: "",
    bloodExaminationsNumber: 0,
    xrayExaminationsNumber: 0,
    boneExaminationNumber: 0,
@@ -73,7 +72,7 @@ const ActDeclaration = ({ askerValues }) => {
          return false
       }
 
-      return runProfiledValidation(state.caseType, state, setErrors)
+      return runProfiledValidation(state.profile, state, setErrors)
    }
 
    // TODO : à tester
@@ -107,11 +106,10 @@ const ActDeclaration = ({ askerValues }) => {
          case "examinationDate":
             setErrors(deleteProperty(errors, "examinationDate"))
             state.periodOfDay = ""
-            state.doctorWorkStatus = ""
             return { ...state, situationDate: getSituationDate(action.payload), examinationDate: action.payload }
          case "asker":
             return { ...state, asker: action.payload }
-         case "caseType":
+         case "profile":
             setErrors({})
             if (preValidate(state)) {
                refPersonType.current.scrollIntoView({
@@ -119,7 +117,7 @@ const ActDeclaration = ({ askerValues }) => {
                   block: "start",
                })
                state = reset(state)
-               return { ...state, caseType: action.payload }
+               return { ...state, profile: action.payload }
             }
             return state
          case "examinationTypes":
@@ -129,11 +127,8 @@ const ActDeclaration = ({ askerValues }) => {
          case "periodOfDay":
             return {
                ...state,
-               doctorWorkStatus: "",
                periodOfDay: action.payload,
             }
-         case "doctorWorkStatus":
-            return { ...state, doctorWorkStatus: action.payload }
          case "personGender":
             return { ...state, personGender: action.payload }
          case "personAgeTag":
@@ -244,9 +239,9 @@ const ActDeclaration = ({ askerValues }) => {
                Qui a été examiné?
             </Title2>
 
-            <ActBlock type="caseType" values={caseTypeValues} dispatch={dispatch} state={state} />
+            <ActBlock type="profile" values={profileValues} dispatch={dispatch} state={state} />
 
-            {/* {state.caseType && getProfiledBlocks(state.caseType, dispatch, state, errors)} */}
+            {state.profile && getProfiledBlocks(state.profile, dispatch, state, errors)}
 
             <div className="text-center mt-5">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>

@@ -7,23 +7,22 @@ import knex from "../../../lib/knex/knex"
 
 const getDataActs = data => ({
    internal_number: data.internalNumber,
-   case_type: data.caseType,
-   person_gender: data.personGender,
-   person_age_tag: data.personAgeTag,
-})
-
-const getDataActsDetails = data => ({
    pv_number: data.pvNumber,
    examination_date: data.examinationDate,
-   asker: data.asker,
-   examination_types: `{ ${data.examinationTypes.join(",")} }`,
-   violence_types: `{ ${data.violenceTypes.join(",")} }`,
-   period_of_day: data.periodOfDay,
-   doctor_work_status: data.doctorWorkStatus,
-   blood_examination_number: data.bloodExaminationsNumber,
-   xray_examination_number: data.xrayExaminationsNumber,
-   bone_examination_number: data.boneExaminationNumber,
-   multiple_visits: data.multipleVisits === "Oui" ? true : false,
+   asker_id: 1, // TODO récupérer l'id
+   profile: data.profile,
+
+   extra_data: {
+      personGender: data.personGender,
+      personAgeTag: data.personAgeTag,
+      examinationTypes: data.examinationTypes,
+      violenceTypes: data.violenceTypes,
+      examinationDatePeriod: data.periodOfDay,
+      bloodExaminationNumber: data.bloodExaminationsNumber,
+      xrayExaminationNumber: data.xrayExaminationsNumber,
+      boneExaminationNumber: data.boneExaminationNumber,
+      multipleVisits: data.multipleVisits,
+   },
 })
 
 export default async (req, res) => {
@@ -36,20 +35,18 @@ export default async (req, res) => {
 
    const data = await req.body
 
-   const trx = await knex.transaction()
-
-   trx("acts")
+   knex("acts")
       .insert(getDataActs(data), "id")
-      .then(ids => trx("acts_details").insert({ ...getDataActsDetails(data), acts_id: ids[0] }, "acts_id"))
       .then(ids => {
-         trx.commit()
          return res.status(STATUS_200_OK).json({ message: `Déclaration envoyée`, detail: ids[0] })
       })
       .catch(error => {
-         trx.rollback()
          console.error(JSON.stringify(error))
-         return res
-            .status(STATUS_500_INTERNAL_SERVER_ERROR)
-            .json({ message: `Erreur serveur base de données`, detail: error })
+         console.error(JSON.stringify(error))
+         return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({
+            error: `Erreur serveur base de données`,
+            error_description: error,
+            error_uri: "https://docs.postgresql.fr/8.3/errcodes-appendix.html",
+         })
       })
 }

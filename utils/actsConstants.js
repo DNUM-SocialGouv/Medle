@@ -82,18 +82,6 @@ const blockBuilder = (type, values) => {
             validate: x => !!x,
             errorMessage: "Obligatoire",
          }
-      case "doctorWorkStatus":
-         return {
-            type: "doctorWorkStatus",
-            title: "Statut médecin",
-            getValues: ({ situationDate, periodOfDay }) =>
-               periodOfDay ? getDoctorWorkStatusValues({ situationDate, periodOfDay }) : doctorWorkStatusValues,
-            render: function render(props) {
-               return <ActBlock {...props} />
-            },
-            validate: x => !!x,
-            errorMessage: "Obligatoire",
-         }
       case "personGender":
          return {
             type: "personGender",
@@ -143,7 +131,6 @@ const profiles = {
       },
       blockBuilder("counters"),
       blockBuilder("periodOfDay"),
-      blockBuilder("doctorWorkStatus"),
       {
          type: "rawContent",
          render: function render() {
@@ -167,7 +154,6 @@ const profiles = {
          validate: x => !!x,
          errorMessage: "Obligatoire",
       },
-      blockBuilder("doctorWorkStatus"),
       {
          type: "rawContent",
          render: function render() {
@@ -181,7 +167,6 @@ const profiles = {
       blockBuilder("examinationTypes", ["Autopsie", "Levée de corps"]),
       blockBuilder("counters"),
       blockBuilder("periodOfDay"),
-      blockBuilder("doctorWorkStatus"),
       {
          type: "rawContent",
          render: function render() {
@@ -193,8 +178,8 @@ const profiles = {
    ],
 }
 
-const getProfiledBlocks = (caseType, dispatch, state, errors) => {
-   const res = profiles[caseType].map(elt =>
+const getProfiledBlocks = (profile, dispatch, state, errors) => {
+   const res = profiles[profile].map(elt =>
       elt.type === "rawContent"
          ? elt.render({ key: elt.type })
          : elt.type === "counters"
@@ -214,9 +199,9 @@ const getProfiledBlocks = (caseType, dispatch, state, errors) => {
    return res
 }
 
-const runProfiledValidation = (caseType, state, setErrors) => {
+const runProfiledValidation = (profile, state, setErrors) => {
    let errors = {}
-   profiles[caseType].forEach(elt => {
+   profiles[profile].forEach(elt => {
       errors = !elt.validate || elt.validate(state[elt.type]) ? errors : { ...errors, [elt.type]: elt.errorMessage }
    })
    setErrors(prev => ({ ...prev, ...errors }))
@@ -224,7 +209,7 @@ const runProfiledValidation = (caseType, state, setErrors) => {
    return isEmpty(errors)
 }
 
-const caseTypeValues = [
+const profileValues = [
    "Victime",
    "Gardé.e à vue",
    "Personne décédée",
@@ -234,9 +219,6 @@ const caseTypeValues = [
    },
 ]
 
-const doctorWorkStatusValues = ["Garde", "Astreinte", "Demie garde"]
-const doctorWorkStatusDefault = ["Classique"]
-
 const periodOfDayValues = {
    week: {
       title: "lun.-ven.",
@@ -244,22 +226,18 @@ const periodOfDayValues = {
          {
             title: "Nuit profonde",
             subTitle: "(00h-8h30)",
-            doctorWorkStatusValues,
          },
          {
             title: "Journée",
             subTitle: "(8h30-18h30)",
-            doctorWorkStatusValues: doctorWorkStatusDefault,
          },
          {
             title: "Soirée",
             subTitle: "(18h30-22h)",
-            doctorWorkStatusValues: doctorWorkStatusDefault,
          },
          {
             title: "Nuit",
             subTitle: "(22h-00h)",
-            doctorWorkStatusValues,
          },
       ],
       dutyDoctorOnly: true,
@@ -270,26 +248,20 @@ const periodOfDayValues = {
          {
             title: "Nuit profonde",
             subTitle: "(00h-8h30)",
-            doctorWorkStatusValues,
          },
          {
             title: "Matin",
             subTitle: "(8h30-12h30)",
-            doctorWorkStatusValues: doctorWorkStatusDefault,
          },
          {
             title: "Après-midi",
             subTitle: "(12h30-18h)",
-            doctorWorkStatusValues,
          },
          {
             title: "Soirée et nuit",
             subTitle: "(18h-00h)",
-            doctorWorkStatusValues,
          },
       ],
-
-      dutyDoctorOnly: false,
    },
    sunday: {
       title: "dim. et férié",
@@ -297,31 +269,22 @@ const periodOfDayValues = {
          {
             title: "Nuit profonde",
             subTitle: "(00h-8h30)",
-            doctorWorkStatusValues,
          },
          {
             title: "Journée",
             subTitle: "(08h30-18h30)",
-            doctorWorkStatusValues,
          },
          {
             title: "Soirée",
             subTitle: "(18h30-22h)",
-            doctorWorkStatusValues,
          },
          {
             title: "Nuit",
             subTitle: "(22h-00h)",
-            doctorWorkStatusValues,
          },
       ],
-
-      dutyDoctorOnly: false,
    },
 }
-
-const getDoctorWorkStatusValues = ({ situationDate, periodOfDay }) =>
-   periodOfDayValues[situationDate].period.filter(elt => elt.title === periodOfDay)[0].doctorWorkStatusValues
 
 const getSituationDate = dateStr => {
    if (!frenchPublicHoliday) {
@@ -341,13 +304,4 @@ const getSituationDate = dateStr => {
    }
 }
 
-export {
-   caseTypeValues,
-   periodOfDayValues,
-   doctorWorkStatusValues,
-   getSituationDate,
-   doctorWorkStatusDefault,
-   getProfiledBlocks,
-   runProfiledValidation,
-   getDoctorWorkStatusValues,
-}
+export { profileValues, periodOfDayValues, getSituationDate, getProfiledBlocks, runProfiledValidation }
