@@ -44,7 +44,7 @@ export default async (req, res) => {
          return res.status(STATUS_200_OK).json(result.numbers)
       } else {
          // Pas de données la 1ère fois. TODO mieux gérer
-         return res.status(STATUS_200_OK).end()
+         return res.status(STATUS_200_OK).json({})
       }
    } else if (req.method === "PUT") {
       const data = await req.body
