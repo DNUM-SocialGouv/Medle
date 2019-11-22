@@ -26,7 +26,7 @@ const ActConfirmationPage = () => {
 
             <Row className="mt-5">
                <Link href="/home">
-                  <a className="mx-auto">Retour à la liste des examens</a>
+                  <a className="mx-auto">Retour à la liste des actes</a>
                </Link>
             </Row>
          </Container>

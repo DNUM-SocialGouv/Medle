@@ -18,10 +18,11 @@ const getDataActs = data => ({
       examinationTypes: data.examinationTypes,
       violenceTypes: data.violenceTypes,
       examinationDatePeriod: data.periodOfDay,
-      bloodExaminationNumber: data.bloodExaminationsNumber,
-      xrayExaminationNumber: data.xrayExaminationsNumber,
-      boneExaminationNumber: data.boneExaminationNumber,
+      bloodExaminationNumber: data.bioExaminationsNumber,
+      xrayExaminationNumber: data.imagingExaminationsNumber,
+      othersExaminationNumber: data.othersExaminationNumber,
       multipleVisits: data.multipleVisits,
+      location: data.location,
    },
 })
 

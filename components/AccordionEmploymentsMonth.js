@@ -100,7 +100,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers }) => {
 AccordionEmploymentsMonth.propTypes = {
    monthName: PropTypes.string.isRequired,
    monthNumber: PropTypes.string.isRequired,
-   numbers: PropTypes.array.isRequired,
+   numbers: PropTypes.object.isRequired,
 }
 
 export default AccordionEmploymentsMonth

@@ -51,18 +51,18 @@ const blockBuilder = (type, values) => {
                      <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
                      <Row>
                         <Col>
-                           <Counter dispatch={dispatch} state={state} type={"bloodExaminationsNumber"}>
-                              Sanguins
+                           <Counter dispatch={dispatch} state={state} type={"bioExaminationsNumber"}>
+                              Biologiques
                            </Counter>
                         </Col>
                         <Col>
-                           <Counter dispatch={dispatch} state={state} type={"xrayExaminationsNumber"}>
-                              Radios
+                           <Counter dispatch={dispatch} state={state} type={"imagingExaminationsNumber"}>
+                              Imageries
                            </Counter>
                         </Col>
                         <Col>
-                           <Counter dispatch={dispatch} state={state} type={"boneExaminationNumber"}>
-                              Osseux
+                           <Counter dispatch={dispatch} state={state} type={"othersExaminationNumber"}>
+                              Autres
                            </Counter>
                         </Col>
                      </Row>
@@ -114,7 +114,7 @@ const profiles = {
          type: "violenceTypes",
          title: "Type(s) de violence",
          getValues: () => [
-            "Conjuguale",
+            "Conjugale",
             "Urbaine",
             "En réunion",
             "Scolaire",
@@ -155,13 +155,32 @@ const profiles = {
          errorMessage: "Obligatoire",
       },
       {
+         type: "location",
+         title: "Lieu de l'examen",
+         getValues: () => ["Commissariat", "UMJ"],
+         render: function render(props) {
+            return <ActBlock {...props} />
+         },
+         validate: x => !!x,
+         errorMessage: "Obligatoire",
+      },
+      {
          type: "rawContent",
          render: function render() {
             return <Title2 className="mb-2 mt-5">{"Profil de la personne gardée à vue"}</Title2>
          },
       },
       blockBuilder("personGender"),
-      blockBuilder("personAgeTag"),
+      {
+         type: "personAgeTag",
+         subTitle: "Âge",
+         getValues: () => ["Mineur", "Majeur", "Non déterminé"],
+         render: function render(props) {
+            return <ActBlock {...props} />
+         },
+         validate: x => !!x,
+         errorMessage: "Obligatoire",
+      },
    ],
    "Personne décédée": [
       blockBuilder("examinationTypes", ["Autopsie", "Levée de corps"]),

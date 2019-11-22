@@ -29,10 +29,11 @@ const reset = state => ({
    examinationTypes: [],
    violenceTypes: [],
    periodOfDay: "",
-   bloodExaminationsNumber: 0,
-   xrayExaminationsNumber: 0,
-   boneExaminationNumber: 0,
+   bioExaminationsNumber: 0,
+   imagingExaminationsNumber: 0,
+   othersExaminationNumber: 0,
    multipleVisits: undefined,
+   location: "",
 })
 
 const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
@@ -133,14 +134,16 @@ const ActDeclaration = ({ askerValues }) => {
             return { ...state, personGender: action.payload }
          case "personAgeTag":
             return { ...state, personAgeTag: action.payload }
-         case "bloodExaminationsNumber":
-            return { ...state, bloodExaminationsNumber: action.payload }
-         case "xrayExaminationsNumber":
-            return { ...state, xrayExaminationsNumber: action.payload }
-         case "boneExaminationNumber":
-            return { ...state, boneExaminationNumber: action.payload }
+         case "bioExaminationsNumber":
+            return { ...state, bioExaminationsNumber: action.payload }
+         case "imagingExaminationsNumber":
+            return { ...state, imagingExaminationsNumber: action.payload }
+         case "othersExaminationNumber":
+            return { ...state, othersExaminationNumber: action.payload }
          case "multipleVisits":
             return { ...state, multipleVisits: action.payload }
+         case "location":
+            return { ...state, location: action.payload }
          default:
             throw new Error("Action.type inconnu")
       }

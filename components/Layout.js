@@ -101,7 +101,7 @@ const Footer = () => (
       <Container>
          <Row>
             <Col>
-               <h4>Medle.incubateur.social.gouv.fr</h4>
+               <h4>Medle.fabrique.social.gouv.fr</h4>
                Un service proposé par la{" "}
                <a
                   target="_blank"
@@ -112,7 +112,7 @@ const Footer = () => (
                </a>{" "}
                et{" "}
                <a target="_blank" href="https://incubateur.social.gouv.fr/" rel="noopener noreferrer">
-                  {" l'incubateur des Affaires sociales"}
+                  {" l'incubateur des ministères sociaux"}
                </a>
             </Col>
             <Col>

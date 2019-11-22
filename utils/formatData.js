@@ -16,7 +16,7 @@ const formats = [
             name: "violenceTypes",
             title: "Type(s) de violence",
             values: [
-               "Conjuguale",
+               "Conjugale",
                "Urbaine",
                "En réunion",
                "Scolaire",
