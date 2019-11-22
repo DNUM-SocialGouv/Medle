@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Head from "next/head"
 import fetch from "isomorphic-unfetch"
-import { LOGIN_ENDPOINT } from "../config"
+import { API_URL, LOGIN_ENDPOINT } from "../config"
 import { login } from "../utils/auth"
 import Login from "../components/Login"
 import { STATUS_200_OK } from "../utils/HttpStatus"
@@ -31,7 +31,7 @@ const LoginPage = () => {
                const { email, password } = userData
 
                try {
-                  const response = await fetch(LOGIN_ENDPOINT, {
+                  const response = await fetch(API_URL + LOGIN_ENDPOINT, {
                      method: "POST",
                      headers: { "Content-Type": "application/json" },
                      body: JSON.stringify({ email, password }),

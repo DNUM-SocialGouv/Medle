@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import nextCookie from "next-cookies"
-import { APP_URL, EMPLOYMENTS_ENDPOINT } from "../config"
+import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
 import moment from "moment"
 import { Alert, Button, Col, Container, FormFeedback, Input, Row } from "reactstrap"
@@ -156,14 +156,6 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
    )
 }
 
-FillEmploymentsPage.propTypes = {
-   currentMonth: PropTypes.integer,
-   currentMonthName: PropTypes.string,
-   numbers: PropTypes.object,
-   allMonths: PropTypes.array,
-   error: PropTypes.string,
-}
-
 FillEmploymentsPage.getInitialProps = async ctx => {
    const { token, role, hospitalId } = nextCookie(ctx)
 
@@ -171,7 +163,7 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       return { error: "Vous n'avez pas d'établissement de santé à gérer." }
    }
 
-   console.log("APP url", APP_URL)
+   console.log("APP url", API_URL)
    console.log("Empployment endoipoit", EMPLOYMENTS_ENDPOINT)
 
    const NAME_MONTHS = {
@@ -202,14 +194,14 @@ FillEmploymentsPage.getInitialProps = async ctx => {
    let result
 
    try {
-      result = await fetch(APP_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${currentYear}`, {
+      result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${currentYear}`, {
          method: "GET",
       })
       const json = await result.json()
 
       if (result.status !== STATUS_200_OK) {
          //throw new Error(json && json.message ? json.message : "")
-         return { error: "Erreur backoffice" }
+         return { error: "Erreur backoffice 1" }
       }
       return {
          currentMonth,
@@ -219,8 +211,16 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       }
    } catch (error) {
       console.error(error)
-      return { error: "Erreur backoffice" }
+      return { error: "Erreur backoffice 2" }
    }
+}
+
+FillEmploymentsPage.propTypes = {
+   currentMonth: PropTypes.string,
+   currentMonthName: PropTypes.string,
+   numbers: PropTypes.object,
+   allMonths: PropTypes.array,
+   error: PropTypes.string,
 }
 
 export default FillEmploymentsPage

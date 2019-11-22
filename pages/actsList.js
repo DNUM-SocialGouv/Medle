@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
 import { withAuthSync } from "../utils/auth"
-import { APP_URL, ACT_LIST_ENDPOINT } from "../config"
+import { API_URL, ACT_LIST_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
 import Layout from "../components/Layout"
 import Banner from "../components/Banner"
@@ -12,7 +12,7 @@ import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, 
 
 const fetchData = async search => {
    const bonus = search ? `?fuzzy=${search}` : ""
-   const res = await fetch(`${APP_URL}${ACT_LIST_ENDPOINT}${bonus}`)
+   const res = await fetch(`${API_URL}${ACT_LIST_ENDPOINT}${bonus}`)
    return await res.json()
 }
 
