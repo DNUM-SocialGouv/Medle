@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import { withAuthSync } from "../../utils/auth"
-import { ACT_DETAIL_ENDPOINT } from "../../config"
+import { API_URL, ACT_DETAIL_ENDPOINT } from "../../config"
 import fetch from "isomorphic-unfetch"
 import Layout from "../../components/Layout"
 import Banner from "../../components/Banner"
@@ -19,7 +19,7 @@ const ActDetail = () => {
       const fetchData = async () => {
          let json
          try {
-            const res = await fetch(ACT_DETAIL_ENDPOINT + "/" + id)
+            const res = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
             json = await res.json()
             setAct(json.act)
          } catch (error) {

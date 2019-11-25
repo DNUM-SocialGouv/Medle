@@ -4,7 +4,7 @@ import Router from "next/router"
 import fetch from "isomorphic-unfetch"
 import { Alert, Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
-import { ACT_DECLARATION_ENDPOINT } from "../config"
+import { API_URL, ACT_DECLARATION_ENDPOINT } from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
@@ -160,7 +160,7 @@ const ActDeclaration = ({ askerValues }) => {
       let response, json
 
       try {
-         response = await fetch(ACT_DECLARATION_ENDPOINT, {
+         response = await fetch(API_URL + ACT_DECLARATION_ENDPOINT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(state),
