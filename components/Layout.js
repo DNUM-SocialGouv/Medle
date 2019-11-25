@@ -29,11 +29,9 @@ const Header = () => {
    return (
       <header>
          <Navbar color="light" light expand="md" className="navbar-medle">
-            <Link href={"/home"}>
-               <NavbarBrand>
-                  <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>&nbsp; Plateforme de médecine légale
-               </NavbarBrand>
-            </Link>
+            <NavbarBrand href="/home">
+               <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>&nbsp; Plateforme de médecine légale
+            </NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
                <Nav className="ml-auto" navbar>

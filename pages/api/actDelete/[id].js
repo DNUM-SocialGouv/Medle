@@ -7,7 +7,7 @@ import {
 } from "../../../utils/HttpStatus"
 
 export default async (req, res) => {
-   let act
+   let ids
 
    const { id } = req.query
 
@@ -16,15 +16,16 @@ export default async (req, res) => {
    }
 
    try {
-      act = await knex("acts")
+      ids = await knex("acts")
          .where("id", id)
-         .first()
+         .whereNull("deleted_at")
+         .update({ deleted_at: knex.fn.now() }, ["id"])
    } catch (err) {
       return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({ message: `Erreur de base de donnée / ${err}` })
    }
 
-   if (act) {
-      return res.status(STATUS_200_OK).json({ act })
+   if (ids) {
+      return res.status(STATUS_200_OK).end()
    } else {
       return res.status(STATUS_404_NOT_FOUND).end()
    }

@@ -1,6 +1,6 @@
 import React, { useReducer, useRef, useState } from "react"
 import PropTypes from "prop-types"
-import Router from "next/router"
+import Router, { useRouter } from "next/router"
 import fetch from "isomorphic-unfetch"
 import { Alert, Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
@@ -12,9 +12,9 @@ import { Title1, Title2, Label, ValidationButton } from "../components/StyledCom
 import { STATUS_200_OK } from "../utils/HttpStatus"
 import { profileValues, getProfiledBlocks, runProfiledValidation, getSituationDate } from "../utils/actsConstants"
 
-const getInitialState = asker => ({
-   pvNumber: "",
-   internalNumber: "",
+const getInitialState = ({ asker, internalNumber, pvNumber }) => ({
+   pvNumber: pvNumber ? pvNumber : "",
+   internalNumber: internalNumber ? internalNumber : "",
    examinationDate: "",
    asker: asker ? asker : "",
    situationDate: "week",
@@ -39,6 +39,11 @@ const reset = state => ({
 const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
 
 const ActDeclaration = ({ askerValues }) => {
+   const router = useRouter()
+   const { internalNumber, pvNumber } = router.query
+
+   console.log("internalNumber", internalNumber)
+
    const refPersonType = useRef()
    const [errors, setErrors] = useState({})
 
@@ -148,7 +153,16 @@ const ActDeclaration = ({ askerValues }) => {
             throw new Error("Action.type inconnu")
       }
    }
-   const [state, dispatch] = useReducer(reducer, getInitialState(askerValues ? askerValues[0] : ""))
+
+   console.log(
+      "initial state",
+      getInitialState({ askerValues: askerValues ? askerValues[0] : "", internalNumber, pvNumber }),
+   )
+
+   const [state, dispatch] = useReducer(
+      reducer,
+      getInitialState({ askerValues: askerValues ? askerValues[0] : "", internalNumber, pvNumber }),
+   )
 
    const validAct = async () => {
       setErrors({})
@@ -201,6 +215,7 @@ const ActDeclaration = ({ askerValues }) => {
                      id="internalNumber"
                      invalid={errors && !!errors.internalNumber}
                      placeholder="Ex: 2019-23091"
+                     value={state.internalNumber}
                      onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
                   />
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
@@ -210,6 +225,7 @@ const ActDeclaration = ({ askerValues }) => {
                   <Input
                      id="pvNumber"
                      placeholder="Optionnel"
+                     value={state.pvNumber}
                      onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
                   />
                </Col>
@@ -258,6 +274,8 @@ const ActDeclaration = ({ askerValues }) => {
 
 ActDeclaration.propTypes = {
    askerValues: PropTypes.array,
+   internalNumber: PropTypes.string,
+   pvNumber: PropTypes.string,
 }
 
 ActDeclaration.getInitialProps = async () => {
