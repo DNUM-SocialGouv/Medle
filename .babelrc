@@ -1,5 +1,14 @@
 {
-    "presets": ["next/babel"],
+    "presets": [
+      "next/babel",
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "esmodules": true
+          }
+        }
+      ]],
     "plugins": [
         [
           "styled-components",
