@@ -1,4 +1,3 @@
-import "core-js/stable"
 import React, { useState } from "react"
 import Head from "next/head"
 import fetch from "isomorphic-unfetch"
