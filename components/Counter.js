@@ -4,12 +4,12 @@ import PropTypes from "prop-types"
 
 const Counter = ({ children, dispatch, state, type }) => {
    const add = () => {
-      dispatch({ type, payload: state[type] + 1 })
+      dispatch({ type, payload: { mode: "replace", val: state[type] + 1 } })
    }
 
    const substract = () => {
       const res = state[type] - 1 > 0 ? state[type] - 1 : 0
-      dispatch({ type, payload: res })
+      dispatch({ type, payload: { mode: "replace", val: res } })
    }
 
    const keyPress = (event, fn) => event.key === "Enter" && fn(event)

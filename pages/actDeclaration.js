@@ -82,27 +82,6 @@ const ActDeclaration = ({ askerValues }) => {
       return runProfiledValidation(state.profile, state, setErrors)
    }
 
-   // TODO : à tester
-   const removePrecedentValueWithPrefix = (prefix, arr) => {
-      const index = arr.findIndex(elt => elt.match(new RegExp(prefix + "/")))
-
-      return index === -1 ? arr : [...arr.slice(0, index), ...arr.slice(index + 1)]
-   }
-
-   // TODO à tester
-   const addOrRemoveInArr = (value, arr) => {
-      const index = arr.indexOf(value)
-      if (index !== -1) {
-         return [...arr.slice(0, index), ...arr.slice(index + 1)]
-      } else {
-         const prefixChunks = value.split("/")
-         if (prefixChunks.length) {
-            arr = removePrecedentValueWithPrefix(prefixChunks[0], arr)
-         }
-         return [...arr, value]
-      }
-   }
-
    const reducer = (state, action) => {
       if (action.payload.mode === "toggle") {
          const part = state[action.type] || ""
@@ -195,6 +174,8 @@ const ActDeclaration = ({ askerValues }) => {
       reducer,
       getInitialState({ askerValues: askerValues ? askerValues[0] : "", internalNumber, pvNumber }),
    )
+
+   console.log("monstate", state)
 
    const validAct = async () => {
       setErrors({})
