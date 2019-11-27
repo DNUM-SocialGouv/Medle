@@ -4,6 +4,29 @@ import { ButtonDropdown, Col, DropdownItem, DropdownMenu, Row } from "reactstrap
 
 import { Button, DropdownToggle, Title2 } from "./StyledComponents"
 
+const normalizeValues = values => {
+   values.forEach(v => {
+      if (typeof v !== "string" && typeof v !== "object") {
+         throw new Error("Incompatible types for values")
+      }
+   })
+
+   return values.map(v => {
+      if (typeof v === "string") {
+         return { title: v, subTitle: "", subValues: [] }
+      } else {
+         let resValue
+         if (!v.subTitle) {
+            resValue = { ...v, subTitle: "" }
+         }
+         if (!v.subValues) {
+            resValue = { ...v, subValues: [] }
+         }
+         return resValue
+      }
+   })
+}
+
 const makeColOptions = values => {
    if (values.length) {
       if (values.length === 1) {
@@ -45,6 +68,8 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
    const colOptions = makeColOptions(values)
    const colorOptions = invalid ? { color: "red" } : {}
 
+   const newValues = normalizeValues(values)
+
    return (
       <>
          {title && (
@@ -62,8 +87,8 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
          )}
 
          <Row>
-            {values.map((val, index) => {
-               if (val.subValues) {
+            {newValues.map((val, index) => {
+               if (val.subValues.length) {
                   const commonElement = hasCommonElement(val.title, state[type], val.subValues)
                   return (
                      <Col key={index} {...colOptions} className="mb-4">
@@ -84,7 +109,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
                         </ButtonDropdown>
                      </Col>
                   )
-               } else if (val.subTitle) {
+               } else {
                   return (
                      <Col key={index} {...colOptions} className="mb-4">
                         <Button
@@ -100,20 +125,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
                         </Button>
                      </Col>
                   )
-               } else
-                  return (
-                     <Col key={index} {...colOptions} className="mb-4 mx-auto">
-                        <Button
-                           outline
-                           color="secondary"
-                           block
-                           invert={isSelected(state[type], val)}
-                           onClick={() => dispatch({ type, payload: val })}
-                        >
-                           {val}
-                        </Button>
-                     </Col>
-                  )
+               }
             })}
          </Row>
       </>
