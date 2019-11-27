@@ -8,6 +8,7 @@ import { API_URL, ACT_DECLARATION_ENDPOINT } from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
+import VictimProfile from "../components/VictimProfile"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
 import { profileValues, getProfiledBlocks, runProfiledValidation, getSituationDate } from "../utils/actsConstants"
@@ -103,6 +104,35 @@ const ActDeclaration = ({ askerValues }) => {
    }
 
    const reducer = (state, action) => {
+      if (action.payload.mode === "toggle") {
+         const part = state[action.type] || ""
+         if (part === action.payload.val) {
+            state = { ...state, [action.type]: "" }
+         } else {
+            state = { ...state, [action.type]: action.payload.val }
+         }
+      } else if (action.payload.mode === "toggleMultiple") {
+         const parts = state[action.type] || []
+         const index = parts.indexOf(action.payload.val)
+         if (index !== -1) {
+            state = { ...state, [action.type]: [...parts.slice(0, index), ...parts.slice(index + 1)] }
+         } else {
+            const chunks = action.payload.val.split("/")
+            let prefix = "",
+               newState = state[action.type]
+            if (chunks.length === 2) {
+               prefix = chunks[0]
+               newState = state[action.type].filter(e => !e.startsWith(prefix))
+            }
+            state = {
+               ...state,
+               [action.type]: [...newState, action.payload.val],
+            }
+         }
+      } else if (action.payload.mode === "replace") {
+         state = { ...state, [action.type]: action.payload.val }
+      }
+
       switch (action.type) {
          case "internalNumber":
             setErrors(deleteProperty(errors, "internalNumber"))
@@ -126,31 +156,33 @@ const ActDeclaration = ({ askerValues }) => {
                return { ...state, profile: action.payload }
             }
             return state
-         case "examinationTypes":
-            return { ...state, examinationTypes: addOrRemoveInArr(action.payload, state.examinationTypes) }
-         case "violenceTypes":
-            return { ...state, violenceTypes: addOrRemoveInArr(action.payload, state.violenceTypes) }
-         case "periodOfDay":
-            return {
-               ...state,
-               periodOfDay: action.payload,
-            }
-         case "personGender":
-            return { ...state, personGender: action.payload }
-         case "personAgeTag":
-            return { ...state, personAgeTag: action.payload }
-         case "bioExaminationsNumber":
-            return { ...state, bioExaminationsNumber: action.payload }
-         case "imagingExaminationsNumber":
-            return { ...state, imagingExaminationsNumber: action.payload }
-         case "othersExaminationNumber":
-            return { ...state, othersExaminationNumber: action.payload }
-         case "multipleVisits":
-            return { ...state, multipleVisits: action.payload }
-         case "location":
-            return { ...state, location: action.payload }
+         // case "examinationTypes":
+         //    return { ...state, examinationTypes: addOrRemoveInArr(action.payload, state.examinationTypes) }
+         // case "violenceTypes":
+         //    return { ...state, violenceTypes: addOrRemoveInArr(action.payload, state.violenceTypes) }
+         // case "periodOfDay":
+         //    return {
+         //       ...state,
+         //       periodOfDay: action.payload,
+         //    }
+         // case "personGender":
+         //    return { ...state, personGender: action.payload }
+         // case "personAgeTag":
+         //    return { ...state, personAgeTag: action.payload }
+         // case "bioExaminationsNumber":
+         //    return { ...state, bioExaminationsNumber: action.payload }
+         // case "imagingExaminationsNumber":
+         //    return { ...state, imagingExaminationsNumber: action.payload }
+         // case "othersExaminationNumber":
+         //    return { ...state, othersExaminationNumber: action.payload }
+         // case "multipleVisits":
+         //    return { ...state, multipleVisits: action.payload }
+         // case "location":
+         //    return { ...state, location: action.payload }
+         // default:
+         //    throw new Error("Action.type inconnu")
          default:
-            throw new Error("Action.type inconnu")
+            return state
       }
    }
 
@@ -258,9 +290,11 @@ const ActDeclaration = ({ askerValues }) => {
                Qui a été examiné?
             </Title2>
 
-            <ActBlock type="profile" values={profileValues} dispatch={dispatch} state={state} />
+            <ActBlock type="profile" values={profileValues} dispatch={dispatch} state={state.profile} />
 
-            {state.profile && getProfiledBlocks(state.profile, dispatch, state, errors)}
+            <VictimProfile dispatch={dispatch} state={state} />
+
+            {/* {state.profile && getProfiledBlocks(state.profile, dispatch, state, errors)} */}
 
             <div className="text-center mt-5">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>

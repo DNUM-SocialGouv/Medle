@@ -50,18 +50,14 @@ const isSelected = (stateType, val) => {
    }
 }
 
-const hasCommonElement = (prefix, stateTypes, subValues) => {
-   if (!(stateTypes instanceof Array) || !(subValues instanceof Array)) return false
-
-   for (let i = 0; i < stateTypes.length; i++) {
-      for (let j = 0; j < subValues.length; j++) {
-         if (stateTypes[i] === prefix + "/" + subValues[j]) return stateTypes[i]
-      }
+const selectedSubvalueInState = (prefix, stateTypes) => {
+   if (stateTypes instanceof Array) {
+      return stateTypes.filter(elt => elt.startsWith(prefix))
    }
    return false
 }
 
-const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) => {
+const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mode }) => {
    const [dropdownOpen, setOpen] = useState(false)
    const toggle = () => setOpen(!dropdownOpen)
 
@@ -89,18 +85,31 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
          <Row>
             {newValues.map((val, index) => {
                if (val.subValues.length) {
-                  const commonElement = hasCommonElement(val.title, state[type], val.subValues)
+                  const selectedSubvalue = selectedSubvalueInState(val.title, state)
                   return (
                      <Col key={index} {...colOptions} className="mb-4">
                         <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
-                           <DropdownToggle outline color="secondary" invert={commonElement ? 1 : 0} caret>
-                              {commonElement ? commonElement : val.title}
+                           <DropdownToggle
+                              outline
+                              color="secondary"
+                              invert={selectedSubvalue && selectedSubvalue.length ? 1 : 0}
+                              caret
+                           >
+                              {selectedSubvalue && selectedSubvalue.length === 1 ? selectedSubvalue[0] : val.title}
                            </DropdownToggle>
                            <DropdownMenu>
                               {val.subValues.map((sub, indexS) => (
                                  <DropdownItem
                                     key={indexS}
-                                    onClick={() => dispatch({ type, payload: val.title + "/" + sub })}
+                                    onClick={() =>
+                                       dispatch({
+                                          type,
+                                          payload: {
+                                             mode,
+                                             val: val.title + "/" + sub,
+                                          },
+                                       })
+                                    }
                                  >
                                     {sub}
                                  </DropdownItem>
@@ -116,8 +125,16 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid }) =
                            outline
                            color="secondary"
                            block
-                           invert={isSelected(state[type], val.title)}
-                           onClick={() => dispatch({ type, payload: val.title })}
+                           invert={isSelected(state, val.title)}
+                           onClick={() =>
+                              dispatch({
+                                 type,
+                                 payload: {
+                                    mode,
+                                    val: val.title,
+                                 },
+                              })
+                           }
                         >
                            {val.title}
                            <br />
@@ -138,8 +155,14 @@ ActBlock.propTypes = {
    type: PropTypes.string.isRequired,
    values: PropTypes.array.isRequired,
    dispatch: PropTypes.func.isRequired,
-   state: PropTypes.object.isRequired,
+   state: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
    invalid: PropTypes.bool,
+   mode: PropTypes.string,
 }
 
-export default ActBlock
+const areEqual = (prevProps, nextProps) => {
+   if (prevProps.state !== nextProps.state) return false
+   return true
+}
+
+export default React.memo(ActBlock, areEqual)

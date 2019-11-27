@@ -259,7 +259,6 @@ const periodOfDayValues = {
             subTitle: "(22h-00h)",
          },
       ],
-      dutyDoctorOnly: true,
    },
    saturday: {
       title: "sam.",
