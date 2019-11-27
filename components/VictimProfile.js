@@ -6,7 +6,7 @@ import { Col, Row } from "reactstrap"
 import Counter from "./Counter"
 import { periodOfDayValues, getSituationDate } from "../utils/actsConstants"
 
-const VictimProfile = ({ dispatch, state, examinationDate }) => {
+const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
    const situationDate = getSituationDate(examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -19,6 +19,7 @@ const VictimProfile = ({ dispatch, state, examinationDate }) => {
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
+            invalid={errors.examinationTypes}
          />
          <ActBlock
             type="violenceTypes"
@@ -36,6 +37,7 @@ const VictimProfile = ({ dispatch, state, examinationDate }) => {
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.violenceTypes || []}
+            invalid={errors.violenceTypes}
          />
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
@@ -63,6 +65,7 @@ const VictimProfile = ({ dispatch, state, examinationDate }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.periodOfDay || ""}
+            invalid={errors.periodOfDay}
          />
          <ActBlock
             type="personGender"
@@ -72,6 +75,7 @@ const VictimProfile = ({ dispatch, state, examinationDate }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.personGender || ""}
+            invalid={errors.personGender}
          />
          <ActBlock
             type="personAgeTag"
@@ -81,15 +85,38 @@ const VictimProfile = ({ dispatch, state, examinationDate }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.personAgeTag || ""}
+            invalid={errors.personAgeTag}
          />
       </>
    )
+}
+
+VictimProfile.validate = ({ state }) => {
+   const errors = {}
+   if (!state.examinationTypes.length) {
+      errors.examinationTypes = "Obligatoire"
+   }
+   if (!state.violenceTypes.length) {
+      errors.violenceTypes = "Obligatoire"
+   }
+   if (!state.periodOfDay) {
+      errors.periodOfDay = "Obligatoire"
+   }
+   if (!state.personGender) {
+      errors.personGender = "Obligatoire"
+   }
+   if (!state.personAgeTag) {
+      errors.personAgeTag = "Obligatoire"
+   }
+
+   return errors
 }
 
 VictimProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    examinationDate: PropTypes.string,
+   errors: PropTypes.object,
 }
 
 export default VictimProfile

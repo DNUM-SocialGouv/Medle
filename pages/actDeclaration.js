@@ -11,7 +11,7 @@ import ActBlock from "../components/ActBlock"
 import VictimProfile from "../components/VictimProfile"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
-import { profileValues, getProfiledBlocks, runProfiledValidation, getSituationDate } from "../utils/actsConstants"
+import { profileValues, runProfiledValidation, getSituationDate } from "../utils/actsConstants"
 
 const getInitialState = ({ asker, internalNumber, pvNumber }) => ({
    pvNumber: pvNumber ? pvNumber : "",
@@ -42,9 +42,6 @@ const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
 const ActDeclaration = ({ askerValues }) => {
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
-
-   console.log("internalNumber", internalNumber)
-
    const refPersonType = useRef()
    const [errors, setErrors] = useState({})
 
@@ -132,7 +129,9 @@ const ActDeclaration = ({ askerValues }) => {
                   block: "start",
                })
                state = reset(state)
-               return { ...state, profile: action.payload }
+
+               console.log("profile", state, action.payload)
+               return { ...state, profile: action.payload.val }
             }
             return state
          // case "examinationTypes":
@@ -175,14 +174,28 @@ const ActDeclaration = ({ askerValues }) => {
       getInitialState({ askerValues: askerValues ? askerValues[0] : "", internalNumber, pvNumber }),
    )
 
-   console.log("monstate", state)
+   const PROFILES = {
+      Victime: {
+         render: <VictimProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: VictimProfile.validate,
+      },
+   }
+
+   const getProfile = ({ profile }) => {
+      return PROFILES[profile].render
+   }
 
    const validAct = async () => {
       setErrors({})
 
-      if (!fullValidate(state)) {
+      const newErrors = PROFILES[state.profile].validate({ state, errors })
+
+      if (Object.keys(newErrors).length) {
+         setErrors(newErrors)
          return
       }
+
+      console.log("pas d'erreurs trouvées")
 
       let response, json
 
@@ -273,9 +286,7 @@ const ActDeclaration = ({ askerValues }) => {
 
             <ActBlock type="profile" values={profileValues} dispatch={dispatch} state={state.profile} />
 
-            <VictimProfile dispatch={dispatch} state={state} />
-
-            {/* {state.profile && getProfiledBlocks(state.profile, dispatch, state, errors)} */}
+            {state.profile && getProfile(state)}
 
             <div className="text-center mt-5">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
