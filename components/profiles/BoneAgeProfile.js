@@ -1,8 +1,8 @@
 import React from "react"
-import ActBlock from "./ActBlock"
+import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
-import { Title2 } from "./StyledComponents"
-import { periodOfDayValues, getSituationDate } from "../utils/actsConstants"
+import { Title2 } from "../StyledComponents"
+import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 
 const BoneAgeProfile = ({ dispatch, state, examinationDate, errors }) => {
    const situationDate = getSituationDate(examinationDate)

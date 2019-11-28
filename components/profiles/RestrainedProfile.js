@@ -1,12 +1,12 @@
 import React from "react"
-import ActBlock from "./ActBlock"
+import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
-import { Title2 } from "./StyledComponents"
+import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
-import Counter from "./Counter"
-import { periodOfDayValues, getSituationDate } from "../utils/actsConstants"
+import Counter from "../Counter"
+import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 
-const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
+const RestrainedProfile = ({ dispatch, state, examinationDate, errors }) => {
    const situationDate = getSituationDate(examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -15,7 +15,7 @@ const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
          <ActBlock
             type="examinationTypes"
             title="Type(s) d'examen"
-            values={["Externe", "Levée de corps", "Autopsie", "Anthropologie", "Odontologie"]}
+            values={["Somatique", "Psychiatrique", "Âge osseux"]}
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
@@ -24,23 +24,13 @@ const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
+               <Counter dispatch={dispatch} state={state} type={"bioExaminationsNumber"}>
+                  Biologiques
+               </Counter>
+            </Col>
+            <Col>
                <Counter dispatch={dispatch} state={state} type={"imagingExaminationsNumber"}>
-                  Imagerie
-               </Counter>
-            </Col>
-            <Col>
-               <Counter dispatch={dispatch} state={state} type={"toxicExaminationsNumber"}>
-                  Toxicologie
-               </Counter>
-            </Col>
-            <Col>
-               <Counter dispatch={dispatch} state={state} type={"anapathExaminationsNumber"}>
-                  Anapath
-               </Counter>
-            </Col>
-            <Col>
-               <Counter dispatch={dispatch} state={state} type={"geneticExaminationsNumber"}>
-                  Génétique
+                  Imageries
                </Counter>
             </Col>
             <Col>
@@ -49,6 +39,24 @@ const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
                </Counter>
             </Col>
          </Row>
+         <ActBlock
+            type="prescription"
+            title="Prescription d'ordonnance"
+            values={["Oui", "Non"]}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.prescription || ""}
+            invalid={errors.prescription}
+         />
+         <ActBlock
+            type="location"
+            title="Lieu de l'examen"
+            values={["UMJ", "Hôpital", "Locaux douaniers", "Centre de rétention"]}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.location || []}
+            invalid={errors.location}
+         />
          <ActBlock
             type="periodOfDay"
             title="Heure de l'examen"
@@ -59,7 +67,7 @@ const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
             invalid={errors.periodOfDay}
          />
 
-         <Title2 className="mb-2 mt-5">{"Profil de la personne décédée"}</Title2>
+         <Title2 className="mb-2 mt-5">{"Profil de la personne retenue"}</Title2>
 
          <ActBlock
             type="personGender"
@@ -75,7 +83,7 @@ const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
             type="personAgeTag"
             title=""
             subTitle="Âge"
-            values={["0-2 ans", "3-17 ans", "+ de 18 ans", "Non déterminé"]}
+            values={["Mineur", "Majeur", "Non déterminé"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personAgeTag || ""}
@@ -85,10 +93,16 @@ const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
    )
 }
 
-DeceasedProfile.validate = state => {
+RestrainedProfile.validate = state => {
    const errors = {}
    if (!state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
+   }
+   if (!state.prescription) {
+      errors.prescription = "Obligatoire"
+   }
+   if (!state.location) {
+      errors.location = "Obligatoire"
    }
    if (!state.periodOfDay) {
       errors.periodOfDay = "Obligatoire"
@@ -103,11 +117,11 @@ DeceasedProfile.validate = state => {
    return errors
 }
 
-DeceasedProfile.propTypes = {
+RestrainedProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    examinationDate: PropTypes.string,
    errors: PropTypes.object,
 }
 
-export default DeceasedProfile
+export default RestrainedProfile

@@ -1,5 +1,5 @@
 import React from "react"
-import ActBlock from "./ActBlock"
+import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
 
 const CriminalCourtProfile = ({ dispatch, state, errors }) => {

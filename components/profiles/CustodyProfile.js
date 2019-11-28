@@ -1,12 +1,12 @@
 import React from "react"
-import ActBlock from "./ActBlock"
+import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
-import { Title2 } from "./StyledComponents"
+import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
-import Counter from "./Counter"
-import { periodOfDayValues, getSituationDate } from "../utils/actsConstants"
+import Counter from "../Counter"
+import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 
-const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
+const CustodyProfile = ({ dispatch, state, examinationDate, errors }) => {
    const situationDate = getSituationDate(examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -15,8 +15,8 @@ const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
          <ActBlock
             type="examinationTypes"
             title="Type(s) d'examen"
-            values={["Somatique"]}
-            mode="toggle"
+            values={["Somatique", "Psychiatrique", "Âge osseux"]}
+            mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
             invalid={errors.examinationTypes}
@@ -30,7 +30,7 @@ const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
             </Col>
             <Col>
                <Counter dispatch={dispatch} state={state} type={"imagingExaminationsNumber"}>
-                  Imagerie
+                  Imageries
                </Counter>
             </Col>
             <Col>
@@ -39,7 +39,6 @@ const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
                </Counter>
             </Col>
          </Row>
-
          <ActBlock
             type="periodOfDay"
             title="Heure de l'examen"
@@ -49,8 +48,26 @@ const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
             state={state.periodOfDay || ""}
             invalid={errors.periodOfDay}
          />
+         <ActBlock
+            type="prescription"
+            title="Prescription d'ordonnance"
+            values={["Oui", "Non"]}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.prescription || ""}
+            invalid={errors.prescription}
+         />
+         <ActBlock
+            type="location"
+            title="Lieu de l'examen"
+            values={["UMJ", "Hôpital", "Commissariat", "Brigade de gendardmerie"]}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.location || []}
+            invalid={errors.location}
+         />
 
-         <Title2 className="mb-2 mt-5">{"Profil de la personne décédée"}</Title2>
+         <Title2 className="mb-2 mt-5">{"Profil de la personne gardée à vue"}</Title2>
 
          <ActBlock
             type="personGender"
@@ -76,10 +93,16 @@ const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
    )
 }
 
-AsylumSeekerProfile.validate = state => {
+CustodyProfile.validate = state => {
    const errors = {}
    if (!state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
+   }
+   if (!state.prescription) {
+      errors.prescription = "Obligatoire"
+   }
+   if (!state.location) {
+      errors.location = "Obligatoire"
    }
    if (!state.periodOfDay) {
       errors.periodOfDay = "Obligatoire"
@@ -94,11 +117,11 @@ AsylumSeekerProfile.validate = state => {
    return errors
 }
 
-AsylumSeekerProfile.propTypes = {
+CustodyProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    examinationDate: PropTypes.string,
    errors: PropTypes.object,
 }
 
-export default AsylumSeekerProfile
+export default CustodyProfile

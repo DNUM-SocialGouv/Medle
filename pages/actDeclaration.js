@@ -2,31 +2,31 @@ import React, { useReducer, useRef, useState } from "react"
 import PropTypes from "prop-types"
 import Router, { useRouter } from "next/router"
 import fetch from "isomorphic-unfetch"
-import { Alert, Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
+import { Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
 import { API_URL, ACT_DECLARATION_ENDPOINT } from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
-import VictimProfile from "../components/VictimProfile"
-import CustodyProfile from "../components/CustodyProfile"
-import DeceasedProfile from "../components/DeceasedProfile"
-import BoneAgeProfile from "../components/BoneAgeProfile"
-import AsylumSeekerProfile from "../components/AsylumSeekerProfile"
-import CriminalCourtProfile from "../components/CriminalCourtProfile"
-import ReconstitutionProfile from "../components/ReconstitutionProfile"
-import DrunkProfile from "../components/DrunkProfile"
-import RestrainedProfile from "../components/RestrainedProfile"
+import {
+   VictimProfile,
+   CustodyProfile,
+   DeceasedProfile,
+   BoneAgeProfile,
+   AsylumSeekerProfile,
+   CriminalCourtProfile,
+   ReconstitutionProfile,
+   DrunkProfile,
+   RestrainedProfile,
+} from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
-import { runProfiledValidation, getSituationDate } from "../utils/actsConstants"
 
 const getInitialState = ({ asker, internalNumber, pvNumber }) => ({
    pvNumber: pvNumber ? pvNumber : "",
    internalNumber: internalNumber ? internalNumber : "",
    examinationDate: "",
    asker: asker ? asker : "",
-   situationDate: "week",
    ...reset({}),
 })
 
@@ -91,15 +91,9 @@ const ActDeclaration = ({ askerValues }) => {
       return isEmpty(errors)
    }
 
-   const fullValidate = state => {
-      if (!preValidate(state)) {
-         return false
-      }
-
-      return runProfiledValidation(state.profile, state, setErrors)
-   }
-
    const reducer = (state, action) => {
+      setErrors(deleteProperty(errors, action.type))
+
       if (action.payload.mode === "toggle") {
          const part = state[action.type] || ""
          if (part === action.payload.val) {
@@ -138,7 +132,7 @@ const ActDeclaration = ({ askerValues }) => {
          case "examinationDate":
             setErrors(deleteProperty(errors, "examinationDate"))
             state.periodOfDay = ""
-            return { ...state, situationDate: getSituationDate(action.payload), examinationDate: action.payload }
+            return { ...state, examinationDate: action.payload }
          case "asker":
             return { ...state, asker: action.payload }
          case "profile":
@@ -251,13 +245,10 @@ const ActDeclaration = ({ askerValues }) => {
 
    return (
       <Layout>
-         <Title1 className="mt-5 mb-5">{"Déclaration d'acte"}</Title1>
+         <Title1 className="mt-5 mb-5">{"Ajout d'acte"}</Title1>
          <Container style={{ maxWidth: 720 }}>
-            <Title2 className="mb-4">{"Données d'identification du dossier"}</Title2>
+            <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>
 
-            {!isEmpty(errors) && (
-               <Alert color="danger">{errors.general || "Veuillez renseigner les éléments en rouge"}</Alert>
-            )}
             <Row>
                <Col className="mr-3">
                   <Label htmlFor="internalNumber">Numéro interne</Label>
@@ -310,7 +301,7 @@ const ActDeclaration = ({ askerValues }) => {
 
             <ActBlock type="profile" values={profileValues} mode="toggle" dispatch={dispatch} state={state.profile} />
 
-            {state.profile && getProfile(state)}
+            {state.profile && !errors.internalNumber && !errors.examinationDate && getProfile(state)}
 
             <div className="text-center mt-5">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>

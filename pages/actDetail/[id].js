@@ -106,7 +106,7 @@ const ActDetail = () => {
                   </Col>
                   <Col className="mr-3">
                      <ColumnAct
-                        header={"Tye d'examen"}
+                        header={"Type d'examen"}
                         values={act && act.extra_data && act.extra_data.examinationTypes}
                      />
                   </Col>
@@ -120,13 +120,8 @@ const ActDetail = () => {
                      <ColumnAct header={"Examens complémentaires"} values={act && act.examination_date_period} />
                   </Col>
                </Row>
-            </div>
-         </Container>
 
-         <Container style={{ maxWidth: 780 }} className="mt-4">
-            <div style={{ border: "1px solid rgba(151,151,151,0.13)", borderRadius: 10 }} className="px-2 py-2">
-               <EditOutlinedIcon style={{ float: "right" }} className="mr-2 mt-3" />
-               <Title2 className="mb-4 mt-3">{"Profil de la personne examinée"}</Title2>
+               <Title2 className="mb-4 mt-3">{"Profil de la personne"}</Title2>
 
                <Row>
                   <Col className="mr-3">
