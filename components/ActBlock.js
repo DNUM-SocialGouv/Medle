@@ -52,9 +52,9 @@ const isSelected = (stateType, val) => {
 
 const selectedSubvalueInState = (prefix, stateTypes) => {
    if (stateTypes instanceof Array) {
-      return stateTypes.filter(elt => elt.startsWith(prefix))
-   }
-   return false
+      const res = stateTypes.filter(elt => elt.startsWith(prefix))
+      return res.length ? res[0] : false
+   } else return stateTypes.startsWith(prefix) ? stateTypes : false
 }
 
 const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mode }) => {
@@ -62,6 +62,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
    const toggle = () => setOpen(!dropdownOpen)
 
    const colOptions = makeColOptions(values)
+   const rowClassNames = values.length && values.length === 1 ? "justify-content-center" : ""
    const colorOptions = invalid ? { color: "red" } : {}
 
    const newValues = normalizeValues(values)
@@ -82,20 +83,15 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
             </Row>
          )}
 
-         <Row>
+         <Row className={rowClassNames}>
             {newValues.map((val, index) => {
                if (val.subValues.length) {
                   const selectedSubvalue = selectedSubvalueInState(val.title, state)
                   return (
                      <Col key={index} {...colOptions} className="mb-4">
                         <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
-                           <DropdownToggle
-                              outline
-                              color="secondary"
-                              invert={selectedSubvalue && selectedSubvalue.length ? 1 : 0}
-                              caret
-                           >
-                              {selectedSubvalue && selectedSubvalue.length === 1 ? selectedSubvalue[0] : val.title}
+                           <DropdownToggle outline color="secondary" invert={selectedSubvalue ? 1 : 0} caret>
+                              {selectedSubvalue ? selectedSubvalue : val.title}
                            </DropdownToggle>
                            <DropdownMenu>
                               {val.subValues.map((sub, indexS) => (
@@ -122,6 +118,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
                   return (
                      <Col key={index} {...colOptions} className="mb-4">
                         <Button
+                           style={{ fontSize: 14 }}
                            outline
                            color="secondary"
                            block

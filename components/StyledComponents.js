@@ -2,6 +2,16 @@ import styled, { css } from "styled-components"
 import { Button as RSButton, DropdownToggle as RSDropdownToggle } from "reactstrap"
 
 export const DropdownToggle = styled(RSDropdownToggle)`
+   font-family: "Source Sans Pro";
+   font-size: 14px;
+   letter-spacing: -0.23px;
+   line-height: 16px;
+   text-align: center;
+   min-height: 46px;
+
+   background: white;
+   color: #6c757d;
+
    ${props =>
       props.invert &&
       css`
@@ -11,6 +21,13 @@ export const DropdownToggle = styled(RSDropdownToggle)`
 `
 
 export const Button = styled(RSButton)`
+   font-family: "Source Sans Pro";
+   font-size: 14px;
+   letter-spacing: -0.23px;
+   line-height: 16px;
+   text-align: center;
+   min-height: 46px;
+
    background: white;
    color: #6c757d;
 

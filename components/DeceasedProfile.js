@@ -6,7 +6,7 @@ import { Col, Row } from "reactstrap"
 import Counter from "./Counter"
 import { periodOfDayValues, getSituationDate } from "../utils/actsConstants"
 
-const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
+const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
    const situationDate = getSituationDate(examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -15,40 +15,32 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
          <ActBlock
             type="examinationTypes"
             title="Type(s) d'examen"
-            values={["Somatique", "Psychiatrique", "Psychologique"]}
+            values={["Externe", "Levée de corps", "Autopsie", "Anthropologie", "Odontologie"]}
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
             invalid={errors.examinationTypes}
          />
-         <ActBlock
-            type="violenceTypes"
-            title="Type(s) de violence"
-            values={[
-               "Conjugale",
-               "Familiale",
-               "En réunion",
-               "Scolaire",
-               "Voie publique",
-               "Sur ascendant",
-               "Agression sexuelle",
-               { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] },
-            ]}
-            mode="toggleMultiple"
-            dispatch={dispatch}
-            state={state.violenceTypes || []}
-            invalid={errors.violenceTypes}
-         />
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"bioExaminationsNumber"}>
-                  Biologiques
+               <Counter dispatch={dispatch} state={state} type={"imagingExaminationsNumber"}>
+                  Imagerie
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"imagingExaminationsNumber"}>
-                  Imagerie
+               <Counter dispatch={dispatch} state={state} type={"toxicExaminationsNumber"}>
+                  Toxicologie
+               </Counter>
+            </Col>
+            <Col>
+               <Counter dispatch={dispatch} state={state} type={"anapathExaminationsNumber"}>
+                  Anapath
+               </Counter>
+            </Col>
+            <Col>
+               <Counter dispatch={dispatch} state={state} type={"geneticExaminationsNumber"}>
+                  Génétique
                </Counter>
             </Col>
             <Col>
@@ -57,7 +49,6 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
                </Counter>
             </Col>
          </Row>
-
          <ActBlock
             type="periodOfDay"
             title="Heure de l'examen"
@@ -67,6 +58,9 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
             state={state.periodOfDay || ""}
             invalid={errors.periodOfDay}
          />
+
+         <Title2 className="mb-2 mt-5">{"Profil de la personne décédée"}</Title2>
+
          <ActBlock
             type="personGender"
             title=""
@@ -81,7 +75,7 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
             type="personAgeTag"
             title=""
             subTitle="Âge"
-            values={["0-2 ans", "3-17 ans", "+ de 18 ans"]}
+            values={["0-2 ans", "3-17 ans", "+ de 18 ans", "Non déterminé"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personAgeTag || ""}
@@ -91,13 +85,10 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
    )
 }
 
-VictimProfile.validate = state => {
+DeceasedProfile.validate = state => {
    const errors = {}
    if (!state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
-   }
-   if (!state.violenceTypes.length) {
-      errors.violenceTypes = "Obligatoire"
    }
    if (!state.periodOfDay) {
       errors.periodOfDay = "Obligatoire"
@@ -112,11 +103,11 @@ VictimProfile.validate = state => {
    return errors
 }
 
-VictimProfile.propTypes = {
+DeceasedProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    examinationDate: PropTypes.string,
    errors: PropTypes.object,
 }
 
-export default VictimProfile
+export default DeceasedProfile

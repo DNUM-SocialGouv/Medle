@@ -9,9 +9,17 @@ import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
 import VictimProfile from "../components/VictimProfile"
+import CustodyProfile from "../components/CustodyProfile"
+import DeceasedProfile from "../components/DeceasedProfile"
+import BoneAgeProfile from "../components/BoneAgeProfile"
+import AsylumSeekerProfile from "../components/AsylumSeekerProfile"
+import CriminalCourtProfile from "../components/CriminalCourtProfile"
+import ReconstitutionProfile from "../components/ReconstitutionProfile"
+import DrunkProfile from "../components/DrunkProfile"
+import RestrainedProfile from "../components/RestrainedProfile"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
-import { profileValues, runProfiledValidation, getSituationDate } from "../utils/actsConstants"
+import { runProfiledValidation, getSituationDate } from "../utils/actsConstants"
 
 const getInitialState = ({ asker, internalNumber, pvNumber }) => ({
    pvNumber: pvNumber ? pvNumber : "",
@@ -36,6 +44,18 @@ const reset = state => ({
    multipleVisits: undefined,
    location: "",
 })
+
+const profileValues = [
+   "Victime",
+   "Gardé.e à vue",
+   "Personne décédée",
+   "Personne pour âge osseux",
+   "Demandeuse d'asile (risque excision)",
+   {
+      title: "Autre activité",
+      subValues: ["Assises", "Reconstitution", "IPM", "Examen lié à la route", "Personne retenue"],
+   },
+]
 
 const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
 
@@ -128,37 +148,9 @@ const ActDeclaration = ({ askerValues }) => {
                   behavior: "smooth",
                   block: "start",
                })
-               state = reset(state)
-
-               console.log("profile", state, action.payload)
-               return { ...state, profile: action.payload.val }
             }
             return state
-         // case "examinationTypes":
-         //    return { ...state, examinationTypes: addOrRemoveInArr(action.payload, state.examinationTypes) }
-         // case "violenceTypes":
-         //    return { ...state, violenceTypes: addOrRemoveInArr(action.payload, state.violenceTypes) }
-         // case "periodOfDay":
-         //    return {
-         //       ...state,
-         //       periodOfDay: action.payload,
-         //    }
-         // case "personGender":
-         //    return { ...state, personGender: action.payload }
-         // case "personAgeTag":
-         //    return { ...state, personAgeTag: action.payload }
-         // case "bioExaminationsNumber":
-         //    return { ...state, bioExaminationsNumber: action.payload }
-         // case "imagingExaminationsNumber":
-         //    return { ...state, imagingExaminationsNumber: action.payload }
-         // case "othersExaminationNumber":
-         //    return { ...state, othersExaminationNumber: action.payload }
-         // case "multipleVisits":
-         //    return { ...state, multipleVisits: action.payload }
-         // case "location":
-         //    return { ...state, location: action.payload }
-         // default:
-         //    throw new Error("Action.type inconnu")
+
          default:
             return state
       }
@@ -179,6 +171,38 @@ const ActDeclaration = ({ askerValues }) => {
          render: <VictimProfile dispatch={dispatch} state={state} errors={errors} />,
          validate: VictimProfile.validate,
       },
+      "Gardé.e à vue": {
+         render: <CustodyProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: CustodyProfile.validate,
+      },
+      "Personne décédée": {
+         render: <DeceasedProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: DeceasedProfile.validate,
+      },
+      "Personne pour âge osseux": {
+         render: <BoneAgeProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: BoneAgeProfile.validate,
+      },
+      "Demandeuse d'asile (risque excision)": {
+         render: <AsylumSeekerProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: AsylumSeekerProfile.validate,
+      },
+      "Autre activité/Assises": {
+         render: <CriminalCourtProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: CriminalCourtProfile.validate,
+      },
+      "Autre activité/Reconstitution": {
+         render: <ReconstitutionProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: ReconstitutionProfile.validate,
+      },
+      "Autre activité/IPM": {
+         render: <DrunkProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: DrunkProfile.validate,
+      },
+      "Autre activité/Personne retenue": {
+         render: <RestrainedProfile dispatch={dispatch} state={state} errors={errors} />,
+         validate: RestrainedProfile.validate,
+      },
    }
 
    const getProfile = ({ profile }) => {
@@ -188,7 +212,7 @@ const ActDeclaration = ({ askerValues }) => {
    const validAct = async () => {
       setErrors({})
 
-      const newErrors = PROFILES[state.profile].validate({ state, errors })
+      const newErrors = PROFILES[state.profile].validate(state)
 
       if (Object.keys(newErrors).length) {
          setErrors(newErrors)
@@ -284,7 +308,7 @@ const ActDeclaration = ({ askerValues }) => {
                Qui a été examiné?
             </Title2>
 
-            <ActBlock type="profile" values={profileValues} dispatch={dispatch} state={state.profile} />
+            <ActBlock type="profile" values={profileValues} mode="toggle" dispatch={dispatch} state={state.profile} />
 
             {state.profile && getProfile(state)}
 
