@@ -24,17 +24,21 @@ const RestrainedProfile = ({ dispatch, state, examinationDate, errors }) => {
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"bioExaminationsNumber"}>
+               <Counter dispatch={dispatch} state={state.bioExaminationsNumber || 0} type={"bioExaminationsNumber"}>
                   Biologiques
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"imagingExaminationsNumber"}>
+               <Counter
+                  dispatch={dispatch}
+                  state={state.imagingExaminationsNumber || 0}
+                  type={"imagingExaminationsNumber"}
+               >
                   Imageries
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"othersExaminationNumber"}>
+               <Counter dispatch={dispatch} state={state.othersExaminationNumber || 0} type={"othersExaminationNumber"}>
                   Autres
                </Counter>
             </Col>
@@ -95,7 +99,7 @@ const RestrainedProfile = ({ dispatch, state, examinationDate, errors }) => {
 
 RestrainedProfile.validate = state => {
    const errors = {}
-   if (!state.examinationTypes.length) {
+   if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
    }
    if (!state.prescription) {

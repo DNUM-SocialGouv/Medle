@@ -97,10 +97,10 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
 
 VictimProfile.validate = state => {
    const errors = {}
-   if (!state.examinationTypes.length) {
+   if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
    }
-   if (!state.violenceTypes.length) {
+   if (!state.violenceTypes || !state.violenceTypes.length) {
       errors.violenceTypes = "Obligatoire"
    }
    if (!state.periodOfDay) {

@@ -78,7 +78,7 @@ const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
 
 DrunkProfile.validate = state => {
    const errors = {}
-   if (!state.examinationTypes.length) {
+   if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
    }
 

@@ -48,7 +48,7 @@ const BoneAgeProfile = ({ dispatch, state, examinationDate, errors }) => {
 
 BoneAgeProfile.validate = state => {
    const errors = {}
-   if (!state.examinationTypes.length) {
+   if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
    }
    if (!state.periodOfDay) {

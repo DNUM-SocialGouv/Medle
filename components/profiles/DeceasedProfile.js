@@ -24,27 +24,39 @@ const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"imagingExaminationsNumber"}>
+               <Counter
+                  dispatch={dispatch}
+                  state={state.imagingExaminationsNumber || 0}
+                  type={"imagingExaminationsNumber"}
+               >
                   Imagerie
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"toxicExaminationsNumber"}>
+               <Counter dispatch={dispatch} state={state.toxicExaminationsNumber || 0} type={"toxicExaminationsNumber"}>
                   Toxicologie
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"anapathExaminationsNumber"}>
+               <Counter
+                  dispatch={dispatch}
+                  state={state.anapathExaminationsNumber || 0}
+                  type={"anapathExaminationsNumber"}
+               >
                   Anapath
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"geneticExaminationsNumber"}>
+               <Counter
+                  dispatch={dispatch}
+                  state={state.geneticExaminationsNumber || 0}
+                  type={"geneticExaminationsNumber"}
+               >
                   Génétique
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"othersExaminationNumber"}>
+               <Counter dispatch={dispatch} state={state.othersExaminationNumber || 0} type={"othersExaminationNumber"}>
                   Autres
                </Counter>
             </Col>
@@ -87,7 +99,7 @@ const DeceasedProfile = ({ dispatch, state, examinationDate, errors }) => {
 
 DeceasedProfile.validate = state => {
    const errors = {}
-   if (!state.examinationTypes.length) {
+   if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
    }
    if (!state.periodOfDay) {

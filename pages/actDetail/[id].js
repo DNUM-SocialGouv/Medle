@@ -99,7 +99,7 @@ const ActDetail = () => {
                      />
                   </Col>
                   <Col className="mr-3">
-                     <ColumnAct header={"Créneau horaire"} values={act && act.examinationDatePeriod} />
+                     <ColumnAct header={"Créneau horaire"} values={act && act.periodOfDay} />
                   </Col>
                </Row>
                <Row>

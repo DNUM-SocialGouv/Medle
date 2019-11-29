@@ -195,6 +195,7 @@ const ActDeclaration = ({ askerValues, act }) => {
       const newErrors = PROFILES[state.profile].validate(state)
 
       if (Object.keys(newErrors).length) {
+         console.error("Erreur state non valide", state)
          setErrors(newErrors)
          return
       }
@@ -294,6 +295,7 @@ const ActDeclaration = ({ askerValues, act }) => {
                      id="examinationDate"
                      invalid={errors && !!errors.examinationDate}
                      type="date"
+                     value={state.examinationDate}
                      onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
                   />
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
