@@ -1,6 +1,9 @@
 import React from "react"
 import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
+import { Col, Row } from "reactstrap"
+import { Title2 } from "../StyledComponents"
+import ColumnAct from "../../components/ColumnAct"
 
 const ReconstitutionProfile = ({ dispatch, state, errors }) => {
    return (
@@ -23,6 +26,35 @@ const ReconstitutionProfile = ({ dispatch, state, errors }) => {
             state={state.distance || []}
             invalid={!!errors.distance}
          />
+      </>
+   )
+}
+
+export const ReconstitutionDetail = act => {
+   const examinations = [
+      [act.imagingExaminationsNumber, "imagerie"],
+      [act.toxicExaminationsNumber, "toxicologie"],
+      [act.anapathExaminationsNumber, "anapath"],
+      [act.geneticExaminationsNumber, "génétique"],
+      [act.othersExaminationNumber, "autre"],
+   ]
+      .filter(elt => !!elt[0])
+      .map(elt => elt.join(" "))
+
+   return (
+      <>
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Statut"} values={act && act.profile} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Durée de la mobilisation"} values={act && act.duration} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Distance du lieu de reconstitution"} values={act.distance} />
+            </Col>
+            <Col className="mr-3"></Col>
+         </Row>
       </>
    )
 }

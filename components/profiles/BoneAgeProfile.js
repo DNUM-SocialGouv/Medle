@@ -3,6 +3,8 @@ import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
 import { Title2 } from "../StyledComponents"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
+import ColumnAct from "../../components/ColumnAct"
+import { Col, Row } from "reactstrap"
 
 const BoneAgeProfile = ({ dispatch, state, examinationDate, errors }) => {
    const situationDate = getSituationDate(examinationDate)
@@ -42,6 +44,34 @@ const BoneAgeProfile = ({ dispatch, state, examinationDate, errors }) => {
             state={state.personGender || ""}
             invalid={!!errors.personGender}
          />
+      </>
+   )
+}
+
+export const BoneAgeDetail = act => {
+   return (
+      <>
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Statut"} values={act && act.profile} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Type(s) d'examen"} values={act && act.examinationTypes} />
+            </Col>
+            <Col className="mr-3"></Col>
+            <Col className="mr-3"></Col>
+         </Row>
+
+         <Title2>Profil</Title2>
+
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Genre"} values={act && act.personGender} />
+            </Col>
+            <Col className="mr-3"></Col>
+            <Col className="mr-3"></Col>
+            <Col className="mr-3"></Col>
+         </Row>
       </>
    )
 }

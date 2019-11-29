@@ -2,8 +2,6 @@ import React from "react"
 import PropTypes from "prop-types"
 
 const ColumnAct = ({ header, values }) => {
-   console.log("values", values)
-
    const val = !values
       ? ""
       : values instanceof Array
@@ -16,6 +14,10 @@ const ColumnAct = ({ header, values }) => {
          <p style={{ fontWeight: "bold" }}>{val}</p>
       </>
    )
+}
+
+ColumnAct.defaultProps = {
+   values: "",
 }
 
 ColumnAct.propTypes = {

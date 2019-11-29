@@ -36,6 +36,14 @@ const getInitialState = ({ asker, internalNumber, pvNumber, act }) => {
    }
 }
 
+const resetState = state => ({
+   pvNumber: state.pvNumber,
+   internalNumber: state.internalNumber,
+   examinationDate: state.examinationDate,
+   asker: state.asker,
+   profile: state.profile,
+})
+
 const profileValues = [
    "Victime",
    "Gardé.e à vue",
@@ -128,6 +136,9 @@ const ActDeclaration = ({ askerValues, act }) => {
             return { ...state, asker: action.payload }
          case "profile":
             setErrors({})
+            if (action.payload.mode !== "lock") {
+               state = resetState(state)
+            }
             if (preValidate(state)) {
                refPersonType.current.scrollIntoView({
                   behavior: "smooth",
@@ -256,13 +267,9 @@ const ActDeclaration = ({ askerValues, act }) => {
          }
       }
    }
-
-   console.log("Render Actdeclaration", "state =", state, "errors =", errors)
-   console.log("props", `askerValues=${askerValues}`, `internalNumber=${internalNumber}`, `pvNumber=${pvNumber}`)
-
    return (
       <Layout>
-         <Title1 className="mt-5 mb-5">{"Ajout d'acte"}</Title1>
+         <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
          <Container style={{ maxWidth: 720 }}>
             <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>
 
@@ -319,7 +326,25 @@ const ActDeclaration = ({ askerValues, act }) => {
                Qui a été examiné?
             </Title2>
 
-            <ActBlock type="profile" values={profileValues} mode="toggle" dispatch={dispatch} state={state.profile} />
+            {!state.id && (
+               <ActBlock
+                  type="profile"
+                  values={profileValues}
+                  mode="toggle"
+                  dispatch={dispatch}
+                  state={state.profile}
+               />
+            )}
+
+            {state.id && (
+               <ActBlock
+                  type="profile"
+                  values={[state.profile]}
+                  mode="lock"
+                  dispatch={dispatch}
+                  state={state.profile}
+               />
+            )}
 
             {state.profile && !errors.internalNumber && !errors.examinationDate && getProfile(state)}
 

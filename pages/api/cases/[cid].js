@@ -6,7 +6,7 @@ import {
    STATUS_500_INTERNAL_SERVER_ERROR,
 } from "../../../utils/HttpStatus"
 import knex from "../../../lib/knex/knex"
-import { buildActsFromDB, buildCaseFromDB } from "../../../lib/knex/models/acts"
+import { buildActsFromDB, buildCaseFromDB } from "../../../lib/knex/models/acts_old"
 
 export default async (req, res) => {
    if (!["GET", "UPDATE"].includes(req.method)) {

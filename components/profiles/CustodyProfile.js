@@ -3,6 +3,7 @@ import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
 import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
+import ColumnAct from "../../components/ColumnAct"
 import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 
@@ -93,6 +94,55 @@ const CustodyProfile = ({ dispatch, state, examinationDate, errors }) => {
             state={state.personAgeTag || ""}
             invalid={!!errors.personAgeTag}
          />
+      </>
+   )
+}
+
+export const CustodyDetail = act => {
+   const examinations = [
+      [act.bioExaminationsNumber, "biologique"],
+      [act.imagingExaminationsNumber, "imagerie"],
+      [act.othersExaminationNumber, "autre"],
+   ]
+      .filter(elt => !!elt[0])
+      .map(elt => elt.join(" "))
+
+   return (
+      <>
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Statut"} values={act && act.profile} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Type(s) d'examen"} values={act && act.examinationTypes} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Examens complémentaires"} values={examinations} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Prescription d'ordonnance"} values={act.prescription} />
+            </Col>
+         </Row>
+         <Col className="mr-3">
+            <ColumnAct header={"Lieu de l'examen"} values={act.location} />
+         </Col>
+         <Col className="mr-3"></Col>
+         <Col className="mr-3"></Col>
+         <Col className="mr-3"></Col>
+         <Row></Row>
+
+         <Title2>Profil</Title2>
+
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Genre"} values={act && act.personGender} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Âge"} values={act && act.personAgeTag} />
+            </Col>
+            <Col className="mr-3"></Col>
+            <Col className="mr-3"></Col>
+         </Row>
       </>
    )
 }

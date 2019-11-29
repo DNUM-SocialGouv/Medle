@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
+import PropTypes from "prop-types"
 
 import moment from "moment"
 import { FORMAT_DATE } from "../../utils/constants"
@@ -14,39 +15,25 @@ import { isEmpty } from "../../utils/misc"
 import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter, Spinner } from "reactstrap"
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
+import { VictimDetail } from "../../components/profiles/VictimProfile"
+import { CustodyDetail } from "../../components/profiles/CustodyProfile"
+import { DeceasedDetail } from "../../components/profiles/DeceasedProfile"
+import { BoneAgeDetail } from "../../components/profiles/BoneAgeProfile"
+import { AsylumSeekerDetail } from "../../components/profiles/AsylumSeekerProfile"
+import { CriminalCourtDetail } from "../../components/profiles/CriminalCourtProfile"
+import { ReconstitutionDetail } from "../../components/profiles/ReconstitutionProfile"
+import { DrunkDetail } from "../../components/profiles/DrunkProfile"
+import { RestrainedDetail } from "../../components/profiles/RestrainedProfile"
+
 // import AddIcon from "@material-ui/icons/Add"
 
-const ActDetail = () => {
+const ActDetail = ({ initialAct, id }) => {
    const router = useRouter()
-   const { id } = router.query
-
-   const [isLoading, setIsLoading] = useState(false)
    const [error, setError] = useState(false)
-   const [act, setAct] = useState()
+   const [act, setAct] = useState(initialAct)
 
    const [modal, setModal] = useState(false)
    const toggle = () => setModal(!modal)
-
-   useEffect(() => {
-      const fetchData = async id => {
-         let act
-         try {
-            const res = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
-            act = await res.json()
-            setAct(act)
-         } catch (error) {
-            console.error(error)
-            setError(error)
-         }
-         setIsLoading(false)
-      }
-
-      if (id) {
-         setIsLoading(true)
-         setError(false)
-         fetchData(id)
-      }
-   }, [id])
 
    const deleteAct = () => {
       toggle()
@@ -84,11 +71,10 @@ const ActDetail = () => {
                   onClick={() => editAct(id)}
                />
                <Title2 className="mb-4 mt-3">{"Identification de l'acte"}</Title2>
-
                <Row>
                   <Col className="mr-3">
                      <ColumnAct header={"Numéro de PV"} values={act && act.pvNumber} />
-                  </Col>
+                  </Col>{" "}
                   <Col className="mr-3">
                      <ColumnAct header={"Demandeur"} values={act && act.asker} />
                   </Col>
@@ -99,41 +85,19 @@ const ActDetail = () => {
                      />
                   </Col>
                   <Col className="mr-3">
-                     <ColumnAct header={"Créneau horaire"} values={act && act.periodOfDay} />
+                     {act && act.periodOfDay && <ColumnAct header={"Créneau horaire"} values={act.periodOfDay} />}
                   </Col>
                </Row>
-               <Row>
-                  <Col className="mr-3">
-                     <ColumnAct header={"Statut"} values={act && act.profile} />
-                  </Col>
-                  <Col className="mr-3">
-                     <ColumnAct header={"Type d'examen"} values={act && act.examinationTypes} />
-                  </Col>
-                  <Col className="mr-3">
-                     <ColumnAct header={"Cause de la violence"} values={act && act.violenceTypes} />
-                  </Col>
-                  <Col className="mr-3">
-                     <ColumnAct header={"Examens complémentaires"} values={act && act.bioExaminationsNumber} />
-                  </Col>
-               </Row>
-
-               <Title2 className="mb-4 mt-3">{"Profil de la personne"}</Title2>
-
-               <Row>
-                  <Col className="mr-3">
-                     <ColumnAct header={"Genre"} values={act && act.personGender} />
-                  </Col>
-                  <Col className="mr-3">
-                     <ColumnAct header={"Âge"} values={act && act.personAgeTag} />
-                  </Col>
-               </Row>
+               {act && act.profile === "Victime" && VictimDetail(act)}
+               {act && act.profile === "Gardé.e à vue" && CustodyDetail(act)}
+               {act && act.profile === "Personne décédée" && DeceasedDetail(act)}
+               {act && act.profile === "Personne pour âge osseux" && BoneAgeDetail(act)}
+               {act && act.profile === "Demandeuse d'asile (risque excision)" && AsylumSeekerDetail(act)}
+               {act && act.profile === "Autre activité/Assises" && CriminalCourtDetail(act)}
+               {act && act.profile === "Autre activité/Reconstitution" && ReconstitutionDetail(act)}
+               {act && act.profile === "Autre activité/IPM" && DrunkDetail(act)}
+               {act && act.profile === "Autre activité/Personne retenue" && RestrainedDetail(act)}
             </div>
-
-            {isLoading && (
-               <div style={{ width: 100 }} className="mx-auto mt-5 mb-3">
-                  <Spinner color="primary">Loading...</Spinner>
-               </div>
-            )}
 
             {!isEmpty(error) && (
                <Alert color="danger" className="mt-5 mb-5">
@@ -183,6 +147,24 @@ const ActDetail = () => {
          </Container>
       </Layout>
    )
+}
+
+ActDetail.getInitialProps = async ({ query }) => {
+   const { id } = query
+
+   let act
+   try {
+      const res = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
+      act = await res.json()
+      return { initialAct: act, id }
+   } catch (error) {
+      console.error(error)
+   }
+}
+
+ActDetail.propTypes = {
+   initialAct: PropTypes.object.isRequired,
+   id: PropTypes.string.isRequired,
 }
 
 export default withAuthSync(ActDetail)

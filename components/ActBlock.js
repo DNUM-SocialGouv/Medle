@@ -54,7 +54,10 @@ const selectedSubvalueInState = (prefix, stateTypes) => {
    if (stateTypes instanceof Array) {
       const res = stateTypes.filter(elt => elt.startsWith(prefix))
       return res.length ? res[0] : false
-   } else return stateTypes.startsWith(prefix) ? stateTypes : false
+   } else if (typeof stateTypes === "string") {
+      return stateTypes.startsWith(prefix) ? stateTypes : false
+   }
+   return false
 }
 
 const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mode }) => {

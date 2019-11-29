@@ -5,6 +5,7 @@ import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
 import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
+import ColumnAct from "../../components/ColumnAct"
 
 const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
    const situationDate = getSituationDate(examinationDate)
@@ -24,7 +25,7 @@ const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"bioExaminationsNumber"}>
+               <Counter dispatch={dispatch} state={state.bioExaminationsNumber || 0} type={"bioExaminationsNumber"}>
                   Biologiques
                </Counter>
             </Col>
@@ -72,6 +73,42 @@ const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
             state={state.personAgeTag || ""}
             invalid={!!errors.personAgeTag}
          />
+      </>
+   )
+}
+
+export const DrunkDetail = act => {
+   const examinations = [[act.bioExaminationsNumber, "biologique"]].filter(elt => !!elt[0]).map(elt => elt.join(" "))
+
+   return (
+      <>
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Statut"} values={act && act.profile} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Type(s) d'examen"} values={act && act.examinationTypes} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Examens complémentaires"} values={examinations} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Lieu de l'examen"} values={act.location} />
+            </Col>
+         </Row>
+
+         <Title2>Profil</Title2>
+
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Genre"} values={act && act.personGender} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Âge"} values={act && act.personAgeTag} />
+            </Col>
+            <Col className="mr-3"></Col>
+            <Col className="mr-3"></Col>
+         </Row>
       </>
    )
 }

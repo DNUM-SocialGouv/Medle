@@ -1,6 +1,8 @@
 import React from "react"
 import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
+import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter, Spinner } from "reactstrap"
+import ColumnAct from "../../components/ColumnAct"
 
 const CriminalCourtProfile = ({ dispatch, state, errors }) => {
    return (
@@ -45,6 +47,24 @@ CriminalCourtProfile.propTypes = {
    state: PropTypes.object.isRequired,
    examinationDate: PropTypes.string,
    errors: PropTypes.object,
+}
+
+export const CriminalCourtDetail = act => {
+   return (
+      <>
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Statut"} values={act && act.profile} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Modalités"} values={act && act.mode} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Durée de la mobilisation"} values={act && act.duration} />
+            </Col>
+         </Row>
+      </>
+   )
 }
 
 export default CriminalCourtProfile

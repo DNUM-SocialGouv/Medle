@@ -5,6 +5,7 @@ import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
 import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
+import ColumnAct from "../../components/ColumnAct"
 
 const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
    const situationDate = getSituationDate(examinationDate)
@@ -76,6 +77,46 @@ const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
             state={state.personAgeTag || ""}
             invalid={!!errors.personAgeTag}
          />
+      </>
+   )
+}
+
+export const AsylumSeekerDetail = act => {
+   const examinations = [
+      [act.bioExaminationsNumber, "biologique"],
+      [act.imagingExaminationsNumber, "imagerie"],
+      [act.othersExaminationNumber, "autre"],
+   ]
+      .filter(elt => !!elt[0])
+      .map(elt => elt.join(" "))
+
+   return (
+      <>
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Statut"} values={act && act.profile} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Type(s) d'examen"} values={act && act.examinationTypes} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Examens complémentaires"} values={examinations} />
+            </Col>
+            <Col className="mr-3"></Col>
+         </Row>
+
+         <Title2>Profil</Title2>
+
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Genre"} values={act && act.personGender} />
+            </Col>
+            <Col className="mr-3">
+               <ColumnAct header={"Âge"} values={act && act.personAgeTag} />
+            </Col>
+            <Col className="mr-3"></Col>
+            <Col className="mr-3"></Col>
+         </Row>
       </>
    )
 }
