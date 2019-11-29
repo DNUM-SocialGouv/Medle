@@ -4,7 +4,7 @@ import Router, { useRouter } from "next/router"
 import fetch from "isomorphic-unfetch"
 import { Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
-import { API_URL, ACT_DECLARATION_ENDPOINT } from "../config"
+import { API_URL, ACT_DECLARATION_ENDPOINT, ACT_DETAIL_ENDPOINT, ACT_EDIT_ENDPOINT } from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
@@ -22,28 +22,19 @@ import {
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { STATUS_200_OK } from "../utils/HttpStatus"
 
-const getInitialState = ({ asker, internalNumber, pvNumber }) => ({
-   pvNumber: pvNumber ? pvNumber : "",
-   internalNumber: internalNumber ? internalNumber : "",
-   examinationDate: "",
-   asker: asker ? asker : "",
-   ...reset({}),
-})
-
-const reset = state => ({
-   ...state,
-   profile: "",
-   personGender: "",
-   personAgeTag: "",
-   examinationTypes: [],
-   violenceTypes: [],
-   periodOfDay: "",
-   bioExaminationsNumber: 0,
-   imagingExaminationsNumber: 0,
-   othersExaminationNumber: 0,
-   multipleVisits: undefined,
-   location: "",
-})
+const getInitialState = ({ asker, internalNumber, pvNumber, act }) => {
+   if (act && act.id) {
+      return act
+   } else {
+      return {
+         pvNumber: pvNumber ? pvNumber : "",
+         internalNumber: internalNumber ? internalNumber : "",
+         examinationDate: "",
+         asker: asker ? asker : "",
+         profile: "",
+      }
+   }
+}
 
 const profileValues = [
    "Victime",
@@ -59,7 +50,7 @@ const profileValues = [
 
 const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
 
-const ActDeclaration = ({ askerValues }) => {
+const ActDeclaration = ({ askerValues, act }) => {
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
@@ -95,25 +86,25 @@ const ActDeclaration = ({ askerValues }) => {
       setErrors(deleteProperty(errors, action.type))
 
       if (action.payload.mode === "toggle") {
-         const part = state[action.type] || ""
-         if (part === action.payload.val) {
+         if (state[action.type] === action.payload.val) {
             state = { ...state, [action.type]: "" }
          } else {
             state = { ...state, [action.type]: action.payload.val }
          }
       } else if (action.payload.mode === "toggleMultiple") {
-         const parts = state[action.type] || []
-         const index = parts.indexOf(action.payload.val)
+         let newState = state[action.type] || []
+         const index = newState.indexOf(action.payload.val)
          if (index !== -1) {
-            state = { ...state, [action.type]: [...parts.slice(0, index), ...parts.slice(index + 1)] }
+            state = { ...state, [action.type]: [...newState.slice(0, index), ...newState.slice(index + 1)] }
          } else {
             const chunks = action.payload.val.split("/")
-            let prefix = "",
-               newState = state[action.type]
-            if (chunks.length === 2) {
+
+            let prefix = ""
+            if (chunks.length >= 2) {
                prefix = chunks[0]
-               newState = state[action.type].filter(e => !e.startsWith(prefix))
+               newState = newState.filter(e => !e.startsWith(prefix))
             }
+
             state = {
                ...state,
                [action.type]: [...newState, action.payload.val],
@@ -150,14 +141,9 @@ const ActDeclaration = ({ askerValues }) => {
       }
    }
 
-   console.log(
-      "initial state",
-      getInitialState({ askerValues: askerValues ? askerValues[0] : "", internalNumber, pvNumber }),
-   )
-
    const [state, dispatch] = useReducer(
       reducer,
-      getInitialState({ askerValues: askerValues ? askerValues[0] : "", internalNumber, pvNumber }),
+      getInitialState({ askerValues: askerValues ? askerValues[0] : "", internalNumber, pvNumber, act }),
    )
 
    const PROFILES = {
@@ -217,31 +203,61 @@ const ActDeclaration = ({ askerValues }) => {
 
       let response, json
 
-      try {
-         response = await fetch(API_URL + ACT_DECLARATION_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(state),
-         })
-         json = await response.json()
-
-         if (response.status !== STATUS_200_OK) {
-            throw new Error(json && json.message ? json.message : "")
-         } else {
-            console.log("Déclaration d'acte envoyée")
-            return Router.push({
-               pathname: "/actConfirmation",
-               query: {
-                  internalNumber: state.internalNumber,
-                  pvNumber: state.pvNumber,
-               },
+      if (!state.id) {
+         try {
+            response = await fetch(API_URL + ACT_DECLARATION_ENDPOINT, {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify(state),
             })
+            json = await response.json()
+
+            if (response.status !== STATUS_200_OK) {
+               throw new Error(json && json.message ? json.message : "")
+            } else {
+               console.log("Déclaration d'acte envoyée")
+               return Router.push({
+                  pathname: "/actConfirmation",
+                  query: {
+                     internalNumber: state.internalNumber,
+                     pvNumber: state.pvNumber,
+                  },
+               })
+            }
+         } catch (error) {
+            console.error(error)
+            setErrors(errors => ({ ...errors, general: json && json.message ? json.message : "Erreur backoffice" }))
          }
-      } catch (error) {
-         console.error(error)
-         setErrors(errors => ({ ...errors, general: json && json.message ? json.message : "Erreur backoffice" }))
+      } else {
+         try {
+            response = await fetch(API_URL + ACT_EDIT_ENDPOINT + "/" + state.id, {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify(state),
+            })
+            json = await response.json()
+
+            if (response.status !== STATUS_200_OK) {
+               throw new Error(json && json.message ? json.message : "")
+            } else {
+               console.log("Déclaration d'acte envoyée")
+               return Router.push({
+                  pathname: "/actConfirmation",
+                  query: {
+                     internalNumber: state.internalNumber,
+                     pvNumber: state.pvNumber,
+                  },
+               })
+            }
+         } catch (error) {
+            console.error(error)
+            setErrors(errors => ({ ...errors, general: json && json.message ? json.message : "Erreur backoffice" }))
+         }
       }
    }
+
+   console.log("Render Actdeclaration", "state =", state, "errors =", errors)
+   console.log("props", `askerValues=${askerValues}`, `internalNumber=${internalNumber}`, `pvNumber=${pvNumber}`)
 
    return (
       <Layout>
@@ -257,7 +273,9 @@ const ActDeclaration = ({ askerValues }) => {
                      invalid={errors && !!errors.internalNumber}
                      placeholder="Ex: 2019-23091"
                      value={state.internalNumber}
-                     onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
+                     onChange={e => {
+                        dispatch({ type: e.target.id, payload: e.target.value })
+                     }}
                   />
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
@@ -305,7 +323,7 @@ const ActDeclaration = ({ askerValues }) => {
 
             <div className="text-center mt-5">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
-                  Valider
+                  {state.id ? "Modifier" : "Valider"}
                </ValidationButton>
             </div>
          </Container>
@@ -315,12 +333,24 @@ const ActDeclaration = ({ askerValues }) => {
 
 ActDeclaration.propTypes = {
    askerValues: PropTypes.array,
-   internalNumber: PropTypes.string,
-   pvNumber: PropTypes.string,
+   act: PropTypes.object,
 }
 
-ActDeclaration.getInitialProps = async () => {
-   return { askerValues: getAskers() }
+ActDeclaration.getInitialProps = async ({ query }) => {
+   const { id } = query
+
+   let act
+
+   if (id) {
+      try {
+         const res = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
+         act = await res.json()
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   return { askerValues: getAskers(), act }
 }
 
 export default ActDeclaration

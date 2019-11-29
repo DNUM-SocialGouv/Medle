@@ -19,7 +19,7 @@ const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.examinationTypes || []}
-            invalid={errors.examinationTypes}
+            invalid={!!errors.examinationTypes}
          />
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
@@ -37,7 +37,7 @@ const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.location || []}
-            invalid={errors.location}
+            invalid={!!errors.location}
          />
 
          <ActBlock
@@ -47,7 +47,7 @@ const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.periodOfDay || ""}
-            invalid={errors.periodOfDay}
+            invalid={!!errors.periodOfDay}
          />
 
          <Title2 className="mb-2 mt-5">{"Profil de la personne examinée"}</Title2>
@@ -60,7 +60,7 @@ const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.personGender || ""}
-            invalid={errors.personGender}
+            invalid={!!errors.personGender}
          />
          <ActBlock
             type="personAgeTag"
@@ -70,7 +70,7 @@ const DrunkProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.personAgeTag || ""}
-            invalid={errors.personAgeTag}
+            invalid={!!errors.personAgeTag}
          />
       </>
    )

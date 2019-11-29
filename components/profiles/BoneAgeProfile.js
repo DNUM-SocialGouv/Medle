@@ -17,7 +17,7 @@ const BoneAgeProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
-            invalid={errors.examinationTypes}
+            invalid={!!errors.examinationTypes}
          />
 
          <ActBlock
@@ -27,7 +27,7 @@ const BoneAgeProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.periodOfDay || ""}
-            invalid={errors.periodOfDay}
+            invalid={!!errors.periodOfDay}
          />
 
          <Title2 className="mb-2 mt-5">{"Profil de la personne décédée"}</Title2>
@@ -40,7 +40,7 @@ const BoneAgeProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.personGender || ""}
-            invalid={errors.personGender}
+            invalid={!!errors.personGender}
          />
       </>
    )

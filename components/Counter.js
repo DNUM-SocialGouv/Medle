@@ -4,11 +4,11 @@ import PropTypes from "prop-types"
 
 const Counter = ({ children, dispatch, state, type }) => {
    const add = () => {
-      dispatch({ type, payload: { mode: "replace", val: state[type] + 1 } })
+      dispatch({ type, payload: { mode: "replace", val: state + 1 } })
    }
 
    const substract = () => {
-      const res = state[type] - 1 > 0 ? state[type] - 1 : 0
+      const res = state - 1 > 0 ? state - 1 : 0
       dispatch({ type, payload: { mode: "replace", val: res } })
    }
 
@@ -24,7 +24,7 @@ const Counter = ({ children, dispatch, state, type }) => {
                tabIndex="0"
                onKeyPress={e => keyPress(e, substract)}
             />
-            {state[type]}
+            {state}
             <AddCircleOutline
                onClick={add}
                className="ml-3"
@@ -48,7 +48,7 @@ const Counter = ({ children, dispatch, state, type }) => {
 Counter.propTypes = {
    children: PropTypes.node,
    dispatch: PropTypes.func.isRequired,
-   state: PropTypes.object.isRequired,
+   state: PropTypes.number.isRequired,
    type: PropTypes.string.isRequired,
 }
 

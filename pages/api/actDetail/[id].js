@@ -5,6 +5,7 @@ import {
    STATUS_404_NOT_FOUND,
    STATUS_500_INTERNAL_SERVER_ERROR,
 } from "../../../utils/HttpStatus"
+import { buildActFromDB } from "../../../lib/knex/models/acts"
 
 export default async (req, res) => {
    let act
@@ -24,7 +25,7 @@ export default async (req, res) => {
    }
 
    if (act) {
-      return res.status(STATUS_200_OK).json({ act })
+      return res.status(STATUS_200_OK).json(buildActFromDB(act))
    } else {
       return res.status(STATUS_404_NOT_FOUND).end()
    }

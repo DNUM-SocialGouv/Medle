@@ -19,7 +19,7 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
-            invalid={errors.examinationTypes}
+            invalid={!!errors.examinationTypes}
          />
          <ActBlock
             type="violenceTypes"
@@ -37,22 +37,26 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.violenceTypes || []}
-            invalid={errors.violenceTypes}
+            invalid={!!errors.violenceTypes}
          />
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"bioExaminationsNumber"}>
+               <Counter dispatch={dispatch} state={state.bioExaminationsNumber || 0} type={"bioExaminationsNumber"}>
                   Biologiques
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"imagingExaminationsNumber"}>
+               <Counter
+                  dispatch={dispatch}
+                  state={state.imagingExaminationsNumber || 0}
+                  type={"imagingExaminationsNumber"}
+               >
                   Imagerie
                </Counter>
             </Col>
             <Col>
-               <Counter dispatch={dispatch} state={state} type={"othersExaminationNumber"}>
+               <Counter dispatch={dispatch} state={state.othersExaminationNumber || 0} type={"othersExaminationNumber"}>
                   Autres
                </Counter>
             </Col>
@@ -65,7 +69,7 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.periodOfDay || ""}
-            invalid={errors.periodOfDay}
+            invalid={!!errors.periodOfDay}
          />
          <ActBlock
             type="personGender"
@@ -75,7 +79,7 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.personGender || ""}
-            invalid={errors.personGender}
+            invalid={!!errors.personGender}
          />
          <ActBlock
             type="personAgeTag"
@@ -85,7 +89,7 @@ const VictimProfile = ({ dispatch, state, examinationDate, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.personAgeTag || ""}
-            invalid={errors.personAgeTag}
+            invalid={!!errors.personAgeTag}
          />
       </>
    )

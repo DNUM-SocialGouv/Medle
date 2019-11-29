@@ -12,7 +12,7 @@ const ReconstitutionProfile = ({ dispatch, state, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.duration || ""}
-            invalid={errors.duration}
+            invalid={!!errors.duration}
          />
          <ActBlock
             type="distance"
@@ -21,7 +21,7 @@ const ReconstitutionProfile = ({ dispatch, state, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.distance || []}
-            invalid={errors.distance}
+            invalid={!!errors.distance}
          />
       </>
    )

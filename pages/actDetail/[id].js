@@ -14,7 +14,7 @@ import { isEmpty } from "../../utils/misc"
 import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter, Spinner } from "reactstrap"
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
-import AddIcon from "@material-ui/icons/Add"
+// import AddIcon from "@material-ui/icons/Add"
 
 const ActDetail = () => {
    const router = useRouter()
@@ -29,13 +29,11 @@ const ActDetail = () => {
 
    useEffect(() => {
       const fetchData = async id => {
-         let json
+         let act
          try {
             const res = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
-            json = await res.json()
-
-            console.log("json", json)
-            setAct(json.act)
+            act = await res.json()
+            setAct(act)
          } catch (error) {
             console.error(error)
             setError(error)
@@ -44,7 +42,6 @@ const ActDetail = () => {
       }
 
       if (id) {
-         console.log("id", id)
          setIsLoading(true)
          setError(false)
          fetchData(id)
@@ -66,23 +63,31 @@ const ActDetail = () => {
       deleteAct(id)
    }
 
-   const addAct = async () => {
-      const bonus = `?internalNumber=${act.internal_number}&pvNumber=${act.pv_number}`
-      return router.push(`/actDeclaration${bonus}`)
+   // const addAct = async () => {
+   //    const bonus = `?internalNumber=${act.internal_number}&pvNumber=${act.pv_number}`
+   //    return router.push(`/actDeclaration${bonus}`)
+   // }
+
+   const editAct = id => {
+      return router.push(`/actDeclaration?id=${id}`)
    }
 
    return (
       <Layout>
-         <Title1 className="mt-5 mb-5">{`Acte n° ${(act && act.internal_number) || ""}`}</Title1>
+         <Title1 className="mt-5 mb-5">{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
 
          <Container style={{ maxWidth: 780 }}>
             <div style={{ border: "1px solid rgba(151,151,151,0.13)", borderRadius: 10 }} className="px-2 py-2">
-               <EditOutlinedIcon style={{ float: "right" }} className="mr-2 mt-3" />
+               <EditOutlinedIcon
+                  style={{ float: "right", cursor: "pointer" }}
+                  className="mr-2 mt-3"
+                  onClick={() => editAct(id)}
+               />
                <Title2 className="mb-4 mt-3">{"Identification de l'acte"}</Title2>
 
                <Row>
                   <Col className="mr-3">
-                     <ColumnAct header={"Numéro de PV"} values={act && act.pv_number} />
+                     <ColumnAct header={"Numéro de PV"} values={act && act.pvNumber} />
                   </Col>
                   <Col className="mr-3">
                      <ColumnAct header={"Demandeur"} values={act && act.asker} />
@@ -90,14 +95,11 @@ const ActDetail = () => {
                   <Col className="mr-3">
                      <ColumnAct
                         header={"Date"}
-                        values={act && act.examination_date && moment(act.examination_date).format(FORMAT_DATE)}
+                        values={act && act.examinationDate && moment(act.examinationDate).format(FORMAT_DATE)}
                      />
                   </Col>
                   <Col className="mr-3">
-                     <ColumnAct
-                        header={"Créneau horaire"}
-                        values={act && act.extra_data && act.extra_data.examinationDatePeriod}
-                     />
+                     <ColumnAct header={"Créneau horaire"} values={act && act.examinationDatePeriod} />
                   </Col>
                </Row>
                <Row>
@@ -105,19 +107,13 @@ const ActDetail = () => {
                      <ColumnAct header={"Statut"} values={act && act.profile} />
                   </Col>
                   <Col className="mr-3">
-                     <ColumnAct
-                        header={"Type d'examen"}
-                        values={act && act.extra_data && act.extra_data.examinationTypes}
-                     />
+                     <ColumnAct header={"Type d'examen"} values={act && act.examinationTypes} />
                   </Col>
                   <Col className="mr-3">
-                     <ColumnAct
-                        header={"Cause de la violence"}
-                        values={act && act.extra_data && act.extra_data.violenceTypes}
-                     />
+                     <ColumnAct header={"Cause de la violence"} values={act && act.violenceTypes} />
                   </Col>
                   <Col className="mr-3">
-                     <ColumnAct header={"Examens complémentaires"} values={act && act.examination_date_period} />
+                     <ColumnAct header={"Examens complémentaires"} values={act && act.bioExaminationsNumber} />
                   </Col>
                </Row>
 
@@ -125,10 +121,10 @@ const ActDetail = () => {
 
                <Row>
                   <Col className="mr-3">
-                     <ColumnAct header={"Genre"} values={act && act.extra_data && act.extra_data.personGender} />
+                     <ColumnAct header={"Genre"} values={act && act.personGender} />
                   </Col>
                   <Col className="mr-3">
-                     <ColumnAct header={"Âge"} values={act && act.extra_data && act.extra_data.personAgeTag} />
+                     <ColumnAct header={"Âge"} values={act && act.personAgeTag} />
                   </Col>
                </Row>
             </div>
@@ -171,12 +167,12 @@ const ActDetail = () => {
                      </Modal>
                   </div>
                </Col>
-               <Col>
+               {/* <Col>
                   <Button block outline color="primary" onClick={addAct}>
                      <AddIcon style={{ float: "left" }} />
                      Ajouter acte lié au dossier
                   </Button>{" "}
-               </Col>
+               </Col> */}
             </Row>
 
             <div className="text-center mt-5">

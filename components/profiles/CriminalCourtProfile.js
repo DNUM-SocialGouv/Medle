@@ -12,7 +12,7 @@ const CriminalCourtProfile = ({ dispatch, state, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.mode || []}
-            invalid={errors.mode}
+            invalid={!!errors.mode}
          />
 
          <ActBlock
@@ -22,7 +22,7 @@ const CriminalCourtProfile = ({ dispatch, state, errors }) => {
             mode="toggle"
             dispatch={dispatch}
             state={state.duration || ""}
-            invalid={errors.duration}
+            invalid={!!errors.duration}
          />
       </>
    )

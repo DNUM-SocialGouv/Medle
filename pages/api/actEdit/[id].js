@@ -7,6 +7,8 @@ import knex from "../../../lib/knex/knex"
 import { buildActFromJSON } from "../../../lib/knex/models/acts"
 
 export default async (req, res) => {
+   const { id } = req.query
+
    res.setHeader("Content-Type", "application/json")
 
    if (req.method !== "POST") {
@@ -17,12 +19,14 @@ export default async (req, res) => {
    const data = await req.body
 
    knex("acts")
-      .insert(buildActFromJSON(data), "id")
-      .then(ids => {
-         return res.status(STATUS_200_OK).json({ message: `Déclaration envoyée`, detail: ids[0] })
+      .update(buildActFromJSON(data))
+      .where("id", id)
+      .then(() => {
+         return res.status(STATUS_200_OK).json({ message: `Acte ${id} modifié` })
       })
       .catch(error => {
          console.error(JSON.stringify(error))
+
          return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({
             error: `Erreur serveur base de données`,
             error_description: error,
