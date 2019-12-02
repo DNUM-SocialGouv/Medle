@@ -22,7 +22,7 @@ ColumnAct.defaultProps = {
 
 ColumnAct.propTypes = {
    header: PropTypes.string,
-   values: PropTypes.oneOfType[(PropTypes.string, PropTypes.array)],
+   values: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
 }
 
 export default ColumnAct
