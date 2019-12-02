@@ -84,7 +84,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
          } else {
             const val = /^[0-9]+$/.test(dataMonth[key]) && parseInt(dataMonth[key], 10)
 
-            if (!val || val < 0) {
+            if (val < 0) {
                newErrors[key] = "Numérique positif"
             }
          }
