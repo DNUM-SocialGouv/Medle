@@ -18,42 +18,27 @@ import AccordionEmploymentsMonth from "../components/AccordionEmploymentsMonth"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 
 const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, allMonths, year, hospitalId }) => {
-   const initialNumbers = numbers
-
-   console.log("numbers", numbers)
-
    const [errors, setErrors] = useState(error)
    const [success, setSuccess] = useState("")
 
-   const [dataMonths, setDataMonths] = useState({ ...numbers })
+   const [dataMonth, setDataMonth] = useState(numbers)
 
    const previousMonths = allMonths && allMonths.length ? allMonths.slice(1) : []
 
-   const handleChange = (e, currentMonth) => {
+   const handleChange = e => {
       e.preventDefault()
 
-      const dataMonth = dataMonths[currentMonth] || {}
-      dataMonth[e.target.name] = e.target.value
-
-      setDataMonths({ ...dataMonths, [currentMonth]: dataMonth })
+      setDataMonth({ ...dataMonth, [e.target.name]: e.target.value })
    }
 
-   const update = async (monthNumber, numbersForMonth) => {
-      console.log("")
-      console.log("numbers =? initialNumbers", initialNumbers === numbers)
-      console.log("numbers =? dataMonths", dataMonths === numbers)
-      console.log("numbers[12] =? dataMonths[12]", dataMonths[12] === numbers[12])
-
+   const update = async monthNumber => {
       console.log("monthNumber", monthNumber)
-
-      const data = { ...initialNumbers, [monthNumber]: numbersForMonth }
-      console.log("data", data)
 
       let result
       try {
-         result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}`, {
+         result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${monthNumber}`, {
             method: "PUT",
-            body: JSON.stringify(data),
+            body: JSON.stringify(dataMonth),
          })
          const json = await result.json()
 
@@ -97,7 +82,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="doctors"
                         invalid={errors && !!errors.doctors}
                         placeholder="Nombre d'ETP"
-                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["doctors"]}
+                        value={dataMonth && dataMonth["doctors"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.doctors}</FormFeedback>
@@ -108,7 +93,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="secretaries"
                         invalid={errors && !!errors.secretaries}
                         placeholder="Nombre d'ETP"
-                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["secretaries"]}
+                        value={dataMonth && dataMonth["secretaries"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.secretaries}</FormFeedback>
@@ -119,7 +104,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="nursings"
                         invalid={errors && !!errors.nursings}
                         placeholder="Nombre d'ETP"
-                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["nursings"]}
+                        value={dataMonth && dataMonth["nursings"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
 
@@ -131,7 +116,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="executives"
                         invalid={errors && !!errors.executives}
                         placeholder="Nombre d'ETP"
-                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["executives"]}
+                        value={dataMonth && dataMonth["executives"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.executives}</FormFeedback>
@@ -144,7 +129,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="ides"
                         invalid={errors && !!errors.ides}
                         placeholder="Nombre d'ETP"
-                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["ides"]}
+                        value={dataMonth && dataMonth["ides"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.ides}</FormFeedback>
@@ -155,7 +140,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="auditoriumAgents"
                         invalid={errors && !!errors.auditoriumAgents}
                         placeholder="Nombre d'ETP"
-                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["auditoriumAgents"]}
+                        value={dataMonth && dataMonth["auditoriumAgents"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
@@ -166,7 +151,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="psychologists"
                         invalid={errors && !!errors.psychologists}
                         placeholder="Nombre d'ETP"
-                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["psychologists"]}
+                        value={dataMonth && dataMonth["psychologists"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.psychologists}</FormFeedback>
@@ -177,7 +162,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="others"
                         invalid={errors && !!errors.others}
                         placeholder="Nombre d'ETP"
-                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["others"]}
+                        value={dataMonth && dataMonth["others"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.others}</FormFeedback>
@@ -192,13 +177,14 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
 
                <Title2 className="mt-5 mb-4">{"Mois précédents"}</Title2>
 
-               {previousMonths.map(({ monthName, monthNumber }) => (
+               {previousMonths.map(({ monthName, month }) => (
                   <AccordionEmploymentsMonth
-                     key={monthNumber}
+                     key={month}
                      monthName={monthName}
-                     monthNumber={monthNumber}
-                     numbers={dataMonths[monthNumber]}
-                     onChange={event => handleChange(event, monthNumber)}
+                     month={month}
+                     year={year}
+                     hospitalId={hospitalId}
+                     onChange={event => handleChange(event, month)}
                      update={update}
                   />
                ))}
@@ -238,14 +224,14 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       .fill(0)
       .map((_, index) => (index + 1).toString().padStart(2, "0"))
       .reverse()
-      .map(elt => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, monthNumber: elt }))
+      .map(elt => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, month: elt }))
 
    console.log("allMonths", allMonths)
 
    let result
 
    try {
-      result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${currentYear}`, {
+      result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${currentYear}/${currentMonth}`, {
          method: "GET",
       })
       const json = await result.json()

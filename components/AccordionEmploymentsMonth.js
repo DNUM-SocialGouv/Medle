@@ -1,12 +1,19 @@
-import React, { useState } from "react"
-import Link from "next/link"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Button, Col, Input, Label, Row, FormFeedback } from "reactstrap"
+import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import EditOutlinedIcon from "@material-ui/icons/Edit"
 import { AnchorButton } from "../components/StyledComponents"
 import { isEmpty } from "../utils/misc"
+import {
+   STATUS_200_OK,
+   STATUS_400_BAD_REQUEST,
+   STATUS_404_NOT_FOUND,
+   STATUS_405_METHOD_NOT_ALLOWED,
+   STATUS_500_INTERNAL_SERVER_ERROR,
+} from "../utils/HttpStatus"
 
 const inputs = [
    "doctors",
@@ -19,25 +26,49 @@ const inputs = [
    "others",
 ]
 
-const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, errors, readOnly }) => {
+const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors, readOnly }) => {
    const [open, setOpen] = useState(false)
-   //const numbersForMonth = numbers && numbers[monthNumber] ? numbers[monthNumber] : []
-
-   const [numbersForMonth, setNumbersForMonth] = useState(numbers || {})
    const [readOnlyState, setReadOnlyState] = useState(readOnly)
    const [errorsState, setErrorsState] = useState(errors)
+
+   const [dataMonth, setDataMonth] = useState({})
+
+   useEffect(() => {
+      const fetchData = async () => {
+         let result
+
+         try {
+            result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
+               method: "GET",
+            })
+            const json = await result.json()
+
+            setDataMonth(json)
+
+            if (result.status !== STATUS_200_OK) {
+               //throw new Error(json && json.message ? json.message : "")
+               return { error: "Erreur backoffice 1" }
+            }
+         } catch (error) {
+            console.error(error)
+            return { error: "Erreur backoffice 2" }
+         }
+      }
+
+      fetchData()
+   }, [hospitalId, month, open, year])
 
    const handleChange = event => {
       event.preventDefault()
 
-      setNumbersForMonth({ ...numbersForMonth, [event.target.name]: event.target.value })
+      setDataMonth({ ...dataMonth, [event.target.name]: event.target.value })
    }
 
    const toggleReadOnly = () => setReadOnlyState(state => !state)
 
    const handleUpdate = () => {
       if (validate()) {
-         update(monthNumber, numbersForMonth)
+         update(month, dataMonth)
          toggleReadOnly()
       }
    }
@@ -48,10 +79,10 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
       const newErrors = {}
 
       inputs.forEach(key => {
-         if (!numbersForMonth[key]) {
+         if (!dataMonth[key]) {
             newErrors[key] = "Obligatoire"
          } else {
-            const val = /^[0-9]+$/.test(numbersForMonth[key]) && parseInt(numbersForMonth[key], 10)
+            const val = /^[0-9]+$/.test(dataMonth[key]) && parseInt(dataMonth[key], 10)
 
             if (!val || val < 0) {
                newErrors[key] = "Numérique positif"
@@ -65,6 +96,27 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
       }
 
       return true
+   }
+
+   const update = async () => {
+      let result
+      try {
+         result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
+            method: "PUT",
+            body: JSON.stringify(dataMonth),
+         })
+         const json = await result.json()
+
+         if (result.status !== STATUS_200_OK) {
+            //throw new Error(json && json.message ? json.message : "")
+            console.error("Error", json.error)
+            return { error: json.error }
+         }
+         // setSuccess("Vos informations ont bien été enregistrées.")
+      } catch (error) {
+         console.error(error)
+         return { error: "Erreur backoffice 2" }
+      }
    }
 
    return (
@@ -89,7 +141,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
                      <Input
                         name="doctors"
                         invalid={errorsState && !!errorsState.doctors}
-                        value={numbersForMonth["doctors"] ? numbersForMonth["doctors"] : ""}
+                        value={dataMonth["doctors"] ? dataMonth["doctors"] : ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -100,7 +152,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
                      <Input
                         name="secretaries"
                         invalid={errorsState && !!errorsState.secretaries}
-                        value={numbersForMonth["secretaries"] ? numbersForMonth["secretaries"] : ""}
+                        value={dataMonth["secretaries"] ? dataMonth["secretaries"] : ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -111,7 +163,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
                      <Input
                         name="nursings"
                         invalid={errorsState && !!errorsState.nursings}
-                        value={numbersForMonth["nursings"] ? numbersForMonth["nursings"] : ""}
+                        value={dataMonth["nursings"] ? dataMonth["nursings"] : ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -122,7 +174,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
                      <Input
                         name="executives"
                         invalid={errorsState && !!errorsState.executives}
-                        value={numbersForMonth["executives"] ? numbersForMonth["executives"] : ""}
+                        value={dataMonth["executives"] ? dataMonth["executives"] : ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -135,7 +187,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
                      <Input
                         name="idesNumber"
                         invalid={errorsState && !!errorsState.idesNumber}
-                        value={numbersForMonth["idesNumber"] ? numbersForMonth["idesNumber"] : ""}
+                        value={dataMonth["idesNumber"] ? dataMonth["idesNumber"] : ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -146,7 +198,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
                      <Input
                         name="auditoriumAgents"
                         invalid={errorsState && !!errorsState.auditoriumAgents}
-                        value={numbersForMonth["auditoriumAgents"] ? numbersForMonth["auditoriumAgents"] : ""}
+                        value={dataMonth["auditoriumAgents"] ? dataMonth["auditoriumAgents"] : ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -157,7 +209,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
                      <Input
                         name="psychologists"
                         invalid={errorsState && !!errorsState.psychologists}
-                        value={numbersForMonth["psychologists"] ? numbersForMonth["psychologists"] : ""}
+                        value={dataMonth["psychologists"] ? dataMonth["psychologists"] : ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -168,7 +220,7 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
                      <Input
                         name="others"
                         invalid={errorsState && !!errorsState.others}
-                        value={numbersForMonth["others"] ? numbersForMonth["others"] : ""}
+                        value={dataMonth["others"] ? dataMonth["others"] : ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -183,8 +235,9 @@ const AccordionEmploymentsMonth = ({ monthName, monthNumber, numbers, update, er
 
 AccordionEmploymentsMonth.propTypes = {
    monthName: PropTypes.string.isRequired,
-   monthNumber: PropTypes.string.isRequired,
-   numbers: PropTypes.object.isRequired,
+   month: PropTypes.string.isRequired,
+   year: PropTypes.number.isRequired,
+   hospitalId: PropTypes.number.isRequired,
    update: PropTypes.func.isRequired,
    errors: PropTypes.object,
    readOnly: PropTypes.bool.isRequired,
