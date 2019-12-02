@@ -18,14 +18,77 @@ import AccordionEmploymentsMonth from "../components/AccordionEmploymentsMonth"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { isEmpty } from "../utils/misc"
 
-const validAct = () => {
-   console.log("Validation des ETP")
-}
+const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, allMonths, year, hospitalId }) => {
+   const initialNumbers = numbers
 
-const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, allMonths }) => {
+   console.log("numbers", numbers)
+
    const [errors, setErrors] = useState(error)
+   const [success, setSuccess] = useState("")
+
+   const [dataMonths, setDataMonths] = useState(numbers)
 
    const previousMonths = allMonths && allMonths.length ? allMonths.slice(1) : []
+
+   const handleChange = (e, currentMonth) => {
+      e.preventDefault()
+
+      const dataMonth = dataMonths[currentMonth] || {}
+      dataMonth[e.target.name] = e.target.value
+
+      setDataMonths({ ...dataMonths, [currentMonth]: dataMonth })
+   }
+
+   const validAct = async () => {
+      console.log("Validation des ETP")
+
+      setErrors({})
+
+      if (!dataMonths[currentMonth]) {
+         setErrors({ error: `Vous devez remplir le mois de ${currentMonthName}` })
+      } else {
+         const newErrors = {}
+
+         Object.keys(dataMonths[currentMonth]).forEach(elt => {
+            if (!dataMonths[currentMonth][elt]) {
+               newErrors[elt] = "Obligatoire"
+            } else {
+               const val = parseInt(dataMonths[currentMonth][elt], 10)
+
+               if (!val || val < 0) {
+                  newErrors[elt] = "Numérique positif"
+               }
+            }
+         })
+
+         if (!isEmpty(newErrors)) {
+            setErrors(newErrors)
+            console.log("newErrors", newErrors)
+            return
+         }
+
+         const data = { ...numbers, [currentMonth]: dataMonths[currentMonth] }
+
+         let result
+         try {
+            result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}`, {
+               method: "PUT",
+               body: JSON.stringify(data),
+            })
+            const json = await result.json()
+
+            if (result.status !== STATUS_200_OK) {
+               //throw new Error(json && json.message ? json.message : "")
+               console.error("Error", json.error)
+               return { error: json.error }
+            }
+            setSuccess("Vos informations ont bien été enregistrées.")
+         } catch (error) {
+            console.error(error)
+            return { error: "Erreur backoffice 2" }
+         }
+      }
+   }
 
    return (
       <Layout>
@@ -43,114 +106,122 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                </small>
             </p>
 
-            {!isEmpty(errors) && <Alert color="danger">{errors || "Veuillez renseigner les éléments en rouge"}</Alert>}
+            {/* {!isEmpty(errors) && <Alert color="danger">{"Veuillez renseigner les éléments en rouge"}</Alert>} */}
 
-            {isEmpty(errors) && (
-               <>
-                  <Row>
-                     <Col className="mr-3">
-                        <Label htmlFor="doctorsNumber">Médecin</Label>
-                        <Input
-                           id="doctorsNumber"
-                           invalid={errors && !!errors.doctorsNumber}
-                           placeholder="Nombre d'ETP"
-                           value={numbers[currentMonth] && numbers[currentMonth]["doctors"]}
-                        />
-                        <FormFeedback>{errors && errors.doctorsNumber}</FormFeedback>
-                     </Col>
-                     <Col className="mr-3">
-                        <Label htmlFor="secretariesNumber">Secrétaire</Label>
-                        <Input
-                           id="secretariesNumber"
-                           invalid={errors && !!errors.secretariesNumber}
-                           placeholder="Nombre d'ETP"
-                           value={numbers[currentMonth] && numbers[currentMonth]["secretaries"]}
-                        />
-                        <FormFeedback>{errors && errors.secretariesNumber}</FormFeedback>
-                     </Col>
-                     <Col className="mr-3">
-                        <Label htmlFor="nursingsNumbers">Aide soignant.e</Label>
-                        <Input
-                           id="nursingsNumbers"
-                           invalid={errors && !!errors.nursingsNumbers}
-                           placeholder="Nombre d'ETP"
-                           value={numbers[currentMonth] && numbers[currentMonth]["nursings"]}
-                        />
+            {success && <Alert color="primary">{success}</Alert>}
 
-                        <FormFeedback>{errors && errors.nursingsNumbers}</FormFeedback>
-                     </Col>
-                     <Col className="mr-3">
-                        <Label htmlFor="executivesNumber">Cadre de santé</Label>
-                        <Input
-                           id="executivesNumber"
-                           invalid={errors && !!errors.executivesNumber}
-                           placeholder="Nombre d'ETP"
-                           value={numbers[currentMonth] && numbers[currentMonth]["executives"]}
-                        />
-                        <FormFeedback>{errors && errors.executivesNumber}</FormFeedback>
-                     </Col>
-                  </Row>
-                  <Row className={"mt-2"}>
-                     <Col className="mr-3">
-                        <Label htmlFor="idesNumber">IDE</Label>
-                        <Input
-                           id="idesNumber"
-                           invalid={errors && !!errors.idesNumber}
-                           placeholder="Nombre d'ETP"
-                           value={numbers[currentMonth] && numbers[currentMonth]["ides"]}
-                        />
-                        <FormFeedback>{errors && errors.idesNumber}</FormFeedback>
-                     </Col>
-                     <Col className="mr-3">
-                        <Label htmlFor="auditoriumAgentsNumber">{"Agent d'amphithéâtre"}</Label>
-                        <Input
-                           id="auditoriumAgentsNumber"
-                           invalid={errors && !!errors.auditoriumAgentsNumber}
-                           placeholder="Nombre d'ETP"
-                           value={numbers[currentMonth] && numbers[currentMonth]["auditoriumAgents"]}
-                        />
-                        <FormFeedback>{errors && errors.auditoriumAgentsNumber}</FormFeedback>
-                     </Col>
-                     <Col className="mr-3">
-                        <Label htmlFor="psychologistsNumber">Psychologue</Label>
-                        <Input
-                           id="psychologistsNumber"
-                           invalid={errors && !!errors.psychologistsNumber}
-                           placeholder="Nombre d'ETP"
-                           value={numbers[currentMonth] && numbers[currentMonth]["psychologists"]}
-                        />
-                        <FormFeedback>{errors && errors.psychologistsNumber}</FormFeedback>
-                     </Col>
-                     <Col className="mr-3">
-                        <Label htmlFor="othersNumber">Autres</Label>
-                        <Input
-                           id="othersNumber"
-                           invalid={errors && !!errors.othersNumber}
-                           placeholder="Nombre d'ETP"
-                           value={numbers[currentMonth] && numbers[currentMonth]["others"]}
-                        />
-                        <FormFeedback>{errors && errors.othersNumber}</FormFeedback>
-                     </Col>
-                  </Row>
-
-                  <div className="text-center mt-5">
-                     <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
-                        Valider
-                     </ValidationButton>
-                  </div>
-
-                  <Title2 className="mt-5 mb-4">{"Mois précédents"}</Title2>
-
-                  {previousMonths.map(({ monthName, monthNumber }) => (
-                     <AccordionEmploymentsMonth
-                        key={monthNumber}
-                        monthName={monthName}
-                        monthNumber={monthNumber}
-                        numbers={numbers}
+            <>
+               <Row>
+                  <Col className="mr-3">
+                     <Label htmlFor="doctors">Médecin</Label>
+                     <Input
+                        name="doctors"
+                        invalid={errors && !!errors.doctors}
+                        placeholder="Nombre d'ETP"
+                        value={numbers[currentMonth] && numbers[currentMonth]["doctors"]}
+                        onChange={event => handleChange(event, currentMonth)}
                      />
-                  ))}
-               </>
-            )}
+                     <FormFeedback>{errors && errors.doctors}</FormFeedback>
+                  </Col>
+                  <Col className="mr-3">
+                     <Label htmlFor="secretaries">Secrétaire</Label>
+                     <Input
+                        name="secretaries"
+                        invalid={errors && !!errors.secretaries}
+                        placeholder="Nombre d'ETP"
+                        value={numbers[currentMonth] && numbers[currentMonth]["secretaries"]}
+                        onChange={event => handleChange(event, currentMonth)}
+                     />
+                     <FormFeedback>{errors && errors.secretaries}</FormFeedback>
+                  </Col>
+                  <Col className="mr-3">
+                     <Label htmlFor="nursings">Aide soignant.e</Label>
+                     <Input
+                        name="nursings"
+                        invalid={errors && !!errors.nursings}
+                        placeholder="Nombre d'ETP"
+                        value={numbers[currentMonth] && numbers[currentMonth]["nursings"]}
+                        onChange={event => handleChange(event, currentMonth)}
+                     />
+
+                     <FormFeedback>{errors && errors.nursings}</FormFeedback>
+                  </Col>
+                  <Col className="mr-3">
+                     <Label htmlFor="executives">Cadre de santé</Label>
+                     <Input
+                        name="executives"
+                        invalid={errors && !!errors.executives}
+                        placeholder="Nombre d'ETP"
+                        value={numbers[currentMonth] && numbers[currentMonth]["executives"]}
+                        onChange={event => handleChange(event, currentMonth)}
+                     />
+                     <FormFeedback>{errors && errors.executives}</FormFeedback>
+                  </Col>
+               </Row>
+               <Row className={"mt-2"}>
+                  <Col className="mr-3">
+                     <Label htmlFor="ides">IDE</Label>
+                     <Input
+                        name="ides"
+                        invalid={errors && !!errors.ides}
+                        placeholder="Nombre d'ETP"
+                        value={numbers[currentMonth] && numbers[currentMonth]["ides"]}
+                        onChange={event => handleChange(event, currentMonth)}
+                     />
+                     <FormFeedback>{errors && errors.ides}</FormFeedback>
+                  </Col>
+                  <Col className="mr-3">
+                     <Label htmlFor="auditoriumAgents">{"Agent d'amphithéâtre"}</Label>
+                     <Input
+                        name="auditoriumAgents"
+                        invalid={errors && !!errors.auditoriumAgents}
+                        placeholder="Nombre d'ETP"
+                        value={numbers[currentMonth] && numbers[currentMonth]["auditoriumAgents"]}
+                        onChange={event => handleChange(event, currentMonth)}
+                     />
+                     <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
+                  </Col>
+                  <Col className="mr-3">
+                     <Label htmlFor="psychologists">Psychologue</Label>
+                     <Input
+                        name="psychologists"
+                        invalid={errors && !!errors.psychologists}
+                        placeholder="Nombre d'ETP"
+                        value={numbers[currentMonth] && numbers[currentMonth]["psychologists"]}
+                        onChange={event => handleChange(event, currentMonth)}
+                     />
+                     <FormFeedback>{errors && errors.psychologists}</FormFeedback>
+                  </Col>
+                  <Col className="mr-3">
+                     <Label htmlFor="others">Autres</Label>
+                     <Input
+                        name="others"
+                        invalid={errors && !!errors.others}
+                        placeholder="Nombre d'ETP"
+                        value={numbers[currentMonth] && numbers[currentMonth]["others"]}
+                        onChange={event => handleChange(event, currentMonth)}
+                     />
+                     <FormFeedback>{errors && errors.others}</FormFeedback>
+                  </Col>
+               </Row>
+
+               <div className="text-center mt-5">
+                  <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
+                     Valider
+                  </ValidationButton>
+               </div>
+
+               <Title2 className="mt-5 mb-4">{"Mois précédents"}</Title2>
+
+               {previousMonths.map(({ monthName, monthNumber }) => (
+                  <AccordionEmploymentsMonth
+                     key={monthNumber}
+                     monthName={monthName}
+                     monthNumber={monthNumber}
+                     numbers={numbers}
+                  />
+               ))}
+            </>
          </Container>
       </Layout>
    )
@@ -162,9 +233,6 @@ FillEmploymentsPage.getInitialProps = async ctx => {
    if (!hospitalId) {
       return { error: "Vous n'avez pas d'établissement de santé à gérer." }
    }
-
-   console.log("APP url", API_URL)
-   console.log("Empployment endoipoit", EMPLOYMENTS_ENDPOINT)
 
    const NAME_MONTHS = {
       "01": "janvier",
@@ -208,6 +276,8 @@ FillEmploymentsPage.getInitialProps = async ctx => {
          currentMonthName: NAME_MONTHS[currentMonth] + " " + currentYear,
          numbers: json,
          allMonths,
+         year: currentYear,
+         hospitalId,
       }
    } catch (error) {
       console.error(error)
@@ -221,6 +291,8 @@ FillEmploymentsPage.propTypes = {
    numbers: PropTypes.object,
    allMonths: PropTypes.array,
    error: PropTypes.string,
+   hospitalId: PropTypes.string.isRequired,
+   year: PropTypes.string.isRequired,
 }
 
 export default FillEmploymentsPage

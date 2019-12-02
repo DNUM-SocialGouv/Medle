@@ -5,14 +5,6 @@ import {
    STATUS_500_INTERNAL_SERVER_ERROR,
 } from "../../../utils/HttpStatus"
 import knex from "../../../lib/knex/knex"
-import Treeize from "treeize"
-
-const getCaseData = data => ({
-   internal_number: data.internalNumber,
-   profile: data.caseType,
-   ets_id: data.etsId,
-   extra_data: JSON.stringify(data.commonData),
-})
 
 export default async (req, res) => {
    if (req.method !== "GET") {
