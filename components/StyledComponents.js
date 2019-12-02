@@ -20,6 +20,19 @@ export const DropdownToggle = styled(RSDropdownToggle)`
       `}
 `
 
+export const AnchorButton = styled(RSButton)`
+   border: 0;
+   background-color: white;
+   color: black;
+
+   :hover {
+      color: red;
+      background-color: white;
+      color: black;
+      text-decoration: underline;
+   }
+`
+
 export const Button = styled(RSButton)`
    font-family: "Source Sans Pro";
    font-size: 14px;

@@ -16,7 +16,6 @@ import {
 import Layout from "../components/Layout"
 import AccordionEmploymentsMonth from "../components/AccordionEmploymentsMonth"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
-import { isEmpty } from "../utils/misc"
 
 const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, allMonths, year, hospitalId }) => {
    const initialNumbers = numbers
@@ -26,7 +25,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
    const [errors, setErrors] = useState(error)
    const [success, setSuccess] = useState("")
 
-   const [dataMonths, setDataMonths] = useState(numbers)
+   const [dataMonths, setDataMonths] = useState({ ...numbers })
 
    const previousMonths = allMonths && allMonths.length ? allMonths.slice(1) : []
 
@@ -39,54 +38,34 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
       setDataMonths({ ...dataMonths, [currentMonth]: dataMonth })
    }
 
-   const validAct = async () => {
-      console.log("Validation des ETP")
+   const update = async (monthNumber, numbersForMonth) => {
+      console.log("")
+      console.log("numbers =? initialNumbers", initialNumbers === numbers)
+      console.log("numbers =? dataMonths", dataMonths === numbers)
+      console.log("numbers[12] =? dataMonths[12]", dataMonths[12] === numbers[12])
 
-      setErrors({})
+      console.log("monthNumber", monthNumber)
 
-      if (!dataMonths[currentMonth]) {
-         setErrors({ error: `Vous devez remplir le mois de ${currentMonthName}` })
-      } else {
-         const newErrors = {}
+      const data = { ...initialNumbers, [monthNumber]: numbersForMonth }
+      console.log("data", data)
 
-         Object.keys(dataMonths[currentMonth]).forEach(elt => {
-            if (!dataMonths[currentMonth][elt]) {
-               newErrors[elt] = "Obligatoire"
-            } else {
-               const val = parseInt(dataMonths[currentMonth][elt], 10)
-
-               if (!val || val < 0) {
-                  newErrors[elt] = "Numérique positif"
-               }
-            }
+      let result
+      try {
+         result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
          })
+         const json = await result.json()
 
-         if (!isEmpty(newErrors)) {
-            setErrors(newErrors)
-            console.log("newErrors", newErrors)
-            return
+         if (result.status !== STATUS_200_OK) {
+            //throw new Error(json && json.message ? json.message : "")
+            console.error("Error", json.error)
+            return { error: json.error }
          }
-
-         const data = { ...numbers, [currentMonth]: dataMonths[currentMonth] }
-
-         let result
-         try {
-            result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}`, {
-               method: "PUT",
-               body: JSON.stringify(data),
-            })
-            const json = await result.json()
-
-            if (result.status !== STATUS_200_OK) {
-               //throw new Error(json && json.message ? json.message : "")
-               console.error("Error", json.error)
-               return { error: json.error }
-            }
-            setSuccess("Vos informations ont bien été enregistrées.")
-         } catch (error) {
-            console.error(error)
-            return { error: "Erreur backoffice 2" }
-         }
+         setSuccess("Vos informations ont bien été enregistrées.")
+      } catch (error) {
+         console.error(error)
+         return { error: "Erreur backoffice 2" }
       }
    }
 
@@ -118,7 +97,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="doctors"
                         invalid={errors && !!errors.doctors}
                         placeholder="Nombre d'ETP"
-                        value={numbers[currentMonth] && numbers[currentMonth]["doctors"]}
+                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["doctors"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.doctors}</FormFeedback>
@@ -129,7 +108,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="secretaries"
                         invalid={errors && !!errors.secretaries}
                         placeholder="Nombre d'ETP"
-                        value={numbers[currentMonth] && numbers[currentMonth]["secretaries"]}
+                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["secretaries"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.secretaries}</FormFeedback>
@@ -140,7 +119,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="nursings"
                         invalid={errors && !!errors.nursings}
                         placeholder="Nombre d'ETP"
-                        value={numbers[currentMonth] && numbers[currentMonth]["nursings"]}
+                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["nursings"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
 
@@ -152,7 +131,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="executives"
                         invalid={errors && !!errors.executives}
                         placeholder="Nombre d'ETP"
-                        value={numbers[currentMonth] && numbers[currentMonth]["executives"]}
+                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["executives"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.executives}</FormFeedback>
@@ -165,7 +144,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="ides"
                         invalid={errors && !!errors.ides}
                         placeholder="Nombre d'ETP"
-                        value={numbers[currentMonth] && numbers[currentMonth]["ides"]}
+                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["ides"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.ides}</FormFeedback>
@@ -176,7 +155,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="auditoriumAgents"
                         invalid={errors && !!errors.auditoriumAgents}
                         placeholder="Nombre d'ETP"
-                        value={numbers[currentMonth] && numbers[currentMonth]["auditoriumAgents"]}
+                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["auditoriumAgents"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
@@ -187,7 +166,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="psychologists"
                         invalid={errors && !!errors.psychologists}
                         placeholder="Nombre d'ETP"
-                        value={numbers[currentMonth] && numbers[currentMonth]["psychologists"]}
+                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["psychologists"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.psychologists}</FormFeedback>
@@ -198,7 +177,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="others"
                         invalid={errors && !!errors.others}
                         placeholder="Nombre d'ETP"
-                        value={numbers[currentMonth] && numbers[currentMonth]["others"]}
+                        value={dataMonths[currentMonth] && dataMonths[currentMonth]["others"]}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.others}</FormFeedback>
@@ -206,7 +185,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                </Row>
 
                <div className="text-center mt-5">
-                  <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
+                  <ValidationButton color="primary" size="lg" className="center" onClick={() => update(currentMonth)}>
                      Valider
                   </ValidationButton>
                </div>
@@ -218,7 +197,9 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                      key={monthNumber}
                      monthName={monthName}
                      monthNumber={monthNumber}
-                     numbers={numbers}
+                     numbers={dataMonths[monthNumber]}
+                     onChange={event => handleChange(event, monthNumber)}
+                     update={update}
                   />
                ))}
             </>
@@ -228,6 +209,8 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
 }
 
 FillEmploymentsPage.getInitialProps = async ctx => {
+   console.log("dans getInitialProps")
+
    const { token, role, hospitalId } = nextCookie(ctx)
 
    if (!hospitalId) {
@@ -293,6 +276,10 @@ FillEmploymentsPage.propTypes = {
    error: PropTypes.string,
    hospitalId: PropTypes.string.isRequired,
    year: PropTypes.string.isRequired,
+}
+
+FillEmploymentsPage.defaultProps = {
+   numbers: {},
 }
 
 export default FillEmploymentsPage
