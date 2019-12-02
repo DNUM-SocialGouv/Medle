@@ -35,8 +35,6 @@ export default async (req, res) => {
       }
    }
 
-   console.log("query", etsId)
-
    let acts
 
    try {
