@@ -1,24 +1,5 @@
 import moment from "moment"
-import { FRENCH_PUBLIC_HOLIDAY_ENDPOINT } from "../config"
-import fetch from "isomorphic-unfetch"
-
-const initFetchFrenchPublicHoliday = async () => {
-   const currentYear = moment().year()
-   try {
-      // TODO : cache data for some duration and refresh after time elapsed
-      const res = await fetch(FRENCH_PUBLIC_HOLIDAY_ENDPOINT + currentYear)
-      const json = await res.json()
-      console.log("Jours fériés chargés")
-      frenchPublicHoliday = json.map(elt => elt.date)
-   } catch (error) {
-      console.error("Erreur chargment jours fériés", error)
-      frenchPublicHoliday = []
-   }
-}
-
-let frenchPublicHoliday
-
-initFetchFrenchPublicHoliday()
+import joursFeries from "@socialgouv/jours-feries"
 
 const periodOfDayValues = {
    week: {
@@ -79,9 +60,11 @@ const periodOfDayValues = {
 }
 
 const getSituationDate = dateStr => {
-   if (!frenchPublicHoliday) {
-      console.warn("Les jours fériés n'ont pas été rapatriés")
-   } else if (frenchPublicHoliday.includes(dateStr)) {
+   const publicHolidays = joursFeries(moment(dateStr).format("YYYY"))
+
+   const allDates = Object.values(publicHolidays).map(elt => moment(elt).format("YYYY-MM-DD"))
+
+   if (allDates.includes(dateStr)) {
       return "sunday"
    }
 
