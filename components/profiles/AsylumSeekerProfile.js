@@ -55,7 +55,7 @@ const AsylumSeekerProfile = ({ dispatch, state, examinationDate, errors }) => {
             invalid={!!errors.periodOfDay}
          />
 
-         <Title2 className="mb-2 mt-5">{"Profil de la personne décédée"}</Title2>
+         <Title2 className="mb-2 mt-5">{"Profil de la personne examinée"}</Title2>
 
          <ActBlock
             type="personGender"

@@ -18,7 +18,7 @@ const ActConfirmationPage = () => {
 
             <Row className="mt-5">
                <Link href="/actDeclaration">
-                  <Button className="mx-auto">
+                  <Button className="mx-auto" primary>
                      <Add /> Ajouter un nouvel acte
                   </Button>
                </Link>

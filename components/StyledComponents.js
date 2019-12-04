@@ -50,6 +50,14 @@ export const Button = styled(RSButton)`
          background: #6c757d;
          color: white;
       `}
+
+   ${props =>
+      props.primary &&
+      css`
+         border-color: #007bff;
+         vbackground: white;
+         color: #007bff;
+      `}
 `
 
 export const ValidationButton = styled(Button)`
