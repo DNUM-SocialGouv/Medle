@@ -55,7 +55,7 @@ docker run -it --init --rm -p 3001:3000 medle
 ## Create knex migration file
 
 ```shell
-NODE_ENV=development yarn knex migrate:make init_schema --cwd ./lib/knex
+NODE_ENV=development yarn knex migrate:make init_schema --cwd ./src/knex
 ```
 
 ## Run migrations
@@ -70,3 +70,11 @@ sudo docker-compose exec app yarn migrate:latest
 
 
 sudo docker-compose exec app yarn seed:run
+
+## TimeZone
+
+`SET timezone = 'posix/Europe/Paris';
+select now();
+
+SET timezone = 'UTC';
+select now();`
