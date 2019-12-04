@@ -44,6 +44,11 @@ export const Button = styled(RSButton)`
    background: white;
    color: #6c757d;
 
+   :hover {
+      color: white;
+      background: #7f8991;
+   }
+
    ${props =>
       props.invert &&
       css`
