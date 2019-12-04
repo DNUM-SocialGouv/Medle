@@ -20,6 +20,9 @@ import {
    RestrainedProfile,
 } from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 import { STATUS_200_OK } from "../utils/HttpStatus"
 
 const getInitialState = ({ asker, internalNumber, pvNumber, act }) => {
@@ -203,11 +206,19 @@ const ActDeclaration = ({ askerValues, act }) => {
    const validAndSubmitAct = async () => {
       setErrors({})
 
+      if (!state.profile) {
+         console.error("Pas de profil choisi !!!")
+         toast.error("Pas si vite! Il me manque une information importante. Qui a été examiné ?")
+         return
+      }
+
       const newErrors = PROFILES[state.profile].validate(state)
 
       if (Object.keys(newErrors).length) {
          console.error("Erreur state non valide", state)
          setErrors(newErrors)
+         console.error("State invalide")
+         toast.error("Oups... Certaines informations importantes sont manquantes")
          return
       }
 
@@ -348,6 +359,8 @@ const ActDeclaration = ({ askerValues, act }) => {
             )}
 
             {state.profile && !errors.internalNumber && !errors.examinationDate && getProfile(state)}
+
+            <ToastContainer />
 
             <div className="text-center mt-5">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAndSubmitAct}>
