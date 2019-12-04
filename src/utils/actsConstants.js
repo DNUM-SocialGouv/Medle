@@ -34,11 +34,7 @@ const periodOfDayValues = {
          },
          {
             title: "Soirée",
-            subTitle: "(18h30-22h)",
-         },
-         {
-            title: "Nuit",
-            subTitle: "(22h-00h)",
+            subTitle: "(18h30-00h)",
          },
       ],
    },
@@ -58,7 +54,7 @@ const periodOfDayValues = {
             subTitle: "(12h30-18h)",
          },
          {
-            title: "Soirée et nuit",
+            title: "Soirée",
             subTitle: "(18h-00h)",
          },
       ],
@@ -76,11 +72,7 @@ const periodOfDayValues = {
          },
          {
             title: "Soirée",
-            subTitle: "(18h30-22h)",
-         },
-         {
-            title: "Nuit",
-            subTitle: "(22h-00h)",
+            subTitle: "(18h30-00h)",
          },
       ],
    },

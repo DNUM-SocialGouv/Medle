@@ -2,7 +2,6 @@ import React from "react"
 import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
 import { Col, Row } from "reactstrap"
-import { Title2 } from "../StyledComponents"
 import ColumnAct from "../../components/ColumnAct"
 
 const ReconstitutionProfile = ({ dispatch, state, errors }) => {
@@ -31,16 +30,6 @@ const ReconstitutionProfile = ({ dispatch, state, errors }) => {
 }
 
 export const ReconstitutionDetail = act => {
-   const examinations = [
-      [act.imagingExaminationsNumber, "imagerie"],
-      [act.toxicExaminationsNumber, "toxicologie"],
-      [act.anapathExaminationsNumber, "anapath"],
-      [act.geneticExaminationsNumber, "génétique"],
-      [act.othersExaminationNumber, "autre"],
-   ]
-      .filter(elt => !!elt[0])
-      .map(elt => elt.join(" "))
-
    return (
       <>
          <Row>
@@ -74,7 +63,6 @@ ReconstitutionProfile.validate = state => {
 ReconstitutionProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
-   examinationDate: PropTypes.string,
    errors: PropTypes.object,
 }
 

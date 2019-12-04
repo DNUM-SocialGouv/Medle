@@ -7,13 +7,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import EditOutlinedIcon from "@material-ui/icons/Edit"
 import { AnchorButton } from "../components/StyledComponents"
 import { isEmpty } from "../utils/misc"
-import {
-   STATUS_200_OK,
-   STATUS_400_BAD_REQUEST,
-   STATUS_404_NOT_FOUND,
-   STATUS_405_METHOD_NOT_ALLOWED,
-   STATUS_500_INTERNAL_SERVER_ERROR,
-} from "../utils/HttpStatus"
+import { STATUS_200_OK } from "../utils/HttpStatus"
 
 const inputs = [
    "doctors",

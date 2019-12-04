@@ -6,8 +6,8 @@ import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 import { Col, Row } from "reactstrap"
 
-const BoneAgeProfile = ({ dispatch, state, examinationDate, errors }) => {
-   const situationDate = getSituationDate(examinationDate)
+const BoneAgeProfile = ({ dispatch, state, errors }) => {
+   const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
    return (
@@ -94,7 +94,6 @@ BoneAgeProfile.validate = state => {
 BoneAgeProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
-   examinationDate: PropTypes.string,
    errors: PropTypes.object,
 }
 

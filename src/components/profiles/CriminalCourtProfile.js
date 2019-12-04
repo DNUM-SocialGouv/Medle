@@ -1,7 +1,7 @@
 import React from "react"
 import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
-import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter, Spinner } from "reactstrap"
+import { Col, Row } from "reactstrap"
 import ColumnAct from "../../components/ColumnAct"
 
 const CriminalCourtProfile = ({ dispatch, state, errors }) => {
@@ -45,7 +45,6 @@ CriminalCourtProfile.validate = state => {
 CriminalCourtProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
-   examinationDate: PropTypes.string,
    errors: PropTypes.object,
 }
 

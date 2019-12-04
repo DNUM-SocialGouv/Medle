@@ -7,8 +7,8 @@ import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 
-const RestrainedProfile = ({ dispatch, state, examinationDate, errors }) => {
-   const situationDate = getSituationDate(examinationDate)
+const RestrainedProfile = ({ dispatch, state, errors }) => {
+   const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
    return (
@@ -175,7 +175,6 @@ RestrainedProfile.validate = state => {
 RestrainedProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
-   examinationDate: PropTypes.string,
    errors: PropTypes.object,
 }
 

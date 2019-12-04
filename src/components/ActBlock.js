@@ -161,7 +161,12 @@ ActBlock.propTypes = {
 }
 
 const areEqual = (prevProps, nextProps) => {
-   if (prevProps.state !== nextProps.state || prevProps.invalid !== nextProps.invalid) return false
+   if (
+      prevProps.state !== nextProps.state ||
+      prevProps.invalid !== nextProps.invalid ||
+      prevProps.values !== nextProps.values
+   )
+      return false
    return true
 }
 
