@@ -25,10 +25,10 @@ const knexConfig = {
          },
       },
       migrations: {
-         directory: join(__dirname, "lib/knex/migrations"),
+         directory: join(__dirname, "src/knex/migrations"),
       },
       seeds: {
-         directory: join(__dirname, "lib/knex/seeds/development"),
+         directory: join(__dirname, "src/knex/seeds/development"),
       },
    },
    staging: {
@@ -44,10 +44,10 @@ const knexConfig = {
          },
       },
       migrations: {
-         directory: join(__dirname, "lib/knex/migrations"),
+         directory: join(__dirname, "src/knex/migrations"),
       },
       seeds: {
-         directory: join(__dirname, "lib/knex/seeds/staging"),
+         directory: join(__dirname, "src/knex/seeds/staging"),
       },
    },
    production: {
@@ -63,10 +63,10 @@ const knexConfig = {
          },
       },
       migrations: {
-         directory: join(__dirname, "lib/knex/migrations"),
+         directory: join(__dirname, "src/knex/migrations"),
       },
       seeds: {
-         directory: join(__dirname, "lib/knex/seeds/production"),
+         directory: join(__dirname, "src/knex/seeds/production"),
       },
    },
 }
