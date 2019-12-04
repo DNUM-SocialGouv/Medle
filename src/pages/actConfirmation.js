@@ -8,13 +8,15 @@ import Add from "@material-ui/icons/Add"
 
 const ActConfirmationPage = () => {
    const router = useRouter()
-   const { internalNumber, pvNumber } = router.query
+   const { internalNumber, pvNumber, edit } = router.query
    const pvText = pvNumber && `(PV: ${pvNumber}) `
 
    return (
       <Layout>
          <Container>
-            <Title1 className="mt-5">{`L'acte #${internalNumber} ${pvText}a été ajouté.`}</Title1>
+            <Title1 className="mt-5">{`L'acte #${internalNumber} ${pvText}a été ${
+               edit ? "modifié" : "ajouté"
+            }.`}</Title1>
 
             <Row className="mt-5">
                <Link href="/actDeclaration">

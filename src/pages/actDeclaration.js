@@ -200,7 +200,7 @@ const ActDeclaration = ({ askerValues, act }) => {
       return PROFILES[profile].render
    }
 
-   const validAct = async () => {
+   const validAndSubmitAct = async () => {
       setErrors({})
 
       const newErrors = PROFILES[state.profile].validate(state)
@@ -258,6 +258,7 @@ const ActDeclaration = ({ askerValues, act }) => {
                   query: {
                      internalNumber: state.internalNumber,
                      pvNumber: state.pvNumber,
+                     edit: true,
                   },
                })
             }
@@ -349,7 +350,7 @@ const ActDeclaration = ({ askerValues, act }) => {
             {state.profile && !errors.internalNumber && !errors.examinationDate && getProfile(state)}
 
             <div className="text-center mt-5">
-               <ValidationButton color="primary" size="lg" className="center" onClick={validAct}>
+               <ValidationButton color="primary" size="lg" className="center" onClick={validAndSubmitAct}>
                   {state.id ? "Modifier" : "Valider"}
                </ValidationButton>
             </div>
