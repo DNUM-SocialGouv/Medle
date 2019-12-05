@@ -38,9 +38,9 @@ const LoginPage = () => {
                   })
                   const json = await response.json()
                   if (response.status === STATUS_200_OK) {
-                     const { token, role, hospitalId } = json
+                     const { token, userId, role, hospitalId } = json
                      console.log("json", json)
-                     await login({ token, role, hospitalId })
+                     await login({ token, userId, role, hospitalId })
                      console.log("after login")
                      resolve("OK")
                   } else {

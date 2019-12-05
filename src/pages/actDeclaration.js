@@ -1,6 +1,7 @@
 import React, { useReducer, useRef, useState } from "react"
 import PropTypes from "prop-types"
 import Router, { useRouter } from "next/router"
+import nextCookie from "next-cookies"
 import fetch from "isomorphic-unfetch"
 import { Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
@@ -25,16 +26,18 @@ import "react-toastify/dist/ReactToastify.css"
 
 import { STATUS_200_OK } from "../utils/HttpStatus"
 
-const getInitialState = ({ asker, internalNumber, pvNumber, act }) => {
+const getInitialState = ({ asker, internalNumber, pvNumber, act, userId, hospitalId }) => {
    if (act && act.id) {
       return act
    } else {
       return {
-         pvNumber: pvNumber ? pvNumber : "",
-         internalNumber: internalNumber ? internalNumber : "",
+         pvNumber: pvNumber || "",
+         internalNumber: internalNumber || "",
          examinationDate: "",
-         asker: asker ? asker : "",
+         asker: asker || "",
          profile: "",
+         addedBy: userId || "",
+         hospitalId: hospitalId || "",
       }
    }
 }
@@ -45,6 +48,8 @@ const resetState = state => ({
    examinationDate: state.examinationDate,
    asker: state.asker,
    profile: state.profile,
+   addedBy: state.addedBy,
+   hospitalId: state.hospitalId,
 })
 
 const profileValues = [
@@ -61,7 +66,7 @@ const profileValues = [
 
 const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
 
-const ActDeclaration = ({ askerValues, act }) => {
+const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
@@ -157,7 +162,14 @@ const ActDeclaration = ({ askerValues, act }) => {
 
    const [state, dispatch] = useReducer(
       reducer,
-      getInitialState({ askerValues: askerValues ? askerValues[0] : "", internalNumber, pvNumber, act }),
+      getInitialState({
+         askerValues: askerValues ? askerValues[0] : "",
+         internalNumber,
+         pvNumber,
+         act,
+         userId,
+         hospitalId,
+      }),
    )
 
    const PROFILES = {
@@ -375,10 +387,15 @@ const ActDeclaration = ({ askerValues, act }) => {
 ActDeclaration.propTypes = {
    askerValues: PropTypes.array,
    act: PropTypes.object,
+   userId: PropTypes.string.isRequired,
+   hospitalId: PropTypes.string.isRequired,
 }
 
-ActDeclaration.getInitialProps = async ({ query }) => {
-   const { id } = query
+ActDeclaration.getInitialProps = async ctx => {
+   const {
+      query: { id = {} },
+   } = ctx
+   const { userId, hospitalId } = nextCookie(ctx)
 
    let act
 
@@ -391,7 +408,7 @@ ActDeclaration.getInitialProps = async ({ query }) => {
       }
    }
 
-   return { askerValues: getAskers(), act }
+   return { askerValues: getAskers(), act, userId, hospitalId }
 }
 
 export default ActDeclaration
