@@ -21,10 +21,10 @@ const fetchData = async search => {
    return handleAPIResponse(response)
 }
 
-const ActsListPage = ({ initialActs, errors }) => {
+const ActsListPage = ({ initialActs, error }) => {
    const [search, setSearch] = useState("")
    const [acts, setActs] = useState(initialActs || [])
-   const [isError, setIsError] = useState(errors)
+   const [isError, setIsError] = useState(error)
    const [isLoading, setIsLoading] = useState(false)
 
    const onChange = e => {
@@ -124,16 +124,17 @@ const ActsListPage = ({ initialActs, errors }) => {
 }
 
 ActsListPage.getInitialProps = async ctx => {
-   const { userId, role } = nextCookie(ctx)
+   const { role } = nextCookie(ctx)
 
    if (!isAllowed(role, ACT_CONSULTATION)) {
-      return { errors: "Vous n'êtes pas autorisé à consulter les actes." }
+      return { error: "Vous n'êtes pas autorisé à consulter les actes." }
    }
    return { initialActs: await fetchData() }
 }
 
 ActsListPage.propTypes = {
    initialActs: PropTypes.array,
+   error: PropTypes.string,
 }
 
 export default withAuthSync(ActsListPage)
