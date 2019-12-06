@@ -29,8 +29,8 @@ export default async (req, res) => {
 
          return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({
             error: `Erreur serveur base de données`,
-            error_description: error,
-            error_uri: "https://docs.postgresql.fr/8.3/errcodes-appendix.html",
+            message: error,
+            uri: "https://docs.postgresql.fr/8.3/errcodes-appendix.html",
          })
       })
 }

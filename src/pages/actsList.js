@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import Link from "next/link"
+import nextCookie from "next-cookies"
 import PropTypes from "prop-types"
 import { withAuthSync } from "../utils/auth"
 import { API_URL, ACT_LIST_ENDPOINT } from "../config"
@@ -9,17 +10,21 @@ import Banner from "../components/Banner"
 import moment from "moment"
 import { FORMAT_DATE } from "../utils/constants"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, Table } from "reactstrap"
+import { ACT_CONSULTATION, isAllowed } from "../utils/roles"
+
+import { handleAPIResponse } from "../utils/errors"
 
 const fetchData = async search => {
    const bonus = search ? `?fuzzy=${search}` : ""
-   const res = await fetch(`${API_URL}${ACT_LIST_ENDPOINT}${bonus}`)
-   return await res.json()
+   const response = await fetch(`${API_URL}${ACT_LIST_ENDPOINT}${bonus}`)
+
+   return handleAPIResponse(response)
 }
 
-const ActsListPage = ({ initialActs }) => {
+const ActsListPage = ({ initialActs, errors }) => {
    const [search, setSearch] = useState("")
    const [acts, setActs] = useState(initialActs || [])
-   const [isError, setIsError] = useState(false)
+   const [isError, setIsError] = useState(errors)
    const [isLoading, setIsLoading] = useState(false)
 
    const onChange = e => {
@@ -34,14 +39,17 @@ const ActsListPage = ({ initialActs }) => {
    const handleSearch = async () => {
       setIsLoading(true)
       setIsError(false)
+
+      let acts
+
       try {
-         setActs(await fetchData(search))
-         setIsLoading(false)
+         acts = await fetchData(search)
       } catch (error) {
          console.error(error)
-         setIsError(true)
-         setActs([])
+         setIsError("Erreur en base de données")
+      } finally {
          setIsLoading(false)
+         setActs(acts || [])
       }
    }
 
@@ -78,7 +86,7 @@ const ActsListPage = ({ initialActs }) => {
 
             {isError && (
                <Alert color="danger" className="mt-5 mb-5">
-                  Erreur de base de données
+                  {isError}
                </Alert>
             )}
 
@@ -115,7 +123,12 @@ const ActsListPage = ({ initialActs }) => {
    )
 }
 
-ActsListPage.getInitialProps = async () => {
+ActsListPage.getInitialProps = async ctx => {
+   const { userId, role } = nextCookie(ctx)
+
+   if (!isAllowed(role, ACT_CONSULTATION)) {
+      return { errors: "Vous n'êtes pas autorisé à consulter les actes." }
+   }
    return { initialActs: await fetchData() }
 }
 

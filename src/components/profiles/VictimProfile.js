@@ -33,7 +33,7 @@ const VictimProfile = ({ dispatch, state, errors }) => {
                "Voie publique",
                "Sur ascendant",
                "Agression sexuelle",
-               { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] },
+               { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] }, // TODO récupérer cette liste via API
             ]}
             mode="toggleMultiple"
             dispatch={dispatch}

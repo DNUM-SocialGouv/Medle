@@ -37,10 +37,9 @@ const LoginPage = () => {
                      body: JSON.stringify({ email, password }),
                   })
                   const json = await response.json()
+                  console.log("json", json)
                   if (response.status === STATUS_200_OK) {
-                     const { token, userId, role, hospitalId } = json
-                     console.log("json", json)
-                     await login({ token, userId, role, hospitalId })
+                     await login(json)
                      console.log("after login")
                      resolve("OK")
                   } else {

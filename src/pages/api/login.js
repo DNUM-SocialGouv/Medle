@@ -34,9 +34,13 @@ export default async (req, res) => {
    }
 
    if (user) {
-      return res
-         .status(STATUS_200_OK)
-         .json({ token: "1234", userId: user.id, role: user.role, hospitalId: user.hospital_id })
+      return res.status(STATUS_200_OK).json({
+         token: "1234",
+         userId: user.id,
+         role: user.role,
+         hospitalId: user.hospital_id,
+         scope: JSON.stringify(user.scope),
+      })
    } else {
       return res.status(STATUS_401_UNAUTHORIZED).json({
          error: {
