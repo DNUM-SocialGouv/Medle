@@ -40,9 +40,8 @@ const LoginPage = () => {
                   resolve("OK")
                } catch (error) {
                   console.error(`${error}`)
-                  console.log("error.status", error.status)
                   if (error.status && error.status === 401) {
-                     setError("L'authentification est incorrecte 2")
+                     setError("L'authentification est incorrecte")
                   } else {
                      setError("Problème en base de données")
                   }
