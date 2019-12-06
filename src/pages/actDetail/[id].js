@@ -25,11 +25,13 @@ import { ReconstitutionDetail } from "../../components/profiles/ReconstitutionPr
 import { DrunkDetail } from "../../components/profiles/DrunkProfile"
 import { RestrainedDetail } from "../../components/profiles/RestrainedProfile"
 
+import { handleAPIResponse } from "../../utils/errors"
+
 // import AddIcon from "@material-ui/icons/Add"
 
-const ActDetail = ({ initialAct, id }) => {
+const ActDetail = ({ initialAct, id, error }) => {
    const router = useRouter()
-   const [error, setError] = useState(false)
+   const [isError, setIsError] = useState(error)
    const [act, setAct] = useState(initialAct)
 
    const [modal, setModal] = useState(false)
@@ -43,7 +45,8 @@ const ActDetail = ({ initialAct, id }) => {
             await fetch(API_URL + ACT_DELETE_ENDPOINT + "/" + id)
             await router.push("/actsList")
          } catch (error) {
-            setError(error)
+            console.error(error)
+            setIsError(error)
          }
       }
 
@@ -99,9 +102,9 @@ const ActDetail = ({ initialAct, id }) => {
                {act && act.profile === "Autre activité/Personne retenue" && RestrainedDetail(act)}
             </div>
 
-            {!isEmpty(error) && (
+            {!isEmpty(isError) && (
                <Alert color="danger" className="mt-5 mb-5">
-                  {error.general || "Veuillez renseigner les éléments en rouge"}
+                  {isError.general || "Veuillez renseigner les éléments en rouge"}
                </Alert>
             )}
          </Container>
@@ -152,19 +155,21 @@ const ActDetail = ({ initialAct, id }) => {
 ActDetail.getInitialProps = async ({ query }) => {
    const { id } = query
 
-   let act
+   let json
    try {
-      const res = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
-      act = await res.json()
-      return { initialAct: act, id }
+      const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
+      json = await handleAPIResponse(response)
+      return { initialAct: json, id }
    } catch (error) {
       console.error(error)
+      return { error: "Erreur en base de données" }
    }
 }
 
 ActDetail.propTypes = {
    initialAct: PropTypes.object.isRequired,
    id: PropTypes.string.isRequired,
+   error: PropTypes.string,
 }
 
 export default withAuthSync(ActDetail)

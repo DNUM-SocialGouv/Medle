@@ -1,7 +1,12 @@
 export class HTTPError extends Error {
-   constructor(message) {
+   constructor(message, status) {
       super(message)
       this.name = "HTTPError"
+      this.status = status
+   }
+
+   toString() {
+      return `${this.name} : ${this.status} (${this.message})`
    }
 }
 
@@ -19,26 +24,16 @@ export class DBError extends Error {
    }
 }
 
-export class APIError extends Error {
-   constructor(message) {
-      super(message)
+export class APIError extends HTTPError {
+   constructor(message, status) {
+      super(message, status)
       this.name = "APIError"
    }
 }
 
 export const handleAPIResponse = async response => {
    if (!response.ok) {
-      throw new APIError(`${response.statusText} (${response.status})`)
+      throw new APIError(response.statusText, response.status)
    }
    return response.json()
-}
-
-async function test() {
-   let response, json
-   try {
-      response = await fetch(API_URL)
-      json = handleAPIResponse(response)
-   } catch (error) {
-      console.error(error)
-   }
 }

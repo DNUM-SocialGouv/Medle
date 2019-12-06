@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import Router, { useRouter } from "next/router"
 import nextCookie from "next-cookies"
 import fetch from "isomorphic-unfetch"
+import { handleAPIResponse } from "../utils/errors"
 import { Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
 import { API_URL, ACT_DECLARATION_ENDPOINT, ACT_DETAIL_ENDPOINT, ACT_EDIT_ENDPOINT } from "../config"
@@ -23,8 +24,6 @@ import {
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-
-import { STATUS_200_OK } from "../utils/HttpStatus"
 
 const getInitialState = ({ asker, internalNumber, pvNumber, act, userId, hospitalId }) => {
    if (act && act.id) {
@@ -236,58 +235,54 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
 
       console.log("pas d'erreurs trouvées")
 
-      let response, json
+      let json
 
       if (!state.id) {
          try {
-            response = await fetch(API_URL + ACT_DECLARATION_ENDPOINT, {
+            const response = await fetch(API_URL + ACT_DECLARATION_ENDPOINT, {
                method: "POST",
                headers: { "Content-Type": "application/json" },
                body: JSON.stringify(state),
             })
-            json = await response.json()
+            json = await handleAPIResponse(response)
 
-            if (response.status !== STATUS_200_OK) {
-               throw new Error(json && json.message ? json.message : "")
-            } else {
-               console.log("Déclaration d'acte envoyée")
-               return Router.push({
-                  pathname: "/actConfirmation",
-                  query: {
-                     internalNumber: state.internalNumber,
-                     pvNumber: state.pvNumber,
-                  },
-               })
-            }
+            return Router.push({
+               pathname: "/actConfirmation",
+               query: {
+                  internalNumber: state.internalNumber,
+                  pvNumber: state.pvNumber,
+               },
+            })
          } catch (error) {
             console.error(error)
-            setErrors(errors => ({ ...errors, general: json && json.message ? json.message : "Erreur backoffice" }))
+            setErrors(errors => ({
+               ...errors,
+               general: json && json.message ? json.message : "Erreur en base de données",
+            }))
          }
       } else {
          try {
-            response = await fetch(API_URL + ACT_EDIT_ENDPOINT + "/" + state.id, {
+            const response = await fetch(API_URL + ACT_EDIT_ENDPOINT + "/" + state.id, {
                method: "POST",
                headers: { "Content-Type": "application/json" },
                body: JSON.stringify(state),
             })
-            json = await response.json()
+            json = await handleAPIResponse(response)
 
-            if (response.status !== STATUS_200_OK) {
-               throw new Error(json && json.message ? json.message : "")
-            } else {
-               console.log("Déclaration d'acte envoyée")
-               return Router.push({
-                  pathname: "/actConfirmation",
-                  query: {
-                     internalNumber: state.internalNumber,
-                     pvNumber: state.pvNumber,
-                     edit: true,
-                  },
-               })
-            }
+            return Router.push({
+               pathname: "/actConfirmation",
+               query: {
+                  internalNumber: state.internalNumber,
+                  pvNumber: state.pvNumber,
+                  edit: true,
+               },
+            })
          } catch (error) {
             console.error(error)
-            setErrors(errors => ({ ...errors, general: json && json.message ? json.message : "Erreur backoffice" }))
+            setErrors(errors => ({
+               ...errors,
+               general: json && json.message ? json.message : "Erreur en base de données",
+            }))
          }
       }
    }
@@ -397,18 +392,18 @@ ActDeclaration.getInitialProps = async ctx => {
    } = ctx
    const { userId, hospitalId } = nextCookie(ctx)
 
-   let act
+   let json
 
    if (id) {
       try {
-         const res = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
-         act = await res.json()
+         const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
+         json = await handleAPIResponse(response)
       } catch (error) {
          console.error(error)
       }
    }
 
-   return { askerValues: getAskers(), act, userId, hospitalId }
+   return { askerValues: getAskers(), act: json || {}, userId, hospitalId }
 }
 
 export default ActDeclaration

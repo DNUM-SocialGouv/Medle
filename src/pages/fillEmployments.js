@@ -5,11 +5,11 @@ import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
 import moment from "moment"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
-import { STATUS_200_OK } from "../utils/HttpStatus"
 
 import Layout from "../components/Layout"
 import AccordionEmploymentsMonth from "../components/AccordionEmploymentsMonth"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
+import { handleAPIResponse } from "../utils/errors"
 
 const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, allMonths, year, hospitalId }) => {
    const [errors, setErrors] = useState(error)
@@ -28,23 +28,17 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
    const update = async monthNumber => {
       console.log("monthNumber", monthNumber)
 
-      let result
       try {
-         result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${monthNumber}`, {
+         const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${monthNumber}`, {
             method: "PUT",
             body: JSON.stringify(dataMonth),
          })
-         const json = await result.json()
+         await handleAPIResponse(response)
 
-         if (result.status !== STATUS_200_OK) {
-            //throw new Error(json && json.message ? json.message : "")
-            console.error("Error", json.error)
-            return { error: json.error }
-         }
          setSuccess("Vos informations ont bien été enregistrées.")
       } catch (error) {
          console.error(error)
-         return { error: "Erreur backoffice 2" }
+         setErrors("Erreur en base de données")
       }
    }
 
@@ -191,7 +185,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
 FillEmploymentsPage.getInitialProps = async ctx => {
    console.log("dans getInitialProps")
 
-   const { token, role, hospitalId } = nextCookie(ctx)
+   const { hospitalId } = nextCookie(ctx)
 
    if (!hospitalId) {
       return { error: "Vous n'avez pas d'établissement de santé à gérer." }
@@ -220,20 +214,12 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       .reverse()
       .map(elt => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, month: elt }))
 
-   console.log("allMonths", allMonths)
-
-   let result
-
    try {
-      result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${currentYear}/${currentMonth}`, {
+      const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${currentYear}/${currentMonth}`, {
          method: "GET",
       })
-      const json = await result.json()
+      const json = await handleAPIResponse(response)
 
-      if (result.status !== STATUS_200_OK) {
-         //throw new Error(json && json.message ? json.message : "")
-         return { error: "Erreur backoffice 1" }
-      }
       return {
          currentMonth,
          currentMonthName: NAME_MONTHS[currentMonth] + " " + currentYear,
@@ -244,7 +230,14 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       }
    } catch (error) {
       console.error(error)
-      return { error: "Erreur backoffice 2" }
+      return {
+         error: "Erreur en base de données",
+         currentMonth,
+         currentMonthName: NAME_MONTHS[currentMonth] + " " + currentYear,
+         allMonths,
+         year: currentYear,
+         hospitalId,
+      }
    }
 }
 

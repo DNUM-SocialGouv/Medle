@@ -7,7 +7,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import EditOutlinedIcon from "@material-ui/icons/Edit"
 import { AnchorButton } from "../components/StyledComponents"
 import { isEmpty } from "../utils/misc"
-import { STATUS_200_OK } from "../utils/HttpStatus"
+import { handleAPIResponse } from "../utils/errors"
 
 const inputs = [
    "doctors",
@@ -29,23 +29,18 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
 
    useEffect(() => {
       const fetchData = async () => {
-         let result
+         let json
 
          try {
-            result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
+            const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
                method: "GET",
             })
-            const json = await result.json()
-
-            setDataMonth(json)
-
-            if (result.status !== STATUS_200_OK) {
-               //throw new Error(json && json.message ? json.message : "")
-               return { error: "Erreur backoffice 1" }
-            }
+            json = await handleAPIResponse(response)
          } catch (error) {
             console.error(error)
-            return { error: "Erreur backoffice 2" }
+            return { error: "Erreur en base de données" }
+         } finally {
+            setDataMonth(json || [])
          }
       }
 
@@ -93,23 +88,15 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
    }
 
    const update = async () => {
-      let result
       try {
-         result = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
+         const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
             method: "PUT",
             body: JSON.stringify(dataMonth),
          })
-         const json = await result.json()
-
-         if (result.status !== STATUS_200_OK) {
-            //throw new Error(json && json.message ? json.message : "")
-            console.error("Error", json.error)
-            return { error: json.error }
-         }
-         // setSuccess("Vos informations ont bien été enregistrées.")
+         await handleAPIResponse(response)
       } catch (error) {
          console.error(error)
-         return { error: "Erreur backoffice 2" }
+         return { error: "Erreur en base de données" }
       }
    }
 

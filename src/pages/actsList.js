@@ -16,7 +16,7 @@ import { handleAPIResponse } from "../utils/errors"
 
 const fetchData = async search => {
    const bonus = search ? `?fuzzy=${search}` : ""
-   const response = await fetch(`${API_URL}${ACT_LIST_ENDPOINT}${bonus}`)
+   const response = await fetch(`${API_URL}${ACT_LIST_ENDPOINT}${bonus}`, { credentials: "include" })
 
    return handleAPIResponse(response)
 }

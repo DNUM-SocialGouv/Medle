@@ -1,6 +1,5 @@
 import {
    STATUS_200_OK,
-   STATUS_400_BAD_REQUEST,
    STATUS_405_METHOD_NOT_ALLOWED,
    STATUS_500_INTERNAL_SERVER_ERROR,
 } from "../../../utils/HttpStatus"
@@ -12,7 +11,9 @@ export default async (req, res) => {
       return res.status(STATUS_405_METHOD_NOT_ALLOWED).end()
    }
 
-   const { role, scope: cookieScope } = req.cookies
+   const { scope: cookieScope } = req.cookies
+
+   console.log("cookies", cookieScope)
 
    const scope = cookieScope ? JSON.parse(cookieScope) : []
 
@@ -27,7 +28,7 @@ export default async (req, res) => {
          .whereNull("acts.deleted_at")
          .where(builder => {
             if (scope.length) {
-               builder.where(knex.raw("hospital_id in (" + scope.map(_ => "?").join(",") + ")", [...scope]))
+               builder.where(knex.raw("hospital_id in (" + scope.map(() => "?").join(",") + ")", [...scope]))
             }
 
             if (fuzzy) {

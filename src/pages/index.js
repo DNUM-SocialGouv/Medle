@@ -4,7 +4,7 @@ import fetch from "isomorphic-unfetch"
 import { API_URL, LOGIN_ENDPOINT } from "../config"
 import { login } from "../utils/auth"
 import Login from "../components/Login"
-import { STATUS_200_OK } from "../utils/HttpStatus"
+import { handleAPIResponse } from "../utils/errors"
 
 const LoginPage = () => {
    const [error, setError] = useState("")
@@ -20,13 +20,10 @@ const LoginPage = () => {
             const valid = isValidUserData(userData)
 
             if (!valid) {
-               const error = {
-                  message: "Problème d'authentification",
-                  detail: "Contrôle de forme KO",
-               }
-               console.error(error)
-               if (isMounted) setError(error.message)
-               reject(error)
+               setError("L'authentification est incorrecte")
+               console.error("L'authentification est incorrecte")
+
+               reject("L'authentification est incorrecte")
             } else {
                const { email, password } = userData
 
@@ -36,23 +33,20 @@ const LoginPage = () => {
                      headers: { "Content-Type": "application/json" },
                      body: JSON.stringify({ email, password }),
                   })
-                  const json = await response.json()
+                  const json = await handleAPIResponse(response)
                   console.log("json", json)
-                  if (response.status === STATUS_200_OK) {
-                     await login(json)
-                     console.log("after login")
-                     resolve("OK")
-                  } else {
-                     throw {
-                        httpStatus: response.status,
-                        message: json.error && json.error.message ? json.error.message : "Erreur serveur",
-                        detail: json.error.detail,
-                     }
-                  }
+
+                  await login(json)
+                  resolve("OK")
                } catch (error) {
-                  console.error(error.message ? error.message : "Erreur", error)
-                  if (isMounted) setError(error.message)
-                  reject(error.message)
+                  console.error(`${error}`)
+                  console.log("error.status", error.status)
+                  if (error.status && error.status === 401) {
+                     setError("L'authentification est incorrecte 2")
+                  } else {
+                     setError("Problème en base de données")
+                  }
+                  reject(error)
                }
             }
          }, 1000)
