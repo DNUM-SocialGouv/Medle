@@ -400,13 +400,14 @@ ActDeclaration.propTypes = {
 
 ActDeclaration.getInitialProps = async ctx => {
    const {
-      query: { id = {} },
+      query: { id },
    } = ctx
    const { userId, hospitalId } = nextCookie(ctx)
 
    let json
 
    if (id) {
+      console.log("id trouvé", id)
       try {
          const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
          json = await handleAPIResponse(response)
