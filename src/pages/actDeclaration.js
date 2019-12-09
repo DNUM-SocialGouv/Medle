@@ -89,12 +89,7 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
          }
       }
 
-      setErrors(precedentState => ({
-         ...precedentState,
-         ...errors,
-      }))
-
-      return isEmpty(errors)
+      return errors
    }
 
    const reducer = (state, action) => {
@@ -141,19 +136,27 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
             return { ...state, examinationDate: action.payload }
          case "asker":
             return { ...state, asker: action.payload }
-         case "profile":
+         case "profile": {
             setErrors({})
             if (action.payload.mode !== "lock") {
                state = resetState(state)
             }
-            if (preValidate(state)) {
+
+            const newErrors = preValidate(state)
+
+            if (!isEmpty(newErrors)) {
+               setErrors(precedentState => ({
+                  ...precedentState,
+                  ...newErrors,
+               }))
+
                refPersonType.current.scrollIntoView({
                   behavior: "smooth",
                   block: "start",
                })
             }
             return state
-
+         }
          default:
             return state
       }
@@ -210,7 +213,7 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
       },
    }
 
-   const getProfile = ({ profile }) => {
+   const getProfiledRender = ({ profile }) => {
       return PROFILES[profile].render
    }
 
@@ -223,7 +226,7 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
          return
       }
 
-      const newErrors = PROFILES[state.profile].validate(state)
+      const newErrors = { ...preValidate(state), ...PROFILES[state.profile].validate(state) }
 
       if (Object.keys(newErrors).length) {
          console.error("Erreur state non valide", state)
@@ -286,6 +289,15 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
          }
       }
    }
+
+   const shouldDisplayProfile = () => {
+      // creation case
+      if (state.profile && !errors.internalNumber && !errors.examinationDate) return true
+      // update case
+      if (state.id) return true
+      return false
+   }
+
    return (
       <Layout>
          <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
@@ -365,7 +377,7 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
                />
             )}
 
-            {state.profile && !errors.internalNumber && !errors.examinationDate && getProfile(state)}
+            {shouldDisplayProfile() && getProfiledRender(state)}
 
             <ToastContainer />
 
