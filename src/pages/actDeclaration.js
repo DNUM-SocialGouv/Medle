@@ -373,11 +373,12 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                   />
                </Col>
                <Col md="8">
-                  <FormGroup>
-                     <Label htmlFor="asker">Demandeur</Label>
-                     <AskerAutocomplete dispatch={dispatch} id="asker" />
-                     <FormFeedback>{errors && errors.asker}</FormFeedback>
-                  </FormGroup>
+                  <Label htmlFor="asker">Demandeur</Label>
+                  <AskerAutocomplete
+                     dispatch={dispatch}
+                     id="asker"
+                     error={errors && errors.asker ? errors.asker : null}
+                  />
                </Col>
             </Row>
 

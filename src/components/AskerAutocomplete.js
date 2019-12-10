@@ -10,7 +10,7 @@ const getSuggestions = async value => {
    return res.json()
 }
 
-const AskerAutocomplete = ({ dispatch, id }) => {
+const AskerAutocomplete = ({ dispatch, id, error }) => {
    const [autoSuggestData, setAutoSuggestData] = useState({ value: "", suggestions: [] })
 
    const onAutoSuggestChange = (event, { newValue }) => {
@@ -54,6 +54,8 @@ const AskerAutocomplete = ({ dispatch, id }) => {
             renderSuggestion={renderSuggestion}
             inputProps={inputProps}
          />
+
+         {error && <div className="react-autosuggest__error">{error}</div>}
 
          <style jsx global>{`
             .react-autosuggest__container {
@@ -127,6 +129,12 @@ const AskerAutocomplete = ({ dispatch, id }) => {
             .react-autosuggest__suggestion--highlighted {
                background-color: #ddd;
             }
+            .react-autosuggest__error {
+               width: 100%;
+               margin-top: 0.25rem;
+               font-size: 80%;
+               color: #d63626;
+            }
          `}</style>
       </>
    )
@@ -135,6 +143,7 @@ const AskerAutocomplete = ({ dispatch, id }) => {
 AskerAutocomplete.propTypes = {
    dispatch: PropTypes.func.isRequired,
    id: PropTypes.string,
+   error: PropTypes.string,
 }
 
 export default AskerAutocomplete
