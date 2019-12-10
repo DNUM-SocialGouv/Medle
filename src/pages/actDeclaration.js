@@ -4,9 +4,16 @@ import Router, { useRouter } from "next/router"
 import nextCookie from "next-cookies"
 import fetch from "isomorphic-unfetch"
 import { handleAPIResponse } from "../utils/errors"
-import { Col, Container, CustomInput, FormFeedback, Input, Row } from "reactstrap"
+import { Col, Container, FormFeedback, FormGroup, Input, Row } from "reactstrap"
 import moment from "moment"
-import { API_URL, ACT_DECLARATION_ENDPOINT, ACT_DETAIL_ENDPOINT, ACT_EDIT_ENDPOINT } from "../config"
+import AskerAutocomplete from "../components/AskerAutocomplete"
+import {
+   API_URL,
+   ACT_DECLARATION_ENDPOINT,
+   ACT_DETAIL_ENDPOINT,
+   ACT_EDIT_ENDPOINT,
+   ASKERS_SEARCH_ENDPOINT,
+} from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
@@ -63,34 +70,48 @@ const profileValues = [
    },
 ]
 
-const getAskers = () => ["TGI Avignon", "TGI Marseille", "TGI Nîmes"]
+const preValidate = state => {
+   let errors = {}
+   if (!state.internalNumber) {
+      errors = { ...errors, internalNumber: "Obligatoire" }
+   }
+   if (!state.examinationDate) {
+      errors = { ...errors, examinationDate: "Obligatoire" }
+   } else {
+      const date = moment(state.examinationDate)
+      if (!date.isValid()) {
+         errors = { ...errors, examinationDate: "Format incorrect" }
+      } else {
+         if (date > moment()) {
+            errors = { ...errors, examinationDate: "La date doit être passée" }
+         }
+      }
+   }
 
-const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
+   return errors
+}
+
+const validateAsker = async state => {
+   let errors = {}
+   if (!state.asker) {
+      errors = { asker: "Obligatoire" }
+   } else {
+      const res = await fetch(`${API_URL}${ASKERS_SEARCH_ENDPOINT}?fuzzy=${state.asker}`)
+      const json = await res.json()
+
+      if (!json || json.length !== 1 || json[0].name !== state.asker) {
+         errors = { asker: "Demandeur inconnu" }
+      }
+   }
+
+   return errors
+}
+
+const ActDeclaration = ({ act, userId, hospitalId }) => {
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
    const [errors, setErrors] = useState({})
-
-   const preValidate = state => {
-      let errors = {}
-      if (!state.internalNumber) {
-         errors = { ...errors, internalNumber: "Obligatoire" }
-      }
-      if (!state.examinationDate) {
-         errors = { ...errors, examinationDate: "Obligatoire" }
-      } else {
-         const date = moment(state.examinationDate)
-         if (!date.isValid()) {
-            errors = { ...errors, examinationDate: "Format incorrect" }
-         } else {
-            if (date > moment()) {
-               errors = { ...errors, examinationDate: "La date doit être passée" }
-            }
-         }
-      }
-
-      return errors
-   }
 
    const reducer = (state, action) => {
       setErrors(deleteProperty(errors, action.type))
@@ -165,7 +186,6 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
    const [state, dispatch] = useReducer(
       reducer,
       getInitialState({
-         askerValues: askerValues ? askerValues[0] : "",
          internalNumber,
          pvNumber,
          act,
@@ -226,7 +246,9 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
          return
       }
 
-      const newErrors = { ...preValidate(state), ...PROFILES[state.profile].validate(state) }
+      const askerErrors = await validateAsker(state)
+
+      const newErrors = { ...preValidate(state), ...askerErrors, ...PROFILES[state.profile].validate(state) }
 
       if (Object.keys(newErrors).length) {
          console.error("Erreur state non valide", state)
@@ -305,7 +327,7 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
             <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>
 
             <Row>
-               <Col className="mr-3">
+               <Col>
                   <Label htmlFor="internalNumber">Numéro interne</Label>
                   <Input
                      id="internalNumber"
@@ -318,16 +340,7 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
                   />
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
-               <Col className="mr-3">
-                  <Label htmlFor="pvNumber">Numéro de PV</Label>
-                  <Input
-                     id="pvNumber"
-                     placeholder="Optionnel"
-                     value={state.pvNumber}
-                     onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
-                  />
-               </Col>
-               <Col className="mr-3">
+               <Col>
                   <Label htmlFor="examinationDate">{"Date d'examen"}</Label>
                   <Input
                      id="examinationDate"
@@ -339,17 +352,32 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
                </Col>
                <Col>
-                  <Label htmlFor="asker">Demandeur</Label>
-                  <CustomInput
-                     type="select"
-                     id="asker"
-                     name="asker"
+                  <Label htmlFor="proofWithoutComplaint">Recueil de preuve sans plainte</Label>
+                  <br />
+                  <Input
+                     type="checkbox"
+                     name="proofWithoutComplaint"
+                     id="proofWithoutComplaint"
+                     style={{ margin: "auto" }}
+                  ></Input>
+               </Col>
+            </Row>
+            <Row>
+               <Col md="4">
+                  <Label htmlFor="pvNumber">Numéro de PV</Label>
+                  <Input
+                     id="pvNumber"
+                     placeholder="Optionnel"
+                     value={state.pvNumber}
                      onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
-                  >
-                     {askerValues.map((elt, index) => (
-                        <option key={index}>{elt}</option>
-                     ))}
-                  </CustomInput>
+                  />
+               </Col>
+               <Col md="8">
+                  <FormGroup>
+                     <Label htmlFor="asker">Demandeur</Label>
+                     <AskerAutocomplete dispatch={dispatch} id="asker" />
+                     <FormFeedback>{errors && errors.asker}</FormFeedback>
+                  </FormGroup>
                </Col>
             </Row>
 
@@ -392,7 +420,6 @@ const ActDeclaration = ({ askerValues, act, userId, hospitalId }) => {
 }
 
 ActDeclaration.propTypes = {
-   askerValues: PropTypes.array,
    act: PropTypes.object,
    userId: PropTypes.string.isRequired,
    hospitalId: PropTypes.string.isRequired,
@@ -416,7 +443,7 @@ ActDeclaration.getInitialProps = async ctx => {
       }
    }
 
-   return { askerValues: getAskers(), act: json || {}, userId, hospitalId }
+   return { act: json || {}, userId, hospitalId }
 }
 
 export default ActDeclaration

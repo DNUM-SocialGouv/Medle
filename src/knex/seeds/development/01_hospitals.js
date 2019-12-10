@@ -1,9 +1,7 @@
 exports.seed = function(knex) {
-   // Deletes ALL existing entries
    return knex("hospitals")
       .del()
       .then(function() {
-         // Inserts seed entries
          return knex("hospitals").insert([
             {
                id: 1,
@@ -52,17 +50,3 @@ exports.seed = function(knex) {
          ])
       })
 }
-// .createTable("hospitals", function(table) {
-//     table.increments("id")
-//     table.timestamp("created_at", { useTz: true }).defaultTo(knex.fn.now())
-//     table.timestamp("updated_at", { useTz: true })
-//     table.timestamp("deleted_at", { useTz: true })
-//     table.string("finesse_number", 50)
-//     table.string("name", 255).notNullable()
-//     table.string("category", 50)
-//     table.string("addr1", 255)
-//     table.string("addr2", 255)
-//     table.string("town", 255)
-//     table.string("dep_code", 3)
-
-//     table.json("extra_data")
