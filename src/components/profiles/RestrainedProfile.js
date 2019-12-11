@@ -148,7 +148,7 @@ export const RestrainedDetail = act => {
    )
 }
 
-RestrainedProfile.validate = state => {
+RestrainedProfile.hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"

@@ -140,7 +140,7 @@ export const DeceasedDetail = act => {
    )
 }
 
-DeceasedProfile.validate = state => {
+DeceasedProfile.hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"

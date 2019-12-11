@@ -48,7 +48,7 @@ export const ReconstitutionDetail = act => {
    )
 }
 
-ReconstitutionProfile.validate = state => {
+ReconstitutionProfile.hasErrors = state => {
    const errors = {}
    if (!state.duration) {
       errors.duration = "Obligatoire"

@@ -4,16 +4,10 @@ import Router, { useRouter } from "next/router"
 import nextCookie from "next-cookies"
 import fetch from "isomorphic-unfetch"
 import { handleAPIResponse } from "../utils/errors"
-import { Col, Container, FormFeedback, FormGroup, Input, Row } from "reactstrap"
+import { Col, Container, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
 import AskerAutocomplete from "../components/AskerAutocomplete"
-import {
-   API_URL,
-   ACT_DECLARATION_ENDPOINT,
-   ACT_DETAIL_ENDPOINT,
-   ACT_EDIT_ENDPOINT,
-   ASKERS_SEARCH_ENDPOINT,
-} from "../config"
+import { API_URL, ACT_DECLARATION_ENDPOINT, ACT_DETAIL_ENDPOINT, ACT_EDIT_ENDPOINT } from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
@@ -32,15 +26,15 @@ import { Title1, Title2, Label, ValidationButton } from "../components/StyledCom
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
-const getInitialState = ({ asker, internalNumber, pvNumber, act, userId, hospitalId }) => {
+const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
    if (act && act.id) {
-      return act
+      return { ...act, userId }
    } else {
       return {
          pvNumber: pvNumber || "",
          internalNumber: internalNumber || "",
          examinationDate: "",
-         asker: asker || "",
+         askerId: "",
          profile: "",
          addedBy: userId || "",
          hospitalId: hospitalId || "",
@@ -48,14 +42,14 @@ const getInitialState = ({ asker, internalNumber, pvNumber, act, userId, hospita
    }
 }
 
-const resetState = state => ({
-   pvNumber: state.pvNumber,
-   internalNumber: state.internalNumber,
-   examinationDate: state.examinationDate,
-   asker: state.asker,
-   profile: state.profile,
-   addedBy: state.addedBy,
-   hospitalId: state.hospitalId,
+const resetState = ({ pvNumber, internalNumber, examinationDate, askerId, profile, addedBy, hospitalId }) => ({
+   pvNumber,
+   internalNumber,
+   examinationDate,
+   askerId,
+   profile,
+   addedBy,
+   hospitalId,
 })
 
 const profileValues = [
@@ -70,8 +64,12 @@ const profileValues = [
    },
 ]
 
-const preValidate = state => {
+const hasErrors = state => {
    let errors = {}
+
+   if (!state.profile) {
+      errors = { ...errors, profile: "Obligatoire" }
+   }
    if (!state.internalNumber) {
       errors = { ...errors, internalNumber: "Obligatoire" }
    }
@@ -88,20 +86,8 @@ const preValidate = state => {
       }
    }
 
-   return errors
-}
-
-const validateAsker = async state => {
-   let errors = {}
-   if (!state.asker) {
-      errors = { asker: "Obligatoire" }
-   } else {
-      const res = await fetch(`${API_URL}${ASKERS_SEARCH_ENDPOINT}?fuzzy=${state.asker}`)
-      const json = await res.json()
-
-      if (!json || json.length !== 1 || json[0].name !== state.asker) {
-         errors = { asker: "Demandeur inconnu" }
-      }
+   if (!state.askerId) {
+      errors = { ...errors, asker: "Obligatoire" }
    }
 
    return errors
@@ -114,6 +100,7 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
    const [errors, setErrors] = useState({})
 
    const reducer = (state, action) => {
+      console.log("action 1", action)
       setErrors(deleteProperty(errors, action.type))
 
       if (action.payload.mode === "toggle") {
@@ -155,22 +142,23 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
             setErrors(deleteProperty(errors, "examinationDate"))
             state.periodOfDay = ""
             return { ...state, examinationDate: action.payload }
-         case "asker":
-            return { ...state, asker: action.payload }
+         case "askerId":
+            return { ...state, askerId: action.payload }
          case "profile": {
             setErrors({})
             if (action.payload.mode !== "lock") {
                state = resetState(state)
             }
 
-            const newErrors = preValidate(state)
+            const errors = hasErrors(state, setErrors)
 
-            if (!isEmpty(newErrors)) {
+            toast.error("Oups! Des informations importantes sont manquantes...")
+
+            if (!isEmpty(errors)) {
                setErrors(precedentState => ({
                   ...precedentState,
-                  ...newErrors,
+                  ...errors,
                }))
-
                refPersonType.current.scrollIntoView({
                   behavior: "smooth",
                   block: "start",
@@ -186,9 +174,9 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
    const [state, dispatch] = useReducer(
       reducer,
       getInitialState({
+         act,
          internalNumber,
          pvNumber,
-         act,
          userId,
          hospitalId,
       }),
@@ -197,39 +185,39 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
    const PROFILES = {
       Victime: {
          render: <VictimProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: VictimProfile.validate,
+         hasErrors: VictimProfile.hasErrors,
       },
       "Gardé.e à vue": {
          render: <CustodyProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: CustodyProfile.validate,
+         hasErrors: CustodyProfile.hasErrors,
       },
       "Personne décédée": {
          render: <DeceasedProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: DeceasedProfile.validate,
+         hasErrors: DeceasedProfile.hasErrors,
       },
       "Personne pour âge osseux": {
          render: <BoneAgeProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: BoneAgeProfile.validate,
+         hasErrors: BoneAgeProfile.hasErrors,
       },
       "Demandeuse d'asile (risque excision)": {
          render: <AsylumSeekerProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: AsylumSeekerProfile.validate,
+         hasErrors: AsylumSeekerProfile.hasErrors,
       },
       "Autre activité/Assises": {
          render: <CriminalCourtProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: CriminalCourtProfile.validate,
+         hasErrors: CriminalCourtProfile.hasErrors,
       },
       "Autre activité/Reconstitution": {
          render: <ReconstitutionProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: ReconstitutionProfile.validate,
+         hasErrors: ReconstitutionProfile.hasErrors,
       },
       "Autre activité/IPM": {
          render: <DrunkProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: DrunkProfile.validate,
+         hasErrors: DrunkProfile.hasErrors,
       },
       "Autre activité/Personne retenue": {
          render: <RestrainedProfile dispatch={dispatch} state={state} errors={errors} />,
-         validate: RestrainedProfile.validate,
+         hasErrors: RestrainedProfile.hasErrors,
       },
    }
 
@@ -240,20 +228,24 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
    const validAndSubmitAct = async () => {
       setErrors({})
 
-      if (!state.profile) {
-         console.error("Pas de profil choisi !!!")
-         toast.error("Pas si vite! Il me manque une information importante. Qui a été examiné ?")
+      let errors = hasErrors(state, setErrors)
+
+      toast.error("Oups! Des informations importantes sont manquantes...")
+
+      if (!isEmpty(errors)) {
+         console.error("Erreur state non valide", state)
+         setErrors(precedentState => ({
+            ...precedentState,
+            ...errors,
+         }))
          return
       }
 
-      const askerErrors = await validateAsker(state)
+      errors = PROFILES[state.profile].hasErrors(state)
 
-      const newErrors = { ...preValidate(state), ...askerErrors, ...PROFILES[state.profile].validate(state) }
-
-      if (Object.keys(newErrors).length) {
-         console.error("Erreur state non valide", state)
-         setErrors(newErrors)
-         console.error("State invalide")
+      if (!isEmpty(errors)) {
+         console.error(`Erreur state non valide pour profil ${state.profile}`, state)
+         setErrors(errors)
          toast.error("Oups... Certaines informations importantes sont manquantes")
          return
       }
@@ -377,6 +369,7 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                   <AskerAutocomplete
                      dispatch={dispatch}
                      id="asker"
+                     askerId={state.askerId}
                      error={errors && errors.asker ? errors.asker : null}
                   />
                </Col>
@@ -432,19 +425,19 @@ ActDeclaration.getInitialProps = async ctx => {
    } = ctx
    const { userId, hospitalId } = nextCookie(ctx)
 
-   let json
+   let act
 
    if (id) {
       console.log("id trouvé", id)
       try {
          const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
-         json = await handleAPIResponse(response)
+         act = await handleAPIResponse(response)
       } catch (error) {
          console.error(error)
       }
    }
 
-   return { act: json || {}, userId, hospitalId }
+   return { act: act || {}, userId, hospitalId }
 }
 
 export default ActDeclaration

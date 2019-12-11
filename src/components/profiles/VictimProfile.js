@@ -138,7 +138,7 @@ export const VictimDetail = act => {
    )
 }
 
-VictimProfile.validate = state => {
+VictimProfile.hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"

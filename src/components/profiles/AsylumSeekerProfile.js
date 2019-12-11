@@ -121,7 +121,7 @@ export const AsylumSeekerDetail = act => {
    )
 }
 
-AsylumSeekerProfile.validate = state => {
+AsylumSeekerProfile.hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"

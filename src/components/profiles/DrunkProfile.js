@@ -113,7 +113,7 @@ export const DrunkDetail = act => {
    )
 }
 
-DrunkProfile.validate = state => {
+DrunkProfile.hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"

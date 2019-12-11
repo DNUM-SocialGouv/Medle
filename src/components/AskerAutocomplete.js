@@ -1,17 +1,40 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import Autosuggest from "react-autosuggest"
-import { API_URL, ASKERS_SEARCH_ENDPOINT } from "../config"
+import { API_URL, ASKERS_SEARCH_ENDPOINT, ASKERS_VIEW_ENDPOINT } from "../config"
+import { isEmpty } from "../utils/misc"
 
 const getSuggestions = async value => {
    const bonus = value ? `?fuzzy=${value}` : ""
    const res = await fetch(`${API_URL}${ASKERS_SEARCH_ENDPOINT}${bonus}`)
 
-   return res.json()
+   const json = res.json()
+
+   return isEmpty(json) ? [] : json
 }
 
-const AskerAutocomplete = ({ dispatch, id, error }) => {
+const getAskerById = async id => {
+   const res = await fetch(`${API_URL}${ASKERS_VIEW_ENDPOINT}/${id}`)
+
+   const json = await res.json()
+
+   return isEmpty(json) ? "" : json.name
+}
+
+const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
    const [autoSuggestData, setAutoSuggestData] = useState({ value: "", suggestions: [] })
+
+   useEffect(() => {
+      const setAskerName = async id => {
+         let askerName = ""
+         if (id) {
+            askerName = await getAskerById(id)
+         }
+         console.log("après use effect", askerName)
+         setAutoSuggestData({ value: askerName, suggestions: [] })
+      }
+      setAskerName(askerId)
+   }, [askerId])
 
    const onAutoSuggestChange = (event, { newValue }) => {
       setAutoSuggestData(prev => ({ ...prev, value: newValue }))
@@ -32,11 +55,38 @@ const AskerAutocomplete = ({ dispatch, id, error }) => {
       placeholder: "Tapez les premières lettres de la ville",
       value: autoSuggestData.value,
       onChange: onAutoSuggestChange,
-      onBlur: () => dispatch({ type: "asker", payload: autoSuggestData ? autoSuggestData.value : "" }),
+      onBlur: async () => {
+         if (!autoSuggestData.value) return
+         const suggestions = await getSuggestions(autoSuggestData.value)
+         if (suggestions && suggestions.length) {
+            if (suggestions.length === 1) {
+               if (autoSuggestData.value.trim().toUpperCase() === suggestions[0].name.toUpperCase()) {
+                  dispatch({ type: "askerId", payload: suggestions[0].id })
+               } else {
+                  setAutoSuggestData({ value: "", suggestions: [] })
+                  dispatch({ type: "askerId", payload: "" })
+               }
+            } else if (suggestions.length > 1) {
+               let hasDispatched = false
+               suggestions.forEach(elt => {
+                  if (autoSuggestData.value.trim().toUpperCase() === elt.name.toUpperCase()) {
+                     dispatch({ type: "askerId", payload: elt.id })
+                     hasDispatched = true
+                  }
+               })
+               if (!hasDispatched) {
+                  setAutoSuggestData({ value: "", suggestions: [] })
+                  dispatch({ type: "askerId", payload: "" })
+               }
+            } else {
+               setAutoSuggestData({ value: "", suggestions: [] })
+               dispatch({ type: "askerId", payload: "" })
+            }
+         }
+      },
    }
 
    const getSuggestionValue = suggestion => {
-      console.log("value", suggestion)
       return suggestion.name
    }
 
@@ -143,6 +193,7 @@ const AskerAutocomplete = ({ dispatch, id, error }) => {
 AskerAutocomplete.propTypes = {
    dispatch: PropTypes.func.isRequired,
    id: PropTypes.string,
+   askerId: PropTypes.number,
    error: PropTypes.string,
 }
 

@@ -39,7 +39,7 @@ export default async (req, res) => {
          userId: user.id,
          role: user.role,
          hospitalId: user.hospital_id,
-         scope: JSON.stringify(user.scope),
+         scope: user.scope ? JSON.stringify(user.scope) : "",
       })
    } else {
       return res.status(STATUS_401_UNAUTHORIZED).json({

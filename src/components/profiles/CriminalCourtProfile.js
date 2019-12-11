@@ -30,7 +30,7 @@ const CriminalCourtProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-CriminalCourtProfile.validate = state => {
+CriminalCourtProfile.hasErrors = state => {
    const errors = {}
    if (!state.mode || !state.mode.length) {
       errors.mode = "Obligatoire"

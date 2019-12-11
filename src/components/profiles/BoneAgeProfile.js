@@ -76,7 +76,7 @@ export const BoneAgeDetail = act => {
    )
 }
 
-BoneAgeProfile.validate = state => {
+BoneAgeProfile.hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"

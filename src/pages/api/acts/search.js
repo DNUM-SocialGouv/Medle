@@ -11,11 +11,11 @@ export default async (req, res) => {
       return res.status(STATUS_405_METHOD_NOT_ALLOWED).end()
    }
 
-   const { scope: cookieScope } = req.cookies
+   const { scope: _scope } = req.cookies
 
-   console.log("cookies", cookieScope)
+   console.log("cookies", _scope)
 
-   const scope = cookieScope ? JSON.parse(cookieScope) : []
+   const scope = _scope ? JSON.parse(_scope) : []
 
    res.setHeader("Content-Type", "application/json")
 

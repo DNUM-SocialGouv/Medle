@@ -19,7 +19,7 @@ exports.seed = function(knex) {
                last_name: "test",
                email: "medle@tours.fr",
                password: "test",
-               role: "gestionnaire",
+               role: "OPERATOR_ACT",
                hospital_id: 1,
             },
             {
@@ -29,7 +29,7 @@ exports.seed = function(knex) {
                last_name: "test",
                email: "medle@orleans.fr",
                password: "test",
-               role: "gestionnaire",
+               role: "OPERATOR_ACT",
                hospital_id: 2,
             },
             {
@@ -39,7 +39,7 @@ exports.seed = function(knex) {
                last_name: "test",
                email: "medle@nantes.fr",
                password: "test",
-               role: "gestionnaire",
+               role: "OPERATOR_ACT",
                hospital_id: 3,
             },
             {
@@ -49,7 +49,7 @@ exports.seed = function(knex) {
                last_name: "test",
                email: "medle@angers.fr",
                password: "test",
-               role: "gestionnaire",
+               role: "OPERATOR_ACT",
                hospital_id: 4,
             },
          ])

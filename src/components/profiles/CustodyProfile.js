@@ -147,7 +147,7 @@ export const CustodyDetail = act => {
    )
 }
 
-CustodyProfile.validate = state => {
+CustodyProfile.hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
