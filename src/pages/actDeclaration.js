@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState } from "react"
+import React, { useReducer, useRef, useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import Router, { useRouter } from "next/router"
 import nextCookie from "next-cookies"
@@ -87,87 +87,111 @@ const hasErrors = state => {
    }
 
    if (!state.askerId) {
-      errors = { ...errors, asker: "Obligatoire" }
+      errors = { ...errors, askerId: "Obligatoire" }
    }
 
    return errors
 }
 
-const ActDeclaration = ({ act, userId, hospitalId }) => {
-   const router = useRouter()
-   const { internalNumber, pvNumber } = router.query
-   const refPersonType = useRef()
-   const [errors, setErrors] = useState({})
+const reduceByMode = (state, action) => {
+   const newState = { ...state }
 
-   const reducer = (state, action) => {
-      console.log("action 1", action)
-      setErrors(deleteProperty(errors, action.type))
-
-      if (action.payload.mode === "toggle") {
+   switch (action.payload.mode) {
+      case "toggle":
          if (state[action.type] === action.payload.val) {
-            state = { ...state, [action.type]: "" }
+            newState[action.type] = ""
          } else {
-            state = { ...state, [action.type]: action.payload.val }
+            newState[action.type] = action.payload.val
          }
-      } else if (action.payload.mode === "toggleMultiple") {
-         let newState = state[action.type] || []
-         const index = newState.indexOf(action.payload.val)
+         return newState
+      case "toggleMultiple": {
+         let newStateType = state[action.type] || []
+         const index = newStateType.indexOf(action.payload.val)
          if (index !== -1) {
-            state = { ...state, [action.type]: [...newState.slice(0, index), ...newState.slice(index + 1)] }
+            newState[action.type] = [...newStateType.slice(0, index), ...newStateType.slice(index + 1)]
          } else {
             const chunks = action.payload.val.split("/")
 
             let prefix = ""
             if (chunks.length >= 2) {
                prefix = chunks[0]
-               newState = newState.filter(e => !e.startsWith(prefix))
+               newStateType = newStateType.filter(e => !e.startsWith(prefix))
             }
 
-            state = {
-               ...state,
-               [action.type]: [...newState, action.payload.val],
-            }
+            newState[action.type] = [...newStateType, action.payload.val]
          }
-      } else if (action.payload.mode === "replace") {
-         state = { ...state, [action.type]: action.payload.val }
+         return newState
       }
+      case "lock":
+         newState[action.type] = newState[action.type] || action.payload.val
+         return newState
+      default:
+         // regular replace
+         newState[action.type] = action.payload.val
+         return newState
+   }
+}
+
+const ActDeclaration = ({ act, userId, hospitalId }) => {
+   console.log("ActDeclaration:render")
+   const router = useRouter()
+   const { internalNumber, pvNumber } = router.query
+   const refPersonType = useRef()
+   const [errors, setErrors] = useState({})
+
+   // const onFocusRef = useRef(false)
+
+   // console.log("ActDeclaration:onFocusRef", onFocusRef.current)
+
+   // useEffect(() => {
+   //    console.log("ActDeclaration:useEffect")
+   //    if (onFocusRef.current) {
+   //       refPersonType.current.scrollIntoView({
+   //          behavior: "smooth",
+   //          block: "start",
+   //       })
+   //       onFocusRef.current = false
+   //    }
+   // }, [])
+
+   const reducer = (state, action) => {
+      console.log("ActDeclaration:reducer", action)
+
+      setErrors(deleteProperty(errors, action.type))
 
       switch (action.type) {
-         case "internalNumber":
-            setErrors(deleteProperty(errors, "internalNumber"))
-            return { ...state, internalNumber: action.payload }
-         case "pvNumber":
-            return { ...state, pvNumber: action.payload }
-         case "examinationDate":
-            setErrors(deleteProperty(errors, "examinationDate"))
-            state.periodOfDay = ""
-            return { ...state, examinationDate: action.payload }
-         case "askerId":
-            return { ...state, askerId: action.payload }
+         case "examinationDate": {
+            const newState = reduceByMode(state, action)
+            return reduceByMode(newState, { type: "periodOfDay", payload: { val: "" } })
+         }
          case "profile": {
-            setErrors({})
+            let newState = reduceByMode(state, action)
+
+            console.log("newState", newState)
             if (action.payload.mode !== "lock") {
-               state = resetState(state)
+               newState = resetState(newState)
             }
 
-            const errors = hasErrors(state, setErrors)
+            const errors = hasErrors(newState, setErrors)
 
-            toast.error("Oups! Des informations importantes sont manquantes...")
+            console.log("errors", errors)
 
             if (!isEmpty(errors)) {
-               setErrors(precedentState => ({
-                  ...precedentState,
-                  ...errors,
-               }))
+               setErrors(errors)
+               toast.error("Oups! Des informations importantes sont manquantes...")
+               console.error("erreur dans profile")
+            } else {
+               setErrors({})
                refPersonType.current.scrollIntoView({
                   behavior: "smooth",
                   block: "start",
                })
             }
-            return state
+
+            return newState
          }
          default:
-            return state
+            return reduceByMode(state, action)
       }
    }
 
@@ -230,14 +254,13 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
 
       let errors = hasErrors(state, setErrors)
 
-      toast.error("Oups! Des informations importantes sont manquantes...")
-
       if (!isEmpty(errors)) {
          console.error("Erreur state non valide", state)
          setErrors(precedentState => ({
             ...precedentState,
             ...errors,
          }))
+         toast.error("Oups! Des informations importantes sont manquantes...")
          return
       }
 
@@ -326,9 +349,7 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                      invalid={errors && !!errors.internalNumber}
                      placeholder="Ex: 2019-23091"
                      value={state.internalNumber}
-                     onChange={e => {
-                        dispatch({ type: e.target.id, payload: e.target.value })
-                     }}
+                     onChange={e => dispatch({ type: e.target.id, payload: { mode: "replace", val: e.target.value } })}
                   />
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
@@ -339,7 +360,7 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                      invalid={errors && !!errors.examinationDate}
                      type="date"
                      value={state.examinationDate}
-                     onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
+                     onChange={e => dispatch({ type: e.target.id, payload: { mode: "replace", val: e.target.value } })}
                   />
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
                </Col>
@@ -361,16 +382,16 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                      id="pvNumber"
                      placeholder="Optionnel"
                      value={state.pvNumber}
-                     onChange={e => dispatch({ type: e.target.id, payload: e.target.value })}
+                     onChange={e => dispatch({ type: e.target.id, payload: { mode: "replace", val: e.target.value } })}
                   />
                </Col>
                <Col md="8">
-                  <Label htmlFor="asker">Demandeur</Label>
+                  <Label htmlFor="askerId">Demandeur</Label>
                   <AskerAutocomplete
                      dispatch={dispatch}
-                     id="asker"
+                     id="askerId"
                      askerId={state.askerId}
-                     error={errors && errors.asker ? errors.asker : null}
+                     error={errors && errors.askerId ? errors.askerId : null}
                   />
                </Col>
             </Row>
