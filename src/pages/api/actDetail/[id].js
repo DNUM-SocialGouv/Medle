@@ -18,11 +18,24 @@ export default async (req, res) => {
 
    try {
       act = await knex("acts")
-         .where("id", id)
+         .join("askers", "acts.asker_id", "askers.id")
+         .join("hospitals", "acts.hospital_id", "hospitals.id")
+         .join("users", "acts.added_by", "users.id")
+         .where("acts.id", id)
+         .select([
+            "acts.*",
+            "askers.name as asker_name",
+            "hospitals.name as hospital_name",
+            "users.email as user_email",
+            "users.first_name as user_first_name",
+            "users.last_name as user_last_name",
+         ])
          .first()
    } catch (err) {
       return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({ message: `Erreur de base de donnée / ${err}` })
    }
+
+   console.log(act)
 
    if (act) {
       return res.status(STATUS_200_OK).json(buildActFromDB(act))

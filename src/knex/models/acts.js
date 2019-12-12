@@ -47,8 +47,13 @@ export const buildActFromDB = data => ({
    pvNumber: data.pv_number,
    examinationDate: moment(data.examination_date).format("YYYY-MM-DD"),
    profile: data.profile,
-   askerId: data.asker_id,
-   addedBy: data.added_by,
-   hospitalId: data.hospital_id,
+   asker: { id: data.asker_id, name: data.asker_name },
+   user: {
+      id: data.added_by,
+      firstName: data.user_first_name,
+      lastName: data.user_last_name,
+      email: data.user_email,
+   },
+   hospital: { id: data.hospital_id, name: data.hospital_name },
    ...data.extra_data,
 })

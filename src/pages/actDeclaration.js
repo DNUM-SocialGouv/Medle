@@ -440,6 +440,19 @@ ActDeclaration.propTypes = {
    hospitalId: PropTypes.string.isRequired,
 }
 
+const transformDBActForState = act => {
+   const newAct = {
+      ...act,
+      askerId: act.asker && act.asker.id ? act.asker.id : "",
+      hospitalId: act.hospital && act.hospital.id ? act.hospital.id : "",
+   }
+
+   delete newAct.asker
+   delete newAct.hospital
+   delete newAct.user
+   return newAct
+}
+
 ActDeclaration.getInitialProps = async ctx => {
    const {
       query: { id },
@@ -449,7 +462,6 @@ ActDeclaration.getInitialProps = async ctx => {
    let act
 
    if (id) {
-      console.log("id trouvé", id)
       try {
          const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
          act = await handleAPIResponse(response)
@@ -458,7 +470,12 @@ ActDeclaration.getInitialProps = async ctx => {
       }
    }
 
-   return { act: act || {}, userId, hospitalId }
+   let newAct
+   if (act) {
+      newAct = transformDBActForState(act)
+   }
+
+   return { act: newAct || {}, userId, hospitalId }
 }
 
 export default ActDeclaration

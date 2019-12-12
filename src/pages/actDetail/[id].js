@@ -79,7 +79,7 @@ const ActDetail = ({ initialAct, id, error }) => {
                      <ColumnAct header={"Numéro de PV"} values={act && act.pvNumber} />
                   </Col>{" "}
                   <Col className="mr-3">
-                     <ColumnAct header={"Demandeur"} values={act && act.asker} />
+                     <ColumnAct header={"Demandeur"} values={act && act.asker && act.asker.name} />
                   </Col>
                   <Col className="mr-3">
                      <ColumnAct
