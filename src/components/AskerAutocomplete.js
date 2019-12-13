@@ -4,6 +4,7 @@ import Autosuggest from "react-autosuggest"
 import { API_URL, ASKERS_SEARCH_ENDPOINT, ASKERS_VIEW_ENDPOINT } from "../config"
 import { isEmpty } from "../utils/misc"
 import { handleAPIResponse } from "../utils/errors"
+import { useTraceUpdate } from "../utils/debug"
 
 const getSuggestions = async value => {
    const bonus = value ? `?fuzzy=${value}` : ""
@@ -36,7 +37,10 @@ const getAskerById = async _id => {
    return isEmpty(json) ? "" : json.name
 }
 
-const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
+const AskerAutocomplete = props => {
+   const { dispatch, id, askerId, error } = props
+   useTraceUpdate(props)
+
    console.log("AskerAutocomplete:render")
    const [autoSuggestData, setAutoSuggestData] = useState({ value: "", suggestions: [] })
 

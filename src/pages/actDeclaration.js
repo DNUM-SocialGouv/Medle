@@ -4,7 +4,8 @@ import Router, { useRouter } from "next/router"
 import nextCookie from "next-cookies"
 import fetch from "isomorphic-unfetch"
 import { handleAPIResponse } from "../utils/errors"
-import { Col, Container, FormFeedback, Input, Row } from "reactstrap"
+import { useTraceUpdate } from "../utils/debug"
+import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
 import moment from "moment"
 import AskerAutocomplete from "../components/AskerAutocomplete"
 import { API_URL, ACT_DECLARATION_ENDPOINT, ACT_DETAIL_ENDPOINT, ACT_EDIT_ENDPOINT } from "../config"
@@ -23,8 +24,6 @@ import {
    RestrainedProfile,
 } from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
-import { ToastContainer, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
    if (act && act.id) {
@@ -132,7 +131,10 @@ const reduceByMode = (state, action) => {
    }
 }
 
-const ActDeclaration = ({ act, userId, hospitalId }) => {
+const ActDeclaration = props => {
+   const { act, userId, hospitalId } = props
+   useTraceUpdate(props)
+
    console.log("ActDeclaration:render")
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
@@ -178,7 +180,6 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
 
             if (!isEmpty(errors)) {
                setErrors(errors)
-               toast.error("Oups! Des informations importantes sont manquantes...")
                console.error("erreur dans profile")
             } else {
                setErrors({})
@@ -252,15 +253,15 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
    const validAndSubmitAct = async () => {
       setErrors({})
 
-      const errors = {
-         ...hasErrors(state, setErrors),
-         ...PROFILES[state.profile].hasErrors(state),
+      let errors = hasErrors(state)
+
+      if (state.profile) {
+         errors = { ...errors, ...PROFILES[state.profile].hasErrors(state) }
       }
 
       if (!isEmpty(errors)) {
          console.error(`Erreur state non valide`, state)
          setErrors(errors)
-         toast.error("Oups... Certaines informations importantes sont manquantes")
          return
       }
 
@@ -414,7 +415,11 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
 
             {shouldDisplayProfile() && getProfiledRender(state)}
 
-            <ToastContainer />
+            {!isEmpty(errors) && (
+               <Alert color="danger">
+                  {"Il y a des erreurs dans le formulaire. Veuillez remplir les éléments affichés en rouge."}
+               </Alert>
+            )}
 
             <div className="text-center mt-5">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAndSubmitAct}>
