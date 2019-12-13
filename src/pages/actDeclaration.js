@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState, useEffect } from "react"
+import React, { useReducer, useRef, useState } from "react"
 import PropTypes from "prop-types"
 import Router, { useRouter } from "next/router"
 import nextCookie from "next-cookies"
@@ -25,6 +25,7 @@ import {
 } from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 
+// internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
    if (act && act.id) {
       return { ...act, userId }
@@ -33,7 +34,7 @@ const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) 
          pvNumber: pvNumber || "",
          internalNumber: internalNumber || "",
          examinationDate: "",
-         askerId: "",
+         askerId: null,
          profile: "",
          addedBy: userId || "",
          hospitalId: hospitalId || "",
@@ -85,7 +86,7 @@ const hasErrors = state => {
       }
    }
 
-   if (!state.askerId) {
+   if (!state.askerId && !state.proofWithoutComplaint) {
       errors = { ...errors, askerId: "Demandeur manquant ou invalide" }
    }
 
@@ -135,29 +136,14 @@ const ActDeclaration = props => {
    const { act, userId, hospitalId } = props
    useTraceUpdate(props)
 
-   console.log("ActDeclaration:render")
+   // console.log("ActDeclaration:render")
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
    const [errors, setErrors] = useState({})
 
-   // const onFocusRef = useRef(false)
-
-   // console.log("ActDeclaration:onFocusRef", onFocusRef.current)
-
-   // useEffect(() => {
-   //    console.log("ActDeclaration:useEffect")
-   //    if (onFocusRef.current) {
-   //       refPersonType.current.scrollIntoView({
-   //          behavior: "smooth",
-   //          block: "start",
-   //       })
-   //       onFocusRef.current = false
-   //    }
-   // }, [])
-
    const reducer = (state, action) => {
-      console.log("ActDeclaration:reducer", action)
+      // console.log("ActDeclaration:reducer", action)
 
       setErrors(deleteProperty(errors, action.type))
 
@@ -165,6 +151,14 @@ const ActDeclaration = props => {
          case "examinationDate": {
             const newState = reduceByMode(state, action)
             return reduceByMode(newState, { type: "periodOfDay", payload: { val: "" } })
+         }
+         case "proofWithoutComplaint": {
+            console.log("dans proofWithoutComplaint")
+            const newState = reduceByMode(state, action)
+            setErrors(deleteProperty(errors, "askerId"))
+            const x = reduceByMode(newState, { type: "askerId", payload: { val: null } })
+            console.log("xxxx", x)
+            return x
          }
          case "profile": {
             let newState = reduceByMode(state, action)
@@ -363,7 +357,10 @@ const ActDeclaration = props => {
                      type="checkbox"
                      name="proofWithoutComplaint"
                      id="proofWithoutComplaint"
+                     value={state.proofWithoutComplaint || false}
+                     checked={state.proofWithoutComplaint || false}
                      style={{ margin: "auto" }}
+                     onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.checked } })}
                   ></Input>
                </Col>
             </Row>
@@ -372,7 +369,7 @@ const ActDeclaration = props => {
                   <Label htmlFor="pvNumber">Numéro de PV</Label>
                   <Input
                      id="pvNumber"
-                     placeholder="Optionnel"
+                     placeholder="Recommandé"
                      value={state.pvNumber}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                   />
@@ -383,6 +380,7 @@ const ActDeclaration = props => {
                      dispatch={dispatch}
                      id="askerId"
                      askerId={state.askerId}
+                     disabled={!!state.proofWithoutComplaint}
                      error={errors && errors.askerId ? errors.askerId : null}
                   />
                   <div style={{ color: "#d63626", fontSize: "80%" }}>{errors && errors.askerId}</div>
@@ -417,7 +415,9 @@ const ActDeclaration = props => {
 
             {!isEmpty(errors) && (
                <Alert color="danger">
-                  {"Il y a des erreurs dans le formulaire. Veuillez remplir les éléments affichés en rouge."}
+                  {errors.general
+                     ? errors.general
+                     : "Il y a des erreurs dans le formulaire. Veuillez remplir les éléments affichés en rouge."}
                </Alert>
             )}
 
@@ -440,7 +440,7 @@ ActDeclaration.propTypes = {
 const transformDBActForState = act => {
    const newAct = {
       ...act,
-      askerId: act.asker && act.asker.id ? act.asker.id : "",
+      askerId: act.asker && act.asker.id ? act.asker.id : null,
       hospitalId: act.hospital && act.hospital.id ? act.hospital.id : "",
    }
 

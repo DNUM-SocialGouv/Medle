@@ -38,7 +38,7 @@ const getAskerById = async _id => {
 }
 
 const AskerAutocomplete = props => {
-   const { dispatch, id, askerId, error } = props
+   const { dispatch, id, askerId, error, disabled } = props
    useTraceUpdate(props)
 
    console.log("AskerAutocomplete:render")
@@ -56,8 +56,12 @@ const AskerAutocomplete = props => {
          console.log("AskerAutocomplete:useEffect", askerName)
          setAutoSuggestData({ value: askerName, suggestions: [] })
       }
-      setAskerName(askerId)
-   }, [askerId])
+      if (!disabled) {
+         setAskerName(askerId)
+      } else {
+         refValue.current = ""
+      }
+   }, [askerId, disabled])
 
    const onAutoSuggestChange = (event, { newValue }) => {
       refValue.current = newValue
@@ -87,7 +91,7 @@ const AskerAutocomplete = props => {
                if (autoSuggestData.value.trim().toUpperCase() === suggestions[0].name.toUpperCase()) {
                   dispatch({ type: "askerId", payload: { val: suggestions[0].id } })
                } else {
-                  dispatch({ type: "askerId", payload: { val: "" } })
+                  dispatch({ type: "askerId", payload: { val: null } })
                }
             } else if (suggestions.length > 1) {
                let hasDispatched = false
@@ -98,13 +102,13 @@ const AskerAutocomplete = props => {
                   }
                })
                if (!hasDispatched) {
-                  dispatch({ type: "askerId", payload: { val: "" } })
+                  dispatch({ type: "askerId", payload: { val: null } })
                }
             } else {
-               dispatch({ type: "askerId", payload: { val: "" } })
+               dispatch({ type: "askerId", payload: { val: null } })
             }
          } else {
-            dispatch({ type: "askerId", payload: { val: "" } })
+            dispatch({ type: "askerId", payload: { val: null } })
          }
       },
    }
@@ -115,94 +119,121 @@ const AskerAutocomplete = props => {
 
    const renderSuggestion = suggestion => <div>{suggestion.name}</div>
 
-   return (
-      <>
-         <Autosuggest
-            id={id}
-            suggestions={autoSuggestData.suggestions}
-            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={onSuggestionsClearRequested}
-            getSuggestionValue={getSuggestionValue}
-            shouldRenderSuggestions={shouldRenderSuggestions}
-            renderSuggestion={renderSuggestion}
-            inputProps={inputProps}
-         />
-
-         <style jsx global>{`
-            .react-autosuggest__container {
-               position: relative;
-            }
-
-            .react-autosuggest__input {
-               width: 100%;
-               display: block;
-               height: calc(1.5em + 0.75rem + 2px);
-               padding: 6px 12px;
-                {
-                  /* font-family: "Open Sans", sans-serif; */
+   if (disabled) {
+      return (
+         <>
+            <input disabled className="input-disabled"></input>
+            <style jsx>{`
+               .input-disabled {
+                  width: 100%;
+                  display: block;
+                  height: calc(1.5em + 0.75rem + 2px);
+                  padding: 6px 12px;
+                   {
+                     /* font-family: "Open Sans", sans-serif; */
+                  }
+                  font-weight: 400;
+                  font-size: 1rem;
+                  border: 1px solid ${error ? "#d63626" : "#ced4da"};
+                  border-radius: 0.25rem;
+                  -webkit-appearance: none;
+                  background-clip: "padding-box";
+                  color: #495057;
+                  background-color: #dddddd;
                }
-               font-weight: 400;
-               font-size: 1rem;
-               border: 1px solid ${error ? "#d63626" : "#ced4da"};
-               border-radius: 0.25rem;
-               -webkit-appearance: none;
-               background-clip: "padding-box";
-               color: #495057;
-               transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            }
+            `}</style>
+         </>
+      )
+   } else {
+      return (
+         <>
+            <Autosuggest
+               id={id}
+               suggestions={autoSuggestData.suggestions}
+               onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+               onSuggestionsClearRequested={onSuggestionsClearRequested}
+               getSuggestionValue={getSuggestionValue}
+               shouldRenderSuggestions={shouldRenderSuggestions}
+               renderSuggestion={renderSuggestion}
+               inputProps={inputProps}
+            />
 
-            .react-autosuggest__input--focused {
-               color: #495057;
-               background-color: #fff;
-               border-color: #3492ff;
-               outline: 0;
-               box-shadow: 0 0 0 0.2rem rgba(0, 83, 179, 0.25);
-            }
+            <style jsx global>{`
+               .react-autosuggest__container {
+                  position: relative;
+               }
 
-            .react-autosuggest__input::-ms-clear {
-               display: none;
-            }
+               .react-autosuggest__input {
+                  width: 100%;
+                  display: block;
+                  height: calc(1.5em + 0.75rem + 2px);
+                  padding: 6px 12px;
+                   {
+                     /* font-family: "Open Sans", sans-serif; */
+                  }
+                  font-weight: 400;
+                  font-size: 1rem;
+                  border: 1px solid ${error ? "#d63626" : "#ced4da"};
+                  border-radius: 0.25rem;
+                  -webkit-appearance: none;
+                  background-clip: "padding-box";
+                  color: #495057;
+                  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+               }
 
-            .react-autosuggest__input--open {
-               border-bottom-left-radius: 0;
-               border-bottom-right-radius: 0;
-            }
+               .react-autosuggest__input--focused {
+                  color: #495057;
+                  background-color: #fff;
+                  border-color: #3492ff;
+                  outline: 0;
+                  box-shadow: 0 0 0 0.2rem rgba(0, 83, 179, 0.25);
+               }
 
-            .react-autosuggest__suggestions-container {
-               display: none;
-            }
+               .react-autosuggest__input::-ms-clear {
+                  display: none;
+               }
 
-            .react-autosuggest__suggestions-container--open {
-               display: block;
-               position: relative;
-               top: -1px;
-               width: 280px;
-               border: 1px solid #aaa;
-               background-color: #fff;
-               font-weight: 400;
-               font-size: 1rem;
-               border-bottom-left-radius: 4px;
-               border-bottom-right-radius: 4px;
-               z-index: 2;
-            }
+               .react-autosuggest__input--open {
+                  border-bottom-left-radius: 0;
+                  border-bottom-right-radius: 0;
+               }
 
-            .react-autosuggest__suggestions-list {
-               margin: 0;
-               padding: 0;
-               list-style-type: none;
-            }
+               .react-autosuggest__suggestions-container {
+                  display: none;
+               }
 
-            .react-autosuggest__suggestion {
-               cursor: pointer;
-               padding: 10px 20px;
-            }
+               .react-autosuggest__suggestions-container--open {
+                  display: block;
+                  position: relative;
+                  top: -1px;
+                  width: 280px;
+                  border: 1px solid #aaa;
+                  background-color: #fff;
+                  font-weight: 400;
+                  font-size: 1rem;
+                  border-bottom-left-radius: 4px;
+                  border-bottom-right-radius: 4px;
+                  z-index: 2;
+               }
 
-            .react-autosuggest__suggestion--highlighted {
-               background-color: #ddd;
-            }
-         `}</style>
-      </>
-   )
+               .react-autosuggest__suggestions-list {
+                  margin: 0;
+                  padding: 0;
+                  list-style-type: none;
+               }
+
+               .react-autosuggest__suggestion {
+                  cursor: pointer;
+                  padding: 10px 20px;
+               }
+
+               .react-autosuggest__suggestion--highlighted {
+                  background-color: #ddd;
+               }
+            `}</style>
+         </>
+      )
+   }
 }
 
 AskerAutocomplete.propTypes = {
@@ -210,6 +241,7 @@ AskerAutocomplete.propTypes = {
    id: PropTypes.string,
    askerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
    error: PropTypes.string,
+   disabled: PropTypes.bool,
 }
 
 export default AskerAutocomplete

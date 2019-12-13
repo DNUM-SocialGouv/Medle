@@ -18,7 +18,7 @@ export default async (req, res) => {
 
    try {
       act = await knex("acts")
-         .join("askers", "acts.asker_id", "askers.id")
+         .leftJoin("askers", "acts.asker_id", "askers.id")
          .join("hospitals", "acts.hospital_id", "hospitals.id")
          .join("users", "acts.added_by", "users.id")
          .where("acts.id", id)

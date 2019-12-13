@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import PropTypes from "prop-types"
@@ -104,7 +104,7 @@ const ActDetail = ({ initialAct, id, error }) => {
 
             {!isEmpty(isError) && (
                <Alert color="danger" className="mt-5 mb-5">
-                  {isError.general || "Veuillez renseigner les éléments en rouge"}
+                  {isError.general || "Erreur en base de données"}
                </Alert>
             )}
          </Container>
