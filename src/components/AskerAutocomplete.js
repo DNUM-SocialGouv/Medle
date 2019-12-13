@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import PropTypes from "prop-types"
 import Autosuggest from "react-autosuggest"
 import { API_URL, ASKERS_SEARCH_ENDPOINT, ASKERS_VIEW_ENDPOINT } from "../config"
@@ -40,9 +40,12 @@ const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
    console.log("AskerAutocomplete:render")
    const [autoSuggestData, setAutoSuggestData] = useState({ value: "", suggestions: [] })
 
+   const refValue = useRef("")
+
    useEffect(() => {
       const setAskerName = async id => {
-         let askerName = ""
+         // ref pour que useEffect ne re render pas en cas de nouveau autoSuggestData.value
+         let askerName = refValue.current
          if (id) {
             askerName = await getAskerById(id)
          }
@@ -53,6 +56,7 @@ const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
    }, [askerId])
 
    const onAutoSuggestChange = (event, { newValue }) => {
+      refValue.current = newValue
       setAutoSuggestData(prev => ({ ...prev, value: newValue }))
    }
 
@@ -79,7 +83,6 @@ const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
                if (autoSuggestData.value.trim().toUpperCase() === suggestions[0].name.toUpperCase()) {
                   dispatch({ type: "askerId", payload: { val: suggestions[0].id } })
                } else {
-                  setAutoSuggestData({ value: "", suggestions: [] })
                   dispatch({ type: "askerId", payload: { val: "" } })
                }
             } else if (suggestions.length > 1) {
@@ -91,13 +94,13 @@ const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
                   }
                })
                if (!hasDispatched) {
-                  setAutoSuggestData({ value: "", suggestions: [] })
                   dispatch({ type: "askerId", payload: { val: "" } })
                }
             } else {
-               setAutoSuggestData({ value: "", suggestions: [] })
                dispatch({ type: "askerId", payload: { val: "" } })
             }
+         } else {
+            dispatch({ type: "askerId", payload: { val: "" } })
          }
       },
    }
@@ -121,8 +124,6 @@ const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
             inputProps={inputProps}
          />
 
-         {error && <div className="react-autosuggest__error">{error}</div>}
-
          <style jsx global>{`
             .react-autosuggest__container {
                position: relative;
@@ -138,7 +139,7 @@ const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
                }
                font-weight: 400;
                font-size: 1rem;
-               border: 1px solid #ced4da;
+               border: 1px solid ${error ? "#d63626" : "#ced4da"};
                border-radius: 0.25rem;
                -webkit-appearance: none;
                background-clip: "padding-box";
@@ -194,12 +195,6 @@ const AskerAutocomplete = ({ dispatch, id, askerId, error }) => {
 
             .react-autosuggest__suggestion--highlighted {
                background-color: #ddd;
-            }
-            .react-autosuggest__error {
-               width: 100%;
-               margin-top: 0.25rem;
-               font-size: 80%;
-               color: #d63626;
             }
          `}</style>
       </>

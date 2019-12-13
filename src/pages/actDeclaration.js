@@ -87,7 +87,7 @@ const hasErrors = state => {
    }
 
    if (!state.askerId) {
-      errors = { ...errors, askerId: "Obligatoire" }
+      errors = { ...errors, askerId: "Demandeur manquant ou invalide" }
    }
 
    return errors
@@ -252,22 +252,13 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
    const validAndSubmitAct = async () => {
       setErrors({})
 
-      let errors = hasErrors(state, setErrors)
-
-      if (!isEmpty(errors)) {
-         console.error("Erreur state non valide", state)
-         setErrors(precedentState => ({
-            ...precedentState,
-            ...errors,
-         }))
-         toast.error("Oups! Des informations importantes sont manquantes...")
-         return
+      const errors = {
+         ...hasErrors(state, setErrors),
+         ...PROFILES[state.profile].hasErrors(state),
       }
 
-      errors = PROFILES[state.profile].hasErrors(state)
-
       if (!isEmpty(errors)) {
-         console.error(`Erreur state non valide pour profil ${state.profile}`, state)
+         console.error(`Erreur state non valide`, state)
          setErrors(errors)
          toast.error("Oups... Certaines informations importantes sont manquantes")
          return
@@ -349,7 +340,7 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                      invalid={errors && !!errors.internalNumber}
                      placeholder="Ex: 2019-23091"
                      value={state.internalNumber}
-                     onChange={e => dispatch({ type: e.target.id, payload: { mode: "replace", val: e.target.value } })}
+                     onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                   />
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
@@ -360,7 +351,7 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                      invalid={errors && !!errors.examinationDate}
                      type="date"
                      value={state.examinationDate}
-                     onChange={e => dispatch({ type: e.target.id, payload: { mode: "replace", val: e.target.value } })}
+                     onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                   />
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
                </Col>
@@ -382,7 +373,7 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                      id="pvNumber"
                      placeholder="Optionnel"
                      value={state.pvNumber}
-                     onChange={e => dispatch({ type: e.target.id, payload: { mode: "replace", val: e.target.value } })}
+                     onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                   />
                </Col>
                <Col md="8">
@@ -393,6 +384,7 @@ const ActDeclaration = ({ act, userId, hospitalId }) => {
                      askerId={state.askerId}
                      error={errors && errors.askerId ? errors.askerId : null}
                   />
+                  <div style={{ color: "#d63626", fontSize: "80%" }}>{errors && errors.askerId}</div>
                </Col>
             </Row>
 
