@@ -42,12 +42,22 @@ const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) 
    }
 }
 
-const resetState = ({ pvNumber, internalNumber, examinationDate, askerId, profile, addedBy, hospitalId }) => ({
+const resetState = ({
    pvNumber,
    internalNumber,
    examinationDate,
    askerId,
    profile,
+   proofWithoutComplaint,
+   addedBy,
+   hospitalId,
+}) => ({
+   pvNumber,
+   internalNumber,
+   examinationDate,
+   askerId,
+   profile,
+   proofWithoutComplaint,
    addedBy,
    hospitalId,
 })
@@ -350,7 +360,7 @@ const ActDeclaration = props => {
                   />
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
                </Col>
-               <Col>
+               <Col style={{ textAlign: "center" }}>
                   <Label htmlFor="proofWithoutComplaint">Recueil de preuve sans plainte</Label>
                   <br />
                   <Input
