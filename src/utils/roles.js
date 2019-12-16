@@ -66,4 +66,9 @@ export const ROLES = {
    PUBLIC_SUPERVISOR: [STATS_LOCAL, STATS_GLOBAL], // ex: un superviseur public, tel que ARS, Ministère de la justice
 }
 
+export const START_PAGES = {
+   OPERATOR_EMPLOYMENT: "/fillEmployments",
+   OPERATOR_ACT: "/actDeclaration",
+}
+
 export const isAllowed = (role, privilege) => ROLES[role] && ROLES[role].includes(privilege)

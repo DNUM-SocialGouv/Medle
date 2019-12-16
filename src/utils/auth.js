@@ -3,6 +3,8 @@ import Router from "next/router"
 import nextCookie from "next-cookies"
 import cookie from "js-cookie"
 
+import { START_PAGES } from "../utils/roles"
+
 export const login = async ({ token, userId, role, hospitalId, scope }) => {
    cookie.set("token", token, { expires: 1 })
    cookie.set("userId", userId, { expires: 1 })
@@ -11,7 +13,10 @@ export const login = async ({ token, userId, role, hospitalId, scope }) => {
    if (hospitalId) {
       cookie.set("hospitalId", hospitalId, { expires: 1 })
    }
-   await Router.push("/home")
+
+   const startPage = START_PAGES[role] || "/actDeclaration"
+
+   await Router.push(startPage)
 }
 
 export const logout = async () => {
