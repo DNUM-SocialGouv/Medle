@@ -13,8 +13,6 @@ import ColumnAct from "../../components/ColumnAct"
 import { Title1, Title2 } from "../../components/StyledComponents"
 import { isEmpty } from "../../utils/misc"
 import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap"
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
-import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import { VictimDetail } from "../../components/profiles/VictimProfile"
 import { CustodyDetail } from "../../components/profiles/CustodyProfile"
 import { DeceasedDetail } from "../../components/profiles/DeceasedProfile"
@@ -24,10 +22,10 @@ import { CriminalCourtDetail } from "../../components/profiles/CriminalCourtProf
 import { ReconstitutionDetail } from "../../components/profiles/ReconstitutionProfile"
 import { DrunkDetail } from "../../components/profiles/DrunkProfile"
 import { RestrainedDetail } from "../../components/profiles/RestrainedProfile"
-
 import { handleAPIResponse } from "../../utils/errors"
 
-// import AddIcon from "@material-ui/icons/Add"
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
+import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 
 const ActDetail = ({ initialAct, id, error }) => {
    const router = useRouter()
@@ -70,6 +68,7 @@ const ActDetail = ({ initialAct, id, error }) => {
             <div style={{ border: "1px solid rgba(151,151,151,0.13)", borderRadius: 10 }} className="px-2 py-2">
                <EditOutlinedIcon
                   style={{ float: "right", cursor: "pointer" }}
+                  width={24}
                   className="mr-2 mt-3"
                   onClick={() => editAct(id)}
                />
@@ -113,7 +112,7 @@ const ActDetail = ({ initialAct, id, error }) => {
             <Row>
                <Col>
                   <Button block outline color="danger" onClick={toggle}>
-                     <DeleteForeverOutlinedIcon style={{ float: "left" }} />
+                     <DeleteForeverOutlinedIcon style={{ float: "left" }} width={24} />
                      {"Supprimer l'acte"}
                   </Button>{" "}
                   <div>

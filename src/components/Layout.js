@@ -8,9 +8,7 @@ import {
    Col,
    Row,
    Nav,
-   NavItem,
    Navbar,
-   NavLink,
    NavbarBrand,
    NavbarToggler,
    UncontrolledDropdown,
@@ -18,7 +16,15 @@ import {
    DropdownMenu,
    DropdownItem,
 } from "reactstrap"
-// import LockIcon from "@material-ui/icons/Lock"
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline"
+import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
+import EqualizerIcon from "@material-ui/icons/Equalizer"
+import PhoneIcon from "@material-ui/icons/Phone"
+import SettingsIcon from "@material-ui/icons/Settings"
+import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
+import AccountCircleIcon from "@material-ui/icons/AccountCircle"
+
 import { colors } from "../theme"
 
 const Header = () => {
@@ -28,22 +34,21 @@ const Header = () => {
 
    return (
       <header>
-         <Navbar color="light" light expand="md" className="navbar-medle">
+         <Navbar expand="md" className="navbar-medle">
             <NavbarBrand href="/home">
-               <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>&nbsp; Plateforme de médecine légale
+               <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>
             </NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
-               <Nav className="ml-auto" navbar>
-                  <NavItem>
-                     <NavLink href="/aide/">Aide</NavLink>
-                  </NavItem>
+               <Nav className="ml-auto d-flex align-items-center" navbar>
+                  <NotificationsNoneIcon className="mr-2 medle-icons" width={"30px"} />
                   <UncontrolledDropdown nav inNavbar>
-                     <Button outline className="account">
-                        <DropdownToggle nav caret>
+                     <DropdownToggle nav>
+                        <AccountCircleIcon className="medle-icons" width={30}>
                            Mon compte&nbsp;
-                        </DropdownToggle>
-                     </Button>
+                        </AccountCircleIcon>
+                     </DropdownToggle>
+
                      <DropdownMenu right>
                         <DropdownItem>Profil</DropdownItem>
                         <DropdownItem>Administration</DropdownItem>
@@ -59,6 +64,10 @@ const Header = () => {
             </Collapse>
          </Navbar>
          <style jsx global>{`
+            .medle-icons {
+               color: #9b9b9b;
+               font-size: 30px !important;
+            }
             header {
                border-bottom: 1px solid #f3f3f3;
             }
@@ -154,14 +163,153 @@ const Footer = () => (
    </footer>
 )
 
-const Layout = ({ children }) => (
-   <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between" }}>
-      <Header />
-      <main style={{ flexGrow: 1 }}>{children}</main>
-      <Footer />
-   </div>
+const Sidebar = ({ page }) => {
+   return (
+      <>
+         <div className="list-group list-group-flush text-center">
+            <Link href="/actDeclaration">
+               <a
+                  className="list-group-item list-group-item-action"
+                  style={
+                     page === "actDeclaration"
+                        ? {
+                             borderLeft: "5px solid #307DF6",
+                             backgroundColor: "#e7f1fe !important",
+                          }
+                        : { borderLeft: "5px solid #fff" }
+                  }
+               >
+                  <AddCircleOutlineIcon width={30} />
+                  <br />
+                  {"Ajout d'acte"}
+               </a>
+            </Link>
+            <Link href="/actsList">
+               <a
+                  className="list-group-item list-group-item-action"
+                  style={
+                     page === "actsList"
+                        ? {
+                             borderLeft: "5px solid #307DF6",
+                             backgroundColor: "#e7f1fe !important",
+                          }
+                        : { borderLeft: "5px solid #fff" }
+                  }
+               >
+                  <FormatListBulletedIcon width={30} /> <br />
+                  {"Tous les actes"}
+               </a>
+            </Link>
+            <Link href="/fillEmployments">
+               <a
+                  className="list-group-item list-group-item-action"
+                  style={
+                     page === "fillEmployments"
+                        ? { borderLeft: "5px solid #307DF6", backgroundColor: "#e7f1fe !important" }
+                        : { borderLeft: "5px solid #fff" }
+                  }
+               >
+                  <FormatListBulletedIcon width={30} /> <br />
+                  {"Personnel"}
+               </a>
+            </Link>
+            <Link href="/home">
+               <a className="list-group-item list-group-item-action">
+                  <EqualizerIcon width={30} /> <br />
+                  {"Statistiques"}
+               </a>
+            </Link>
+            <Link href="/home">
+               <a className="list-group-item list-group-item-action">
+                  <PhoneIcon width={30} /> <br />
+                  {"Annuaire"}
+               </a>
+            </Link>
+            <Link href="/home">
+               <a className="list-group-item list-group-item-action">
+                  <LocalLibraryIcon width={30} /> <br />
+                  {"Ressources"}
+               </a>
+            </Link>
+            <Link href="/home">
+               <a className="list-group-item list-group-item-action">
+                  <SettingsIcon width={30} /> <br />
+                  {"Paramètres"}
+               </a>
+            </Link>
+         </div>
+         <style jsx>{`
+            a {
+               font-variant: small-caps;
+               font-size: 12px;
+               font-family: "Source Sans Pro";
+               color: #9b9b9b;
+            }
+         `}</style>
+      </>
+   )
+}
+
+Sidebar.propTypes = {
+   page: PropTypes.string,
+}
+
+const Layout = ({ children, page }) => (
+   <>
+      <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between" }}>
+         <Header />
+         <div id="wrapper" className="d-flex">
+            <div id="sidebar-wrapper" className="border-right">
+               <Sidebar page={page} />
+            </div>
+            <div id="page-content-wrapper">
+               <main style={{ flexGrow: 1 }}>{children}</main>
+            </div>
+         </div>
+         <Footer />
+      </div>
+      <style jsx>{`
+         #sidebar-wrapper {
+            min-height: 100vh;
+            width: 140px;
+            margin-left: -15rem;
+            -webkit-transition: margin 0.25s ease-out;
+            -moz-transition: margin 0.25s ease-out;
+            -o-transition: margin 0.25s ease-out;
+            transition: margin 0.25s ease-out;
+         }
+
+         #sidebar-wrapper .sidebar-heading {
+            padding: 0.875rem 1.25rem;
+            font-size: 1.2rem;
+         }
+
+         #page-content-wrapper {
+            min-width: 100vw;
+         }
+
+         #wrapper.toggled #sidebar-wrapper {
+            margin-left: 0;
+         }
+
+         @media (min-width: 768px) {
+            #sidebar-wrapper {
+               margin-left: 0;
+            }
+
+            #page-content-wrapper {
+               min-width: 0;
+               width: 100%;
+            }
+
+            #wrapper.toggled #sidebar-wrapper {
+               margin-left: -15rem;
+            }
+         }
+      `}</style>
+   </>
 )
 
-Layout.propTypes = { children: PropTypes.node.isRequired }
+Layout.propTypes = { children: PropTypes.node.isRequired, page: PropTypes.string }
 
 export default Layout

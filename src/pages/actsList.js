@@ -6,7 +6,7 @@ import { withAuthSync } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
 import Layout from "../components/Layout"
-import Banner from "../components/Banner"
+import { Title1 } from "../components/StyledComponents"
 import moment from "moment"
 import { FORMAT_DATE } from "../utils/constants"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, Table } from "reactstrap"
@@ -54,15 +54,12 @@ const ActsListPage = ({ initialActs, error }) => {
    }
 
    return (
-      <Layout>
-         <Banner title="Actes d'un établissement de santé" />
-         <Container>
+      <Layout page="actsList">
+         <Title1 className="mt-5 mb-4">{"L'activité de votre UMJ/IML"}</Title1>
+         <Container style={{ maxWidth: 980 }}>
             <Form onSubmit={onSubmit}>
                <FormGroup row inline>
-                  <Label for="email" sm={"auto"}>
-                     Établissement de santé
-                  </Label>
-                  <Col sm={7}>
+                  <Col md={{ size: 6, offset: 3 }}>
                      <Input
                         type="text"
                         name="es"
@@ -72,7 +69,7 @@ const ActsListPage = ({ initialActs, error }) => {
                         onChange={onChange}
                      />
                   </Col>
-                  <Col sm={2} className="text-align-right">
+                  <Col className="text-align-right" md={{ size: 3 }}>
                      <Button>Chercher</Button>
                   </Col>
                </FormGroup>
@@ -91,10 +88,10 @@ const ActsListPage = ({ initialActs, error }) => {
             )}
 
             {!isError && !isLoading && (
-               <Table striped bordered responsive className="mt-5">
+               <Table responsive className="mt-5 table-hover">
                   <thead>
-                     <tr>
-                        <th>N° interne</th>
+                     <tr className="table-light">
+                        <th>N° dossier interne</th>
                         <th>N° PV</th>
                         <th>Date</th>
                         <th>Type de profil</th>
@@ -104,7 +101,9 @@ const ActsListPage = ({ initialActs, error }) => {
                   <tbody>
                      {acts.map(act => (
                         <tr key={act.id}>
-                           <td>{act.internal_number}</td>
+                           <td>
+                              <b>{act.internal_number}</b>
+                           </td>
                            <td>{act.pv_number}</td>
                            <td>{act.examination_date && moment(act.examination_date).format(FORMAT_DATE)}</td>
                            <td>{act.profile}</td>

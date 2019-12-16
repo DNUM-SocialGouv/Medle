@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Button, Col, Input, Label, Row, FormFeedback } from "reactstrap"
 import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import EditOutlinedIcon from "@material-ui/icons/Edit"
 import { AnchorButton } from "../components/StyledComponents"
 import { isEmpty } from "../utils/misc"
 import { handleAPIResponse } from "../utils/errors"
+
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import EditOutlinedIcon from "@material-ui/icons/Edit"
 
 const inputs = [
    "doctors",
@@ -104,14 +105,14 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
       <>
          <Button outline color="secondary" block className="text-left pl-4 pt-2 pb-2" onClick={() => setOpen(!open)}>
             {monthName}
-            {!open && <ArrowForwardIosIcon className="float-right" />}
-            {open && <ExpandMoreIcon className="float-right" />}
+            {!open && <ArrowForwardIosIcon className="float-right" width={24} />}
+            {open && <ExpandMoreIcon className="float-right" width={24} />}
          </Button>
          {open && (
             <div className="px-2">
                <div className="text-right pr-2 pt-3 pb-2">
                   {readOnlyState ? (
-                     <EditOutlinedIcon onClick={toggleReadOnly} />
+                     <EditOutlinedIcon onClick={toggleReadOnly} width={24} />
                   ) : (
                      <AnchorButton onClick={handleUpdate}>Enregistrer</AnchorButton>
                   )}
@@ -122,7 +123,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <Input
                         name="doctors"
                         invalid={errorsState && !!errorsState.doctors}
-                        value={dataMonth["doctors"] ? dataMonth["doctors"] : ""}
+                        value={dataMonth["doctors"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -133,7 +134,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <Input
                         name="secretaries"
                         invalid={errorsState && !!errorsState.secretaries}
-                        value={dataMonth["secretaries"] ? dataMonth["secretaries"] : ""}
+                        value={dataMonth["secretaries"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -144,7 +145,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <Input
                         name="nursings"
                         invalid={errorsState && !!errorsState.nursings}
-                        value={dataMonth["nursings"] ? dataMonth["nursings"] : ""}
+                        value={dataMonth["nursings"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -155,7 +156,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <Input
                         name="executives"
                         invalid={errorsState && !!errorsState.executives}
-                        value={dataMonth["executives"] ? dataMonth["executives"] : ""}
+                        value={dataMonth["executives"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -168,7 +169,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <Input
                         name="idesNumber"
                         invalid={errorsState && !!errorsState.idesNumber}
-                        value={dataMonth["idesNumber"] ? dataMonth["idesNumber"] : ""}
+                        value={dataMonth["idesNumber"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -179,7 +180,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <Input
                         name="auditoriumAgents"
                         invalid={errorsState && !!errorsState.auditoriumAgents}
-                        value={dataMonth["auditoriumAgents"] ? dataMonth["auditoriumAgents"] : ""}
+                        value={dataMonth["auditoriumAgents"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -190,7 +191,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <Input
                         name="psychologists"
                         invalid={errorsState && !!errorsState.psychologists}
-                        value={dataMonth["psychologists"] ? dataMonth["psychologists"] : ""}
+                        value={dataMonth["psychologists"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
@@ -201,7 +202,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <Input
                         name="others"
                         invalid={errorsState && !!errorsState.others}
-                        value={dataMonth["others"] ? dataMonth["others"] : ""}
+                        value={dataMonth["others"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />

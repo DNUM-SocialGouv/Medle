@@ -332,7 +332,7 @@ const ActDeclaration = props => {
    }
 
    return (
-      <Layout>
+      <Layout page="actDeclaration">
          <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
          <Container style={{ maxWidth: 720 }}>
             <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>

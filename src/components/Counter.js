@@ -23,6 +23,7 @@ const Counter = ({ children, dispatch, state, type }) => {
                className="mr-3"
                tabIndex="0"
                onKeyPress={e => keyPress(e, substract)}
+               width={24}
             />
             {state}
             <AddCircleOutline
@@ -31,6 +32,7 @@ const Counter = ({ children, dispatch, state, type }) => {
                tabIndex="0"
                onSelect={() => console.log("selected!")}
                onKeyPress={e => keyPress(e, add)}
+               width={24}
             />
          </div>
          <style jsx>{`

@@ -43,7 +43,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
    }
 
    return (
-      <Layout>
+      <Layout page="fillEmployments">
          <Title1 className="mt-5 mb-5">{"Déclaration du personnel"}</Title1>
          <Container style={{ maxWidth: 720 }}>
             <Title2 className="mb-4 text-capitalize">{currentMonthName}</Title2>
@@ -70,7 +70,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="doctors"
                         invalid={errors && !!errors.doctors}
                         placeholder="Nombre d'ETP"
-                        value={dataMonth && dataMonth["doctors"]}
+                        value={(dataMonth && dataMonth["doctors"]) || ""}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.doctors}</FormFeedback>
@@ -81,7 +81,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="secretaries"
                         invalid={errors && !!errors.secretaries}
                         placeholder="Nombre d'ETP"
-                        value={dataMonth && dataMonth["secretaries"]}
+                        value={(dataMonth && dataMonth["secretaries"]) || ""}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.secretaries}</FormFeedback>
@@ -92,7 +92,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="nursings"
                         invalid={errors && !!errors.nursings}
                         placeholder="Nombre d'ETP"
-                        value={dataMonth && dataMonth["nursings"]}
+                        value={(dataMonth && dataMonth["nursings"]) || ""}
                         onChange={event => handleChange(event, currentMonth)}
                      />
 
@@ -104,7 +104,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="executives"
                         invalid={errors && !!errors.executives}
                         placeholder="Nombre d'ETP"
-                        value={dataMonth && dataMonth["executives"]}
+                        value={(dataMonth && dataMonth["executives"]) || ""}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.executives}</FormFeedback>
@@ -117,7 +117,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="ides"
                         invalid={errors && !!errors.ides}
                         placeholder="Nombre d'ETP"
-                        value={dataMonth && dataMonth["ides"]}
+                        value={(dataMonth && dataMonth["ides"]) || ""}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.ides}</FormFeedback>
@@ -128,7 +128,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="auditoriumAgents"
                         invalid={errors && !!errors.auditoriumAgents}
                         placeholder="Nombre d'ETP"
-                        value={dataMonth && dataMonth["auditoriumAgents"]}
+                        value={(dataMonth && dataMonth["auditoriumAgents"]) || ""}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
@@ -139,7 +139,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="psychologists"
                         invalid={errors && !!errors.psychologists}
                         placeholder="Nombre d'ETP"
-                        value={dataMonth && dataMonth["psychologists"]}
+                        value={(dataMonth && dataMonth["psychologists"]) || ""}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.psychologists}</FormFeedback>
@@ -150,7 +150,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                         name="others"
                         invalid={errors && !!errors.others}
                         placeholder="Nombre d'ETP"
-                        value={dataMonth && dataMonth["others"]}
+                        value={(dataMonth && dataMonth["others"]) || ""}
                         onChange={event => handleChange(event, currentMonth)}
                      />
                      <FormFeedback>{errors && errors.others}</FormFeedback>
