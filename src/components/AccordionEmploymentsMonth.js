@@ -112,7 +112,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
             <div className="px-2">
                <div className="text-right pr-2 pt-3 pb-2">
                   {readOnlyState ? (
-                     <EditOutlinedIcon onClick={toggleReadOnly} width={24} />
+                     <Button outline onClick={toggleReadOnly} style={{ border: 0 }}>
+                        <EditOutlinedIcon width={24} />
+                     </Button>
                   ) : (
                      <AnchorButton onClick={handleUpdate}>Enregistrer</AnchorButton>
                   )}
