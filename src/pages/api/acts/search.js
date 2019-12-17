@@ -33,8 +33,8 @@ export default async (req, res) => {
 
             if (fuzzy) {
                builder.where(function() {
-                  this.where("internal_number", fuzzy)
-                     .orWhere("pv_number", fuzzy)
+                  this.where("internal_number", "ilike", `%${fuzzy}%`)
+                     .orWhere("pv_number", "ilike", `%${fuzzy}%`)
                      .orWhere("profile", "ilike", `%${fuzzy}%`)
                })
             }

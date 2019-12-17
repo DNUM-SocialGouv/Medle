@@ -129,9 +129,6 @@ const AskerAutocomplete = props => {
                   display: block;
                   height: calc(1.5em + 0.75rem + 2px);
                   padding: 6px 12px;
-                   {
-                     /* font-family: "Open Sans", sans-serif; */
-                  }
                   font-weight: 400;
                   font-size: 1rem;
                   border: 1px solid ${error ? "#d63626" : "#ced4da"};
@@ -168,9 +165,6 @@ const AskerAutocomplete = props => {
                   display: block;
                   height: calc(1.5em + 0.75rem + 2px);
                   padding: 6px 12px;
-                   {
-                     /* font-family: "Open Sans", sans-serif; */
-                  }
                   font-weight: 400;
                   font-size: 1rem;
                   border: 1px solid ${error ? "#d63626" : "#ced4da"};
