@@ -31,3 +31,9 @@ export const useTraceUpdate = props => {
       prev.current = props
    })
 }
+
+// usage: <Logger label="Mon composant à loguer" />
+export const Logger = props => {
+   console.log(`${props.label} rendered`)
+   return null // irrelevant
+}

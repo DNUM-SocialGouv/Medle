@@ -37,5 +37,8 @@
   "emmet.syntaxProfiles": {
       "javascript": "jsx"
   },
-  "css.lint.emptyRules": "ignore"
+  "css.lint.emptyRules": "ignore",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
