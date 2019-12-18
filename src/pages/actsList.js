@@ -9,7 +9,7 @@ import Layout from "../components/Layout"
 import { Title1 } from "../components/StyledComponents"
 import moment from "moment"
 import { FORMAT_DATE } from "../utils/constants"
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Spinner, Table } from "reactstrap"
+import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 import { ACT_CONSULTATION, isAllowed } from "../utils/roles"
 
 import { handleAPIResponse } from "../utils/errors"
