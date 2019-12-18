@@ -66,12 +66,14 @@ const ActDetail = ({ initialAct, id, error }) => {
 
          <Container style={{ maxWidth: 780 }}>
             <div style={{ border: "1px solid rgba(151,151,151,0.13)", borderRadius: 10 }} className="px-2 py-2">
-               <EditOutlinedIcon
-                  style={{ float: "right", cursor: "pointer" }}
-                  width={24}
-                  className="mr-2 mt-3"
+               <Button
+                  outline
                   onClick={() => editAct(id)}
-               />
+                  style={{ border: 0, float: "right", cursor: "pointer" }}
+                  className="mr-2 mt-3"
+               >
+                  <EditOutlinedIcon width={24} />
+               </Button>
                <Title2 className="mb-4 mt-3">{"Identification de l'acte"}</Title2>
                <Row>
                   <Col className="mr-3">
