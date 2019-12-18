@@ -27,6 +27,7 @@ export default async (req, res) => {
          })
          .orderBy("name")
          .select("id", "name")
+         .limit(5)
 
       return res.status(STATUS_200_OK).json(askers)
    } catch (error) {
