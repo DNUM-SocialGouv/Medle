@@ -30,7 +30,7 @@ export default async (req, res) => {
             .whereNull("deleted_at")
             .where("year", year)
             .where("hospital_id", hospitalId)
-            .select("numbers")
+            .select("data_month")
             .first()
       } catch (error) {
          return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({
@@ -41,7 +41,7 @@ export default async (req, res) => {
       }
 
       if (result) {
-         return res.status(STATUS_200_OK).json(result.numbers)
+         return res.status(STATUS_200_OK).json(result.data_month)
       } else {
          // Pas de données la 1ère fois. TODO mieux gérer
          return res.status(STATUS_200_OK).json({})
@@ -56,7 +56,7 @@ export default async (req, res) => {
             object: {
                hospital_id: hospitalId,
                year,
-               numbers: JSON.stringify(data),
+               data_month: JSON.stringify(data),
                updated_at: knex.fn.now(),
             },
             constraint: "(hospital_id, year)",

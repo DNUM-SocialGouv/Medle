@@ -1,44 +1,58 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import nextCookie from "next-cookies"
-import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
-import fetch from "isomorphic-unfetch"
 import moment from "moment"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
 
 import Layout from "../components/Layout"
-import AccordionEmploymentsMonth from "../components/AccordionEmploymentsMonth"
+import AccordionEmploymentsMonth, {
+   hasErrors,
+   fetchDataMonth,
+   updateDataMonth,
+} from "../components/AccordionEmploymentsMonth"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
-import { handleAPIResponse } from "../utils/errors"
+import { isEmpty } from "../utils/misc"
 
-const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, allMonths, year, hospitalId }) => {
+const FillEmploymentsPage = ({
+   currentMonth,
+   currentMonthName,
+   error,
+   dataMonth: _dataMonth,
+   allMonths,
+   year,
+   hospitalId,
+}) => {
    const [errors, setErrors] = useState(error)
    const [success, setSuccess] = useState("")
 
-   const [dataMonth, setDataMonth] = useState(numbers)
+   const [dataMonth, setDataMonth] = useState(_dataMonth)
 
    const previousMonths = allMonths && allMonths.length ? allMonths.slice(1) : []
 
    const handleChange = e => {
       e.preventDefault()
 
-      setDataMonth({ ...dataMonth, [e.target.name]: e.target.value })
+      setDataMonth({ ...dataMonth, [e.target.name]: e.target.value.trim() })
    }
 
    const update = async monthNumber => {
+      setErrors({})
       console.log("monthNumber", monthNumber)
 
+      const errors = hasErrors(dataMonth)
+
+      if (!isEmpty(errors)) {
+         setErrors({ ...errors, general: "Erreur de saisie" })
+         return
+      }
+
       try {
-         const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${monthNumber}`, {
-            method: "PUT",
-            body: JSON.stringify(dataMonth),
-         })
-         await handleAPIResponse(response)
+         await updateDataMonth({ hospitalId, year, month: monthNumber, dataMonth })
 
          setSuccess("Vos informations ont bien été enregistrées.")
       } catch (error) {
          console.error(error)
-         setErrors("Erreur en base de données")
+         setErrors({ general: "Erreur lors de la mise à jour des ETP" })
       }
    }
 
@@ -58,7 +72,7 @@ const FillEmploymentsPage = ({ currentMonth, currentMonthName, error, numbers, a
                </small>
             </p>
 
-            {/* {!isEmpty(errors) && <Alert color="danger">{"Veuillez renseigner les éléments en rouge"}</Alert>} */}
+            {!isEmpty(errors) && <Alert color="danger">{errors.general || "Erreur en base de données"}</Alert>}
 
             {success && <Alert color="primary">{success}</Alert>}
 
@@ -215,15 +229,12 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       .map(elt => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, month: elt }))
 
    try {
-      const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${currentYear}/${currentMonth}`, {
-         method: "GET",
-      })
-      const json = await handleAPIResponse(response)
+      const json = await fetchDataMonth({ hospitalId, year: currentYear, month: currentMonth })
 
       return {
          currentMonth,
          currentMonthName: NAME_MONTHS[currentMonth] + " " + currentYear,
-         numbers: json,
+         dataMonth: json,
          allMonths,
          year: currentYear,
          hospitalId,
@@ -244,7 +255,7 @@ FillEmploymentsPage.getInitialProps = async ctx => {
 FillEmploymentsPage.propTypes = {
    currentMonth: PropTypes.string,
    currentMonthName: PropTypes.string,
-   numbers: PropTypes.object,
+   dataMonth: PropTypes.object,
    allMonths: PropTypes.array,
    error: PropTypes.string,
    hospitalId: PropTypes.string.isRequired,
@@ -252,7 +263,7 @@ FillEmploymentsPage.propTypes = {
 }
 
 FillEmploymentsPage.defaultProps = {
-   numbers: {},
+   dataMonth: {},
 }
 
 export default FillEmploymentsPage

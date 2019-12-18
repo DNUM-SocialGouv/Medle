@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
-import { Button, Col, Input, Label, Row, FormFeedback } from "reactstrap"
+import { Alert, Button, Col, Input, Row, FormFeedback } from "reactstrap"
+import { Label, AnchorButton } from "../components/StyledComponents"
+
 import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
-import { AnchorButton } from "../components/StyledComponents"
+
 import { isEmpty } from "../utils/misc"
 import { handleAPIResponse } from "../utils/errors"
 
@@ -10,21 +12,56 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import EditOutlinedIcon from "@material-ui/icons/Edit"
 
-const inputs = [
-   "doctors",
-   "secretaries",
-   "nursings",
-   "executives",
-   "idesNumber",
-   "auditoriumAgents",
-   "psychologists",
-   "others",
-]
+export const hasErrors = dataMonth => {
+   const errors = {}
 
-const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors, readOnly }) => {
+   if (dataMonth.doctors && isNaN(dataMonth.doctors)) {
+      errors.doctors = "Nombre requis"
+   }
+   if (dataMonth.secretaries && isNaN(dataMonth.secretaries)) {
+      errors.secretaries = "Nombre requis"
+   }
+   if (dataMonth.nursings && isNaN(dataMonth.nursings)) {
+      errors.nursings = "Nombre requis"
+   }
+   if (dataMonth.executives && isNaN(dataMonth.executives)) {
+      errors.executives = "Nombre requis"
+   }
+   if (dataMonth.ides && isNaN(dataMonth.ides)) {
+      errors.ides = "Nombre requis"
+   }
+   if (dataMonth.auditoriumAgents && isNaN(dataMonth.auditoriumAgents)) {
+      errors.auditoriumAgents = "Nombre requis"
+   }
+   if (dataMonth.psychologists && isNaN(dataMonth.psychologists)) {
+      errors.psychologists = "Nombre requis"
+   }
+   if (dataMonth.others && isNaN(dataMonth.others)) {
+      errors.others = "Nombre requis"
+   }
+
+   return errors
+}
+
+export const fetchDataMonth = async ({ hospitalId, year, month }) => {
+   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
+      method: "GET",
+   })
+   return handleAPIResponse(response)
+}
+
+export const updateDataMonth = async ({ hospitalId, year, month, dataMonth }) => {
+   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
+      method: "PUT",
+      body: JSON.stringify(dataMonth),
+   })
+   await handleAPIResponse(response)
+}
+
+const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnly }) => {
    const [open, setOpen] = useState(false)
    const [readOnlyState, setReadOnlyState] = useState(readOnly)
-   const [errorsState, setErrorsState] = useState(errors)
+   const [errors, setErrors] = useState()
 
    const [dataMonth, setDataMonth] = useState({})
 
@@ -33,10 +70,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
          let json
 
          try {
-            const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
-               method: "GET",
-            })
-            json = await handleAPIResponse(response)
+            json = await fetchDataMonth({ hospitalId, year, month })
          } catch (error) {
             console.error(error)
             return { error: "Erreur en base de données" }
@@ -56,48 +90,20 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
 
    const toggleReadOnly = () => setReadOnlyState(state => !state)
 
-   const handleUpdate = () => {
-      if (validate()) {
-         update(month, dataMonth)
-         toggleReadOnly()
+   const handleUpdate = async () => {
+      setErrors({})
+      const errors = hasErrors(dataMonth)
+
+      if (!isEmpty(errors)) {
+         setErrors({ ...errors, general: "Erreur de saisie" })
+         return
       }
-   }
-
-   const validate = () => {
-      setErrorsState({})
-
-      const newErrors = {}
-
-      inputs.forEach(key => {
-         if (!dataMonth[key]) {
-            newErrors[key] = "Obligatoire"
-         } else {
-            const val = /^[0-9]+$/.test(dataMonth[key]) && parseInt(dataMonth[key], 10)
-
-            if (val < 0) {
-               newErrors[key] = "Numérique positif"
-            }
-         }
-      })
-
-      if (!isEmpty(newErrors)) {
-         setErrorsState(newErrors)
-         return false
-      }
-
-      return true
-   }
-
-   const update = async () => {
       try {
-         const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
-            method: "PUT",
-            body: JSON.stringify(dataMonth),
-         })
-         await handleAPIResponse(response)
+         await updateDataMonth({ hospitalId, year, month, dataMonth })
+         toggleReadOnly()
       } catch (error) {
          console.error(error)
-         return { error: "Erreur en base de données" }
+         setErrors({ general: "Erreur lors de la mise à jour des ETP" })
       }
    }
 
@@ -119,96 +125,107 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, errors,
                      <AnchorButton onClick={handleUpdate}>Enregistrer</AnchorButton>
                   )}
                </div>
+
+               {!isEmpty(errors) && <Alert color="danger">{errors.general || "Erreur en base de données"}</Alert>}
+
                <Row>
                   <Col className="mr-3">
                      <Label htmlFor="doctors">Médecin</Label>
                      <Input
                         name="doctors"
-                        invalid={errorsState && !!errorsState.doctors}
+                        invalid={errors && !!errors.doctors}
+                        placeholder="Nombre d'ETP"
                         value={dataMonth["doctors"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
-                     <FormFeedback>{errorsState && errorsState.doctors}</FormFeedback>
+                     <FormFeedback>{errors && errors.doctors}</FormFeedback>
                   </Col>
                   <Col className="mr-3">
                      <Label htmlFor="secretaries">Secrétaire</Label>
                      <Input
                         name="secretaries"
-                        invalid={errorsState && !!errorsState.secretaries}
+                        invalid={errors && !!errors.secretaries}
+                        placeholder="Nombre d'ETP"
                         value={dataMonth["secretaries"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
-                     <FormFeedback>{errorsState && errorsState.secretaries}</FormFeedback>
+                     <FormFeedback>{errors && errors.secretaries}</FormFeedback>
                   </Col>
                   <Col className="mr-3">
                      <Label htmlFor="nursings">Aide soignant.e</Label>
                      <Input
                         name="nursings"
-                        invalid={errorsState && !!errorsState.nursings}
+                        invalid={errors && !!errors.nursings}
+                        placeholder="Nombre d'ETP"
                         value={dataMonth["nursings"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
-                     <FormFeedback>{errorsState && errorsState.nursings}</FormFeedback>
+                     <FormFeedback>{errors && errors.nursings}</FormFeedback>
                   </Col>
                   <Col className="mr-3">
                      <Label htmlFor="executives">Cadre de santé</Label>
                      <Input
                         name="executives"
-                        invalid={errorsState && !!errorsState.executives}
+                        invalid={errors && !!errors.executives}
+                        placeholder="Nombre d'ETP"
                         value={dataMonth["executives"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
-                     <FormFeedback>{errorsState && errorsState.executives}</FormFeedback>
+                     <FormFeedback>{errors && errors.executives}</FormFeedback>
                   </Col>
                </Row>
-               <Row className={"mt-2"}>
+               <Row className="mt-2 mb-5">
                   <Col className="mr-3">
                      <Label htmlFor="idesNumber">IDE</Label>
                      <Input
                         name="idesNumber"
-                        invalid={errorsState && !!errorsState.idesNumber}
+                        invalid={errors && !!errors.idesNumber}
+                        placeholder="Nombre d'ETP"
                         value={dataMonth["idesNumber"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
-                     <FormFeedback>{errorsState && errorsState.idesNumber}</FormFeedback>
+                     <FormFeedback>{errors && errors.idesNumber}</FormFeedback>
                   </Col>
                   <Col className="mr-3">
                      <Label htmlFor="auditoriumAgents">{"Agent d'amphithéâtre"}</Label>
                      <Input
                         name="auditoriumAgents"
-                        invalid={errorsState && !!errorsState.auditoriumAgents}
+                        invalid={errors && !!errors.auditoriumAgents}
+                        placeholder="Nombre d'ETP"
                         value={dataMonth["auditoriumAgents"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
-                     <FormFeedback>{errorsState && errorsState.auditoriumAgents}</FormFeedback>
+                     <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
                   </Col>
                   <Col className="mr-3">
                      <Label htmlFor="psychologists">Psychologue</Label>
                      <Input
                         name="psychologists"
-                        invalid={errorsState && !!errorsState.psychologists}
+                        invalid={errors && !!errors.psychologists}
+                        placeholder="Nombre d'ETP"
                         value={dataMonth["psychologists"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
-                     <FormFeedback>{errorsState && errorsState.psychologists}</FormFeedback>
+                     <FormFeedback>{errors && errors.psychologists}</FormFeedback>
                   </Col>
                   <Col className="mr-3">
                      <Label htmlFor="others">Autres</Label>
                      <Input
                         name="others"
-                        invalid={errorsState && !!errorsState.others}
+                        invalid={errors && !!errors.others}
+                        placeholder="Nombre d'ETP"
                         value={dataMonth["others"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
                      />
-                     <FormFeedback>{errorsState && errorsState.others}</FormFeedback>
+                     <FormFeedback>{errors && errors.others}</FormFeedback>
                   </Col>
                </Row>
             </div>
@@ -223,7 +240,6 @@ AccordionEmploymentsMonth.propTypes = {
    year: PropTypes.string.isRequired,
    hospitalId: PropTypes.string.isRequired,
    update: PropTypes.func.isRequired,
-   errors: PropTypes.object,
    readOnly: PropTypes.bool.isRequired,
 }
 
