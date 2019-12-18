@@ -11,24 +11,24 @@ export default async (req, res) => {
       return res.status(STATUS_405_METHOD_NOT_ALLOWED).end()
    }
 
-   const { scope: cookieScope } = req.cookies
-
-   console.log("cookies", cookieScope)
-
    res.setHeader("Content-Type", "application/json")
 
    const { fuzzy } = req.query
 
-   let acts
+   let askers
 
    try {
-      acts = await knex("askers")
+      askers = await knex("askers")
          .whereNull("deleted_at")
-         .where("name", "ilike", `%${fuzzy}%`)
+         .where(builder => {
+            if (fuzzy) {
+               builder.where("name", "ilike", `%${fuzzy}%`)
+            }
+         })
          .orderBy("name")
          .select("id", "name")
 
-      return res.status(STATUS_200_OK).json(acts)
+      return res.status(STATUS_200_OK).json(askers)
    } catch (error) {
       console.error(error)
       return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({
