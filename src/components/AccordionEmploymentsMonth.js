@@ -138,6 +138,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                         value={dataMonth["doctors"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
+                        autocomplete="off"
                      />
                      <FormFeedback>{errors && errors.doctors}</FormFeedback>
                   </Col>
@@ -150,6 +151,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                         value={dataMonth["secretaries"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
+                        autocomplete="off"
                      />
                      <FormFeedback>{errors && errors.secretaries}</FormFeedback>
                   </Col>
@@ -162,6 +164,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                         value={dataMonth["nursings"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
+                        autocomplete="off"
                      />
                      <FormFeedback>{errors && errors.nursings}</FormFeedback>
                   </Col>
@@ -174,6 +177,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                         value={dataMonth["executives"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
+                        autocomplete="off"
                      />
                      <FormFeedback>{errors && errors.executives}</FormFeedback>
                   </Col>
@@ -188,6 +192,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                         value={dataMonth["idesNumber"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
+                        autocomplete="off"
                      />
                      <FormFeedback>{errors && errors.idesNumber}</FormFeedback>
                   </Col>
@@ -200,6 +205,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                         value={dataMonth["auditoriumAgents"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
+                        autocomplete="off"
                      />
                      <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
                   </Col>
@@ -212,6 +218,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                         value={dataMonth["psychologists"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
+                        autocomplete="off"
                      />
                      <FormFeedback>{errors && errors.psychologists}</FormFeedback>
                   </Col>
@@ -224,6 +231,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                         value={dataMonth["others"] || ""}
                         onChange={event => handleChange(event)}
                         disabled={readOnlyState}
+                        autocomplete="off"
                      />
                      <FormFeedback>{errors && errors.others}</FormFeedback>
                   </Col>

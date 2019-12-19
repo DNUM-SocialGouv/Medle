@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Layout from "../components/Layout"
@@ -11,12 +11,17 @@ const ActConfirmationPage = () => {
    const { internalNumber, pvNumber, edit } = router.query
    const pvText = pvNumber && `(PV: ${pvNumber}) `
 
+   useEffect(() => {
+      document.body.focus()
+      window.scrollTo(0, 0)
+   })
+
    return (
       <Layout>
          <Container>
-            <Title1 className="mt-5">{`L'acte #${internalNumber} ${pvText}a été ${
-               edit ? "modifié" : "ajouté"
-            }.`}</Title1>
+            <Title1 className="mt-5">
+               {`L'acte #${internalNumber} ${pvText}a été ${edit ? "modifié" : "ajouté"}.`}
+            </Title1>
 
             <Row className="mt-5">
                <Link href="/actDeclaration">
