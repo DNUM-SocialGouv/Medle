@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
 import {
-   Button,
    Collapse,
    Container,
    Col,
@@ -254,61 +253,63 @@ Sidebar.propTypes = {
    page: PropTypes.string,
 }
 
-const Layout = ({ children, page }) => (
-   <>
-      <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between" }}>
-         <Header />
-         <div id="wrapper" className="d-flex">
-            <div id="sidebar-wrapper" className="border-right">
-               <Sidebar page={page} />
+const Layout = ({ children, page }) => {
+   return (
+      <>
+         <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between" }}>
+            <Header />
+            <div id="wrapper" className="d-flex">
+               <div id="sidebar-wrapper" className="border-right">
+                  <Sidebar page={page} />
+               </div>
+               <div id="page-content-wrapper">
+                  <main style={{ flexGrow: 1 }}>{children}</main>
+               </div>
             </div>
-            <div id="page-content-wrapper">
-               <main style={{ flexGrow: 1 }}>{children}</main>
-            </div>
+            <Footer />
          </div>
-         <Footer />
-      </div>
-      <style jsx>{`
-         #sidebar-wrapper {
-            min-height: 100vh;
-            width: 140px;
-            margin-left: -15rem;
-            -webkit-transition: margin 0.25s ease-out;
-            -moz-transition: margin 0.25s ease-out;
-            -o-transition: margin 0.25s ease-out;
-            transition: margin 0.25s ease-out;
-         }
-
-         #sidebar-wrapper .sidebar-heading {
-            padding: 0.875rem 1.25rem;
-            font-size: 1.2rem;
-         }
-
-         #page-content-wrapper {
-            min-width: 100vw;
-         }
-
-         #wrapper.toggled #sidebar-wrapper {
-            margin-left: 0;
-         }
-
-         @media (min-width: 768px) {
+         <style jsx>{`
             #sidebar-wrapper {
-               margin-left: 0;
+               min-height: 100vh;
+               width: 140px;
+               margin-left: -15rem;
+               -webkit-transition: margin 0.25s ease-out;
+               -moz-transition: margin 0.25s ease-out;
+               -o-transition: margin 0.25s ease-out;
+               transition: margin 0.25s ease-out;
+            }
+
+            #sidebar-wrapper .sidebar-heading {
+               padding: 0.875rem 1.25rem;
+               font-size: 1.2rem;
             }
 
             #page-content-wrapper {
-               min-width: 0;
-               width: 100%;
+               min-width: 100vw;
             }
 
             #wrapper.toggled #sidebar-wrapper {
-               margin-left: -15rem;
+               margin-left: 0;
             }
-         }
-      `}</style>
-   </>
-)
+
+            @media (min-width: 768px) {
+               #sidebar-wrapper {
+                  margin-left: 0;
+               }
+
+               #page-content-wrapper {
+                  min-width: 0;
+                  width: 100%;
+               }
+
+               #wrapper.toggled #sidebar-wrapper {
+                  margin-left: -15rem;
+               }
+            }
+         `}</style>
+      </>
+   )
+}
 
 Layout.propTypes = { children: PropTypes.node.isRequired, page: PropTypes.string }
 

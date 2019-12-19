@@ -1,16 +1,40 @@
 import React, { useEffect, useRef } from "react"
-import Router from "next/router"
+import { useRouter } from "next/router"
 
-Router.events.on("routeChangeStart", url => {
-   console.log("event routeChangeStart", url)
-})
-Router.events.on("routeChangeComplete", url => {
-   console.log("event routeChangeComplete", url)
-})
-Router.events.on("routeChangeError", (err, url) => {
-   console.log("event routeChangeError", url, err)
-})
+// useEffect(() => {
+//    console.log("XX dans useEffect")
+//    const routeChangeComplete = async () => {
+//       console.log("XXX dans routeChangeComplete")
+//       window.scrollTo(0, 0)
 
+//       console.log("mainRef", mainRef)
+
+//       if (mainRef && mainRef.current) {
+//          mainRef.current.focus()
+//       }
+//    }
+//    router.events.on("routeChangeComplete", routeChangeComplete)
+
+//    return () => {
+//       router.events.off("routeChangeComplete", routeChangeComplete)
+//    }
+// }, [router.events])
+
+export const DebugRouter = () => {
+   const router = useRouter()
+
+   router.events.on("routeChangeStart", url => {
+      console.log("event routeChangeStart", url)
+   })
+   router.events.on("routeChangeComplete", url => {
+      console.log("event routeChangeComplete", url)
+   })
+   router.events.on("routeChangeError", (err, url) => {
+      console.log("event routeChangeError", url, err)
+   })
+
+   return null
+}
 // Usage
 // function MyComponent(props) {
 //    useTraceUpdate(props)
