@@ -164,11 +164,12 @@ const ActDeclaration = props => {
          }
          case "proofWithoutComplaint": {
             console.log("dans proofWithoutComplaint")
-            const newState = reduceByMode(state, action)
+            let newState = reduceByMode(state, action)
             setErrors(deleteProperty(errors, "askerId"))
-            const x = reduceByMode(newState, { type: "askerId", payload: { val: null } })
-            console.log("xxxx", x)
-            return x
+            newState = reduceByMode(newState, { type: "askerId", payload: { val: null } })
+            newState = reduceByMode(newState, { type: "pvNumber", payload: { val: "" } })
+            console.log("newState", newState)
+            return newState
          }
          case "profile": {
             let newState = reduceByMode(state, action)
@@ -379,8 +380,9 @@ const ActDeclaration = props => {
                   <Label htmlFor="pvNumber">Numéro de PV</Label>
                   <Input
                      id="pvNumber"
-                     placeholder="Recommandé"
+                     placeholder={state.proofWithoutComplaint ? "" : "Recommandé"}
                      value={state.pvNumber}
+                     disabled={!!state.proofWithoutComplaint}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                   />
                </Col>
@@ -401,7 +403,9 @@ const ActDeclaration = props => {
                Qui a été examiné?
             </Title2>
 
-            {!state.id && (
+            {state.proofWithoutComplaint ? (
+               <ActBlock type="profile" values={["Victime"]} mode="toggle" dispatch={dispatch} state={state.profile} />
+            ) : !state.id ? (
                <ActBlock
                   type="profile"
                   values={profileValues}
@@ -409,9 +413,7 @@ const ActDeclaration = props => {
                   dispatch={dispatch}
                   state={state.profile}
                />
-            )}
-
-            {state.id && (
+            ) : (
                <ActBlock
                   type="profile"
                   values={[state.profile]}
