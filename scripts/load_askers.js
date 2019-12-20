@@ -9,7 +9,8 @@ const fetch = require("isomorphic-unfetch")
 const fs = require("fs")
 const moment = require("moment")
 
-const API_URL = "http://localhost:3000"
+// const API_URL = "http://localhost:3000"
+const API_URL = "https://medle.fabrique.social.gouv.fr"
 const ACT_SEARCH_ENDPOINT = "/api/askers/search"
 
 const primaryAskers = [
@@ -83,7 +84,7 @@ Promise.all([fetchAskersThirdParty(), fetchExistingAskers()]).then(([newAskers, 
    console.log("Tours newAskers", newAskers["Tribunal de grande instance de Tours".toUpperCase()])
    console.log("Tours existingAskers", existingAskers["Tribunal de grande instance de Tours".toUpperCase()])
 
-   const formatResult = data => "name, type\n" + data.map(elt => elt.name + "," + elt.type).join("\n")
+   const formatResult = data => "name,type\n" + data.map(elt => elt.name + "," + elt.type).join("\n")
 
    fs.writeFile(`./data/${moment().format("YYYYMMDD-HHmmss")}-askersToAdd.csv`, formatResult(askersToAdd), function(
       err,
