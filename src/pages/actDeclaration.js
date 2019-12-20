@@ -347,6 +347,7 @@ const ActDeclaration = props => {
                      placeholder="Ex: 2019-23091"
                      value={state.internalNumber}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
+                     autocomplete="off"
                   />
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
@@ -384,6 +385,7 @@ const ActDeclaration = props => {
                      value={state.pvNumber}
                      disabled={!!state.proofWithoutComplaint}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
+                     autocomplete="off"
                   />
                </Col>
                <Col md="8">
