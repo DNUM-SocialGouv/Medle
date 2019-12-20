@@ -5,10 +5,16 @@ import nextCookie from "next-cookies"
 import fetch from "isomorphic-unfetch"
 import { handleAPIResponse } from "../utils/errors"
 import { useTraceUpdate } from "../utils/debug"
-import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
+import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "reactstrap"
 import moment from "moment"
 import AskerAutocomplete from "../components/AskerAutocomplete"
-import { API_URL, ACT_DECLARATION_ENDPOINT, ACT_DETAIL_ENDPOINT, ACT_EDIT_ENDPOINT } from "../config"
+import {
+   API_URL,
+   ACT_DECLARATION_ENDPOINT,
+   ACT_DETAIL_ENDPOINT,
+   ACT_EDIT_ENDPOINT,
+   ACT_SEARCH_ENDPOINT,
+} from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
@@ -151,6 +157,7 @@ const ActDeclaration = props => {
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
    const [errors, setErrors] = useState({})
+   const [warnings, setWarnings] = useState({})
 
    const reducer = (state, action) => {
       // console.log("ActDeclaration:reducer", action)
@@ -332,6 +339,28 @@ const ActDeclaration = props => {
       return false
    }
 
+   const onBlurNumberInputs = async event => {
+      const { id } = event.target
+
+      const urlChunk = `?${id}=${state[id]}`
+
+      if (state[id]) {
+         try {
+            const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}${urlChunk}`)
+            const acts = await handleAPIResponse(response)
+
+            if (acts && acts.length) {
+               setWarnings({ ...warnings, [id]: "Déjà utilisé" })
+            } else {
+               setWarnings({ ...warnings, [id]: null })
+            }
+         } catch (error) {
+            console.error("Erreur d'API pour recherche d'internal number")
+            setWarnings({})
+         }
+      }
+   }
+
    return (
       <Layout page="actDeclaration">
          <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
@@ -347,8 +376,10 @@ const ActDeclaration = props => {
                      placeholder="Ex: 2019-23091"
                      value={state.internalNumber}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
-                     autocomplete="off"
+                     autoComplete="off"
+                     onBlur={onBlurNumberInputs}
                   />
+                  {warnings && warnings.internalNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
                <Col>
@@ -385,8 +416,10 @@ const ActDeclaration = props => {
                      value={state.pvNumber}
                      disabled={!!state.proofWithoutComplaint}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
-                     autocomplete="off"
+                     autoComplete="off"
+                     onBlur={onBlurNumberInputs}
                   />
+                  {warnings && warnings.pvNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
                </Col>
                <Col md="8">
                   <Label htmlFor="askerId">Demandeur</Label>

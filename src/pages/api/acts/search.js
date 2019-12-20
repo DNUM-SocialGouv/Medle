@@ -19,7 +19,7 @@ export default async (req, res) => {
 
    res.setHeader("Content-Type", "application/json")
 
-   const { fuzzy } = req.query
+   const { fuzzy, internalNumber, pvNumber } = req.query
 
    let acts
 
@@ -29,6 +29,14 @@ export default async (req, res) => {
          .where(builder => {
             if (scope.length) {
                builder.where(knex.raw("hospital_id in (" + scope.map(() => "?").join(",") + ")", [...scope]))
+            }
+
+            if (internalNumber) {
+               builder.where("internal_number", internalNumber)
+            }
+
+            if (pvNumber) {
+               builder.where("pv_number", pvNumber)
             }
 
             if (fuzzy) {
