@@ -108,7 +108,7 @@ const ActsListPage = ({ initialActs, error }) => {
                            <td>{act.examination_date && moment(act.examination_date).format(FORMAT_DATE)}</td>
                            <td>{act.profile}</td>
                            <td>
-                              <Link href={`/actDetail/${act.id}`}>
+                              <Link href="/actDetail/[id]" as={`/actDetail/${act.id}`}>
                                  <a>{"Modifier / voir >"}</a>
                               </Link>
                            </td>
