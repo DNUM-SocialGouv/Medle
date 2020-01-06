@@ -1,4 +1,6 @@
 import knex from "../../knex/knex"
+import { compareWithHash } from "../../utils/bcrypt"
+
 import {
    STATUS_200_OK,
    STATUS_400_BAD_REQUEST,
@@ -22,7 +24,6 @@ export default async (req, res) => {
    try {
       user = await knex("users")
          .where("email", email)
-         .andWhere("password", password)
          .first()
    } catch (error) {
       return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({
@@ -33,7 +34,7 @@ export default async (req, res) => {
       })
    }
 
-   if (user) {
+   if (user && (await compareWithHash(password, user.password))) {
       return res.status(STATUS_200_OK).json({
          token: "1234",
          userId: user.id,

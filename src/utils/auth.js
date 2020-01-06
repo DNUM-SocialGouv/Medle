@@ -34,7 +34,7 @@ export const auth = ctx => {
     * Additionally if there's no token it means the user is not logged in.
     */
    if (ctx.req && !token) {
-      ctx.res.writeHead(302, { Location: "/index" })
+      ctx.res.writeHead(302, { Location: "/login" })
       ctx.res.end()
    }
 

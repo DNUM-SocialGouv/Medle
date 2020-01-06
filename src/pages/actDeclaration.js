@@ -484,6 +484,7 @@ ActDeclaration.propTypes = {
    hospitalId: PropTypes.string.isRequired,
 }
 
+// TODO : à migrer dans la couche persistance
 const transformDBActForState = act => {
    const newAct = {
       ...act,
