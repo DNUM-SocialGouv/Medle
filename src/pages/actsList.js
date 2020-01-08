@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import Link from "next/link"
-import nextCookie from "next-cookies"
 import PropTypes from "prop-types"
 import { withAuthSync } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
@@ -10,7 +9,7 @@ import { Title1 } from "../components/StyledComponents"
 import moment from "moment"
 import { FORMAT_DATE } from "../utils/constants"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
-import { ACT_CONSULTATION, isAllowed } from "../utils/roles"
+import { ACT_CONSULTATION } from "../utils/roles"
 
 import { handleAPIResponse } from "../utils/errors"
 
@@ -21,10 +20,13 @@ const fetchData = async search => {
    return handleAPIResponse(response)
 }
 
-const ActsListPage = ({ initialActs, error }) => {
+// const hasPermissionError = dataUser =>
+//    !dataUser || !isAllowed(dataUser.role, ACT_CONSULTATION) ? "Vous n'êtes pas autorisé à consulter les actes." : ""
+
+const ActsListPage = ({ initialActs, dataUser, permissionError }) => {
    const [search, setSearch] = useState("")
    const [acts, setActs] = useState(initialActs || [])
-   const [isError, setIsError] = useState(error)
+   const [isError, setIsError] = useState(permissionError)
    const [isLoading, setIsLoading] = useState(false)
 
    const onChange = e => {
@@ -122,18 +124,13 @@ const ActsListPage = ({ initialActs, error }) => {
    )
 }
 
-ActsListPage.getInitialProps = async ctx => {
-   const { role } = nextCookie(ctx)
-
-   if (!isAllowed(role, ACT_CONSULTATION)) {
-      return { error: "Vous n'êtes pas autorisé à consulter les actes." }
-   }
+ActsListPage.getInitialProps = async () => {
    return { initialActs: await fetchData() }
 }
 
 ActsListPage.propTypes = {
    initialActs: PropTypes.array,
-   error: PropTypes.string,
+   dataUser: PropTypes.object,
 }
 
-export default withAuthSync(ActsListPage)
+export default withAuthSync(ActsListPage, ACT_CONSULTATION)

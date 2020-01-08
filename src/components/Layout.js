@@ -24,6 +24,7 @@ import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle"
 
+import { logout } from "../utils/auth"
 import { colors } from "../theme"
 
 const Header = () => {
@@ -53,9 +54,9 @@ const Header = () => {
                         <DropdownItem>Administration</DropdownItem>
                         <DropdownItem divider />
                         <DropdownItem>
-                           <Link href="/index">
-                              <a className="menu-link">Se déconnecter</a>
-                           </Link>
+                           <button className="menu-link" onClick={logout}>
+                              Se déconnecter
+                           </button>
                         </DropdownItem>
                      </DropdownMenu>
                   </UncontrolledDropdown>
@@ -91,8 +92,10 @@ const Header = () => {
             .menu-link:link,
             .menu-link:visited,
             .menu-link:active {
+               border: 0;
                color: ${colors.header.color} !important;
                text-decoration: none;
+               background-color: ${colors.header.background} !important;
             }
             header .dropdown-item {
                color: ${colors.header.color} !important;

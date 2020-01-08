@@ -1,5 +1,6 @@
 import knex from "../../knex/knex"
 import { compareWithHash } from "../../utils/bcrypt"
+import { generateToken } from "../../utils/jwt"
 
 import {
    STATUS_200_OK,
@@ -11,6 +12,18 @@ import {
 const validPassword = password => {
    return password.length
 }
+
+const maxDurationCookies = 2 * 60 * 60 // 2 heures max. TODO: mettre en confi (cf. expiration JWT)
+
+const extractPublicData = ({ id, first_name, last_name, email, role, hospital_id, scope }) => ({
+   id,
+   first_name,
+   last_name,
+   email,
+   role,
+   hospital_id,
+   scope,
+})
 
 export default async (req, res) => {
    const { email, password } = await req.body
@@ -34,14 +47,12 @@ export default async (req, res) => {
       })
    }
 
+   const token = generateToken(user)
+
    if (user && (await compareWithHash(password, user.password))) {
-      return res.status(STATUS_200_OK).json({
-         token: "1234",
-         userId: user.id,
-         role: user.role,
-         hospitalId: user.hospital_id,
-         scope: user.scope ? JSON.stringify(user.scope) : "",
-      })
+      res.setHeader("Set-Cookie", `token=${token}; Path=/; HttpOnly; Max-Age=${maxDurationCookies}`)
+      res.status(STATUS_200_OK).json(extractPublicData(user))
+      // res.status(STATUS_200_OK).json({ token })
    } else {
       return res.status(STATUS_401_UNAUTHORIZED).json({
          error: {

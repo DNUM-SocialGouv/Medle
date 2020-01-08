@@ -78,3 +78,14 @@ select now();
 
 SET timezone = 'UTC';
 select now();`
+
+
+## Ajouter un user en base de données
+
+`INSERT INTO USERS (first_name, last_name, email, password, role, hospital_id)
+VALUES ('Dominique', 'Cormier', 'dom.cormier@gmail.com', 'test', 'SUPERVISOR_HOSPITAL', 1);`
+
+__Comment générer un mdp?__
+
+Il faut utiliser un site qui permet de générer un hash bcrypt à partir d'un texte. Attention : il faut que le hash généré commence par 2a et non pas 2y, comme le montre l'exemple précédent.
+Ex: https://www.browserling.com/tools/bcrypt

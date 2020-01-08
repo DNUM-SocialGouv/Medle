@@ -30,6 +30,8 @@ import {
    RestrainedProfile,
 } from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
+import { ACT_CONSULTATION } from "../utils/roles"
+import { withAuthSync } from "../utils/auth"
 
 // internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
@@ -156,7 +158,7 @@ const ActDeclaration = props => {
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
-   const [errors, setErrors] = useState({})
+   const [errors, setErrors] = useState(props.error ? { general: props.error } : {})
    const [warnings, setWarnings] = useState({})
 
    const reducer = (state, action) => {
@@ -482,6 +484,7 @@ ActDeclaration.propTypes = {
    act: PropTypes.object,
    userId: PropTypes.string.isRequired,
    hospitalId: PropTypes.string.isRequired,
+   error: PropTypes.string,
 }
 
 // TODO : à migrer dans la couche persistance
@@ -523,4 +526,4 @@ ActDeclaration.getInitialProps = async ctx => {
    return { act: newAct || {}, userId, hospitalId }
 }
 
-export default ActDeclaration
+export default withAuthSync(ActDeclaration, ACT_CONSULTATION)

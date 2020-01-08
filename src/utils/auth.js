@@ -1,77 +1,94 @@
-import React, { useEffect } from "react"
+import React from "react"
 import Router from "next/router"
-import nextCookie from "next-cookies"
-import cookie from "js-cookie"
+import { API_URL, LOGOUT_ENDPOINT } from "../config"
+import * as jwt from "jsonwebtoken"
+import { isAllowed } from "./roles"
 
-import { START_PAGES } from "../utils/roles"
-
-export const login = async ({ token, userId, role, hospitalId, scope }) => {
-   cookie.set("token", token, { expires: 1 })
-   cookie.set("userId", userId, { expires: 1 })
-   cookie.set("role", role, { expires: 1 })
-   cookie.set("scope", scope, { expires: 1 })
-   if (hospitalId) {
-      cookie.set("hospitalId", hospitalId, { expires: 1 })
-   }
-
-   const startPage = START_PAGES[role] || "/actDeclaration"
-
-   await Router.push(startPage)
-}
+/**
+ * Remarks on cookie & session storage:
+ *
+ * - token is a cookie set API side. It is HttpOnly, so there is no risk (or less risks) to have XSS exploits.
+ * the true security is only needeed on the API side
+ * - local storage is not a viable solution since it doesn't support SSR and it doesn't prevent XSS like cookie
+ * - dataUser contient une sous-partie de token. Pas d'information privée (email), pas de signature
+ * - use session storage to store the non private data of the user and to drive the UI. This is XSS exploitable but there will not have incidence with API side
+ */
 
 export const logout = async () => {
-   cookie.remove("token")
-   // to support logging out from all windows
-   window.localStorage.setItem("logout", Date.now())
+   // Let API send a cookie with very close expiration date to reset the "token" cookie with HttpOnly
+   await fetch(API_URL + LOGOUT_ENDPOINT)
+
+   sessionStorage.removeItem("dataUser")
+
    await Router.push("/index")
 }
 
-export const auth = ctx => {
-   const { token } = nextCookie(ctx)
-
-   /*
-    * If `ctx.req` is available it means we are on the server.
-    * Additionally if there's no token it means the user is not logged in.
-    */
-   if (ctx.req && !token) {
-      ctx.res.writeHead(302, { Location: "/login" })
-      ctx.res.end()
+const getDataUser = ctx => {
+   if (ctx && ctx.req) {
+      // Server side navigation
+      const res = getTokenContentFromCookie(ctx)
+      return res ? jwt.decode(res) : null
+   } else {
+      // Client side navigation
+      return getDataUserFromSessionStorage()
    }
-
-   // We already checked for server. This should only happen on client.
-   if (!token) {
-      Router.push("/login")
-   }
-
-   return token
+}
+export const getDataUserFromSessionStorage = () => {
+   const dataUser = sessionStorage.getItem("dataUser")
+   return dataUser ? JSON.parse(dataUser) : null
 }
 
-export const withAuthSync = WrappedComponent => {
-   const Wrapper = props => {
-      const syncLogout = event => {
-         if (event.key === "logout") {
-            Router.push("/index")
-         }
-      }
+const getTokenContentFromCookie = ctx => {
+   const cookieContent = ctx.req.headers.cookie
 
-      useEffect(() => {
-         window.addEventListener("storage", syncLogout)
+   if (!cookieContent) return ""
 
-         return () => {
-            window.removeEventListener("storage", syncLogout)
-            window.localStorage.removeItem("logout")
-         }
-      }, [])
+   const res = cookieContent
+      .split(";")
+      .map(elt => elt.trim())
+      .filter(elt => /token/.test(elt))
 
-      return <WrappedComponent {...props} />
+   if (!res.length || res.length !== 1) {
+      console.error("Erreur dans le cookie token")
+      return ""
+   } else {
+      return res[0].replace(/token=/, "")
    }
+}
+
+export const withAuthSync = (WrappedComponent, requiredPrivilege) => {
+   const Wrapper = props => <WrappedComponent {...props} />
 
    Wrapper.getInitialProps = async ctx => {
-      const token = auth(ctx)
+      // const { pathname } = ctx
+      // const isPublic =
+      //    pathname === "/index" ||
+      //    pathname === "/signup" ||
+      //    pathname === "/inscription" ||
+      //    pathname === "/" ||
+      //    pathname === "/account/reset-password" ||
+      //    pathname === "/account/forgot-password"
+      const dataUser = getDataUser(ctx)
+
+      if (!dataUser) {
+         if (ctx && ctx.req) {
+            // Server side navigation
+            ctx.res.writeHead(302, { Location: "/index" })
+            ctx.res.end()
+         } else {
+            // Client side navigation
+            Router.push("/index")
+         }
+         return
+      }
+
+      if (!isAllowed(dataUser.role, requiredPrivilege)) {
+         return { permissionError: "Vous n'êtes pas autorisé à voir cette page" }
+      }
 
       const componentProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx))
 
-      return { ...componentProps, token }
+      return { ...componentProps, dataUser }
    }
 
    return Wrapper

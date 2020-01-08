@@ -41,7 +41,7 @@ const AskerAutocomplete = props => {
    const { dispatch, id, askerId, error, disabled } = props
    useTraceUpdate(props)
 
-   console.log("AskerAutocomplete:render")
+   // console.log("AskerAutocomplete:render")
    const [autoSuggestData, setAutoSuggestData] = useState({ value: "", suggestions: [] })
 
    const refValue = useRef("")
@@ -53,7 +53,7 @@ const AskerAutocomplete = props => {
          if (id) {
             askerName = await getAskerById(id)
          }
-         console.log("AskerAutocomplete:useEffect", askerName)
+         // console.log("AskerAutocomplete:useEffect", askerName)
          setAutoSuggestData({ value: askerName, suggestions: [] })
       }
       if (!disabled) {
