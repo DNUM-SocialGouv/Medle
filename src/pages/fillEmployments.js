@@ -3,6 +3,8 @@ import PropTypes from "prop-types"
 import nextCookie from "next-cookies"
 import moment from "moment"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
+import { withAuthentication } from "../utils/auth"
+import { EMPLOYMENT_CONSULTATION } from "../utils/roles"
 
 import Layout from "../components/Layout"
 import AccordionEmploymentsMonth, {

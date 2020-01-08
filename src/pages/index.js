@@ -4,8 +4,7 @@ import fetch from "isomorphic-unfetch"
 import { API_URL, LOGIN_ENDPOINT } from "../config"
 import Login from "../components/Login"
 import { handleAPIResponse } from "../utils/errors"
-import { START_PAGES } from "../utils/roles"
-import Router from "next/router"
+import { registerAndRedirectUser } from "../utils/auth"
 
 const LoginPage = () => {
    const [error, setError] = useState("")
@@ -36,12 +35,7 @@ const LoginPage = () => {
                   })
                   const json = await handleAPIResponse(response)
 
-                  sessionStorage.setItem("dataUser", JSON.stringify(json))
-
-                  const startPage = START_PAGES[json.role] || "/actDeclaration"
-
-                  await Router.push(startPage)
-
+                  registerAndRedirectUser(json)
                   resolve("OK")
                } catch (error) {
                   console.error(`${error}`)

@@ -2,43 +2,51 @@ import React from "react"
 import Router from "next/router"
 import { API_URL, LOGOUT_ENDPOINT } from "../config"
 import * as jwt from "jsonwebtoken"
-import { isAllowed } from "./roles"
+import { isAllowed, START_PAGES } from "./roles"
 
 /**
  * Remarks on cookie & session storage:
  *
- * - token is a cookie set API side. It is HttpOnly, so there is no risk (or less risks) to have XSS exploits.
- * the true security is only needeed on the API side
+ * - token is a cookie set by the API. It is HttpOnly, so there is no risk (or less risks) to have XSS exploits.
  * - local storage is not a viable solution since it doesn't support SSR and it doesn't prevent XSS like cookie
- * - dataUser contient une sous-partie de token. Pas d'information privée (email), pas de signature
- * - use session storage to store the non private data of the user and to drive the UI. This is XSS exploitable but there will not have incidence with API side
+ * - currentUser includes data of the user, without the token
+ * - use session storage to store data of the user without the token, allowing to drive the UI. This is XSS exploitable but without the token content, there should be no way to call the API endpoints
  */
 
 export const logout = async () => {
    // Let API send a cookie with very close expiration date to reset the "token" cookie with HttpOnly
    await fetch(API_URL + LOGOUT_ENDPOINT)
 
-   sessionStorage.removeItem("dataUser")
+   sessionStorage.removeItem("currentUser")
 
    await Router.push("/index")
 }
 
-const getDataUser = ctx => {
+export const registerAndRedirectUser = json => {
+   sessionStorage.setItem("currentUser", JSON.stringify(json))
+
+   const startPage = START_PAGES[json.role] || "/actDeclaration"
+
+   Router.push(startPage)
+}
+
+const getCurrentUser = ctx => {
    if (ctx && ctx.req) {
       // Server side navigation
-      const res = getTokenContentFromCookie(ctx)
+      const res = getTokenFromCookie(ctx)
       return res ? jwt.decode(res) : null
    } else {
       // Client side navigation
-      return getDataUserFromSessionStorage()
+      return getCurrentUserFromSessionStorage()
    }
 }
-export const getDataUserFromSessionStorage = () => {
-   const dataUser = sessionStorage.getItem("dataUser")
-   return dataUser ? JSON.parse(dataUser) : null
+export const getCurrentUserFromSessionStorage = () => {
+   const currentUser = sessionStorage.getItem("currentUser")
+
+   return currentUser ? JSON.parse(currentUser) : null
 }
 
-const getTokenContentFromCookie = ctx => {
+const getTokenFromCookie = ctx => {
    const cookieContent = ctx.req.headers.cookie
 
    if (!cookieContent) return ""
@@ -56,21 +64,13 @@ const getTokenContentFromCookie = ctx => {
    }
 }
 
-export const withAuthSync = (WrappedComponent, requiredPrivilege) => {
+export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
    const Wrapper = props => <WrappedComponent {...props} />
 
    Wrapper.getInitialProps = async ctx => {
-      // const { pathname } = ctx
-      // const isPublic =
-      //    pathname === "/index" ||
-      //    pathname === "/signup" ||
-      //    pathname === "/inscription" ||
-      //    pathname === "/" ||
-      //    pathname === "/account/reset-password" ||
-      //    pathname === "/account/forgot-password"
-      const dataUser = getDataUser(ctx)
+      const currentUser = getCurrentUser(ctx)
 
-      if (!dataUser) {
+      if (!currentUser) {
          if (ctx && ctx.req) {
             // Server side navigation
             ctx.res.writeHead(302, { Location: "/index" })
@@ -79,16 +79,16 @@ export const withAuthSync = (WrappedComponent, requiredPrivilege) => {
             // Client side navigation
             Router.push("/index")
          }
-         return
+         return {}
       }
 
-      if (!isAllowed(dataUser.role, requiredPrivilege)) {
+      if (!isAllowed(currentUser.role, requiredPrivilege)) {
          return { permissionError: "Vous n'êtes pas autorisé à voir cette page" }
       }
 
       const componentProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx))
 
-      return { ...componentProps, dataUser }
+      return { ...componentProps, currentUser }
    }
 
    return Wrapper

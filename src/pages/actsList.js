@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
-import { withAuthSync } from "../utils/auth"
+import { withAuthentication } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
 import Layout from "../components/Layout"
@@ -20,13 +20,13 @@ const fetchData = async search => {
    return handleAPIResponse(response)
 }
 
-// const hasPermissionError = dataUser =>
-//    !dataUser || !isAllowed(dataUser.role, ACT_CONSULTATION) ? "Vous n'êtes pas autorisé à consulter les actes." : ""
+// const hasPermissionError = currenUser =>
+//    !currenUser || !isAllowed(currenUser.role, ACT_CONSULTATION) ? "Vous n'êtes pas autorisé à consulter les actes." : ""
 
-const ActsListPage = ({ initialActs, dataUser, permissionError }) => {
+const ActsListPage = ({ initialActs, currentUser }) => {
    const [search, setSearch] = useState("")
    const [acts, setActs] = useState(initialActs || [])
-   const [isError, setIsError] = useState(permissionError)
+   const [isError, setIsError] = useState()
    const [isLoading, setIsLoading] = useState(false)
 
    const onChange = e => {
@@ -56,7 +56,7 @@ const ActsListPage = ({ initialActs, dataUser, permissionError }) => {
    }
 
    return (
-      <Layout page="actsList">
+      <Layout page="actsList" currentUser={currentUser}>
          <Title1 className="mt-5 mb-4">{"L'activité de votre UMJ/IML"}</Title1>
          <Container style={{ maxWidth: 980 }}>
             <Form onSubmit={onSubmit}>
@@ -130,7 +130,7 @@ ActsListPage.getInitialProps = async () => {
 
 ActsListPage.propTypes = {
    initialActs: PropTypes.array,
-   dataUser: PropTypes.object,
+   currentUser: PropTypes.object.isRequired,
 }
 
-export default withAuthSync(ActsListPage, ACT_CONSULTATION)
+export default withAuthentication(ActsListPage, ACT_CONSULTATION)

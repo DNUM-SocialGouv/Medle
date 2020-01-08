@@ -11,16 +11,8 @@ const theme = {
 }
 
 export default class MyApp extends App {
-   static async getInitialProps(app) {
-      if (app.ctx && app.ctx.req) {
-         console.log("cookie", app.ctx.req.headers.cookie)
-      }
-      return {}
-   }
-
    render() {
       const { Component, pageProps } = this.props
-      console.log("dans render de _app")
       return (
          <ThemeProvider theme={theme}>
             <Component {...pageProps} />

@@ -27,7 +27,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle"
 import { logout } from "../utils/auth"
 import { colors } from "../theme"
 
-const Header = () => {
+const Header = ({ currentUser }) => {
    const [isOpen, setIsOpen] = useState(false)
 
    const toggle = () => setIsOpen(!isOpen)
@@ -50,13 +50,18 @@ const Header = () => {
                      </DropdownToggle>
 
                      <DropdownMenu right>
+                        {currentUser && (
+                           <DropdownItem>{currentUser.first_name + " " + currentUser.last_name} </DropdownItem>
+                        )}
+                        <DropdownItem divider />
                         <DropdownItem>Profil</DropdownItem>
                         <DropdownItem>Administration</DropdownItem>
                         <DropdownItem divider />
                         <DropdownItem>
-                           <button className="menu-link" onClick={logout}>
+                           {/*eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                           <a className="menu-link" onClick={logout} href={"#"}>
                               Se déconnecter
-                           </button>
+                           </a>
                         </DropdownItem>
                      </DropdownMenu>
                   </UncontrolledDropdown>
@@ -105,6 +110,10 @@ const Header = () => {
          `}</style>
       </header>
    )
+}
+
+Header.propTypes = {
+   currentUser: PropTypes.object,
 }
 
 const Footer = () => (
@@ -256,11 +265,11 @@ Sidebar.propTypes = {
    page: PropTypes.string,
 }
 
-const Layout = ({ children, page }) => {
+const Layout = ({ children, page, currentUser }) => {
    return (
       <>
          <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between" }}>
-            <Header />
+            <Header currentUser={currentUser} />
             <div id="wrapper" className="d-flex">
                <div id="sidebar-wrapper" className="border-right">
                   <Sidebar page={page} />
@@ -314,6 +323,6 @@ const Layout = ({ children, page }) => {
    )
 }
 
-Layout.propTypes = { children: PropTypes.node.isRequired, page: PropTypes.string }
+Layout.propTypes = { children: PropTypes.node.isRequired, page: PropTypes.string, currentUser: PropTypes.object }
 
 export default Layout

@@ -1,10 +1,9 @@
 import React, { useReducer, useRef, useState } from "react"
 import PropTypes from "prop-types"
 import Router, { useRouter } from "next/router"
-import nextCookie from "next-cookies"
 import fetch from "isomorphic-unfetch"
 import { handleAPIResponse } from "../utils/errors"
-import { useTraceUpdate } from "../utils/debug"
+// import { useTraceUpdate } from "../utils/debug"
 import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "reactstrap"
 import moment from "moment"
 import AskerAutocomplete from "../components/AskerAutocomplete"
@@ -31,7 +30,7 @@ import {
 } from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_CONSULTATION } from "../utils/roles"
-import { withAuthSync } from "../utils/auth"
+import { withAuthentication } from "../utils/auth"
 
 // internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
@@ -150,15 +149,14 @@ const reduceByMode = (state, action) => {
    }
 }
 
-const ActDeclaration = props => {
-   const { act, userId, hospitalId } = props
-   useTraceUpdate(props)
+const ActDeclaration = ({ act, error: _error, currentUser: { id: userId, hospital_id: hospitalId } }) => {
+   // useTraceUpdate(props)
 
    // console.log("ActDeclaration:render")
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
-   const [errors, setErrors] = useState(props.error ? { general: props.error } : {})
+   const [errors, setErrors] = useState(_error ? { general: _error } : {})
    const [warnings, setWarnings] = useState({})
 
    const reducer = (state, action) => {
@@ -482,9 +480,8 @@ const ActDeclaration = props => {
 
 ActDeclaration.propTypes = {
    act: PropTypes.object,
-   userId: PropTypes.string.isRequired,
-   hospitalId: PropTypes.string.isRequired,
    error: PropTypes.string,
+   currentUser: PropTypes.object.isRequired,
 }
 
 // TODO : à migrer dans la couche persistance
@@ -505,7 +502,6 @@ ActDeclaration.getInitialProps = async ctx => {
    const {
       query: { id },
    } = ctx
-   const { userId, hospitalId } = nextCookie(ctx)
 
    let act
 
@@ -523,7 +519,7 @@ ActDeclaration.getInitialProps = async ctx => {
       newAct = transformDBActForState(act)
    }
 
-   return { act: newAct || {}, userId, hospitalId }
+   return { act: newAct || {} }
 }
 
-export default withAuthSync(ActDeclaration, ACT_CONSULTATION)
+export default withAuthentication(ActDeclaration, ACT_CONSULTATION)

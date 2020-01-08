@@ -11,13 +11,10 @@ const Login = ({ authentication, error }) => {
 
    const onSubmit = async e => {
       e.preventDefault()
-      console.log("email", emailRef.current.value)
-      console.log("password", passwordRef.current.value)
 
       setIsLoading(true)
       try {
          await authentication({ email: emailRef.current.value, password: passwordRef.current.value })
-         // eslint-disable-next-line no-empty
       } catch (ignore) {
          setIsLoading(false)
       }
@@ -40,6 +37,7 @@ const Login = ({ authentication, error }) => {
                            placeholder="spike.spiegel@cowboy.fr"
                            ref={emailRef}
                            className={"form-control"}
+                           autoComplete="username"
                         />
                      </InputGroup>
                   </FormGroup>
@@ -57,6 +55,7 @@ const Login = ({ authentication, error }) => {
                         placeholder="Mot de passe"
                         ref={passwordRef}
                         className={"form-control"}
+                        autoComplete="current-password"
                      />
                   </FormGroup>
                   <Button block>{isLoading ? <Spinner color="light" data-testid="loading" /> : "Se connecter"}</Button>

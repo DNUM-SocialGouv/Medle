@@ -5,7 +5,7 @@ import PropTypes from "prop-types"
 
 import moment from "moment"
 import { FORMAT_DATE } from "../../utils/constants"
-import { withAuthSync } from "../../utils/auth"
+import { withAuthentication } from "../../utils/auth"
 import { API_URL, ACT_DETAIL_ENDPOINT, ACT_DELETE_ENDPOINT } from "../../config"
 import fetch from "isomorphic-unfetch"
 import Layout from "../../components/Layout"
@@ -26,8 +26,9 @@ import { handleAPIResponse } from "../../utils/errors"
 
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
+import { ACT_CONSULTATION } from "../../utils/roles"
 
-const ActDetail = ({ initialAct, id, error }) => {
+const ActDetail = ({ initialAct, id, error, currentUser }) => {
    const router = useRouter()
    const [isError, setIsError] = useState(error)
    const [act, setAct] = useState(initialAct)
@@ -61,7 +62,7 @@ const ActDetail = ({ initialAct, id, error }) => {
    }
 
    return (
-      <Layout>
+      <Layout page="actsList" currentUser={currentUser}>
          <Title1 className="mt-5 mb-5">{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
 
          <Container style={{ maxWidth: 780 }}>
@@ -171,6 +172,7 @@ ActDetail.propTypes = {
    initialAct: PropTypes.object.isRequired,
    id: PropTypes.string.isRequired,
    error: PropTypes.string,
+   currentUser: PropTypes.object.isRequired,
 }
 
-export default withAuthSync(ActDetail)
+export default withAuthentication(ActDetail, ACT_CONSULTATION)
