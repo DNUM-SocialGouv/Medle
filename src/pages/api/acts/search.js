@@ -13,8 +13,6 @@ export default async (req, res) => {
 
    const { scope: _scope } = req.cookies
 
-   console.log("cookies", _scope)
-
    const scope = _scope ? JSON.parse(_scope) : []
 
    res.setHeader("Content-Type", "application/json")

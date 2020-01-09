@@ -16,15 +16,23 @@ export const decodeToken = token => {
    return jwt.decode(token)
 }
 
-export const generateToken = ({ id, first_name, last_name, email, role, hospital_id, scope }) =>
+export const generateToken = ({
+   id,
+   first_name: firstName,
+   last_name: lastName,
+   email,
+   role,
+   hospital_id: hospitalId,
+   scope,
+}) =>
    jwt.sign(
       {
          id,
-         first_name,
-         last_name,
+         firstName,
+         lastName,
          email,
          role,
-         hospital_id,
+         hospitalId,
          scope,
       },
       jwtConfig.secret,

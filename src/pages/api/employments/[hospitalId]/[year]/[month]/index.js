@@ -14,7 +14,6 @@ export default async (req, res) => {
       return res.status(STATUS_405_METHOD_NOT_ALLOWED).end()
    }
 
-   console.log("query", req.query)
    const { year, month, hospitalId } = req.query
 
    if (!year || !hospitalId || !/^[0-9]{4}$/.test(year) || !/^[0-9]+$/.test(hospitalId)) {

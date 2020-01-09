@@ -30,7 +30,7 @@ export const registerAndRedirectUser = json => {
    Router.push(startPage)
 }
 
-const getCurrentUser = ctx => {
+export const getCurrentUser = ctx => {
    if (ctx && ctx.req) {
       // Server side navigation
       const res = getTokenFromCookie(ctx)
@@ -64,6 +64,17 @@ const getTokenFromCookie = ctx => {
    }
 }
 
+export const isomorphicRedirect = (ctx, url) => {
+   if (ctx && ctx.req) {
+      // Server side navigation
+      ctx.res.writeHead(302, { Location: url })
+      ctx.res.end()
+   } else {
+      // Client side navigation
+      Router.push(url)
+   }
+}
+
 export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
    const Wrapper = props => <WrappedComponent {...props} />
 
@@ -71,19 +82,11 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
       const currentUser = getCurrentUser(ctx)
 
       if (!currentUser) {
-         if (ctx && ctx.req) {
-            // Server side navigation
-            ctx.res.writeHead(302, { Location: "/index" })
-            ctx.res.end()
-         } else {
-            // Client side navigation
-            Router.push("/index")
-         }
-         return {}
+         isomorphicRedirect(ctx, "/index")
       }
 
-      if (!isAllowed(currentUser.role, requiredPrivilege)) {
-         return { permissionError: "Vous n'êtes pas autorisé à voir cette page" }
+      if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
+         isomorphicRedirect(ctx, "/permissionError")
       }
 
       const componentProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx))

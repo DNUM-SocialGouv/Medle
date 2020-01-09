@@ -51,7 +51,7 @@ const Header = ({ currentUser }) => {
 
                      <DropdownMenu right>
                         {currentUser && (
-                           <DropdownItem>{currentUser.first_name + " " + currentUser.last_name} </DropdownItem>
+                           <DropdownItem>{currentUser.firstName + " " + currentUser.lastName} </DropdownItem>
                         )}
                         <DropdownItem divider />
                         <DropdownItem>Profil</DropdownItem>

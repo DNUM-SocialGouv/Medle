@@ -35,8 +35,6 @@ export default async (req, res) => {
       return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json({ message: `Erreur de base de donnée / ${err}` })
    }
 
-   console.log(act)
-
    if (act) {
       return res.status(STATUS_200_OK).json(buildActFromDB(act))
    } else {

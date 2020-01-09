@@ -30,7 +30,6 @@ const Counter = ({ children, dispatch, state, type }) => {
                onClick={add}
                className="ml-3"
                tabIndex="0"
-               onSelect={() => console.log("selected!")}
                onKeyPress={e => keyPress(e, add)}
                width={24}
             />

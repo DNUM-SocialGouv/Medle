@@ -149,7 +149,7 @@ const reduceByMode = (state, action) => {
    }
 }
 
-const ActDeclaration = ({ act, error: _error, currentUser: { id: userId, hospital_id: hospitalId } }) => {
+const ActDeclaration = ({ act, error: _error, currentUser: { id: userId, hospitalId } }) => {
    // useTraceUpdate(props)
 
    // console.log("ActDeclaration:render")
@@ -170,25 +170,22 @@ const ActDeclaration = ({ act, error: _error, currentUser: { id: userId, hospita
             return reduceByMode(newState, { type: "periodOfDay", payload: { val: "" } })
          }
          case "proofWithoutComplaint": {
-            console.log("dans proofWithoutComplaint")
             let newState = reduceByMode(state, action)
             setErrors(deleteProperty(errors, "askerId"))
             newState = reduceByMode(newState, { type: "askerId", payload: { val: null } })
             newState = reduceByMode(newState, { type: "pvNumber", payload: { val: "" } })
-            console.log("newState", newState)
             return newState
          }
          case "profile": {
             let newState = reduceByMode(state, action)
 
-            console.log("newState", newState)
             if (action.payload.mode !== "lock") {
                newState = resetState(newState)
             }
 
             const errors = hasErrors(newState, setErrors)
 
-            console.log("errors", errors)
+            console.error(errors)
 
             if (!isEmpty(errors)) {
                setErrors(errors)
@@ -276,8 +273,6 @@ const ActDeclaration = ({ act, error: _error, currentUser: { id: userId, hospita
          setErrors(errors)
          return
       }
-
-      console.log("pas d'erreurs trouvées")
 
       let json
 

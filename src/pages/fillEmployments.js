@@ -1,9 +1,8 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
-import nextCookie from "next-cookies"
 import moment from "moment"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
-import { withAuthentication } from "../utils/auth"
+import { withAuthentication, getCurrentUser } from "../utils/auth"
 import { EMPLOYMENT_CONSULTATION } from "../utils/roles"
 
 import Layout from "../components/Layout"
@@ -22,12 +21,14 @@ const FillEmploymentsPage = ({
    dataMonth: _dataMonth,
    allMonths,
    year,
-   hospitalId,
+   currentUser,
 }) => {
    const [errors, setErrors] = useState(error)
    const [success, setSuccess] = useState("")
 
    const [dataMonth, setDataMonth] = useState(_dataMonth)
+
+   const { hospitalId } = currentUser
 
    const previousMonths = allMonths && allMonths.length ? allMonths.slice(1) : []
 
@@ -39,7 +40,6 @@ const FillEmploymentsPage = ({
 
    const update = async monthNumber => {
       setErrors({})
-      console.log("monthNumber", monthNumber)
 
       const errors = hasErrors(dataMonth)
 
@@ -59,7 +59,7 @@ const FillEmploymentsPage = ({
    }
 
    return (
-      <Layout page="fillEmployments">
+      <Layout page="fillEmployments" currentUser={currentUser}>
          <Title1 className="mt-5 mb-5">{"Déclaration du personnel"}</Title1>
          <Container style={{ maxWidth: 720 }}>
             <Title2 className="mb-4 text-capitalize">{currentMonthName}</Title2>
@@ -207,9 +207,7 @@ const FillEmploymentsPage = ({
 }
 
 FillEmploymentsPage.getInitialProps = async ctx => {
-   console.log("dans getInitialProps")
-
-   const { hospitalId } = nextCookie(ctx)
+   const { hospitalId } = getCurrentUser(ctx)
 
    if (!hospitalId) {
       return { error: "Vous n'avez pas d'établissement de santé à gérer." }
@@ -232,6 +230,7 @@ FillEmploymentsPage.getInitialProps = async ctx => {
 
    const currentMonth = moment().format("MM")
    const currentYear = moment().format("YYYY")
+
    const allMonths = new Array(parseInt(currentMonth))
       .fill(0)
       .map((_, index) => (index + 1).toString().padStart(2, "0"))
@@ -247,7 +246,6 @@ FillEmploymentsPage.getInitialProps = async ctx => {
          dataMonth: json,
          allMonths,
          year: currentYear,
-         hospitalId,
       }
    } catch (error) {
       console.error(error)
@@ -257,7 +255,6 @@ FillEmploymentsPage.getInitialProps = async ctx => {
          currentMonthName: NAME_MONTHS[currentMonth] + " " + currentYear,
          allMonths,
          year: currentYear,
-         hospitalId,
       }
    }
 }
@@ -268,12 +265,13 @@ FillEmploymentsPage.propTypes = {
    dataMonth: PropTypes.object,
    allMonths: PropTypes.array,
    error: PropTypes.string,
-   hospitalId: PropTypes.string.isRequired,
+   // hospitalId: PropTypes.string.isRequired,
    year: PropTypes.string.isRequired,
+   currentUser: PropTypes.object.isRequired,
 }
 
 FillEmploymentsPage.defaultProps = {
    dataMonth: {},
 }
 
-export default FillEmploymentsPage
+export default withAuthentication(FillEmploymentsPage, EMPLOYMENT_CONSULTATION)

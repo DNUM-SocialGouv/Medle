@@ -15,13 +15,21 @@ const validPassword = password => {
 
 const maxDurationCookies = 2 * 60 * 60 // 2 heures max. TODO: mettre en confi (cf. expiration JWT)
 
-const extractPublicData = ({ id, first_name, last_name, email, role, hospital_id, scope }) => ({
+const extractPublicData = ({
    id,
-   first_name,
-   last_name,
+   first_name: firstName,
+   last_name: lastName,
    email,
    role,
-   hospital_id,
+   hospital_id: hospitalId,
+   scope,
+}) => ({
+   id,
+   firstName,
+   lastName,
+   email,
+   role,
+   hospitalId,
    scope,
 })
 

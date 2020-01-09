@@ -20,9 +20,6 @@ const fetchData = async search => {
    return handleAPIResponse(response)
 }
 
-// const hasPermissionError = currenUser =>
-//    !currenUser || !isAllowed(currenUser.role, ACT_CONSULTATION) ? "Vous n'êtes pas autorisé à consulter les actes." : ""
-
 const ActsListPage = ({ initialActs, currentUser }) => {
    const [search, setSearch] = useState("")
    const [acts, setActs] = useState(initialActs || [])
