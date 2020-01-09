@@ -149,7 +149,7 @@ const reduceByMode = (state, action) => {
    }
 }
 
-const ActDeclaration = ({ act, error: _error, currentUser: { id: userId, hospitalId } }) => {
+const ActDeclaration = ({ act, error: _error, currentUser }) => {
    // useTraceUpdate(props)
 
    // console.log("ActDeclaration:render")
@@ -158,6 +158,8 @@ const ActDeclaration = ({ act, error: _error, currentUser: { id: userId, hospita
    const refPersonType = useRef()
    const [errors, setErrors] = useState(_error ? { general: _error } : {})
    const [warnings, setWarnings] = useState({})
+
+   const { id: userId, hospitalId } = currentUser
 
    const reducer = (state, action) => {
       // console.log("ActDeclaration:reducer", action)
@@ -357,7 +359,7 @@ const ActDeclaration = ({ act, error: _error, currentUser: { id: userId, hospita
    }
 
    return (
-      <Layout page="actDeclaration">
+      <Layout page="actDeclaration" currentUser={currentUser}>
          <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
          <Container style={{ maxWidth: 720 }}>
             <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>
