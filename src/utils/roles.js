@@ -41,7 +41,18 @@ export const ROLES = {
    OPERATOR_EMPLOYMENT: [EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT, ACT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un gestionnaire d'ETP
    GUEST_HOSPITAL: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
    SUPER_ADMIN: PRIVILEGES, // le super admin qui a tous les privilèges
+   REGIONAL_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un ARS par exemple
    PUBLIC_SUPERVISOR: [STATS_LOCAL, STATS_GLOBAL], // ex: un superviseur public, tel que ARS, Ministère de la justice
+}
+
+export const ROLES_DESCRIPTION = {
+   ADMIN_HOSPITAL: "Administrateur d'UMJ ou d'IML",
+   OPERATOR_ACT: "Gestionnaire d'actes",
+   OPERATOR_EMPLOYMENT: "Gestionnaire d'emplois",
+   GUEST_HOSPITAL: "Invité",
+   SUPER_ADMIN: "Administrateur de Medlé",
+   PUBLIC_SUPERVISOR: "Superviseur publique",
+   REGIONAL_SUPERVISOR: "Superviseur de plusieurs UMJ ou IML",
 }
 
 export const START_PAGES = {

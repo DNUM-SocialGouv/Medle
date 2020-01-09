@@ -54,7 +54,11 @@ const Header = ({ currentUser }) => {
                            <DropdownItem>{currentUser.firstName + " " + currentUser.lastName} </DropdownItem>
                         )}
                         <DropdownItem divider />
-                        <DropdownItem>Profil</DropdownItem>
+                        <DropdownItem>
+                           <Link href="/profile">
+                              <a>Profil</a>
+                           </Link>
+                        </DropdownItem>
                         <DropdownItem>Administration</DropdownItem>
                         <DropdownItem divider />
                         <DropdownItem>

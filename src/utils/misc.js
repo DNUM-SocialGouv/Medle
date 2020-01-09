@@ -8,3 +8,9 @@ export const deleteProperty = (obj, property) => {
    delete res[property]
    return res
 }
+
+export const capitalize = str => {
+   if (!str || !str.length) return ""
+
+   return str[0].toUpperCase() + str.slice(1)
+}
