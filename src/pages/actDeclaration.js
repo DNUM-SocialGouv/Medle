@@ -29,7 +29,7 @@ import {
    RestrainedProfile,
 } from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
-import { ACT_CONSULTATION } from "../utils/roles"
+import { ACT_MANAGEMENT } from "../utils/roles"
 import { withAuthentication } from "../utils/auth"
 
 // internalNumber & pvNumber found by query, in update situation
@@ -519,4 +519,4 @@ ActDeclaration.getInitialProps = async ctx => {
    return { act: newAct || {} }
 }
 
-export default withAuthentication(ActDeclaration, ACT_CONSULTATION)
+export default withAuthentication(ActDeclaration, ACT_MANAGEMENT)

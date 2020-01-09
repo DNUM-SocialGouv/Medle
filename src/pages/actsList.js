@@ -108,7 +108,7 @@ const ActsListPage = ({ initialActs, currentUser }) => {
                            <td>{act.profile}</td>
                            <td>
                               <Link href="/actDetail/[id]" as={`/actDetail/${act.id}`}>
-                                 <a>{"Modifier / voir >"}</a>
+                                 <a>{"Voir >"}</a>
                               </Link>
                            </td>
                         </tr>

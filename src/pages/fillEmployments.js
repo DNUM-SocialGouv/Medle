@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import moment from "moment"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
 import { withAuthentication, getCurrentUser } from "../utils/auth"
-import { EMPLOYMENT_CONSULTATION } from "../utils/roles"
+import { isAllowed, EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 
 import Layout from "../components/Layout"
 import AccordionEmploymentsMonth, {
@@ -180,15 +180,19 @@ const FillEmploymentsPage = ({
                      <FormFeedback>{errors && errors.others}</FormFeedback>
                   </Col>
                </Row>
-
-               <div className="text-center mt-5">
-                  <ValidationButton color="primary" size="lg" className="center" onClick={() => update(currentMonth)}>
-                     Valider
-                  </ValidationButton>
-               </div>
-
-               <Title2 className="mt-5 mb-4">{"Mois précédents"}</Title2>
-
+               {isAllowed(currentUser.role, EMPLOYMENT_MANAGEMENT) && (
+                  <div className="text-center mt-5">
+                     <ValidationButton
+                        color="primary"
+                        size="lg"
+                        className="center"
+                        onClick={() => update(currentMonth)}
+                     >
+                        Valider
+                     </ValidationButton>
+                  </div>
+               )}
+               {!!previousMonths.length && <Title2 className="mt-5 mb-4">{"Mois précédents"}</Title2>}
                {previousMonths.map(({ monthName, month }) => (
                   <AccordionEmploymentsMonth
                      key={month}

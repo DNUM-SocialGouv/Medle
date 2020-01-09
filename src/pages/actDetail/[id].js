@@ -26,7 +26,7 @@ import { handleAPIResponse } from "../../utils/errors"
 
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
-import { ACT_CONSULTATION } from "../../utils/roles"
+import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT } from "../../utils/roles"
 
 const ActDetail = ({ initialAct, id, error, currentUser }) => {
    const router = useRouter()
@@ -67,14 +67,16 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
 
          <Container style={{ maxWidth: 780 }}>
             <div style={{ border: "1px solid rgba(151,151,151,0.13)", borderRadius: 10 }} className="px-2 py-2">
-               <Button
-                  outline
-                  onClick={() => editAct(id)}
-                  style={{ border: 0, float: "right", cursor: "pointer" }}
-                  className="mr-2 mt-3"
-               >
-                  <EditOutlinedIcon width={24} />
-               </Button>
+               {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
+                  <Button
+                     outline
+                     onClick={() => editAct(id)}
+                     style={{ border: 0, float: "right", cursor: "pointer" }}
+                     className="mr-2 mt-3"
+                  >
+                     <EditOutlinedIcon width={24} />
+                  </Button>
+               )}
                <Title2 className="mb-4 mt-3">{"Identification de l'acte"}</Title2>
                <Row>
                   <Col className="mr-3">
@@ -112,38 +114,39 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
          </Container>
 
          <Container style={{ maxWidth: 780 }} className="mt-4">
-            <Row>
-               <Col>
-                  <Button block outline color="danger" onClick={toggle}>
-                     <DeleteForeverOutlinedIcon style={{ float: "left" }} width={24} />
-                     {"Supprimer l'acte"}
-                  </Button>{" "}
-                  <div>
-                     <Modal isOpen={modal} toggle={toggle}>
-                        <ModalHeader toggle={toggle}>Voulez-vous vraiment supprimer cet acte?</ModalHeader>
-                        <ModalBody>
-                           Si vous supprimez cet acte, il ne serait plus visible ni modifiable dans la liste des actes.
-                           Merci de confirmer votre choix.
-                        </ModalBody>
-                        <ModalFooter>
-                           <Button color="primary" onClick={deleteAct}>
-                              Supprimer
-                           </Button>{" "}
-                           <Button color="secondary" onClick={toggle}>
-                              Annuler
-                           </Button>
-                        </ModalFooter>
-                     </Modal>
-                  </div>
-               </Col>
-               {/* <Col>
+            {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
+               <Row>
+                  <Col>
+                     <Button block outline color="danger" onClick={toggle}>
+                        <DeleteForeverOutlinedIcon style={{ float: "left" }} width={24} />
+                        {"Supprimer l'acte"}
+                     </Button>{" "}
+                     <div>
+                        <Modal isOpen={modal} toggle={toggle}>
+                           <ModalHeader toggle={toggle}>Voulez-vous vraiment supprimer cet acte?</ModalHeader>
+                           <ModalBody>
+                              Si vous supprimez cet acte, il ne serait plus visible ni modifiable dans la liste des
+                              actes. Merci de confirmer votre choix.
+                           </ModalBody>
+                           <ModalFooter>
+                              <Button color="primary" onClick={deleteAct}>
+                                 Supprimer
+                              </Button>{" "}
+                              <Button color="secondary" onClick={toggle}>
+                                 Annuler
+                              </Button>
+                           </ModalFooter>
+                        </Modal>
+                     </div>
+                  </Col>
+                  {/* <Col>
                   <Button block outline color="primary" onClick={addAct}>
                      <AddIcon style={{ float: "left" }} />
                      Ajouter acte lié au dossier
                   </Button>{" "}
                </Col> */}
-            </Row>
-
+               </Row>
+            )}
             <div className="text-center mt-5">
                <Link href="/actsList">
                   <a>Retour à la liste des actes</a>

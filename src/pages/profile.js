@@ -2,7 +2,6 @@ import React from "react"
 import { PropTypes } from "prop-types"
 import Layout from "../components/Layout"
 import { Container, Col, Row } from "reactstrap"
-import { Title1 } from "../components/StyledComponents"
 import { withAuthentication } from "../utils/auth"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle"
 import { ROLES_DESCRIPTION } from "../utils/roles"
@@ -13,32 +12,52 @@ const ProfilePage = ({ currentUser }) => {
    return (
       <Layout currentUser={currentUser}>
          <Container style={{ maxWidth: 500 }}>
-            <Title1 className="mt-5 mb-5">Profil</Title1>
-            <div style={{ boxShadow: "5px 5px 5px #d3d3d3", border: "1px solid #eee", borderRadius: "10px" }}>
-               <Row className="pt-4 pb-4">
-                  <Col sm="4" title={`id #${id}`}>
-                     <AccountCircleIcon className="account-icon ml-4" width={100} />
+            <div
+               className="mt-5 pt-5 pb-4 pl-4 pr-4"
+               style={{
+                  boxShadow: "5px 5px 5px #d3d3d3",
+                  border: "1px solid #eee",
+                  borderRadius: "10px",
+               }}
+            >
+               <Row>
+                  <div style={{ width: "100%", textAlign: "center" }}>
+                     <AccountCircleIcon
+                        className="account-icon ml-4"
+                        style={{ marginTop: -120, marginLeft: 25 }}
+                        width={100}
+                     />
+                  </div>
+                  <Col sm="4" title={`id #${id}`} style={{ textTransform: "uppercase" }}>
+                     {"Données de l'utilisateur"}
                   </Col>
-                  <Col sm="8">
+                  <Col sm="8" className="pl-4" style={{ borderLeft: "1px solid #d3d3d3" }}>
                      <Row>
-                        <Col>
+                        <Col style={{ fontWeight: "600" }}>
                            {capitalize(firstName)} {capitalize(lastName)}
                         </Col>
                      </Row>
                      <Row className="mt-1">
                         <Col>{email}</Col>
                      </Row>
-                     <Row className="mt-4">
+                     <Row className="mt-3">
                         <Col>
-                           <i>Rôle</i>
-                           <br />
-                           {role && ROLES_DESCRIPTION[role] ? ROLES_DESCRIPTION[role] : "N/A"}
+                           <span
+                              style={{
+                                 backgroundColor: "#b2f5ea",
+                                 borderRadius: "0.25rem",
+                                 color: "#2c7a7b",
+                                 padding: "0.25rem 0.5rem",
+                              }}
+                           >
+                              {role && ROLES_DESCRIPTION[role] ? ROLES_DESCRIPTION[role] : "N/A"}
+                           </span>
                         </Col>
                      </Row>
                      {hospitalId && (
                         <Row className="mt-4">
                            <Col>
-                              <b>Hôpital de rattachement</b>
+                              <i>Hôpital de rattachement</i>
                               <br />
                               {hospitalId}
                            </Col>

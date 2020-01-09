@@ -82,10 +82,12 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
       const currentUser = getCurrentUser(ctx)
 
       if (!currentUser) {
+         console.error("Pas de currentUser trouvé en cookie ou en SessionStorage. Redirection sur index")
          isomorphicRedirect(ctx, "/index")
       }
 
       if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
+         console.error("Rôle incorrect. Redirection sur page permissionError")
          isomorphicRedirect(ctx, "/permissionError")
       }
 

@@ -54,19 +54,14 @@ const Header = ({ currentUser }) => {
                            <DropdownItem>{currentUser.firstName + " " + currentUser.lastName} </DropdownItem>
                         )}
                         <DropdownItem divider />
-                        <DropdownItem>
-                           <Link href="/profile">
-                              <a>Profil</a>
-                           </Link>
-                        </DropdownItem>
+                        <Link href="/profile">
+                           <a>
+                              <DropdownItem>Profil</DropdownItem>
+                           </a>
+                        </Link>
                         <DropdownItem>Administration</DropdownItem>
                         <DropdownItem divider />
-                        <DropdownItem>
-                           {/*eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                           <a className="menu-link" onClick={logout} href={"#"}>
-                              Se déconnecter
-                           </a>
-                        </DropdownItem>
+                        <DropdownItem onClick={logout}>Se déconnecter</DropdownItem>
                      </DropdownMenu>
                   </UncontrolledDropdown>
                </Nav>
@@ -184,14 +179,8 @@ const Sidebar = ({ page }) => {
          <div className="list-group list-group-flush text-center">
             <Link href="/actDeclaration">
                <a
-                  className="list-group-item list-group-item-action"
-                  style={
-                     page === "actDeclaration"
-                        ? {
-                             borderLeft: "5px solid #307DF6",
-                             backgroundColor: "#e7f1fe !important",
-                          }
-                        : { borderLeft: "5px solid #fff" }
+                  className={
+                     "list-group-item list-group-item-action " + (page === "actDeclaration" ? "selected" : "unselected")
                   }
                >
                   <AddCircleOutlineIcon width={30} />
@@ -201,14 +190,8 @@ const Sidebar = ({ page }) => {
             </Link>
             <Link href="/actsList">
                <a
-                  className="list-group-item list-group-item-action"
-                  style={
-                     page === "actsList"
-                        ? {
-                             borderLeft: "5px solid #307DF6",
-                             backgroundColor: "#e7f1fe !important",
-                          }
-                        : { borderLeft: "5px solid #fff" }
+                  className={
+                     "list-group-item list-group-item-action " + (page === "actsList" ? "selected" : "unselected")
                   }
                >
                   <FormatListBulletedIcon width={30} /> <br />
@@ -217,11 +200,9 @@ const Sidebar = ({ page }) => {
             </Link>
             <Link href="/fillEmployments">
                <a
-                  className="list-group-item list-group-item-action"
-                  style={
-                     page === "fillEmployments"
-                        ? { borderLeft: "5px solid #307DF6", backgroundColor: "#e7f1fe !important" }
-                        : { borderLeft: "5px solid #fff" }
+                  className={
+                     "list-group-item list-group-item-action " +
+                     (page === "fillEmployments" ? "selected" : "unselected")
                   }
                >
                   <FormatListBulletedIcon width={30} /> <br />
@@ -259,6 +240,13 @@ const Sidebar = ({ page }) => {
                font-size: 12px;
                font-family: "Source Sans Pro";
                color: #9b9b9b;
+            }
+            a.selected {
+               border-left: 5px solid #307df6;
+               background-color: #e7f1fe !important;
+            }
+            a.unselected {
+               border-left: 5px solid #fff;
             }
          `}</style>
       </>
