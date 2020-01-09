@@ -9,4 +9,7 @@ module.exports = withCSS({
    env: {
       API_URL: process.env.API_URL,
    },
+   serverRuntimeConfig: {
+      JWT_SECRET: process.env.JWT_SECRET,
+   },
 })

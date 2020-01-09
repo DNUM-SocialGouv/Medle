@@ -7,7 +7,8 @@ import {
    STATUS_400_BAD_REQUEST,
    STATUS_401_UNAUTHORIZED,
    STATUS_500_INTERNAL_SERVER_ERROR,
-} from "../../utils/HttpStatus"
+   METHOD_POST,
+} from "../../utils/http"
 
 const validPassword = password => {
    return password.length
@@ -33,7 +34,13 @@ const extractPublicData = ({
    scope,
 })
 
+import { checkHttpMethod } from "../../utils/api"
+
 export default async (req, res) => {
+   res.setHeader("Content-Type", "application/json")
+
+   checkHttpMethod([METHOD_POST], req, res)
+
    const { email, password } = await req.body
 
    if (!validPassword(password)) {

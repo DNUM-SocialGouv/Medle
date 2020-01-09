@@ -1,7 +1,9 @@
 import * as jwt from "jsonwebtoken"
+import getConfig from "next/config"
+const { serverRuntimeConfig } = getConfig()
 
 const jwtConfig = {
-   secret: "JHo$aY@2&o7m", // TODO: à mettre dans process.ENV
+   secret: serverRuntimeConfig.JWT_SECRET || "JHo$aY@2&o7m", // only for dev
    options: {
       expiresIn: "2h",
       algorithm: "HS256",

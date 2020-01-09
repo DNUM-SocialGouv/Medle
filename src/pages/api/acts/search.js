@@ -1,21 +1,18 @@
-import {
-   STATUS_200_OK,
-   STATUS_405_METHOD_NOT_ALLOWED,
-   STATUS_500_INTERNAL_SERVER_ERROR,
-} from "../../../utils/HttpStatus"
+import { STATUS_200_OK, STATUS_500_INTERNAL_SERVER_ERROR, METHOD_GET } from "../../../utils/http"
 import knex from "../../../knex/knex"
+import { ACT_CONSULTATION } from "../../../utils/roles"
+import { checkValidUserWithPrivilege, checkHttpMethod } from "../../../utils/api"
 
 export default async (req, res) => {
-   if (req.method !== "GET") {
-      console.error(`Méthode non permise ${STATUS_405_METHOD_NOT_ALLOWED}`)
-      return res.status(STATUS_405_METHOD_NOT_ALLOWED).end()
-   }
-
    const { scope: _scope } = req.cookies
 
    const scope = _scope ? JSON.parse(_scope) : []
 
    res.setHeader("Content-Type", "application/json")
+
+   checkHttpMethod([METHOD_GET], req, res)
+
+   checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
    const { fuzzy, internalNumber, pvNumber } = req.query
 

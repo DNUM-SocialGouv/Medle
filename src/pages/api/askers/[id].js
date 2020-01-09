@@ -4,7 +4,7 @@ import {
    STATUS_400_BAD_REQUEST,
    STATUS_404_NOT_FOUND,
    STATUS_500_INTERNAL_SERVER_ERROR,
-} from "../../../utils/HttpStatus"
+} from "../../../utils/http"
 
 export default async (req, res) => {
    let askers

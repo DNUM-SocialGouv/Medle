@@ -14,3 +14,8 @@ export const STATUS_410_GONE = 410
 export const STATUS_500_INTERNAL_SERVER_ERROR = 500
 export const STATUS_501_NOT_IMPLEMENTED = 501
 export const STATUS_503_SERVICE_UNAVAILABLE = 503
+
+export const METHOD_GET = "GET"
+export const METHOD_POST = "POST"
+export const METHOD_PUT = "PUT"
+export const METHOD_PATCH = "PATCH"

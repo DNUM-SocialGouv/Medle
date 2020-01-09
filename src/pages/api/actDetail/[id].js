@@ -4,8 +4,11 @@ import {
    STATUS_400_BAD_REQUEST,
    STATUS_404_NOT_FOUND,
    STATUS_500_INTERNAL_SERVER_ERROR,
-} from "../../../utils/HttpStatus"
+   METHOD_GET,
+} from "../../../utils/http"
 import { buildActFromDB } from "../../../knex/models/acts"
+import { ACT_CONSULTATION } from "../../../utils/roles"
+import { checkValidUserWithPrivilege, checkHttpMethod } from "../../../utils/api"
 
 export default async (req, res) => {
    let act
@@ -15,6 +18,10 @@ export default async (req, res) => {
    if (!id) {
       return res.status(STATUS_400_BAD_REQUEST).end()
    }
+
+   checkHttpMethod([METHOD_GET], req, res)
+
+   checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
    try {
       act = await knex("acts")

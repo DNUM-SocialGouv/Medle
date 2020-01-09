@@ -4,14 +4,23 @@ import {
    STATUS_200_OK,
    STATUS_400_BAD_REQUEST,
    STATUS_404_NOT_FOUND,
-   STATUS_405_METHOD_NOT_ALLOWED,
    STATUS_500_INTERNAL_SERVER_ERROR,
-} from "../../../../../utils/HttpStatus"
+   METHOD_GET,
+   METHOD_PUT,
+} from "../../../../../utils/http"
+
+import { EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../../../../../utils/roles"
+import { checkValidUserWithPrivilege, checkHttpMethod } from "../../../../../utils/api"
 
 export default async (req, res) => {
-   if (!["GET", "PUT"].includes(req.method)) {
-      console.error(`Méthode non permise ${STATUS_405_METHOD_NOT_ALLOWED}`)
-      return res.status(STATUS_405_METHOD_NOT_ALLOWED).end()
+   res.setHeader("Content-Type", "application/json")
+
+   checkHttpMethod([METHOD_GET, METHOD_PUT], req, res)
+
+   checkValidUserWithPrivilege(EMPLOYMENT_CONSULTATION, req, res)
+
+   if (req.method === METHOD_PUT) {
+      checkValidUserWithPrivilege(EMPLOYMENT_MANAGEMENT, req, res)
    }
 
    const { year, hospitalId } = req.query
@@ -19,8 +28,6 @@ export default async (req, res) => {
    if (!year || !hospitalId || !/^[0-9]{4}$/.test(year) || !/^[0-9]+$/.test(hospitalId)) {
       return res.status(STATUS_400_BAD_REQUEST).end()
    }
-
-   res.setHeader("Content-Type", "application/json")
 
    if (req.method === "GET") {
       let result
