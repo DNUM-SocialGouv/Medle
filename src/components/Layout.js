@@ -26,6 +26,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle"
 
 import { logout } from "../utils/auth"
 import { colors } from "../theme"
+import { isAllowed, ACT_MANAGEMENT, ACT_CONSULTATION, EMPLOYMENT_CONSULTATION } from "../utils/roles"
 
 const Header = ({ currentUser }) => {
    const [isOpen, setIsOpen] = useState(false)
@@ -173,42 +174,49 @@ const Footer = () => (
    </footer>
 )
 
-const Sidebar = ({ page }) => {
+const Sidebar = ({ page, currentUser }) => {
    return (
       <>
          <div className="list-group list-group-flush text-center">
-            <Link href="/actDeclaration">
-               <a
-                  className={
-                     "list-group-item list-group-item-action " + (page === "actDeclaration" ? "selected" : "unselected")
-                  }
-               >
-                  <AddCircleOutlineIcon width={30} />
-                  <br />
-                  {"Ajout d'acte"}
-               </a>
-            </Link>
-            <Link href="/actsList">
-               <a
-                  className={
-                     "list-group-item list-group-item-action " + (page === "actsList" ? "selected" : "unselected")
-                  }
-               >
-                  <FormatListBulletedIcon width={30} /> <br />
-                  {"Tous les actes"}
-               </a>
-            </Link>
-            <Link href="/fillEmployments">
-               <a
-                  className={
-                     "list-group-item list-group-item-action " +
-                     (page === "fillEmployments" ? "selected" : "unselected")
-                  }
-               >
-                  <FormatListBulletedIcon width={30} /> <br />
-                  {"Personnel"}
-               </a>
-            </Link>
+            {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
+               <Link href="/actDeclaration">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " +
+                        (page === "actDeclaration" ? "selected" : "unselected")
+                     }
+                  >
+                     <AddCircleOutlineIcon width={30} />
+                     <br />
+                     {"Ajout d'acte"}
+                  </a>
+               </Link>
+            )}
+            {isAllowed(currentUser.role, ACT_CONSULTATION) && (
+               <Link href="/actsList">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " + (page === "actsList" ? "selected" : "unselected")
+                     }
+                  >
+                     <FormatListBulletedIcon width={30} /> <br />
+                     {"Tous les actes"}
+                  </a>
+               </Link>
+            )}
+            {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
+               <Link href="/fillEmployments">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " +
+                        (page === "fillEmployments" ? "selected" : "unselected")
+                     }
+                  >
+                     <FormatListBulletedIcon width={30} /> <br />
+                     {"Personnel"}
+                  </a>
+               </Link>
+            )}
             <Link href="/home">
                <a className="list-group-item list-group-item-action">
                   <EqualizerIcon width={30} /> <br />
@@ -255,6 +263,7 @@ const Sidebar = ({ page }) => {
 
 Sidebar.propTypes = {
    page: PropTypes.string,
+   currentUser: PropTypes.object,
 }
 
 const Layout = ({ children, page, currentUser }) => {
@@ -264,7 +273,7 @@ const Layout = ({ children, page, currentUser }) => {
             <Header currentUser={currentUser} />
             <div id="wrapper" className="d-flex">
                <div id="sidebar-wrapper" className="border-right">
-                  <Sidebar page={page} />
+                  <Sidebar page={page} currentUser={currentUser} />
                </div>
                <div id="page-content-wrapper">
                   <main style={{ flexGrow: 1 }}>{children}</main>

@@ -39,6 +39,14 @@ export const ROLES = {
    ],
    OPERATOR_ACT: [ACT_CONSULTATION, ACT_MANAGEMENT, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un gestionnaire d'acte
    OPERATOR_EMPLOYMENT: [EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT, ACT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un gestionnaire d'ETP
+   OPERATOR_GENERIC: [
+      EMPLOYMENT_CONSULTATION,
+      EMPLOYMENT_MANAGEMENT,
+      ACT_CONSULTATION,
+      ACT_MANAGEMENT,
+      STATS_LOCAL,
+      STATS_GLOBAL,
+   ], // un gestionnaire d'actes et d'ETP
    GUEST_HOSPITAL: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
    SUPER_ADMIN: PRIVILEGES, // le super admin qui a tous les privilèges
    REGIONAL_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un ARS par exemple
@@ -49,6 +57,7 @@ export const ROLES_DESCRIPTION = {
    ADMIN_HOSPITAL: "Administrateur d'UMJ ou d'IML",
    OPERATOR_ACT: "Gestionnaire d'actes",
    OPERATOR_EMPLOYMENT: "Gestionnaire d'emplois",
+   OPERATOR_GENERIC: "Gestionnaire d'actes et ETP",
    GUEST_HOSPITAL: "Invité",
    SUPER_ADMIN: "Administrateur de Medlé",
    PUBLIC_SUPERVISOR: "Superviseur publique",
@@ -57,7 +66,8 @@ export const ROLES_DESCRIPTION = {
 
 export const START_PAGES = {
    OPERATOR_EMPLOYMENT: "/fillEmployments",
-   OPERATOR_ACT: "/actDeclaration",
+   OPERATOR_ACT: "/actsList",
+   OPERATOR_GENERIC: "/actsList",
 }
 
 export const isAllowed = (role, privilege) => ROLES[role] && ROLES[role].includes(privilege)
