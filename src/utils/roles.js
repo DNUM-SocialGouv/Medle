@@ -9,6 +9,7 @@ export const ADD_USER_OPERATOR_ACT = "ADD_USER_OPERATOR_ACT" // peut ajouter un 
 export const ADD_USER_OPERATOR_EMPLOYMENT = "ADD_USER_OPERATOR_EMPLOYMENT" // peut ajouter un utilisateur gestionnaire d'ETP pour un ou plusieurs ETS
 export const ADD_USER_ADMIN_HOSPITAL = "ADD_USER_ADMIN_HOSPITAL" // peut ajouter un utilisateur administrateur d'un ETS pouvant créer des administrateurs d'actes et des administrateurs d'ETP pour un ou plusieurs ETS
 export const ADD_TYPE_VIOLENCE = "ADD_TYPE_VIOLENCE" // peut ajouter des types de violences occasionnellement (attentat, etc.)
+export const NO_PRIVILEGE_REQUIRED = "NO_PRIVILEGE_REQUIRED"
 
 export const PRIVILEGES = [
    HOSPITAL_DETAILS_MANAGEMENT,
@@ -54,14 +55,14 @@ export const ROLES = {
 }
 
 export const ROLES_DESCRIPTION = {
-   ADMIN_HOSPITAL: "Administrateur d'UMJ ou d'IML",
-   OPERATOR_ACT: "Gestionnaire d'actes",
-   OPERATOR_EMPLOYMENT: "Gestionnaire d'emplois",
-   OPERATOR_GENERIC: "Gestionnaire d'actes et ETP",
-   GUEST_HOSPITAL: "Invité",
-   SUPER_ADMIN: "Administrateur de Medlé",
-   PUBLIC_SUPERVISOR: "Superviseur publique",
-   REGIONAL_SUPERVISOR: "Superviseur de plusieurs UMJ ou IML",
+   ADMIN_HOSPITAL: "Administrateur d'UMJ ou d'IML", // no scope, 1 hospital_id
+   OPERATOR_ACT: "Gestionnaire d'actes", // no scope, 1 hospital_id
+   OPERATOR_EMPLOYMENT: "Gestionnaire d'emplois", // no scope, 1 hospital_id
+   OPERATOR_GENERIC: "Gestionnaire d'actes et ETP", // no scope, 1 hospital_id
+   GUEST_HOSPITAL: "Invité", // no scope, 1 hospital_id
+   SUPER_ADMIN: "Administrateur de Medlé", // no scope, no hospital_id
+   PUBLIC_SUPERVISOR: "Superviseur publique", // no scope, no hospital_id
+   REGIONAL_SUPERVISOR: "Superviseur de plusieurs UMJ ou IML", // n hospitals in scope, no hospital_id
 }
 
 export const START_PAGES = {

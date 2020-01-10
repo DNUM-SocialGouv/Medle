@@ -44,7 +44,7 @@ const ActsListPage = ({ initialActs, currentUser }) => {
       try {
          acts = await fetchData(search)
       } catch (error) {
-         console.error(error)
+         console.error("APP error", error)
          setIsError("Erreur en base de données")
       } finally {
          setIsLoading(false)
@@ -122,7 +122,13 @@ const ActsListPage = ({ initialActs, currentUser }) => {
 }
 
 ActsListPage.getInitialProps = async () => {
-   return { initialActs: await fetchData() }
+   try {
+      const acts = await fetchData()
+      return { initialActs: acts }
+   } catch (error) {
+      console.error("APP error", error)
+   }
+   return {}
 }
 
 ActsListPage.propTypes = {

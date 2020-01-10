@@ -172,8 +172,8 @@ ActDetail.getInitialProps = async ({ query }) => {
 }
 
 ActDetail.propTypes = {
-   initialAct: PropTypes.object.isRequired,
-   id: PropTypes.string.isRequired,
+   initialAct: PropTypes.object,
+   id: PropTypes.string,
    error: PropTypes.string,
    currentUser: PropTypes.object.isRequired,
 }

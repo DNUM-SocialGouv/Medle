@@ -1,12 +1,14 @@
 import React, { useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { PropTypes } from "prop-types"
 import Layout from "../components/Layout"
 import { Container, Row } from "reactstrap"
 import { Button, Title1 } from "../components/StyledComponents"
 import Add from "@material-ui/icons/Add"
+import { withAuthentication } from "../utils/auth"
 
-const ActConfirmationPage = () => {
+const ActConfirmationPage = ({ currentUser }) => {
    const router = useRouter()
    const { internalNumber, pvNumber, edit } = router.query
    const pvText = pvNumber && `(PV: ${pvNumber}) `
@@ -17,7 +19,7 @@ const ActConfirmationPage = () => {
    })
 
    return (
-      <Layout>
+      <Layout currentUser={currentUser}>
          <Container>
             <Title1 className="mt-5">
                {`L'acte #${internalNumber} ${pvText}a été ${edit ? "modifié" : "ajouté"}.`}
@@ -41,4 +43,8 @@ const ActConfirmationPage = () => {
    )
 }
 
-export default ActConfirmationPage
+ActConfirmationPage.propTypes = {
+   currentUser: PropTypes.object.isRequired,
+}
+
+export default withAuthentication(ActConfirmationPage)
