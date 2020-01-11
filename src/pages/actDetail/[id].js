@@ -2,17 +2,18 @@ import React, { useState } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import PropTypes from "prop-types"
-
 import moment from "moment"
-import { FORMAT_DATE } from "../../utils/constants"
-import { withAuthentication } from "../../utils/auth"
-import { API_URL, ACT_DETAIL_ENDPOINT, ACT_DELETE_ENDPOINT } from "../../config"
 import fetch from "isomorphic-unfetch"
+import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap"
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
+import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
+
+import { FORMAT_DATE } from "../../utils/date"
+import { API_URL, ACT_DETAIL_ENDPOINT, ACT_DELETE_ENDPOINT } from "../../config"
 import Layout from "../../components/Layout"
 import ColumnAct from "../../components/ColumnAct"
 import { Title1, Title2 } from "../../components/StyledComponents"
 import { isEmpty } from "../../utils/misc"
-import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap"
 import { VictimDetail } from "../../components/profiles/VictimProfile"
 import { CustodyDetail } from "../../components/profiles/CustodyProfile"
 import { DeceasedDetail } from "../../components/profiles/DeceasedProfile"
@@ -23,9 +24,7 @@ import { ReconstitutionDetail } from "../../components/profiles/ReconstitutionPr
 import { DrunkDetail } from "../../components/profiles/DrunkProfile"
 import { RestrainedDetail } from "../../components/profiles/RestrainedProfile"
 import { handleAPIResponse } from "../../utils/errors"
-
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
-import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
+import { buildOptionsFetch, withAuthentication } from "../../utils/auth"
 import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT } from "../../utils/roles"
 
 const ActDetail = ({ initialAct, id, error, currentUser }) => {
@@ -157,12 +156,14 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
    )
 }
 
-ActDetail.getInitialProps = async ({ query }) => {
-   const { id } = query
+ActDetail.getInitialProps = async ctx => {
+   const optionsFetch = buildOptionsFetch(ctx)
+
+   const { id } = ctx.query
 
    let json
    try {
-      const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
+      const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id, optionsFetch)
       json = await handleAPIResponse(response)
       return { initialAct: json, id }
    } catch (error) {

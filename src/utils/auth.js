@@ -47,10 +47,14 @@ export const getCurrentUserFromSessionStorage = () => {
 }
 
 const getTokenFromCookie = ctx => {
+   // Can't work on client side
+   if (!ctx || !ctx.req) return ""
+
    const cookieContent = ctx.req.headers.cookie
 
    if (!cookieContent) return ""
 
+   // Not useful to verify that token is valid Max-Age wise, since the API will verify it for us
    const res = cookieContent
       .split(";")
       .map(elt => elt.trim())
@@ -62,6 +66,18 @@ const getTokenFromCookie = ctx => {
    } else {
       return res[0].replace(/token=/, "")
    }
+}
+
+// On server side, fetch need to carry the cookie which contains the JWT token, so here we prepare the options
+export const buildOptionsFetch = ctx => {
+   const token = getTokenFromCookie(ctx)
+   return token
+      ? {
+           headers: {
+              cookie: `token=${token}`,
+           },
+        }
+      : null
 }
 
 export const isomorphicRedirect = (ctx, url) => {

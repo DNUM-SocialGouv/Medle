@@ -1,10 +1,9 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
-import moment from "moment"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
-import { withAuthentication, getCurrentUser } from "../utils/auth"
-import { isAllowed, EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 
+import { withAuthentication, getCurrentUser, buildOptionsFetch } from "../utils/auth"
+import { isAllowed, EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 import Layout from "../components/Layout"
 import AccordionEmploymentsMonth, {
    hasErrors,
@@ -13,6 +12,7 @@ import AccordionEmploymentsMonth, {
 } from "../components/AccordionEmploymentsMonth"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { isEmpty } from "../utils/misc"
+import { now } from "../utils/date"
 
 const FillEmploymentsPage = ({
    currentMonth,
@@ -202,6 +202,7 @@ const FillEmploymentsPage = ({
                      hospitalId={hospitalId}
                      onChange={event => handleChange(event, month)}
                      update={update}
+                     currentUser={currentUser}
                   />
                ))}
             </>
@@ -211,6 +212,8 @@ const FillEmploymentsPage = ({
 }
 
 FillEmploymentsPage.getInitialProps = async ctx => {
+   const optionsFetch = buildOptionsFetch(ctx)
+
    const { hospitalId } = getCurrentUser(ctx)
 
    if (!hospitalId) {
@@ -232,8 +235,9 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       "12": "décembre",
    }
 
-   const currentMonth = moment().format("MM")
-   const currentYear = moment().format("YYYY")
+   const moment = now()
+   const currentMonth = moment.format("MM")
+   const currentYear = moment.format("YYYY")
 
    const allMonths = new Array(parseInt(currentMonth))
       .fill(0)
@@ -242,7 +246,7 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       .map(elt => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, month: elt }))
 
    try {
-      const json = await fetchDataMonth({ hospitalId, year: currentYear, month: currentMonth })
+      const json = await fetchDataMonth({ hospitalId, year: currentYear, month: currentMonth, optionsFetch })
 
       return {
          currentMonth,

@@ -9,7 +9,12 @@ module.exports = withCSS({
    env: {
       API_URL: process.env.API_URL,
    },
+   publicRuntimeConfig: {
+      // Will be available on both server and client
+      TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
+   },
    serverRuntimeConfig: {
+      // Will only be available on the server side
       JWT_SECRET: process.env.JWT_SECRET,
    },
 })

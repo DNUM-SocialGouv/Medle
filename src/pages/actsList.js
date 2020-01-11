@@ -1,21 +1,21 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
-import { withAuthentication } from "../utils/auth"
+import { buildOptionsFetch, withAuthentication } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
 import fetch from "isomorphic-unfetch"
 import Layout from "../components/Layout"
 import { Title1 } from "../components/StyledComponents"
 import moment from "moment"
-import { FORMAT_DATE } from "../utils/constants"
+import { FORMAT_DATE } from "../utils/date"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 import { ACT_CONSULTATION } from "../utils/roles"
 
 import { handleAPIResponse } from "../utils/errors"
 
-const fetchData = async search => {
+const fetchData = async ({ search, optionsFetch }) => {
    const bonus = search ? `?fuzzy=${search}` : ""
-   const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}${bonus}`)
+   const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}${bonus}`, optionsFetch)
 
    return handleAPIResponse(response)
 }
@@ -42,7 +42,7 @@ const ActsListPage = ({ initialActs, currentUser }) => {
       let acts
 
       try {
-         acts = await fetchData(search)
+         acts = await fetchData({ search })
       } catch (error) {
          console.error("APP error", error)
          setIsError("Erreur en base de données")
@@ -121,9 +121,11 @@ const ActsListPage = ({ initialActs, currentUser }) => {
    )
 }
 
-ActsListPage.getInitialProps = async () => {
+ActsListPage.getInitialProps = async ctx => {
+   const optionsFetch = buildOptionsFetch(ctx)
+
    try {
-      const acts = await fetchData()
+      const acts = await fetchData({ optionsFetch })
       return { initialActs: acts }
    } catch (error) {
       console.error("APP error", error)

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Alert, Button, Col, Input, Row, FormFeedback } from "reactstrap"
-import { Label, AnchorButton } from "../components/StyledComponents"
-
-import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
-
-import { isEmpty } from "../utils/misc"
-import { handleAPIResponse } from "../utils/errors"
-
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import EditOutlinedIcon from "@material-ui/icons/Edit"
+import fetch from "isomorphic-unfetch"
+
+import { Label, AnchorButton } from "../components/StyledComponents"
+import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
+import { isEmpty } from "../utils/misc"
+import { handleAPIResponse } from "../utils/errors"
+import { isAllowed, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 
 export const hasErrors = dataMonth => {
    const errors = {}
@@ -43,10 +43,8 @@ export const hasErrors = dataMonth => {
    return errors
 }
 
-export const fetchDataMonth = async ({ hospitalId, year, month }) => {
-   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
-      method: "GET",
-   })
+export const fetchDataMonth = async ({ hospitalId, year, month, optionsFetch }) => {
+   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, optionsFetch)
    return handleAPIResponse(response)
 }
 
@@ -58,7 +56,7 @@ export const updateDataMonth = async ({ hospitalId, year, month, dataMonth }) =>
    await handleAPIResponse(response)
 }
 
-const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnly }) => {
+const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnly, currentUser }) => {
    const [open, setOpen] = useState(false)
    const [readOnlyState, setReadOnlyState] = useState(readOnly)
    const [errors, setErrors] = useState()
@@ -117,7 +115,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
          {open && (
             <div className="px-2">
                <div className="text-right pr-2 pt-3 pb-2">
-                  {readOnlyState ? (
+                  {!isAllowed(currentUser.role, EMPLOYMENT_MANAGEMENT) ? null : readOnlyState ? (
                      <Button outline onClick={toggleReadOnly} style={{ border: 0 }}>
                         <EditOutlinedIcon width={24} />
                      </Button>
@@ -249,6 +247,7 @@ AccordionEmploymentsMonth.propTypes = {
    hospitalId: PropTypes.string.isRequired,
    update: PropTypes.func.isRequired,
    readOnly: PropTypes.bool.isRequired,
+   currentUser: PropTypes.object,
 }
 
 AccordionEmploymentsMonth.defaultProps = {

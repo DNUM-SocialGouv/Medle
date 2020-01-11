@@ -30,7 +30,8 @@ import {
 } from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../utils/roles"
-import { withAuthentication } from "../utils/auth"
+import { buildOptionsFetch, withAuthentication } from "../utils/auth"
+import { now } from "../utils/date"
 
 // internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
@@ -97,7 +98,7 @@ const hasErrors = state => {
       if (!date.isValid()) {
          errors = { ...errors, examinationDate: "Format incorrect" }
       } else {
-         if (date > moment()) {
+         if (date > now()) {
             errors = { ...errors, examinationDate: "La date doit être passée" }
          }
       }
@@ -496,6 +497,8 @@ const transformDBActForState = act => {
 }
 
 ActDeclaration.getInitialProps = async ctx => {
+   const optionsFetch = buildOptionsFetch(ctx)
+
    const {
       query: { id },
    } = ctx
@@ -504,7 +507,7 @@ ActDeclaration.getInitialProps = async ctx => {
 
    if (id) {
       try {
-         const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id)
+         const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id, optionsFetch)
          act = await handleAPIResponse(response)
       } catch (error) {
          console.error(error)
