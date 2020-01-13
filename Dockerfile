@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json .
 COPY yarn.lock .
 
-RUN yarn install
+RUN yarn install --production --frozen-lockfile
 
 COPY . .
 
@@ -25,10 +25,17 @@ ENV MATOMO_SITE_ID=$MATOMO_SITE_ID
 ARG POSTGRES_HOST
 ENV POSTGRES_HOST=$POSTGRES_HOST
 
-RUN yarn build && yarn --production
+ARG JWT_SECRET
+ENV JWT_SECRET=$JWT_SECRET
 
-USER node
+ARG TEST_CURRENT_DATE
+ENV TEST_CURRENT_DATE=$TEST_CURRENT_DATE
 
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN yarn build
+
+USER node
 
 CMD ["yarn", "start"]
