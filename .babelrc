@@ -1,18 +1,24 @@
 {
-    "presets": [
+  "presets": [
+    [
       "next/babel",
-      [
-        "@babel/preset-env",
-        {
+      {
+        "preset-env": {
           "targets": {
             "esmodules": true
           }
         }
-      ]],
-    "plugins": [
-        [
-          "styled-components",
-          { "ssr": true, "displayName": true, "preprocess": false }
-        ]
+      }
     ]
+  ],
+  "plugins": [
+    [
+      "styled-components",
+      {
+        "ssr": true,
+        "displayName": true,
+        "preprocess": false
+      }
+    ]
+  ]
 }

@@ -1,6 +1,6 @@
 import React from "react"
 import { cleanup, render, fireEvent, waitForElement } from "@testing-library/react"
-import Login from "../login"
+import Login from "../Login"
 import { act } from "react-dom/test-utils"
 
 describe("<Login> component tests", () => {
@@ -26,27 +26,27 @@ describe("<Login> component tests", () => {
       expect(getByTestId("loading")).toBeTruthy()
    })
 
-   it.skip("should display an error in case of loading authentication issue", async () => {
-      const fn = jest.fn(() => {
-         return Promise.reject("Erreur xxx")
-      })
+   // it("should display an error in case of loading authentication issue", async () => {
+   //    const fn = jest.fn(() => {
+   //       return Promise.reject("Erreur xxx")
+   //    })
 
-      const { getByText, findByText, getByTestId, queryByTestId } = render(<Login authentication={fn} error={null} />)
+   //    const { getByText, findByText, getByTestId, queryByTestId } = render(<Login authentication={fn} error={null} />)
 
-      fireEvent.click(getByText("Se connecter"))
+   //    fireEvent.click(getByText("Se connecter"))
 
-      expect(fn).toHaveBeenCalledTimes(1)
+   //    expect(fn).toHaveBeenCalledTimes(1)
 
-      expect(getByTestId("loading")).not.toBeNull()
+   //    expect(getByTestId("loading")).not.toBeNull()
 
-      let erreurDiv
+   //    let erreurDiv
 
-      await waitForElement(() => {
-         erreurDiv = findByText("Erreur xxx")
-      })
+   //    await waitForElement(() => {
+   //       erreurDiv = findByText("Erreur xxx")
+   //    })
 
-      expect(erreurDiv).not.toBeTruthy()
+   //    expect(erreurDiv).not.toBeTruthy()
 
-      expect(queryByTestId("loading")).toBeNull()
-   })
+   //    expect(queryByTestId("loading")).toBeNull()
+   // })
 })
