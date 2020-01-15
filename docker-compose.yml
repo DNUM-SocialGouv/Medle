@@ -30,6 +30,7 @@ services:
             - MATOMO_URL=https://matomo.tools.factory.social.gouv.fr
             - MATOMO_SITE_ID=16
             - POSTGRES_HOST=db
+            - JWT_SECRET=${JWT_SECRET:-j63NFc@YNWThqZ}
       ports:
          - 80:3000
 
