@@ -38,7 +38,7 @@ const BoneAgeProfile = ({ dispatch, state, errors }) => {
             type="personGender"
             title=""
             subTitle="Genre"
-            values={["Féminin", "Masculin", "Autre", "Non déterminé"]}
+            values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personGender || ""}
