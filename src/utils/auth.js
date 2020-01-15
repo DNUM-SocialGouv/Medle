@@ -3,6 +3,14 @@ import Router from "next/router"
 import { API_URL, LOGOUT_ENDPOINT } from "../config"
 import * as jwt from "jsonwebtoken"
 import { isAllowed, START_PAGES } from "./roles"
+import moment from "moment"
+
+// Timeout config : keep this timeout values in sync
+export const timeout = {
+   jwt: "7h",
+   cookie: 7 * 60 * 60,
+   session: { hours: 7 },
+}
 
 /**
  * Remarks on cookie & session storage:
@@ -23,7 +31,7 @@ export const logout = async () => {
 }
 
 export const registerAndRedirectUser = json => {
-   sessionStorage.setItem("currentUser", JSON.stringify(json))
+   sessionStorage.setItem("currentUser", JSON.stringify({ ...json, authentifiedAt: moment() }))
 
    const startPage = START_PAGES[json.role] || "/actDeclaration"
 
@@ -91,15 +99,19 @@ export const isomorphicRedirect = (ctx, url) => {
    }
 }
 
+const sessionTooOld = currentUser => {
+   return currentUser.authentifiedAt && moment(currentUser.authentifiedAt).add(timeout.session) < moment()
+}
+
 export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
    const Wrapper = props => <WrappedComponent {...props} />
 
    Wrapper.getInitialProps = async ctx => {
       const currentUser = getCurrentUser(ctx)
 
-      if (!currentUser) {
-         console.error("Pas de currentUser trouvé en cookie ou en SessionStorage. Redirection sur index")
-         isomorphicRedirect(ctx, "/index")
+      if (!currentUser || sessionTooOld(currentUser)) {
+         console.error("Pas de currentUser 1 trouvé en cookie ou en SessionStorage. Redirection sur index")
+         isomorphicRedirect(ctx, "/index?sessionTimeout=1")
       }
 
       if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {

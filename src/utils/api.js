@@ -1,4 +1,9 @@
-import { STATUS_401_UNAUTHORIZED, STATUS_405_METHOD_NOT_ALLOWED, STATUS_500_INTERNAL_SERVER_ERROR } from "./http"
+import {
+   STATUS_401_UNAUTHORIZED,
+   STATUS_403_FORBIDDEN,
+   STATUS_405_METHOD_NOT_ALLOWED,
+   STATUS_500_INTERNAL_SERVER_ERROR,
+} from "./http"
 import { isAllowed, NO_PRIVILEGE_REQUIRED } from "./roles"
 import { checkToken, decodeToken } from "./jwt"
 import { APIError } from "./errors"
@@ -33,7 +38,7 @@ export const checkValidUserWithPrivilege = (privilege, req) => {
       if (privilege !== NO_PRIVILEGE_REQUIRED && !isAllowed(currentUser.role, privilege)) {
          throw new APIError({
             message: `Not allowed role  (${currentUser.email ? currentUser.email : "unknown user"})`,
-            status: STATUS_401_UNAUTHORIZED,
+            status: STATUS_403_FORBIDDEN,
          })
       } else {
          return currentUser

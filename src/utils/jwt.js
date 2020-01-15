@@ -1,11 +1,12 @@
 import * as jwt from "jsonwebtoken"
 import getConfig from "next/config"
 const { serverRuntimeConfig } = getConfig()
+import { timeout } from "./auth"
 
 const jwtConfig = {
    secret: serverRuntimeConfig.JWT_SECRET || "JHo$aY@2&o7m", // only for dev
    options: {
-      expiresIn: "7h",
+      expiresIn: timeout.jwt,
       algorithm: "HS256",
    },
 }

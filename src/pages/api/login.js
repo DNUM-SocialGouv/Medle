@@ -4,12 +4,14 @@ import { generateToken } from "../../utils/jwt"
 
 import { STATUS_200_OK, STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, METHOD_POST } from "../../utils/http"
 import { sendAPIError, checkHttpMethod } from "../../utils/api"
+import { timeout } from "../../utils/auth"
 
 const validPassword = password => {
    return password.length
 }
 
-const maxDurationCookies = 7 * 60 * 60 // 7 heures max. TODO: mettre en config (cf. expiration JWT)
+// const maxDurationCookies = 7 * 60 * 60 // 7 heures max. TODO: mettre en config (cf. expiration JWT)
+const maxDurationCookies = timeout.cookie
 
 const extractPublicData = ({
    id,

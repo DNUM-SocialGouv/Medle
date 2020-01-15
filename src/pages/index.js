@@ -5,9 +5,10 @@ import { API_URL, LOGIN_ENDPOINT } from "../config"
 import Login from "../components/Login"
 import { handleAPIResponse } from "../utils/errors"
 import { registerAndRedirectUser } from "../utils/auth"
+import PropTypes from "prop-types"
 
-const LoginPage = () => {
-   const [error, setError] = useState("")
+const LoginPage = ({ message }) => {
+   const [error, setError] = useState(message || "")
    const isValidUserData = ({ email, password }) => !!(email && password)
    let isMounted = false
 
@@ -72,6 +73,21 @@ const LoginPage = () => {
          `}</style>
       </>
    )
+}
+
+LoginPage.propTypes = {
+   message: PropTypes.string,
+}
+
+LoginPage.getInitialProps = async ctx => {
+   const {
+      query: { sessionTimeout },
+   } = ctx
+
+   if (sessionTimeout) {
+      return { message: "Votre session s'est terminée." }
+   }
+   return {}
 }
 
 export default LoginPage
