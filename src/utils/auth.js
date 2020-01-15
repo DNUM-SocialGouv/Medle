@@ -76,7 +76,7 @@ const getTokenFromCookie = ctx => {
    }
 }
 
-// On server side, fetch need to carry the cookie which contains the JWT token, so here we prepare the options
+// On server side, fetch needs to carry the cookie which contains the JWT token, so here we prepare the options
 export const buildOptionsFetch = ctx => {
    const token = getTokenFromCookie(ctx)
    return token
