@@ -68,7 +68,6 @@ sudo docker-compose exec app yarn migrate:latest
 
 ## Run seeds
 
-
 sudo docker-compose exec app yarn seed:run
 
 ## TimeZone
@@ -82,10 +81,13 @@ select now();`
 
 ## Ajouter un user en base de données
 
-`INSERT INTO USERS (first_name, last_name, email, password, role, hospital_id)
-VALUES ('Dominique', 'Cormier', 'dom.cormier@gmail.com', 'test', 'SUPERVISOR_HOSPITAL', 1);`
+`INSERT INTO USERS (first_name, last_name, email, password, role, hospital_id, scope)
+VALUES ('Dominique', 'Cormier', 'dom.cormier@gmail.com', 'password-with-bcrypt', 'OPERATOR_ACT', 1, null);`
 
-__Comment générer un mdp?__
+`INSERT INTO USERS (first_name, last_name, email, password, role, hospital_id, scope)
+VALUES ('Dominique', 'Cormier', 'dom.cormier@gmail.com', 'password-with-bcrypt', 'OPERATOR_EMPLOYMENT', 1, null);`
 
-Il faut utiliser un site qui permet de générer un hash bcrypt à partir d'un texte. Attention : il faut que le hash généré commence par 2a et non pas 2y, comme le montre l'exemple précédent.
-Ex: https://www.browserling.com/tools/bcrypt
+`INSERT INTO USERS (first_name, last_name, email, password, role, hospital_id, scope)
+VALUES ('Marc', 'Legrand', 'marc.legrand@yahoo.fr', 'password-with-bcrypt', 'REGIONAL_SUPERVISOR', null, {1, 2, 3});`
+
+Use bcrypt generator, like : https://www.browserling.com/tools/bcrypt
