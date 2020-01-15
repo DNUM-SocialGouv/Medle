@@ -5,7 +5,7 @@ const { serverRuntimeConfig } = getConfig()
 const jwtConfig = {
    secret: serverRuntimeConfig.JWT_SECRET || "JHo$aY@2&o7m", // only for dev
    options: {
-      expiresIn: "2h",
+      expiresIn: "7h",
       algorithm: "HS256",
    },
 }

@@ -9,7 +9,7 @@ const validPassword = password => {
    return password.length
 }
 
-const maxDurationCookies = 2 * 60 * 60 // 2 heures max. TODO: mettre en confi (cf. expiration JWT)
+const maxDurationCookies = 7 * 60 * 60 // 7 heures max. TODO: mettre en config (cf. expiration JWT)
 
 const extractPublicData = ({
    id,
