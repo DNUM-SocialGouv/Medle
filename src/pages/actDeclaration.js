@@ -27,6 +27,7 @@ import {
    ReconstitutionProfile,
    DrunkProfile,
    RestrainedProfile,
+   RoadRelatedExaminationProfile,
 } from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../utils/roles"
@@ -41,7 +42,7 @@ const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) 
       return {
          pvNumber: pvNumber || "",
          internalNumber: internalNumber || "",
-         examinationDate: "",
+         examinationDate: moment(now()).format("YYYY-MM-DD"),
          askerId: null,
          profile: "",
          addedBy: userId || "",
@@ -71,14 +72,14 @@ const resetState = ({
 })
 
 const profileValues = [
-   "Victime",
+   "Victime (vivante)",
    "Gardé.e à vue",
+   "Personne pour âge osseux (hors GAV)",
+   "Examen pour OFPRA",
    "Personne décédée",
-   "Personne pour âge osseux",
-   "Demandeuse d'asile (risque excision)",
    {
       title: "Autre activité",
-      subValues: ["Assises", "Reconstitution", "IPM", "Examen lié à la route", "Personne retenue"],
+      subValues: ["Personne retenue", "Examen lié à la route", "IPM", "Assises", "Reconstitution"],
    },
 ]
 
@@ -150,14 +151,14 @@ const reduceByMode = (state, action) => {
    }
 }
 
-const ActDeclaration = ({ act, error: _error, currentUser }) => {
+const ActDeclaration = ({ act, currentUser }) => {
    // useTraceUpdate(props)
 
    // console.log("ActDeclaration:render")
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
-   const [errors, setErrors] = useState(_error ? { general: _error } : {})
+   const [errors, setErrors] = useState({})
    const [warnings, setWarnings] = useState({})
 
    const { id: userId, hospitalId } = currentUser
@@ -220,7 +221,7 @@ const ActDeclaration = ({ act, error: _error, currentUser }) => {
    )
 
    const PROFILES = {
-      Victime: {
+      "Victime (vivante)": {
          render: <VictimProfile dispatch={dispatch} state={state} errors={errors} />,
          hasErrors: VictimProfile.hasErrors,
       },
@@ -228,17 +229,29 @@ const ActDeclaration = ({ act, error: _error, currentUser }) => {
          render: <CustodyProfile dispatch={dispatch} state={state} errors={errors} />,
          hasErrors: CustodyProfile.hasErrors,
       },
-      "Personne décédée": {
-         render: <DeceasedProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: DeceasedProfile.hasErrors,
-      },
       "Personne pour âge osseux": {
          render: <BoneAgeProfile dispatch={dispatch} state={state} errors={errors} />,
          hasErrors: BoneAgeProfile.hasErrors,
       },
-      "Demandeuse d'asile (risque excision)": {
+      "Personne décédée": {
+         render: <DeceasedProfile dispatch={dispatch} state={state} errors={errors} />,
+         hasErrors: DeceasedProfile.hasErrors,
+      },
+      "Examen pour OFPRA": {
          render: <AsylumSeekerProfile dispatch={dispatch} state={state} errors={errors} />,
          hasErrors: AsylumSeekerProfile.hasErrors,
+      },
+      "Autre activité/Personne retenue": {
+         render: <RestrainedProfile dispatch={dispatch} state={state} errors={errors} />,
+         hasErrors: RestrainedProfile.hasErrors,
+      },
+      "Autre activité/Examen lié à la route": {
+         render: <RoadRelatedExaminationProfile dispatch={dispatch} state={state} errors={errors} />,
+         hasErrors: RoadRelatedExaminationProfile.hasErrors,
+      },
+      "Autre activité/IPM": {
+         render: <DrunkProfile dispatch={dispatch} state={state} errors={errors} />,
+         hasErrors: DrunkProfile.hasErrors,
       },
       "Autre activité/Assises": {
          render: <CriminalCourtProfile dispatch={dispatch} state={state} errors={errors} />,
@@ -247,14 +260,6 @@ const ActDeclaration = ({ act, error: _error, currentUser }) => {
       "Autre activité/Reconstitution": {
          render: <ReconstitutionProfile dispatch={dispatch} state={state} errors={errors} />,
          hasErrors: ReconstitutionProfile.hasErrors,
-      },
-      "Autre activité/IPM": {
-         render: <DrunkProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: DrunkProfile.hasErrors,
-      },
-      "Autre activité/Personne retenue": {
-         render: <RestrainedProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: RestrainedProfile.hasErrors,
       },
    }
 
@@ -386,7 +391,8 @@ const ActDeclaration = ({ act, error: _error, currentUser }) => {
                      id="examinationDate"
                      invalid={errors && !!errors.examinationDate}
                      type="date"
-                     value={state.examinationDate}
+                     value={state.examinationDate || moment(now()).format("YYYY-MM-DD")}
+                     // value={state.examinationDate}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                   />
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
@@ -437,7 +443,13 @@ const ActDeclaration = ({ act, error: _error, currentUser }) => {
             </Title2>
 
             {state.proofWithoutComplaint ? (
-               <ActBlock type="profile" values={["Victime"]} mode="toggle" dispatch={dispatch} state={state.profile} />
+               <ActBlock
+                  type="profile"
+                  values={["Victime (vivante)"]}
+                  mode="toggle"
+                  dispatch={dispatch}
+                  state={state.profile}
+               />
             ) : !state.id ? (
                <ActBlock
                   type="profile"

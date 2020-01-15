@@ -15,8 +15,8 @@ const CustodyProfile = ({ dispatch, state, errors }) => {
       <>
          <ActBlock
             type="examinationTypes"
-            title="Type(s) d'examen"
-            values={["Somatique", "Psychiatrique", "Âge osseux"]}
+            title="Type(s) d'acte"
+            values={["Somatique", "Psychiatrique"]}
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
@@ -54,19 +54,10 @@ const CustodyProfile = ({ dispatch, state, errors }) => {
             invalid={!!errors.periodOfDay}
          />
          <ActBlock
-            type="prescription"
-            title="Prescription d'ordonnance"
-            values={["Oui", "Non"]}
-            mode="toggle"
-            dispatch={dispatch}
-            state={state.prescription || ""}
-            invalid={!!errors.prescription}
-         />
-         <ActBlock
             type="location"
             title="Lieu de l'examen"
-            values={["UMJ", "Hôpital", "Commissariat", "Brigade de gendardmerie"]}
-            mode="toggle"
+            values={["UMJ", "Commissariat", "Gendarmerie"]}
+            mode="toggleMultiple"
             dispatch={dispatch}
             state={state.location || []}
             invalid={!!errors.location}
@@ -78,7 +69,7 @@ const CustodyProfile = ({ dispatch, state, errors }) => {
             type="personGender"
             title=""
             subTitle="Genre"
-            values={["Féminin", "Masculin", "Autre", "Non déterminé"]}
+            values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personGender || ""}
@@ -114,13 +105,10 @@ export const CustodyDetail = act => {
                <ColumnAct header={"Statut"} values={act && act.profile} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Type(s) d'examen"} values={act && act.examinationTypes} />
+               <ColumnAct header={"Type(s) d'acte"} values={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
                <ColumnAct header={"Examens complémentaires"} values={examinations} />
-            </Col>
-            <Col className="mr-3">
-               <ColumnAct header={"Prescription d'ordonnance"} values={act.prescription} />
             </Col>
          </Row>
          <Col className="mr-3">

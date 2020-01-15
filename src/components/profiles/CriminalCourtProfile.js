@@ -10,7 +10,7 @@ const CriminalCourtProfile = ({ dispatch, state, errors }) => {
          <ActBlock
             type="mode"
             title="Modalités"
-            values={["Présentiel", "À distance"]}
+            values={["Présentiel", "En visioconférence"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.mode || []}

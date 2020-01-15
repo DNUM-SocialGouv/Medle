@@ -14,7 +14,7 @@ const BoneAgeProfile = ({ dispatch, state, errors }) => {
       <>
          <ActBlock
             type="examinationTypes"
-            title="Type(s) d'examen"
+            title="Type(s) d'acte"
             values={["Scanner", "Radiographie", "Panoramique dentaire"]}
             mode="toggleMultiple"
             dispatch={dispatch}
@@ -56,7 +56,7 @@ export const BoneAgeDetail = act => {
                <ColumnAct header={"Statut"} values={act && act.profile} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Type(s) d'examen"} values={act && act.examinationTypes} />
+               <ColumnAct header={"Type(s) d'acte"} values={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3"></Col>
             <Col className="mr-3"></Col>

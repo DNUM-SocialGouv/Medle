@@ -15,7 +15,7 @@ const DrunkProfile = ({ dispatch, state, errors }) => {
       <>
          <ActBlock
             type="examinationTypes"
-            title="Type(s) d'examen"
+            title="Type(s) d'acte"
             values={["Somatique"]}
             mode="toggle"
             dispatch={dispatch}
@@ -34,8 +34,8 @@ const DrunkProfile = ({ dispatch, state, errors }) => {
          <ActBlock
             type="location"
             title="Lieu de l'examen"
-            values={["UMJ", "Commissariat", "Brigade de gendardmerie", "In situ"]}
-            mode="toggle"
+            values={["UMJ", "Commissariat", "Gendarmerie", "In situ"]}
+            mode="toggleMultiple"
             dispatch={dispatch}
             state={state.location || []}
             invalid={!!errors.location}
@@ -57,7 +57,7 @@ const DrunkProfile = ({ dispatch, state, errors }) => {
             type="personGender"
             title=""
             subTitle="Genre"
-            values={["Féminin", "Masculin", "Autre", "Non déterminé"]}
+            values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personGender || ""}
@@ -87,7 +87,7 @@ export const DrunkDetail = act => {
                <ColumnAct header={"Statut"} values={act && act.profile} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Type(s) d'examen"} values={act && act.examinationTypes} />
+               <ColumnAct header={"Type(s) d'acte"} values={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
                <ColumnAct header={"Examens complémentaires"} values={examinations} />

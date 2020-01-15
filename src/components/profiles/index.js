@@ -7,6 +7,7 @@ import DrunkProfile from "./DrunkProfile"
 import ReconstitutionProfile from "./ReconstitutionProfile"
 import RestrainedProfile from "./RestrainedProfile"
 import VictimProfile from "./VictimProfile"
+import RoadRelatedExaminationProfile from "./RoadRelatedExaminationProfile"
 
 export {
    AsylumSeekerProfile,
@@ -18,4 +19,5 @@ export {
    ReconstitutionProfile,
    RestrainedProfile,
    VictimProfile,
+   RoadRelatedExaminationProfile,
 }

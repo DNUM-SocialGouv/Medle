@@ -15,8 +15,8 @@ const DeceasedProfile = ({ dispatch, state, errors }) => {
       <>
          <ActBlock
             type="examinationTypes"
-            title="Type(s) d'examen"
-            values={["Externe", "Levée de corps", "Autopsie", "Anthropologie", "Odontologie"]}
+            title="Type(s) d'acte"
+            values={["Examen externe", "Levée de corps", "Autopsie", "Anthropologie", "Odontologie"]}
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
@@ -78,7 +78,7 @@ const DeceasedProfile = ({ dispatch, state, errors }) => {
             type="personGender"
             title=""
             subTitle="Genre"
-            values={["Féminin", "Masculin", "Autre", "Non déterminé"]}
+            values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personGender || ""}
@@ -116,7 +116,7 @@ export const DeceasedDetail = act => {
                <ColumnAct header={"Statut"} values={act && act.profile} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Type(s) d'examen"} values={act && act.examinationTypes} />
+               <ColumnAct header={"Type(s) d'acte"} values={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
                <ColumnAct header={"Examens complémentaires"} values={examinations} />

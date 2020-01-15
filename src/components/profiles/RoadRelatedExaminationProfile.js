@@ -5,9 +5,9 @@ import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
 import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
-import ColumnAct from "../../components/ColumnAct"
+import ColumnAct from "../ColumnAct"
 
-const VictimProfile = ({ dispatch, state, errors }) => {
+const RoadRelatedExaminationProfile = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -22,24 +22,6 @@ const VictimProfile = ({ dispatch, state, errors }) => {
             state={state.examinationTypes || []}
             invalid={!!errors.examinationTypes}
          />
-         <ActBlock
-            type="violenceTypes"
-            title="Type(s) de violence"
-            values={[
-               "Conjugale",
-               "Familiale",
-               "En réunion",
-               "Scolaire",
-               "Voie publique",
-               "Sur ascendant",
-               "Agression sexuelle",
-               { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] }, // TODO récupérer cette liste via API
-            ]}
-            mode="toggleMultiple"
-            dispatch={dispatch}
-            state={state.violenceTypes || []}
-            invalid={!!errors.violenceTypes}
-         />
          <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
@@ -53,7 +35,7 @@ const VictimProfile = ({ dispatch, state, errors }) => {
                   state={state.imagingExaminationsNumber || 0}
                   type={"imagingExaminationsNumber"}
                >
-                  Imagerie
+                  Imageries
                </Counter>
             </Col>
             <Col>
@@ -62,7 +44,15 @@ const VictimProfile = ({ dispatch, state, errors }) => {
                </Counter>
             </Col>
          </Row>
-
+         <ActBlock
+            type="location"
+            title="Lieu de l'examen"
+            values={["UMJ", "Locaux douaniers", "Centre de rétention"]}
+            mode="toggleMultiple"
+            dispatch={dispatch}
+            state={state.location || []}
+            invalid={!!errors.location}
+         />
          <ActBlock
             type="periodOfDay"
             title="Heure de l'examen"
@@ -72,6 +62,9 @@ const VictimProfile = ({ dispatch, state, errors }) => {
             state={state.periodOfDay || ""}
             invalid={!!errors.periodOfDay}
          />
+
+         <Title2 className="mb-2 mt-5">{"Profil de la personne retenue"}</Title2>
+
          <ActBlock
             type="personGender"
             title=""
@@ -86,7 +79,7 @@ const VictimProfile = ({ dispatch, state, errors }) => {
             type="personAgeTag"
             title=""
             subTitle="Âge"
-            values={["0-2 ans", "3-17 ans", "+ de 18 ans"]}
+            values={["Mineur", "Majeur", "Non déterminé"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personAgeTag || ""}
@@ -96,7 +89,7 @@ const VictimProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const VictimDetail = act => {
+export const RestrainedDetail = act => {
    const examinations = [
       [act.bioExaminationsNumber, "biologique"],
       [act.imagingExaminationsNumber, "imagerie"],
@@ -115,11 +108,16 @@ export const VictimDetail = act => {
                <ColumnAct header={"Type(s) d'acte"} values={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Type(s) de violence"} values={act && act.violenceTypes} />
-            </Col>
-            <Col className="mr-3">
                <ColumnAct header={"Examens complémentaires"} values={examinations} />
             </Col>
+         </Row>
+         <Row>
+            <Col className="mr-3">
+               <ColumnAct header={"Lieu de l'examen"} values={act.location} />
+            </Col>
+            <Col className="mr-3"></Col>
+            <Col className="mr-3"></Col>
+            <Col className="mr-3"></Col>
          </Row>
 
          <Title2>Profil</Title2>
@@ -138,13 +136,16 @@ export const VictimDetail = act => {
    )
 }
 
-VictimProfile.hasErrors = state => {
+RoadRelatedExaminationProfile.hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
    }
-   if (!state.violenceTypes || !state.violenceTypes.length) {
-      errors.violenceTypes = "Obligatoire"
+   if (!state.prescription) {
+      errors.prescription = "Obligatoire"
+   }
+   if (!state.location) {
+      errors.location = "Obligatoire"
    }
    if (!state.periodOfDay) {
       errors.periodOfDay = "Obligatoire"
@@ -159,10 +160,10 @@ VictimProfile.hasErrors = state => {
    return errors
 }
 
-VictimProfile.propTypes = {
+RoadRelatedExaminationProfile.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default VictimProfile
+export default RoadRelatedExaminationProfile
