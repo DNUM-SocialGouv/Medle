@@ -73,10 +73,10 @@ const resetState = ({
 
 const profileValues = [
    "Victime (vivante)",
+   "Personne décédée",
    "Gardé.e à vue",
    "Personne pour âge osseux (hors GAV)",
    "Examen pour OFPRA",
-   "Personne décédée",
    {
       title: "Autre activité",
       subValues: ["Personne retenue", "Examen lié à la route", "IPM", "Assises", "Reconstitution"],
