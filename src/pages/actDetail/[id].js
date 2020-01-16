@@ -14,18 +14,10 @@ import Layout from "../../components/Layout"
 import ColumnAct from "../../components/ColumnAct"
 import { Title1, Title2 } from "../../components/StyledComponents"
 import { isEmpty } from "../../utils/misc"
-import { VictimDetail } from "../../components/profiles/VictimProfile"
-import { CustodyDetail } from "../../components/profiles/CustodyProfile"
-import { DeceasedDetail } from "../../components/profiles/DeceasedProfile"
-import { BoneAgeDetail } from "../../components/profiles/BoneAgeProfile"
-import { AsylumSeekerDetail } from "../../components/profiles/AsylumSeekerProfile"
-import { CriminalCourtDetail } from "../../components/profiles/CriminalCourtProfile"
-import { ReconstitutionDetail } from "../../components/profiles/ReconstitutionProfile"
-import { DrunkDetail } from "../../components/profiles/DrunkProfile"
-import { RestrainedDetail } from "../../components/profiles/RestrainedProfile"
 import { handleAPIResponse } from "../../utils/errors"
 import { buildOptionsFetch, withAuthentication } from "../../utils/auth"
 import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT } from "../../utils/roles"
+import { profiles } from "../../utils/actsConstants"
 
 const ActDetail = ({ initialAct, id, error, currentUser }) => {
    const router = useRouter()
@@ -34,6 +26,10 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
 
    const [modal, setModal] = useState(false)
    const toggle = () => setModal(!modal)
+
+   const getProfiledRender = ({ profile, act }) => {
+      return profiles[profile].read(act)
+   }
 
    const deleteAct = () => {
       toggle()
@@ -50,11 +46,6 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
 
       deleteAct(id)
    }
-
-   // const addAct = async () => {
-   //    const bonus = `?internalNumber=${act.internal_number}&pvNumber=${act.pv_number}`
-   //    return router.push(`/actDeclaration${bonus}`)
-   // }
 
    const editAct = id => {
       return router.push(`/actDeclaration?id=${id}`)
@@ -94,15 +85,7 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
                      {act && act.periodOfDay && <ColumnAct header={"Créneau horaire"} values={act.periodOfDay} />}
                   </Col>
                </Row>
-               {act && act.profile === "Victime" && VictimDetail(act)}
-               {act && act.profile === "Gardé.e à vue" && CustodyDetail(act)}
-               {act && act.profile === "Personne décédée" && DeceasedDetail(act)}
-               {act && act.profile === "Personne pour âge osseux" && BoneAgeDetail(act)}
-               {act && act.profile === "Demandeuse d'asile (risque excision)" && AsylumSeekerDetail(act)}
-               {act && act.profile === "Autre activité/Assises" && CriminalCourtDetail(act)}
-               {act && act.profile === "Autre activité/Reconstitution" && ReconstitutionDetail(act)}
-               {act && act.profile === "Autre activité/IPM" && DrunkDetail(act)}
-               {act && act.profile === "Autre activité/Personne retenue" && RestrainedDetail(act)}
+               {getProfiledRender({ profile: act.profile, act })}
             </div>
 
             {!isEmpty(isError) && (
@@ -138,12 +121,6 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
                         </Modal>
                      </div>
                   </Col>
-                  {/* <Col>
-                  <Button block outline color="primary" onClick={addAct}>
-                     <AddIcon style={{ float: "left" }} />
-                     Ajouter acte lié au dossier
-                  </Button>{" "}
-               </Col> */}
                </Row>
             )}
             <div className="text-center mt-5">

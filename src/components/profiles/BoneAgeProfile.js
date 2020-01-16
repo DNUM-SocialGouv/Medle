@@ -6,7 +6,7 @@ import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 import { Col, Row } from "reactstrap"
 
-const BoneAgeProfile = ({ dispatch, state, errors }) => {
+const BoneAgeEdit = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -48,7 +48,7 @@ const BoneAgeProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const BoneAgeDetail = act => {
+const BoneAgeRead = act => {
    return (
       <>
          <Row>
@@ -76,7 +76,7 @@ export const BoneAgeDetail = act => {
    )
 }
 
-BoneAgeProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
@@ -91,10 +91,14 @@ BoneAgeProfile.hasErrors = state => {
    return errors
 }
 
-BoneAgeProfile.propTypes = {
+BoneAgeEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default BoneAgeProfile
+export default {
+   edit: BoneAgeEdit,
+   read: BoneAgeRead,
+   hasErrors,
+}

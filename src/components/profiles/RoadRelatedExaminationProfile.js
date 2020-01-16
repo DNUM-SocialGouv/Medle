@@ -7,7 +7,7 @@ import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../ColumnAct"
 
-const RoadRelatedExaminationProfile = ({ dispatch, state, errors }) => {
+const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -89,7 +89,7 @@ const RoadRelatedExaminationProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const RestrainedDetail = act => {
+const RoadRelatedExaminationRead = act => {
    const examinations = [
       [act.bioExaminationsNumber, "biologique"],
       [act.imagingExaminationsNumber, "imagerie"],
@@ -136,7 +136,7 @@ export const RestrainedDetail = act => {
    )
 }
 
-RoadRelatedExaminationProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
@@ -160,10 +160,14 @@ RoadRelatedExaminationProfile.hasErrors = state => {
    return errors
 }
 
-RoadRelatedExaminationProfile.propTypes = {
+RoadRelatedExaminationEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default RoadRelatedExaminationProfile
+export default {
+   edit: RoadRelatedExaminationEdit,
+   read: RoadRelatedExaminationRead,
+   hasErrors,
+}

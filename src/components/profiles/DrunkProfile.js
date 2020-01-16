@@ -7,7 +7,7 @@ import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 
-const DrunkProfile = ({ dispatch, state, errors }) => {
+const DrunkEdit = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -77,7 +77,7 @@ const DrunkProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const DrunkDetail = act => {
+const DrunkRead = act => {
    const examinations = [[act.bioExaminationsNumber, "biologique"]].filter(elt => !!elt[0]).map(elt => elt.join(" "))
 
    return (
@@ -113,7 +113,7 @@ export const DrunkDetail = act => {
    )
 }
 
-DrunkProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
@@ -135,10 +135,14 @@ DrunkProfile.hasErrors = state => {
    return errors
 }
 
-DrunkProfile.propTypes = {
+DrunkEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default DrunkProfile
+export default {
+   edit: DrunkEdit,
+   read: DrunkRead,
+   hasErrors,
+}

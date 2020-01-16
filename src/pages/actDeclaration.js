@@ -6,6 +6,7 @@ import { handleAPIResponse } from "../utils/errors"
 // import { useTraceUpdate } from "../utils/debug"
 import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "reactstrap"
 import moment from "moment"
+
 import AskerAutocomplete from "../components/AskerAutocomplete"
 import {
    API_URL,
@@ -17,22 +18,11 @@ import {
 import { isEmpty, deleteProperty } from "../utils/misc"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
-import {
-   VictimProfile,
-   CustodyProfile,
-   DeceasedProfile,
-   BoneAgeProfile,
-   AsylumSeekerProfile,
-   CriminalCourtProfile,
-   ReconstitutionProfile,
-   DrunkProfile,
-   RestrainedProfile,
-   RoadRelatedExaminationProfile,
-} from "../components/profiles"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../utils/roles"
 import { buildOptionsFetch, withAuthentication } from "../utils/auth"
 import { now } from "../utils/date"
+import { profiles, orderedProfileValues } from "../utils/actsConstants"
 
 // internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
@@ -70,18 +60,6 @@ const resetState = ({
    addedBy,
    hospitalId,
 })
-
-const profileValues = [
-   "Victime (vivante)",
-   "Personne décédée",
-   "Gardé.e à vue",
-   "Personne pour âge osseux (hors GAV)",
-   "Examen pour OFPRA",
-   {
-      title: "Autre activité",
-      subValues: ["Personne retenue", "Examen lié à la route", "IPM", "Assises", "Reconstitution"],
-   },
-]
 
 const hasErrors = state => {
    let errors = {}
@@ -220,51 +198,8 @@ const ActDeclaration = ({ act, currentUser }) => {
       }),
    )
 
-   const PROFILES = {
-      "Victime (vivante)": {
-         render: <VictimProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: VictimProfile.hasErrors,
-      },
-      "Gardé.e à vue": {
-         render: <CustodyProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: CustodyProfile.hasErrors,
-      },
-      "Personne pour âge osseux": {
-         render: <BoneAgeProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: BoneAgeProfile.hasErrors,
-      },
-      "Personne décédée": {
-         render: <DeceasedProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: DeceasedProfile.hasErrors,
-      },
-      "Examen pour OFPRA": {
-         render: <AsylumSeekerProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: AsylumSeekerProfile.hasErrors,
-      },
-      "Autre activité/Personne retenue": {
-         render: <RestrainedProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: RestrainedProfile.hasErrors,
-      },
-      "Autre activité/Examen lié à la route": {
-         render: <RoadRelatedExaminationProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: RoadRelatedExaminationProfile.hasErrors,
-      },
-      "Autre activité/IPM": {
-         render: <DrunkProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: DrunkProfile.hasErrors,
-      },
-      "Autre activité/Assises": {
-         render: <CriminalCourtProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: CriminalCourtProfile.hasErrors,
-      },
-      "Autre activité/Reconstitution": {
-         render: <ReconstitutionProfile dispatch={dispatch} state={state} errors={errors} />,
-         hasErrors: ReconstitutionProfile.hasErrors,
-      },
-   }
-
    const getProfiledRender = ({ profile }) => {
-      return PROFILES[profile].render
+      return profiles[profile].edit({ dispatch, state, errors })
    }
 
    const validAndSubmitAct = async () => {
@@ -273,7 +208,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       let errors = hasErrors(state)
 
       if (state.profile) {
-         errors = { ...errors, ...PROFILES[state.profile].hasErrors(state) }
+         errors = { ...errors, ...profiles[state.profile].hasErrors(state) }
       }
 
       if (!isEmpty(errors)) {
@@ -453,7 +388,7 @@ const ActDeclaration = ({ act, currentUser }) => {
             ) : !state.id ? (
                <ActBlock
                   type="profile"
-                  values={profileValues}
+                  values={orderedProfileValues}
                   mode="toggle"
                   dispatch={dispatch}
                   state={state.profile}

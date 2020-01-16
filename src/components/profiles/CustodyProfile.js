@@ -7,7 +7,7 @@ import ColumnAct from "../../components/ColumnAct"
 import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 
-const CustodyProfile = ({ dispatch, state, errors }) => {
+const CustodyEdit = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -89,7 +89,7 @@ const CustodyProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const CustodyDetail = act => {
+const CustodyRead = act => {
    const examinations = [
       [act.bioExaminationsNumber, "biologique"],
       [act.imagingExaminationsNumber, "imagerie"],
@@ -135,7 +135,7 @@ export const CustodyDetail = act => {
    )
 }
 
-CustodyProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
@@ -159,10 +159,14 @@ CustodyProfile.hasErrors = state => {
    return errors
 }
 
-CustodyProfile.propTypes = {
+CustodyEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default CustodyProfile
+export default {
+   edit: CustodyEdit,
+   read: CustodyRead,
+   hasErrors,
+}

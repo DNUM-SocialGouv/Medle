@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import { Col, Row } from "reactstrap"
 import ColumnAct from "../../components/ColumnAct"
 
-const ReconstitutionProfile = ({ dispatch, state, errors }) => {
+const ReconstitutionEdit = ({ dispatch, state, errors }) => {
    return (
       <>
          <ActBlock
@@ -29,7 +29,7 @@ const ReconstitutionProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const ReconstitutionDetail = act => {
+const ReconstitutionRead = act => {
    return (
       <>
          <Row>
@@ -48,7 +48,7 @@ export const ReconstitutionDetail = act => {
    )
 }
 
-ReconstitutionProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.duration) {
       errors.duration = "Obligatoire"
@@ -60,10 +60,14 @@ ReconstitutionProfile.hasErrors = state => {
    return errors
 }
 
-ReconstitutionProfile.propTypes = {
+ReconstitutionEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default ReconstitutionProfile
+export default {
+   edit: ReconstitutionEdit,
+   read: ReconstitutionRead,
+   hasErrors,
+}

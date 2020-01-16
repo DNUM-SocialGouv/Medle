@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import { Col, Row } from "reactstrap"
 import ColumnAct from "../../components/ColumnAct"
 
-const CriminalCourtProfile = ({ dispatch, state, errors }) => {
+const CriminalCourtEdit = ({ dispatch, state, errors }) => {
    return (
       <>
          <ActBlock
@@ -30,7 +30,7 @@ const CriminalCourtProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-CriminalCourtProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.mode || !state.mode.length) {
       errors.mode = "Obligatoire"
@@ -42,13 +42,13 @@ CriminalCourtProfile.hasErrors = state => {
    return errors
 }
 
-CriminalCourtProfile.propTypes = {
+CriminalCourtEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export const CriminalCourtDetail = act => {
+const CriminalCourtRead = act => {
    return (
       <>
          <Row>
@@ -66,4 +66,8 @@ export const CriminalCourtDetail = act => {
    )
 }
 
-export default CriminalCourtProfile
+export default {
+   edit: CriminalCourtEdit,
+   read: CriminalCourtRead,
+   hasErrors,
+}

@@ -7,7 +7,7 @@ import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 
-const RestrainedProfile = ({ dispatch, state, errors }) => {
+const RestrainedEdit = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -89,7 +89,7 @@ const RestrainedProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const RestrainedDetail = act => {
+const RestrainedRead = act => {
    const examinations = [
       [act.bioExaminationsNumber, "biologique"],
       [act.imagingExaminationsNumber, "imagerie"],
@@ -136,7 +136,7 @@ export const RestrainedDetail = act => {
    )
 }
 
-RestrainedProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
@@ -160,10 +160,14 @@ RestrainedProfile.hasErrors = state => {
    return errors
 }
 
-RestrainedProfile.propTypes = {
+RestrainedEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default RestrainedProfile
+export default {
+   edit: RestrainedEdit,
+   read: RestrainedRead,
+   hasErrors,
+}

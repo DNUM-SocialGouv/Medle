@@ -1,5 +1,40 @@
 import moment from "moment"
 import joursFeries from "@socialgouv/jours-feries"
+import AsylumSeekerProfile from "../components/profiles/AsylumSeekerProfile"
+import BoneAgeProfile from "../components/profiles/BoneAgeProfile"
+import CriminalCourtProfile from "../components/profiles/CriminalCourtProfile"
+import CustodyProfile from "../components/profiles/CustodyProfile"
+import DeceasedProfile from "../components/profiles/DeceasedProfile"
+import DrunkProfile from "../components/profiles/DrunkProfile"
+import ReconstitutionProfile from "../components/profiles/ReconstitutionProfile"
+import RestrainedProfile from "../components/profiles/RestrainedProfile"
+import RoadRelatedExaminationProfile from "../components/profiles/RoadRelatedExaminationProfile"
+import VictimProfile from "../components/profiles/VictimProfile"
+
+export const orderedProfileValues = [
+   "Victime (vivante)",
+   "Personne décédée",
+   "Gardé.e à vue",
+   "Personne pour âge osseux (hors GAV)",
+   "Examen pour OFPRA",
+   {
+      title: "Autre activité",
+      subValues: ["Personne retenue", "Examen lié à la route", "IPM", "Assises", "Reconstitution"],
+   },
+]
+
+export const profiles = {
+   "Victime (vivante)": VictimProfile,
+   "Personne décédée": DeceasedProfile,
+   "Gardé.e à vue": CustodyProfile,
+   "Personne pour âge osseux": BoneAgeProfile,
+   "Examen pour OFPRA": AsylumSeekerProfile,
+   "Autre activité/Personne retenue": RestrainedProfile,
+   "Autre activité/Examen lié à la route": RoadRelatedExaminationProfile,
+   "Autre activité/IPM": DrunkProfile,
+   "Autre activité/Assises": CriminalCourtProfile,
+   "Autre activité/Reconstitution": ReconstitutionProfile,
+}
 
 const periodOfDayValues = {
    week: {

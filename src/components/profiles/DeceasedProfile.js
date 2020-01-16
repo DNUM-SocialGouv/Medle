@@ -7,7 +7,7 @@ import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 
-const DeceasedProfile = ({ dispatch, state, errors }) => {
+const DeceasedEdit = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -98,7 +98,7 @@ const DeceasedProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const DeceasedDetail = act => {
+const DeceasedRead = act => {
    const examinations = [
       [act.imagingExaminationsNumber, "imagerie"],
       [act.toxicExaminationsNumber, "toxicologie"],
@@ -140,7 +140,7 @@ export const DeceasedDetail = act => {
    )
 }
 
-DeceasedProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
@@ -158,10 +158,14 @@ DeceasedProfile.hasErrors = state => {
    return errors
 }
 
-DeceasedProfile.propTypes = {
+DeceasedEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default DeceasedProfile
+export default {
+   edit: DeceasedEdit,
+   read: DeceasedRead,
+   hasErrors,
+}

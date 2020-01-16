@@ -7,7 +7,7 @@ import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../ColumnAct"
 
-const AsylumSeekerProfile = ({ dispatch, state, errors }) => {
+const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -81,7 +81,7 @@ const AsylumSeekerProfile = ({ dispatch, state, errors }) => {
    )
 }
 
-export const AsylumSeekerDetail = act => {
+const AsylumSeekerRead = act => {
    const examinations = [
       [act.bioExaminationsNumber, "biologique"],
       [act.imagingExaminationsNumber, "imagerie"],
@@ -121,7 +121,7 @@ export const AsylumSeekerDetail = act => {
    )
 }
 
-AsylumSeekerProfile.hasErrors = state => {
+const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
@@ -139,10 +139,14 @@ AsylumSeekerProfile.hasErrors = state => {
    return errors
 }
 
-AsylumSeekerProfile.propTypes = {
+AsylumSeekerEdit.propTypes = {
    dispatch: PropTypes.func.isRequired,
    state: PropTypes.object.isRequired,
    errors: PropTypes.object,
 }
 
-export default AsylumSeekerProfile
+export default {
+   edit: AsylumSeekerEdit,
+   read: AsylumSeekerRead,
+   hasErrors,
+}
