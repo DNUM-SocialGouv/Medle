@@ -102,32 +102,32 @@ const RestrainedRead = act => {
       <>
          <Row>
             <Col className="mr-3">
-               <ColumnAct header={"Statut"} values={act && act.profile} />
+               <ColumnAct header={"Statut"} content={act && act.profile} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Type(s) d'acte"} values={act && act.examinationTypes} />
+               <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Examens complémentaires"} values={examinations} />
+               <ColumnAct header={"Examens complémentaires"} content={examinations} />
             </Col>
          </Row>
          <Row>
             <Col className="mr-3">
-               <ColumnAct header={"Lieu de l'examen"} values={act.location} />
+               <ColumnAct header={"Lieu de l'examen"} content={act.location} />
             </Col>
             <Col className="mr-3"></Col>
             <Col className="mr-3"></Col>
             <Col className="mr-3"></Col>
          </Row>
 
-         <Title2>Profil</Title2>
+         <Title2 className="pt-3">Profil</Title2>
 
          <Row>
             <Col className="mr-3">
-               <ColumnAct header={"Genre"} values={act && act.personGender} />
+               <ColumnAct header={"Genre"} content={act && act.personGender} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Âge"} values={act && act.personAgeTag} />
+               <ColumnAct header={"Âge"} content={act && act.personAgeTag} />
             </Col>
             <Col className="mr-3"></Col>
             <Col className="mr-3"></Col>

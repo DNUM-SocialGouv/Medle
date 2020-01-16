@@ -1,16 +1,17 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
+import fetch from "isomorphic-unfetch"
+import moment from "moment"
+import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
+
 import { buildOptionsFetch, withAuthentication } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
-import fetch from "isomorphic-unfetch"
-import Layout from "../components/Layout"
 import { Title1 } from "../components/StyledComponents"
-import moment from "moment"
+import Layout from "../components/Layout"
+import { VerticalList } from "../components/VerticalList"
 import { FORMAT_DATE } from "../utils/date"
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 import { ACT_CONSULTATION } from "../utils/roles"
-
 import { handleAPIResponse } from "../utils/errors"
 
 const fetchData = async ({ search, optionsFetch }) => {
@@ -94,6 +95,7 @@ const ActsListPage = ({ initialActs, currentUser }) => {
                         <th>N° PV</th>
                         <th>Date</th>
                         <th>Type de profil</th>
+                        <th>{"Type d'acte"}</th>
                         <th></th>
                      </tr>
                   </thead>
@@ -106,6 +108,7 @@ const ActsListPage = ({ initialActs, currentUser }) => {
                            <td>{act.pv_number}</td>
                            <td>{act.examination_date && moment(act.examination_date).format(FORMAT_DATE)}</td>
                            <td>{act.profile}</td>
+                           <td>{act.extra_data && <VerticalList content={act.extra_data.examinationTypes} />}</td>
                            <td>
                               <Link href="/actDetail/[id]" as={`/actDetail/${act.id}`}>
                                  <a>{"Voir >"}</a>

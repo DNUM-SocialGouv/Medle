@@ -53,13 +53,13 @@ const CriminalCourtRead = act => {
       <>
          <Row>
             <Col className="mr-3">
-               <ColumnAct header={"Statut"} values={act && act.profile} />
+               <ColumnAct header={"Statut"} content={act && act.profile} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Modalités"} values={act && act.mode} />
+               <ColumnAct header={"Modalités"} content={act && act.mode} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Durée de la mobilisation"} values={act && act.duration} />
+               <ColumnAct header={"Durée de la mobilisation"} content={act && act.duration} />
             </Col>
          </Row>
       </>

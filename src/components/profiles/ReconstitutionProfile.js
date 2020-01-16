@@ -34,13 +34,13 @@ const ReconstitutionRead = act => {
       <>
          <Row>
             <Col className="mr-3">
-               <ColumnAct header={"Statut"} values={act && act.profile} />
+               <ColumnAct header={"Statut"} content={act && act.profile} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Durée de la mobilisation"} values={act && act.duration} />
+               <ColumnAct header={"Durée de la mobilisation"} content={act && act.duration} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Distance du lieu de reconstitution"} values={act.distance} />
+               <ColumnAct header={"Distance du lieu de reconstitution"} content={act.distance} />
             </Col>
             <Col className="mr-3"></Col>
          </Row>

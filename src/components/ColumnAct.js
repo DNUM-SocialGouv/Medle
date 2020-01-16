@@ -1,28 +1,23 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { VerticalList } from "./VerticalList"
 
-const ColumnAct = ({ header, values }) => {
-   const val = !values
-      ? ""
-      : values instanceof Array
-      ? values.map((v, index) => [<span key={index}>{v}</span>, <br key={`${index}-br`} />])
-      : values
-
+const ColumnAct = ({ header, content }) => {
    return (
       <>
          <p>{header}</p>
-         <p style={{ fontWeight: "bold" }}>{val}</p>
+         <VerticalList content={content} style={{ fontWeight: "bold", paddingBottom: 5 }} />
       </>
    )
 }
 
 ColumnAct.defaultProps = {
-   values: "",
+   content: "",
 }
 
 ColumnAct.propTypes = {
    header: PropTypes.string,
-   values: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+   content: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
 }
 
 export default ColumnAct

@@ -70,19 +70,19 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
                <Title2 className="mb-4 mt-3">{"Identification de l'acte"}</Title2>
                <Row>
                   <Col className="mr-3">
-                     <ColumnAct header={"Numéro de PV"} values={act && act.pvNumber} />
+                     <ColumnAct header={"Numéro de PV"} content={act && act.pvNumber} />
                   </Col>{" "}
                   <Col className="mr-3">
-                     <ColumnAct header={"Demandeur"} values={act && act.asker && act.asker.name} />
+                     <ColumnAct header={"Demandeur"} content={act && act.asker && act.asker.name} />
                   </Col>
                   <Col className="mr-3">
                      <ColumnAct
                         header={"Date"}
-                        values={act && act.examinationDate && moment(act.examinationDate).format(FORMAT_DATE)}
+                        content={act && act.examinationDate && moment(act.examinationDate).format(FORMAT_DATE)}
                      />
                   </Col>
                   <Col className="mr-3">
-                     {act && act.periodOfDay && <ColumnAct header={"Créneau horaire"} values={act.periodOfDay} />}
+                     {act && act.periodOfDay && <ColumnAct header={"Créneau horaire"} content={act.periodOfDay} />}
                   </Col>
                </Row>
                {getProfiledRender({ profile: act.profile, act })}
