@@ -56,17 +56,7 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
          <Title1 className="mt-5 mb-5">{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
 
          <Container style={{ maxWidth: 780 }}>
-            <div style={{ border: "1px solid rgba(151,151,151,0.13)", borderRadius: 10 }} className="px-2 py-2">
-               {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
-                  <Button
-                     outline
-                     onClick={() => editAct(id)}
-                     style={{ border: 0, float: "right", cursor: "pointer" }}
-                     className="mr-2 mt-3"
-                  >
-                     <EditOutlinedIcon width={24} />
-                  </Button>
-               )}
+            <div className="px-2 py-2">
                <Title2 className="mb-4 mt-3">{"Identification de l'acte"}</Title2>
                <Row>
                   <Col className="mr-3">
@@ -100,8 +90,14 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
                <Row>
                   <Col>
                      <Button block outline color="danger" onClick={toggle}>
-                        <DeleteForeverOutlinedIcon style={{ float: "left" }} width={24} />
-                        {"Supprimer l'acte"}
+                        <DeleteForeverOutlinedIcon width={24} />
+                        {" Supprimer l'acte"}
+                     </Button>{" "}
+                  </Col>
+                  <Col>
+                     <Button block outline color="info" onClick={() => editAct(id)}>
+                        <EditOutlinedIcon width={24} />
+                        {" Modifier l'acte"}
                      </Button>{" "}
                      <div>
                         <Modal isOpen={modal} toggle={toggle}>

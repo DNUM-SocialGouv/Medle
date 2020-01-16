@@ -5,7 +5,7 @@ import { VerticalList } from "./VerticalList"
 const ColumnAct = ({ header, content }) => {
    return (
       <>
-         <p>{header}</p>
+         <p className="mb-0">{header}</p>
          <VerticalList content={content} style={{ fontWeight: "bold", paddingBottom: 5 }} />
       </>
    )
