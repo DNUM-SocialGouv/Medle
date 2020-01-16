@@ -65,7 +65,7 @@ const FillEmploymentsPage = ({
             <Title2 className="mb-4 text-capitalize">{currentMonthName}</Title2>
 
             <p className="font-italic text-center mb-0">
-               {"Veuillez indiquer le nombre d'ETP pour les différents profils de votre UMJ."}
+               {"Veuillez indiquer le nombre d'ETP pour les différents profils de votre UMJ/IML."}
             </p>
             <p className="text-center mb-5">
                <small>
