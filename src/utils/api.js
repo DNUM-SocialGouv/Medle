@@ -22,8 +22,6 @@ export const sendAPIError = (error, res) => {
 export const checkValidUserWithPrivilege = (privilege, req) => {
    const { token } = req.cookies
 
-   console.log("cookies xxx", req.cookies)
-
    try {
       if (!token) {
          throw new APIError({
