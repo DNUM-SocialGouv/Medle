@@ -3,7 +3,6 @@ import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
 import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
-import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 
@@ -40,7 +39,17 @@ const VictimEdit = ({ dispatch, state, errors }) => {
             state={state.violenceTypes || []}
             invalid={!!errors.violenceTypes}
          />
-         <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
+         <ActBlock
+            type="examinations"
+            title="Examens complémentaires"
+            values={["Biologiques", "Imageries", "Autres"]}
+            mode="toggleMultiple"
+            dispatch={dispatch}
+            state={state.examinations || []}
+            invalid={!!errors.examinations}
+         />
+
+         {/* <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
                <Counter dispatch={dispatch} state={state.bioExaminationsNumber || 0} type={"bioExaminationsNumber"}>
@@ -53,7 +62,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
                   state={state.imagingExaminationsNumber || 0}
                   type={"imagingExaminationsNumber"}
                >
-                  Imagerie
+                  Imageries
                </Counter>
             </Col>
             <Col>
@@ -61,7 +70,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
                   Autres
                </Counter>
             </Col>
-         </Row>
+         </Row> */}
 
          <ActBlock
             type="periodOfDay"
@@ -97,13 +106,13 @@ const VictimEdit = ({ dispatch, state, errors }) => {
 }
 
 const VictimRead = act => {
-   const examinations = [
-      [act.bioExaminationsNumber, "biologique"],
-      [act.imagingExaminationsNumber, "imagerie"],
-      [act.othersExaminationNumber, "autre"],
-   ]
-      .filter(elt => !!elt[0])
-      .map(elt => elt.join(" "))
+   // const examinations = [
+   //    [act.bioExaminationsNumber, "biologique"],
+   //    [act.imagingExaminationsNumber, "imagerie"],
+   //    [act.othersExaminationNumber, "autre"],
+   // ]
+   //    .filter(elt => !!elt[0])
+   //    .map(elt => elt.join(" "))
 
    return (
       <>
@@ -118,7 +127,7 @@ const VictimRead = act => {
                <ColumnAct header={"Type(s) de violence"} content={act && act.violenceTypes} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Examens complémentaires"} content={examinations} />
+               <ColumnAct header={"Examens complémentaires"} content={act && act.examinations} />
             </Col>
          </Row>
 

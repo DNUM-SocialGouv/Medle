@@ -3,7 +3,6 @@ import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
 import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
-import Counter from "../Counter"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../ColumnAct"
 
@@ -22,7 +21,17 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
             state={state.examinationTypes || []}
             invalid={!!errors.examinationTypes}
          />
-         <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
+         <ActBlock
+            type="examinations"
+            title="Examens complémentaires"
+            values={["Biologiques", "Imageries", "Autres"]}
+            mode="toggleMultiple"
+            dispatch={dispatch}
+            state={state.examinations || []}
+            invalid={!!errors.examinations}
+         />
+
+         {/* <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
          <Row>
             <Col>
                <Counter dispatch={dispatch} state={state.bioExaminationsNumber || 0} type={"bioExaminationsNumber"}>
@@ -43,7 +52,7 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
                   Autres
                </Counter>
             </Col>
-         </Row>
+         </Row> */}
          <ActBlock
             type="location"
             title="Lieu de l'examen"
@@ -90,13 +99,13 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
 }
 
 const RoadRelatedExaminationRead = act => {
-   const examinations = [
-      [act.bioExaminationsNumber, "biologique"],
-      [act.imagingExaminationsNumber, "imagerie"],
-      [act.othersExaminationNumber, "autre"],
-   ]
-      .filter(elt => !!elt[0])
-      .map(elt => elt.join(" "))
+   // const examinations = [
+   //    [act.bioExaminationsNumber, "biologique"],
+   //    [act.imagingExaminationsNumber, "imagerie"],
+   //    [act.othersExaminationNumber, "autre"],
+   // ]
+   //    .filter(elt => !!elt[0])
+   //    .map(elt => elt.join(" "))
 
    return (
       <>
@@ -108,7 +117,7 @@ const RoadRelatedExaminationRead = act => {
                <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Examens complémentaires"} content={examinations} />
+               <ColumnAct header={"Examens complémentaires"} content={act && act.examinations} />
             </Col>
          </Row>
          <Row>

@@ -27,7 +27,7 @@ export const profiles = {
    "Victime (vivante)": VictimProfile,
    "Personne décédée": DeceasedProfile,
    "Gardé.e à vue": CustodyProfile,
-   "Personne pour âge osseux": BoneAgeProfile,
+   "Personne pour âge osseux (hors GAV)": BoneAgeProfile,
    "Examen pour OFPRA": AsylumSeekerProfile,
    "Autre activité/Personne retenue": RestrainedProfile,
    "Autre activité/Examen lié à la route": RoadRelatedExaminationProfile,
