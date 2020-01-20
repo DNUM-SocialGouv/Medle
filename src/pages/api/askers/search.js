@@ -13,21 +13,21 @@ export default async (req, res) => {
       // 2 privilege verification
       checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-      const { fuzzy } = req.query
-
-      let askers
+      const { fuzzy, all } = req.query
 
       // 3 SQL query
-      askers = await knex("askers")
+      const askers = await knex("askers")
          .whereNull("deleted_at")
          .where(builder => {
             if (fuzzy) {
                builder.where("name", "ilike", `%${fuzzy}%`)
             }
+            if (!all) {
+               builder.limit(5)
+            }
          })
          .orderBy("name")
          .select("id", "name")
-         .limit(5)
 
       return res.status(STATUS_200_OK).json(askers)
    } catch (error) {

@@ -10,8 +10,12 @@ const fs = require("fs")
 const moment = require("moment")
 
 // const API_URL = "http://localhost:3000"
-const API_URL = "https://medle.fabrique.social.gouv.fr"
+// const API_URL = "https://medle.fabrique.social.gouv.fr"
+const API_URL = "http://40.89.136.101"
 const ACT_SEARCH_ENDPOINT = "/api/askers/search"
+const ACT_LOGIN = "/api/login"
+const USER_LOGIN = "medle@tours.fr"
+const USER_PASSWORD = "test"
 
 const primaryAskers = [
    "OFPRA (Office Français de Protection des Réfugiés et Apatrides)",
@@ -24,9 +28,28 @@ const primaryAskers = [
    "Juge d'instruction",
 ]
 
-const fetchAskersThirdParty = async () => {
+const buildOptionsFetch = async () => {
+   const response = await fetch(API_URL + ACT_LOGIN, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: USER_LOGIN, password: USER_PASSWORD }),
+   })
+   const token = response.headers.get("set-cookie")
+
+   if (!token) {
+      throw new Error("Authentication failed")
+   }
+
+   return {
+      headers: {
+         cookie: token,
+      },
+   }
+}
+
+const fetchAskersThirdParty = async options => {
    const fetchData = async type => {
-      const response = await fetch(`http://etablissements-publics.api.gouv.fr/v3/organismes/${type}`)
+      const response = await fetch(`http://etablissements-publics.api.gouv.fr/v3/organismes/${type}`, options)
       const json = await response.json()
       if (!json || !json.features || !json.features.length) return false
       return json.features[0]
@@ -53,9 +76,13 @@ const fetchAskersThirdParty = async () => {
    }
 }
 
-const fetchExistingAskers = async () => {
-   const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}`)
+const fetchExistingAskers = async options => {
+   const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}?all=true`, options)
    const json = await response.json()
+
+   if (!json) return {}
+
+   console.log("fetch existing askers", json)
 
    return json.reduce((acc, curr) => {
       acc[curr.name.trim().toUpperCase()] = curr.name
@@ -70,38 +97,58 @@ const getAskersToAdd = (newAskers, existingAskers) => {
    Object.keys(newAskers).forEach(key => {
       const candidate = existingAskers[key]
       if (!candidate) askersToAdd.push(newAskers[key])
-      else askersNotToAdd.push(newAskers[key])
+      else {
+         console.log("XXXX candidate '", candidate, "'", "key '", key, "'")
+         askersNotToAdd.push(newAskers[key])
+      }
    })
 
    return { askersToAdd, askersNotToAdd }
 }
 
-Promise.all([fetchAskersThirdParty(), fetchExistingAskers()]).then(([newAskers, existingAskers]) => {
-   console.log("newAskers", newAskers)
-   console.log("existingAskers", existingAskers)
-   const { askersToAdd, askersNotToAdd } = getAskersToAdd(newAskers, existingAskers)
+buildOptionsFetch()
+   .then(options =>
+      Promise.all([fetchAskersThirdParty(options), fetchExistingAskers(options)]).then(
+         ([newAskers, existingAskers]) => {
+            console.log("newAskers")
+            Object.keys(newAskers)
+               .slice(0, 10)
+               .map(key => console.log(newAskers[key]))
 
-   console.log("Tours newAskers", newAskers["Tribunal de grande instance de Tours".toUpperCase()])
-   console.log("Tours existingAskers", existingAskers["Tribunal de grande instance de Tours".toUpperCase()])
+            console.log("existingAskers")
 
-   const formatResult = data => "name,type\n" + data.map(elt => elt.name + "," + elt.type).join("\n")
+            Object.keys(existingAskers)
+               .slice(0, 10)
+               .map(key => console.log(existingAskers[key]))
 
-   fs.writeFile(`./data/${moment().format("YYYYMMDD-HHmmss")}-askersToAdd.csv`, formatResult(askersToAdd), function(
-      err,
-   ) {
-      if (err) {
-         return console.log(err)
-      }
-      console.log("The file askersToAdd.csv was saved!")
-   })
-   fs.writeFile(
-      `./data/${moment().format("YYYYMMDD-HHmmss")}-askersNotToAdd.csv`,
-      formatResult(askersNotToAdd),
-      function(err) {
-         if (err) {
-            return console.log(err)
-         }
-         console.log("The file askersNotToAdd was saved!")
-      },
+            const { askersToAdd, askersNotToAdd } = getAskersToAdd(newAskers, existingAskers)
+
+            console.log("Tours newAskers", newAskers["Tribunal de grande instance de Tours".toUpperCase()])
+            console.log("Tours existingAskers", existingAskers["Tribunal de grande instance de Tours".toUpperCase()])
+
+            const formatResult = data => "name,type\n" + data.map(elt => elt.name + "," + elt.type).join("\n")
+
+            fs.writeFile(
+               `./data/${moment().format("YYYYMMDD-HHmmss")}-askersToAdd.csv`,
+               formatResult(askersToAdd),
+               function(err) {
+                  if (err) {
+                     return console.log(err)
+                  }
+                  console.log("The file askersToAdd.csv was saved!")
+               },
+            )
+            fs.writeFile(
+               `./data/${moment().format("YYYYMMDD-HHmmss")}-askersNotToAdd.csv`,
+               formatResult(askersNotToAdd),
+               function(err) {
+                  if (err) {
+                     return console.log(err)
+                  }
+                  console.log("The file askersNotToAdd was saved!")
+               },
+            )
+         },
+      ),
    )
-})
+   .catch(console.log)
