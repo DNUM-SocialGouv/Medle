@@ -6,6 +6,10 @@ import { Col, Row } from "reactstrap"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 
+const getAttacks = () => {
+   return sessionStorage.getItem("attacks") ? JSON.parse(sessionStorage.getItem("attacks")).map(elt => elt.name) : []
+}
+
 const VictimEdit = ({ dispatch, state, errors }) => {
    const situationDate = getSituationDate(state.examinationDate)
    const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
@@ -32,7 +36,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
                "Voie publique",
                "Sur ascendant",
                "Agression sexuelle",
-               { title: "Attentat", subValues: ["Bataclan", "Hyper Cacher"] }, // TODO récupérer cette liste via API
+               { title: "Attentat", subValues: getAttacks() },
             ]}
             mode="toggleMultiple"
             dispatch={dispatch}

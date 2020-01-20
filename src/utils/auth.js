@@ -4,6 +4,7 @@ import { API_URL, LOGOUT_ENDPOINT } from "../config"
 import * as jwt from "jsonwebtoken"
 import { isAllowed, START_PAGES } from "./roles"
 import moment from "moment"
+import { fetchReferenceData, clearReferenceData } from "./init"
 
 // Timeout config : keep this timeout values in sync
 export const timeout = {
@@ -27,10 +28,13 @@ export const logout = async () => {
 
    sessionStorage.removeItem("currentUser")
 
+   clearReferenceData()
+
    await Router.push("/index")
 }
 
 export const registerAndRedirectUser = json => {
+   fetchReferenceData()
    sessionStorage.setItem("currentUser", JSON.stringify({ ...json, authentifiedAt: moment() }))
 
    const startPage = START_PAGES[json.role] || "/actDeclaration"
