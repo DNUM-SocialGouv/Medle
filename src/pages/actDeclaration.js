@@ -2,11 +2,10 @@ import React, { useReducer, useRef, useState } from "react"
 import PropTypes from "prop-types"
 import Router, { useRouter } from "next/router"
 import fetch from "isomorphic-unfetch"
-import { handleAPIResponse } from "../utils/errors"
-// import { useTraceUpdate } from "../utils/debug"
 import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "reactstrap"
 import moment from "moment"
 
+import { handleAPIResponse } from "../utils/errors"
 import AskerAutocomplete from "../components/AskerAutocomplete"
 import {
    API_URL,
@@ -23,6 +22,7 @@ import { ACT_MANAGEMENT } from "../utils/roles"
 import { buildOptionsFetch, withAuthentication } from "../utils/auth"
 import { now } from "../utils/date"
 import { profiles, orderedProfileValues } from "../utils/actsConstants"
+// import { useTraceUpdate } from "../utils/debug"
 
 // internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
@@ -212,6 +212,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       }
 
       if (!isEmpty(errors)) {
+         console.error(errors)
          console.error(`Erreur state non valide`, state)
          setErrors(errors)
          return

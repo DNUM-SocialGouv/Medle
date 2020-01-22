@@ -24,35 +24,12 @@ const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
          <ActBlock
             type="examinations"
             title="Examens complémentaires"
-            values={["Biologiques", "Imagerie", "Autres"]}
+            values={["Biologie", "Imagerie", "Autres"]}
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinations || []}
             invalid={!!errors.examinations}
          />
-         {/* <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
-         <Row>
-            <Col>
-               <Counter dispatch={dispatch} state={state.bioExaminationsNumber || 0} type={"bioExaminationsNumber"}>
-                  Biologiques
-               </Counter>
-            </Col>
-            <Col>
-               <Counter
-                  dispatch={dispatch}
-                  state={state.imagingExaminationsNumber || 0}
-                  type={"imagingExaminationsNumber"}
-               >
-                  Imagerie
-               </Counter>
-            </Col>
-            <Col>
-               <Counter dispatch={dispatch} state={state.othersExaminationNumber || 0} type={"othersExaminationNumber"}>
-                  Autres
-               </Counter>
-            </Col>
-         </Row> */}
-
          <ActBlock
             type="periodOfDay"
             title="Heure de l'examen"
@@ -90,14 +67,6 @@ const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
 }
 
 const AsylumSeekerRead = act => {
-   // const examinations = [
-   //    [act.bioExaminationsNumber, "biologique"],
-   //    [act.imagingExaminationsNumber, "imagerie"],
-   //    [act.othersExaminationNumber, "autre"],
-   // ]
-   //    .filter(elt => !!elt[0])
-   //    .map(elt => elt.join(" "))
-
    return (
       <>
          <Row>

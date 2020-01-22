@@ -24,22 +24,12 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
          <ActBlock
             type="examinations"
             title="Examens complémentaires"
-            values={["Biologiques"]}
+            values={["Biologie", "Autres"]}
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinations || []}
             invalid={!!errors.examinations}
          />
-
-         {/* <Title2 className="mb-4 mt-5">{"Examens complémentaires"}</Title2>
-         <Row>
-            <Col>
-               <Counter dispatch={dispatch} state={state.bioExaminationsNumber || 0} type={"bioExaminationsNumber"}>
-                  Biologiques
-               </Counter>
-            </Col>
-         </Row> */}
-
          <ActBlock
             type="location"
             title="Lieu de l'examen"
@@ -87,8 +77,6 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
 }
 
 const DrunkRead = act => {
-   // const examinations = [[act.bioExaminationsNumber, "biologique"]].filter(elt => !!elt[0]).map(elt => elt.join(" "))
-
    return (
       <>
          <Row>

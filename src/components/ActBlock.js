@@ -60,10 +60,53 @@ const selectedSubvalueInState = (prefix, stateTypes) => {
    return false
 }
 
-const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mode }) => {
+const BlockChildren = ({ title, values, state, index, dispatch, type, mode, colOptions }) => {
    const [dropdownOpen, setOpen] = useState(false)
    const toggle = () => setOpen(!dropdownOpen)
 
+   const selectedSubvalue = selectedSubvalueInState(title, state)
+   return (
+      <Col key={index} {...colOptions} className="mb-4">
+         <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
+            <DropdownToggle outline color="secondary" invert={selectedSubvalue ? 1 : 0} caret>
+               {selectedSubvalue ? selectedSubvalue : title}
+            </DropdownToggle>
+            <DropdownMenu>
+               {values.map((sub, indexS) => (
+                  <DropdownItem
+                     key={indexS}
+                     onClick={() => {
+                        console.log("click")
+                        dispatch({
+                           type,
+                           payload: {
+                              mode,
+                              val: title + "/" + sub,
+                           },
+                        })
+                     }}
+                  >
+                     {sub}
+                  </DropdownItem>
+               ))}
+            </DropdownMenu>
+         </ButtonDropdown>
+      </Col>
+   )
+}
+
+BlockChildren.propTypes = {
+   title: PropTypes.string,
+   values: PropTypes.array.isRequired,
+   state: PropTypes.array.isRequired,
+   index: PropTypes.number,
+   dispatch: PropTypes.func.isRequired,
+   type: PropTypes.string.isRequired,
+   mode: PropTypes.string,
+   colOptions: PropTypes.object,
+}
+
+const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mode }) => {
    const colOptions = makeColOptions(values)
    const rowClassNames = values.length && values.length === 1 ? "justify-content-center" : ""
    const colorOptions = invalid ? { color: "red" } : {}
@@ -89,33 +132,17 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
          <Row className={rowClassNames}>
             {newValues.map((val, index) => {
                if (val.subValues.length) {
-                  const selectedSubvalue = selectedSubvalueInState(val.title, state)
                   return (
-                     <Col key={index} {...colOptions} className="mb-4">
-                        <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
-                           <DropdownToggle outline color="secondary" invert={selectedSubvalue ? 1 : 0} caret>
-                              {selectedSubvalue ? selectedSubvalue : val.title}
-                           </DropdownToggle>
-                           <DropdownMenu>
-                              {val.subValues.map((sub, indexS) => (
-                                 <DropdownItem
-                                    key={indexS}
-                                    onClick={() =>
-                                       dispatch({
-                                          type,
-                                          payload: {
-                                             mode,
-                                             val: val.title + "/" + sub,
-                                          },
-                                       })
-                                    }
-                                 >
-                                    {sub}
-                                 </DropdownItem>
-                              ))}
-                           </DropdownMenu>
-                        </ButtonDropdown>
-                     </Col>
+                     <BlockChildren
+                        title={val.title}
+                        values={val.subValues}
+                        state={state}
+                        index={index}
+                        dispatch={dispatch}
+                        type={type}
+                        mode={mode}
+                        colOptions={colOptions}
+                     />
                   )
                } else {
                   return (
