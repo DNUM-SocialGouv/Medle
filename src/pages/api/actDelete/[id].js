@@ -1,3 +1,5 @@
+import Cors from "micro-cors"
+
 import knex from "../../../knex/knex"
 import {
    STATUS_200_OK,
@@ -5,18 +7,16 @@ import {
    STATUS_404_NOT_FOUND,
    STATUS_403_FORBIDDEN,
    METHOD_GET,
+   METHOD_OPTIONS,
 } from "../../../utils/http"
 import { ACT_MANAGEMENT } from "../../../utils/roles"
-import { checkValidUserWithPrivilege, checkHttpMethod, sendAPIError } from "../../../utils/api"
+import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
 
-export default async (req, res) => {
+const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    try {
-      // 1 methods verification
-      checkHttpMethod([METHOD_GET], req, res)
-
-      // 2 privilege verification
+      // privilege verification
       const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
       let scope = currentUser.scope || []
       scope = [...scope, currentUser.hospitalId]
@@ -28,7 +28,7 @@ export default async (req, res) => {
          return res.status(STATUS_400_BAD_REQUEST).end()
       }
 
-      // 4 SQL query
+      // SQL query
       const act = await knex("acts")
          .where("id", id)
          .whereNull("deleted_at")
@@ -38,7 +38,7 @@ export default async (req, res) => {
          return res.status(STATUS_404_NOT_FOUND).end()
       }
 
-      // 5 scope verification
+      // scope verification
       if (act && !scope.includes(act.hospital_id)) {
          return res.status(STATUS_403_FORBIDDEN).json({ message: "Forbidden action for the user" })
       }
@@ -49,8 +49,14 @@ export default async (req, res) => {
 
       return res.status(STATUS_200_OK).end()
    } catch (error) {
-      // 7 DB error
+      // DB error
       console.error("API error", JSON.stringify(error))
       sendAPIError(error, res)
    }
 }
+
+const cors = Cors({
+   allowMethods: [METHOD_GET, METHOD_OPTIONS],
+})
+
+export default cors(handler)

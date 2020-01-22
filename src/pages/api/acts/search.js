@@ -1,17 +1,16 @@
+import Cors from "micro-cors"
+
 import { STATUS_200_OK, STATUS_500_INTERNAL_SERVER_ERROR, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { ACT_CONSULTATION } from "../../../utils/roles"
-import { checkValidUserWithPrivilege, checkHttpMethod, sendAPIError } from "../../../utils/api"
+import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
 import { APIError } from "../../../utils/errors"
 
-export default async (req, res) => {
+const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    try {
-      // 1 methods verification
-      checkHttpMethod([METHOD_GET, METHOD_OPTIONS], req, res)
-
-      // 2 privilege verification
+      // privilege verification
       const currentUser = checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
       let scope = currentUser.scope || []
@@ -20,7 +19,7 @@ export default async (req, res) => {
       const { fuzzy, internalNumber, pvNumber } = req.query
 
       try {
-         // 3 SQL query
+         // SQL query
          const acts = await knex("acts")
             .whereNull("acts.deleted_at")
             .where(builder => {
@@ -49,7 +48,7 @@ export default async (req, res) => {
 
          return res.status(STATUS_200_OK).json(acts)
       } catch (error) {
-         // 4 DB error
+         // DB error
          throw new APIError({
             status: STATUS_500_INTERNAL_SERVER_ERROR,
             message: "Erreur DB",
@@ -63,3 +62,9 @@ export default async (req, res) => {
       sendAPIError(error, res)
    }
 }
+
+const cors = Cors({
+   allowMethods: [METHOD_GET, METHOD_OPTIONS],
+})
+
+export default cors(handler)

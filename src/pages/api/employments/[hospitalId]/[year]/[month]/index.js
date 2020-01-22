@@ -1,3 +1,5 @@
+import Cors from "micro-cors"
+
 import knex from "../../../../../../knex/knex"
 import upsert from "../../../../../../knex/knex-upsert"
 import {
@@ -6,32 +8,30 @@ import {
    STATUS_404_NOT_FOUND,
    METHOD_GET,
    METHOD_PUT,
+   METHOD_OPTIONS,
 } from "../../../../../../utils/http"
 import { EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../../../../../../utils/roles"
-import { checkValidUserWithPrivilege, checkHttpMethod, sendAPIError } from "../../../../../../utils/api"
+import { checkValidUserWithPrivilege, sendAPIError } from "../../../../../../utils/api"
 
-export default async (req, res) => {
+const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    try {
-      // 1 methods verification
-      checkHttpMethod([METHOD_GET, METHOD_PUT], req, res)
-
-      // 2 privilege verification
+      // privilege verification
       checkValidUserWithPrivilege(EMPLOYMENT_CONSULTATION, req, res)
 
       if (req.method === METHOD_PUT) {
          checkValidUserWithPrivilege(EMPLOYMENT_MANAGEMENT, req, res)
       }
 
-      // 3 request verification
+      // request verification
       const { year, month, hospitalId } = req.query
 
       if (!year || !hospitalId || !/^[0-9]{4}$/.test(year) || !/^[0-9]+$/.test(hospitalId)) {
          return res.status(STATUS_400_BAD_REQUEST).end()
       }
 
-      // 4 SQL query
+      // SQL query
       if (req.method === METHOD_GET) {
          const results = await knex("employments")
             .whereNull("deleted_at")
@@ -64,8 +64,14 @@ export default async (req, res) => {
          return result ? res.status(STATUS_200_OK).json(result) : res.status(STATUS_404_NOT_FOUND).end()
       }
    } catch (error) {
-      // 5 DB error
+      // DB error
       console.error("API error", JSON.stringify(error))
       sendAPIError(error, res)
    }
 }
+
+const cors = Cors({
+   allowMethods: [METHOD_GET, METHOD_PUT, METHOD_OPTIONS],
+})
+
+export default cors(handler)

@@ -1,19 +1,18 @@
-import { STATUS_200_OK, METHOD_GET } from "../../../utils/http"
+import Cors from "micro-cors"
+
+import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { ACT_CONSULTATION } from "../../../utils/roles"
-import { checkValidUserWithPrivilege, checkHttpMethod, sendAPIError } from "../../../utils/api"
+import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
 
-export default async (req, res) => {
+const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    try {
-      // 1 methods verification
-      checkHttpMethod([METHOD_GET], req, res)
-
-      // 2 privilege verification
+      // privilege verification
       checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
-      // 3 SQL query
+      // SQL query
       const attacks = await knex("attacks")
          .whereNull("deleted_at")
          .orderBy("name")
@@ -21,9 +20,15 @@ export default async (req, res) => {
 
       return res.status(STATUS_200_OK).json(attacks)
    } catch (error) {
-      // 4 DB error
+      // DB error
       console.error(error)
       console.error("API error", JSON.stringify(error))
       sendAPIError(error, res)
    }
 }
+
+const cors = Cors({
+   allowMethods: [METHOD_GET, METHOD_OPTIONS],
+})
+
+export default cors(handler)

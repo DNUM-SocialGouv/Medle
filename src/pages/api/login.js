@@ -1,7 +1,8 @@
+import Cors from "micro-cors"
+
 import knex from "../../knex/knex"
 import { compareWithHash } from "../../utils/bcrypt"
 import { generateToken } from "../../utils/jwt"
-
 import {
    STATUS_200_OK,
    STATUS_400_BAD_REQUEST,
@@ -9,7 +10,7 @@ import {
    METHOD_OPTIONS,
    METHOD_POST,
 } from "../../utils/http"
-import { sendAPIError, checkHttpMethod } from "../../utils/api"
+import { sendAPIError } from "../../utils/api"
 import { timeout } from "../../utils/auth"
 
 const validPassword = password => {
@@ -37,21 +38,18 @@ const extractPublicData = ({
    scope,
 })
 
-export default async (req, res) => {
+const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    try {
-      // 1 methods verification
-      checkHttpMethod([METHOD_POST, METHOD_OPTIONS], req, res)
-
-      // 2 request verification
+      // request verification
       const { email, password } = await req.body
 
       if (!validPassword(password)) {
          return res.status(STATUS_400_BAD_REQUEST).json({ message: "Incorrect password" })
       }
 
-      // 3 SQL query
+      // SQL query
       const user = await knex("users")
          .where("email", email)
          .whereNull("deleted_at")
@@ -64,7 +62,7 @@ export default async (req, res) => {
          res.status(STATUS_200_OK).json(extractPublicData(user))
          // res.status(STATUS_200_OK).json({ token })
       } else {
-         // 4 Unauthorized path
+         // Unauthorized path
          return res.status(STATUS_401_UNAUTHORIZED).json({
             error: {
                message: "Erreur d'authentification",
@@ -77,3 +75,9 @@ export default async (req, res) => {
       sendAPIError(error, res)
    }
 }
+
+const cors = Cors({
+   allowMethods: [METHOD_POST, METHOD_OPTIONS],
+})
+
+export default cors(handler)

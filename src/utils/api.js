@@ -56,14 +56,3 @@ export const checkValidUserWithPrivilege = (privilege, req) => {
       })
    }
 }
-
-export const checkHttpMethod = (methods, req) => {
-   if (!methods || !methods.length) {
-      console.error("Incorrect call of checkHttpMethod")
-      return
-   }
-
-   if (!methods.includes(req.method)) {
-      throw new APIError({ message: "Method not allowed", status: STATUS_405_METHOD_NOT_ALLOWED })
-   }
-}
