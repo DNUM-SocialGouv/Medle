@@ -17,5 +17,6 @@ export const STATUS_503_SERVICE_UNAVAILABLE = 503
 
 export const METHOD_GET = "GET"
 export const METHOD_POST = "POST"
+export const METHOD_OPTIONS = "OPTIONS"
 export const METHOD_PUT = "PUT"
 export const METHOD_PATCH = "PATCH"

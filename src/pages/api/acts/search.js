@@ -1,4 +1,4 @@
-import { STATUS_200_OK, STATUS_500_INTERNAL_SERVER_ERROR, METHOD_GET } from "../../../utils/http"
+import { STATUS_200_OK, STATUS_500_INTERNAL_SERVER_ERROR, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { ACT_CONSULTATION } from "../../../utils/roles"
 import { checkValidUserWithPrivilege, checkHttpMethod, sendAPIError } from "../../../utils/api"
@@ -9,7 +9,7 @@ export default async (req, res) => {
 
    try {
       // 1 methods verification
-      checkHttpMethod([METHOD_GET], req, res)
+      checkHttpMethod([METHOD_GET, METHOD_OPTIONS], req, res)
 
       // 2 privilege verification
       const currentUser = checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)

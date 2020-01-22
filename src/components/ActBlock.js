@@ -60,13 +60,13 @@ const selectedSubvalueInState = (prefix, stateTypes) => {
    return false
 }
 
-const BlockChildren = ({ title, values, state, index, dispatch, type, mode, colOptions }) => {
+const BlockChildren = ({ title, values, state, dispatch, type, mode, colOptions }) => {
    const [dropdownOpen, setOpen] = useState(false)
    const toggle = () => setOpen(!dropdownOpen)
 
    const selectedSubvalue = selectedSubvalueInState(title, state)
    return (
-      <Col key={index} {...colOptions} className="mb-4">
+      <Col {...colOptions} className="mb-4">
          <ButtonDropdown className="btn-block" isOpen={dropdownOpen} toggle={toggle}>
             <DropdownToggle outline color="secondary" invert={selectedSubvalue ? 1 : 0} caret>
                {selectedSubvalue ? selectedSubvalue : title}
@@ -98,8 +98,7 @@ const BlockChildren = ({ title, values, state, index, dispatch, type, mode, colO
 BlockChildren.propTypes = {
    title: PropTypes.string,
    values: PropTypes.array.isRequired,
-   state: PropTypes.array.isRequired,
-   index: PropTypes.number,
+   state: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
    dispatch: PropTypes.func.isRequired,
    type: PropTypes.string.isRequired,
    mode: PropTypes.string,
@@ -134,10 +133,10 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
                if (val.subValues.length) {
                   return (
                      <BlockChildren
+                        key={index}
                         title={val.title}
                         values={val.subValues}
                         state={state}
-                        index={index}
                         dispatch={dispatch}
                         type={type}
                         mode={mode}

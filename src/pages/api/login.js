@@ -2,7 +2,13 @@ import knex from "../../knex/knex"
 import { compareWithHash } from "../../utils/bcrypt"
 import { generateToken } from "../../utils/jwt"
 
-import { STATUS_200_OK, STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, METHOD_POST } from "../../utils/http"
+import {
+   STATUS_200_OK,
+   STATUS_400_BAD_REQUEST,
+   STATUS_401_UNAUTHORIZED,
+   METHOD_OPTIONS,
+   METHOD_POST,
+} from "../../utils/http"
 import { sendAPIError, checkHttpMethod } from "../../utils/api"
 import { timeout } from "../../utils/auth"
 
@@ -36,7 +42,7 @@ export default async (req, res) => {
 
    try {
       // 1 methods verification
-      checkHttpMethod([METHOD_POST], req, res)
+      checkHttpMethod([METHOD_POST, METHOD_OPTIONS], req, res)
 
       // 2 request verification
       const { email, password } = await req.body
