@@ -1,3 +1,4 @@
+// NB: all passwords have the content "test" after bcrypt operations. So use medle@tours.fr/test, for example, to authenticate
 exports.seed = function(knex) {
    return knex("users")
       .del()
