@@ -1,21 +1,82 @@
-# medle
-MedLé :  plateforme permettant aux établissements de santé de déclarer leur activité médico-légale
+# Medle
 
-## Install
+MedLé is a plateform for french hospital to declare their medico-legal activity.
 
-Prerequisite : install a Postgres DB, named `medle`.
+## 👔 Install
 
-```js
-yarn install
+Install git, yarn, docker, docker-compose with brew on Mac OS.
+
+`docker-compose up --build -d`
+
+Then, the DB is exposed on port 5434 and the app is accessible on port 80.
+
+Connect to the DB via a Postgresql client. For start, there a user with the name user and the password password.
+
+`docker exec -it medle_db_1 psql -U user`
+
+Create the medle database and the user medle.
+
+```sql
+create database medle;
+create user medle with encrypted password 'jJFWsfW5ePbN7J'sql;
+grant all privileges on database medle to medle
 ```
 
-## Run
+Then you create/modify a file .env on the root of the project (see the .env.samp like a reference).
+For DATABASE_URL, use the matching password you have just created.
 
 ```js
-yarn dev
+NODE_ENV=development
+
+APP_URL=http://localhost
+API_URL=http://localhost/api
+
+POSTGRES_USER=medle
+POSTGRES_PASSWORD=jJFWsfW5ePbN7J
+
+# API variables
+
+# for container app usage (like production)
+DATABASE_URL=psql://medle:jJFWsfW5ePbN7J@db:5432/medle
+
+# JWT
+JWT_SECRET=NEGLaRS3n9JHuY
+
+# Test variables
+#TEST_CURRENT_DATE=10/09/2019
 ```
 
-## Type for commit messages
+Then rerun the container app, to force usage of this .env file.
+`docker-compose up --build -d app`
+
+This is supposed to work now!
+
+
+## 🏗️ Development usage
+
+For development purpose, it is more handy to use `yarn dev` to benefit of the hot reload Next mechanism.
+
+So, you only run the db container
+`docker-compose up --build -d db`
+
+Modify .env for APP_URL and APP_API
+```js
+APP_URL=http://localhost:3000
+API_URL=http://localhost:3000/api
+```
+
+Now run `yarn` to install the dependencies, then `yarn dev`.
+
+At the end, the app is running at http://localhost:3000.
+
+*Nota bene*
+Be careful. If you use the app from the container, it is considered inside the docker network.
+So you have to use an DATABASE_URL with __5432__ port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@db:5432/medle`.
+
+On the other hand, when you use `yarn dev`, the node process is on localhost and is therefore outside the docker network.
+In this case, you need to use a DATABASE_URL with __5434__ port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@localhost:5434/medle`.
+
+## 🖋️ Type for commit messages
 
 You need to use the commit lint convention for commit message.
 
@@ -40,90 +101,35 @@ Add in commit message "Closes #123" where 123 is the issues's id to close.
 For example, This closes #34, closes #23, and closes example_user/example_repo#42 would close issues #34 and #23 in the same repository, and issue #42 in the "example_user/example_repo" repository.
 
 
-## Docker build
 
-```shell
-docker build --build-arg SENTRY_DSN="https://[hash]@url.sentry.com/42" --build-arg SENTRY_TOKEN="1234" --build-arg MATOMO_URL="https://url.matomo.com" --build-arg MATOMO_SITE_ID=42 --build-arg POSTGRES_HOST="192.168.1.18" . -t medle
-```
+## 🌱 Migration and seeds
 
-## Docker run
+The database structure may evolve thanks to Knex.js migrations.
 
-```shell
-docker run -it --init --rm -p 3001:3000 medle
-```
-
-## Create knex migration file
+To initiate a migration, the easiest way is to use `migrate:make` script in package.json.
 
 ```shell
 NODE_ENV=development yarn knex migrate:make init_schema --cwd ./src/knex
 ```
 
-## Run migrations
+Modify it accordingly with the business needs.
 
-```
+To use it, use `migrate:latest` script in package.json.
+
+`sudo docker-compose exec app yarn migrate:latest`
+
+So on another platform like production, the pattern is to do:
+
+```sh
 git pull
 sudo docker-compose up --build -d
 sudo docker-compose exec app yarn migrate:latest
 ```
 
-## Run seeds
 
-sudo docker-compose exec app yarn seed:run
+On the development platform, you may need to populate table in JS (you may do it directly with SQL client too).
 
-## TimeZone
+Make a new seed file, then:
 
-`SET timezone = 'posix/Europe/Paris';
-select now();
+`sudo docker-compose exec app yarn seed:run`
 
-SET timezone = 'UTC';
-select now();`
-
-
-## Ajouter un user en base de données
-
-`INSERT INTO USERS (first_name, last_name, email, password, role, hospital_id, scope)
-VALUES ('Dominique', 'Cormier', 'dom.cormier@gmail.com', 'password-with-bcrypt', 'OPERATOR_ACT', 1, null);`
-
-`INSERT INTO USERS (first_name, last_name, email, password, role, hospital_id, scope)
-VALUES ('Dominique', 'Cormier', 'dom.cormier@gmail.com', 'password-with-bcrypt', 'OPERATOR_EMPLOYMENT', 1, null);`
-
-`INSERT INTO USERS (first_name, last_name, email, password, role, hospital_id, scope)
-VALUES ('Marc', 'Legrand', 'marc.legrand@yahoo.fr', 'password-with-bcrypt', 'REGIONAL_SUPERVISOR', null, {1, 2, 3});`
-
-Use bcrypt generator, like : https://www.browserling.com/tools/bcrypt
-
-## Patch DB
-
-Dans le cas où la définition des actes changent dans leur version existante (le nom d'un profil change ou bien une des réponses possibles d'une rubrique existante est modifiée), la page de déclaration d'acte ne va pas réussir à lire toutes les catégories ou les valeurs. Pour un profil, cela aboutira à une erreur. Pour une valeur de rubrique, qui change (ex: le genre de la personne passe de "Autre" à "Autre genre"), pour les actes qui ont l'ancienne valeur (Autre), rien ne sera coché dans cette rubrique. Pas d'erreur donc mais un fonctionnement non optimal.
-
-Pour corriger cela, il faut modifier la base de données et la colonne JSONB `extra_data` avec des requêtes du type :
-
-- changement d'un libellé de profil: `le profil 'Victime' devient 'Victime (vivante)'`
-
-```sql
-update acts set profile = 'Victime (vivante)' where profile = 'Victime'
-```
-
-- changement d'une valeur pour une catégorie qui ne prend qu'une seule réponse `Le genre "Autre" devient "Autre genre"`
-```sql
-update acts
-set extra_data = extra_data - 'personGender' || '{"personGender": "Autre genre"}'
-where extra_data->'personGender' ? 'Autre'
-```
-
-- ajouter une valeur à une propriété de type array `Ajouter à violenceTypes la valeur "Voie publique", là où il y a la valeur "Familiale"`
-```sql
-update acts
-set extra_data = jsonb_set(extra_data, '{violenceTypes}', (extra_data->'violenceTypes') || '["Voie publique"]')
-where extra_data->'violenceTypes' ? 'Familiale'
-```
-
-- changement d'une valeur pour une catégorie prenant potentiellement plusieurs réponses `le type de violence "Voie publique" devient "Sur voie publique"`
-
-```sql
-update acts
-set extra_data = jsonb_set(extra_data, '{violenceTypes}', ((extra_data->'violenceTypes') - 'Voie publique') || '["Sur voie publique"]')
-where extra_data->'violenceTypes' ? 'Voie publique'
-```
-
-À contrario, ajouter une rubrique à la déclaration d'acte ou une valeur, sera accepté sans problème.
