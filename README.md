@@ -1,29 +1,32 @@
 # Medle
 
-MedLé is a plateform for french hospital to declare their medico-legal activity.
+MedLé is a plateform for french hospitals to declare their medico-legal activity.
 
 ## 👔 Install
 
-Install git, yarn, docker, docker-compose with brew on Mac OS.
+First, install git, yarn, docker, docker-compose with [brew](https://brew.sh/) on Mac OS.
+
+Then, run the containers with `docker-compose`.
 
 `docker-compose up --build -d`
 
 Then, the DB is exposed on port 5434 and the app is accessible on port 80.
 
-Connect to the DB via a Postgresql client. For start, there a user with the name user and the password password.
+Connect to the DB via a Postgresql client. For start, there a user with the name `user` and the password `password`.
 
 `docker exec -it medle_db_1 psql -U user`
 
-Create the medle database and the user medle.
+Create the medle database and the user medle with the password of your choice.
 
 ```sql
 create database medle;
-create user medle with encrypted password 'jJFWsfW5ePbN7J'sql;
+create user medle with encrypted password 'jJFWsfW5ePbN7J';
 grant all privileges on database medle to medle
 ```
 
-Then you create/modify a file .env on the root of the project (see the .env.samp like a reference).
-For DATABASE_URL, use the matching password you have just created.
+Then create/modify an `.env` file in the root of the project (see `.env.sample` as a reference).
+
+For DATABASE_URL, be sure to use the matching password you have just created before.
 
 ```js
 NODE_ENV=development
@@ -46,7 +49,7 @@ JWT_SECRET=NEGLaRS3n9JHuY
 #TEST_CURRENT_DATE=10/09/2019
 ```
 
-Then rerun the container app, to force usage of this .env file.
+Then rerun the container app, to force usage of this `.env` file.
 `docker-compose up --build -d app`
 
 This is supposed to work now!
@@ -54,12 +57,12 @@ This is supposed to work now!
 
 ## 🏗️ Development usage
 
-For development purpose, it is more handy to use `yarn dev` to benefit of the hot reload Next mechanism.
+For development purpose, it is more handy to use `yarn dev` to benefit from the hot reload offered by Next.
 
 So, you only run the db container
 `docker-compose up --build -d db`
 
-Modify .env for APP_URL and APP_API
+Modify `.env` for APP_URL and APP_API
 ```js
 APP_URL=http://localhost:3000
 API_URL=http://localhost:3000/api
@@ -70,6 +73,7 @@ Now run `yarn` to install the dependencies, then `yarn dev`.
 At the end, the app is running at http://localhost:3000.
 
 *Nota bene*
+
 Be careful. If you use the app from the container, it is considered inside the docker network.
 So you have to use an DATABASE_URL with __5432__ port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@db:5432/medle`.
 
@@ -92,14 +96,13 @@ I.e, you must specify a type in prefix position, for the message using one of th
 - style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
 - test: Adding missing tests or correcting existing tests
 
-as a reference see https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-angular
+As a reference see https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-angular.
 
 ## Close automatically issues
 
 Add in commit message "Closes #123" where 123 is the issues's id to close.
 
 For example, This closes #34, closes #23, and closes example_user/example_repo#42 would close issues #34 and #23 in the same repository, and issue #42 in the "example_user/example_repo" repository.
-
 
 
 ## 🌱 Migration and seeds
@@ -112,13 +115,13 @@ To initiate a migration, the easiest way is to use `migrate:make` script in pack
 NODE_ENV=development yarn knex migrate:make init_schema --cwd ./src/knex
 ```
 
-Modify it accordingly with the business needs.
+Modify it accordingly to the business needs.
 
-To use it, use `migrate:latest` script in package.json.
+To apply it, use `migrate:latest` script in package.json.
 
 `sudo docker-compose exec app yarn migrate:latest`
 
-So on another platform like production, the pattern is to do:
+So on another platform like production, the pattern is:
 
 ```sh
 git pull
@@ -126,8 +129,11 @@ sudo docker-compose up --build -d
 sudo docker-compose exec app yarn migrate:latest
 ```
 
+If you're not happy with the migration done, you can rollback with the script `migrate:rollback` in package.json.
 
-On the development platform, you may need to populate table in JS (you may do it directly with SQL client too).
+`sudo docker-compose exec app yarn migrate:rollback`
+
+On the development platform, you may need to populate table in JS (you may yet do it directly with SQL client too).
 
 Make a new seed file, then:
 
