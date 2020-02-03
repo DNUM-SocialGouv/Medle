@@ -1,6 +1,6 @@
 # Medle
 
-MedLé is a plateform for french hospitals to declare their medico-legal activity.
+MedLé is a platform for french hospitals to declare their medico-legal activity.
 
 ## 👔 Install
 
@@ -80,31 +80,6 @@ So you have to use an DATABASE_URL with __5432__ port, like `DATABASE_URL=psql:/
 On the other hand, when you use `yarn dev`, the node process is on localhost and is therefore outside the docker network.
 In this case, you need to use a DATABASE_URL with __5434__ port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@localhost:5434/medle`.
 
-## 🖋️ Type for commit messages
-
-You need to use the commit lint convention for commit message.
-
-I.e, you must specify a type in prefix position, for the message using one of the following:
-
-- build: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-- ci: Changes to our CI configuration files and scripts (example scopes: Circle, BrowserStack, SauceLabs)
-- docs: Documentation only changes
-- feat: A new feature
-- fix: A bug fix
-- perf: A code change that improves performance
-- refactor: A code change that neither fixes a bug nor adds a feature
-- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- test: Adding missing tests or correcting existing tests
-
-As a reference see https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-angular.
-
-## Close automatically issues
-
-Add in commit message "Closes #123" where 123 is the issues's id to close.
-
-For example, This closes #34, closes #23, and closes example_user/example_repo#42 would close issues #34 and #23 in the same repository, and issue #42 in the "example_user/example_repo" repository.
-
-
 ## 🌱 Migration and seeds
 
 The database structure may evolve thanks to Knex.js migrations.
@@ -139,3 +114,25 @@ Make a new seed file, then:
 
 `sudo docker-compose exec app yarn seed:run`
 
+
+## 🖋️ Conventions for commit messages
+
+You need to use the commit lint convention for commit message.
+
+I.e, you must specify a type in prefix position, for the message using one of the following:
+
+- build: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+- ci: Changes to our CI configuration files and scripts (example scopes: Circle, BrowserStack, SauceLabs)
+- docs: Documentation only changes
+- feat: A new feature
+- fix: A bug fix
+- perf: A code change that improves performance
+- refactor: A code change that neither fixes a bug nor adds a feature
+- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- test: Adding missing tests or correcting existing tests
+
+As a reference see https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-angular.
+
+## Conventions for closing automatically issues
+
+Add in commit message "Closes #123" where 123 is the issues's id to close.
