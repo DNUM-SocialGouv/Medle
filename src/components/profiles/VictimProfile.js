@@ -5,9 +5,14 @@ import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
+import { fetchAttacks } from "../../utils/init"
 
 const getAttacks = () => {
-   return sessionStorage.getItem("attacks") ? JSON.parse(sessionStorage.getItem("attacks")).map(elt => elt.name) : []
+   if (typeof sessionStorage !== "undefined") {
+      return sessionStorage.getItem("attacks") ? JSON.parse(sessionStorage.getItem("attacks")).map(elt => elt.name) : []
+   }
+   const attacks = fetchAttacks()
+   return attacks && attacks.length ? attacks.map(elt => elt.name) : []
 }
 
 const VictimEdit = ({ dispatch, state, errors }) => {
@@ -77,6 +82,9 @@ const VictimEdit = ({ dispatch, state, errors }) => {
             state={state.periodOfDay || ""}
             invalid={!!errors.periodOfDay}
          />
+
+         <Title2 className="mb-2 mt-5">{"Profil de la personne examinée"}</Title2>
+
          <ActBlock
             type="personGender"
             title=""
