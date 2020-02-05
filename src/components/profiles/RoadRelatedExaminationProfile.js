@@ -15,7 +15,7 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
          <ActBlock
             type="examinationTypes"
             title="Type(s) d'acte"
-            values={["Somatique", "Psychiatrique"]}
+            values={["Somatique"]}
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.examinationTypes || []}
@@ -33,7 +33,7 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
          <ActBlock
             type="location"
             title="Lieu de l'examen"
-            values={["UMJ", "Locaux douaniers", "Centre de rétention"]}
+            values={["UMJ", "Lieu de contrôle", "Commissariat / gendarmerie"]}
             mode="toggleMultiple"
             dispatch={dispatch}
             state={state.location || []}
@@ -49,7 +49,7 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
             invalid={!!errors.periodOfDay}
          />
 
-         <Title2 className="mb-2 mt-5">{"Profil de la personne retenue"}</Title2>
+         <Title2 className="mb-2 mt-5">{"Profil de la personne examinée"}</Title2>
 
          <ActBlock
             type="personGender"
@@ -118,9 +118,6 @@ const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
-   }
-   if (!state.prescription) {
-      errors.prescription = "Obligatoire"
    }
    if (!state.location) {
       errors.location = "Obligatoire"

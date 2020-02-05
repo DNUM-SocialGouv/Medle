@@ -80,7 +80,7 @@ const AskerAutocomplete = props => {
    const shouldRenderSuggestions = value => value.trim().length > 2
 
    const inputProps = {
-      placeholder: "Tapez les premières lettres de la ville",
+      placeholder: "Tapez le nom du demandeur",
       value: autoSuggestData.value,
       onChange: onAutoSuggestChange,
       onBlur: async () => {
