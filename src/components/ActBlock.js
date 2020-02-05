@@ -76,7 +76,6 @@ const BlockChildren = ({ title, values, state, dispatch, type, mode, colOptions 
                   <DropdownItem
                      key={indexS}
                      onClick={() => {
-                        console.log("click")
                         dispatch({
                            type,
                            payload: {
