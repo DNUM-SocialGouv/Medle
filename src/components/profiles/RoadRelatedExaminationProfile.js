@@ -34,7 +34,7 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
             type="location"
             title="Lieu de l'examen"
             values={["UMJ", "Lieu de contrôle", "Commissariat / gendarmerie"]}
-            mode="toggleMultiple"
+            mode="toggle"
             dispatch={dispatch}
             state={state.location || []}
             invalid={!!errors.location}
