@@ -1,52 +1,39 @@
 import React from "react"
 import { cleanup, render, fireEvent, waitForElement } from "@testing-library/react"
 import Login from "../Login"
-import { act } from "react-dom/test-utils"
 
 describe("<Login> component tests", () => {
    afterEach(cleanup)
 
-   //    beforeEach(() => {
-   //       console.log("dans le beforeEach")
-   //    })
-
    it("should display a spinner in case of loading authentication process", async () => {
-      const fn = jest.fn(() => {
-         setTimeout(() => {
-            // something
-         })
-      }, 100)
+      const noop = jest.fn(() => {})
 
-      const { getByText, getByTestId } = render(<Login authentication={fn} error={null} />)
+      const { getByText, getByTestId } = render(<Login authentication={noop} error={null} />)
 
       fireEvent.click(getByText("Se connecter"))
 
-      expect(fn).toHaveBeenCalledTimes(1)
+      const loading = await waitForElement(() => getByTestId("loading"))
 
-      expect(getByTestId("loading")).toBeTruthy()
+      expect(noop).toHaveBeenCalledTimes(1)
+
+      expect(loading).toBeTruthy()
    })
 
-   // it("should display an error in case of loading authentication issue", async () => {
-   //    const fn = jest.fn(() => {
-   //       return Promise.reject("Erreur xxx")
-   //    })
+   it("should display an error in case of loading authentication issue", async () => {
+      const noop = jest.fn(() => {})
 
-   //    const { getByText, findByText, getByTestId, queryByTestId } = render(<Login authentication={fn} error={null} />)
+      const { getByText, findByText, getByTestId } = render(<Login authentication={noop} error={"Erreur_xxx"} />)
 
-   //    fireEvent.click(getByText("Se connecter"))
+      fireEvent.click(getByText("Se connecter"))
 
-   //    expect(fn).toHaveBeenCalledTimes(1)
+      const loading = await waitForElement(() => getByTestId("loading"))
 
-   //    expect(getByTestId("loading")).not.toBeNull()
+      expect(noop).toHaveBeenCalledTimes(1)
 
-   //    let erreurDiv
+      expect(loading).toBeTruthy()
 
-   //    await waitForElement(() => {
-   //       erreurDiv = findByText("Erreur xxx")
-   //    })
+      const erreurDiv = await waitForElement(() => findByText("Erreur_xxx"))
 
-   //    expect(erreurDiv).not.toBeTruthy()
-
-   //    expect(queryByTestId("loading")).toBeNull()
-   // })
+      expect(erreurDiv).toBeTruthy()
+   })
 })
