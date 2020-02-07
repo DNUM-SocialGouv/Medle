@@ -9,9 +9,6 @@ import { isAllowed, NO_PRIVILEGE_REQUIRED } from "./roles"
 import { checkToken, decodeToken } from "./jwt"
 import { APIError } from "./errors"
 
-const { NODE_ENV } = process.env
-const DEV = NODE_ENV === "development"
-
 // see Micro.sendError
 export const sendError = (req, res, error) => {
    const statusCode = error.statusCode || error.status
@@ -41,12 +38,11 @@ export const createError = (code, message, original) => {
 export const sendAPIError = (error, res) => {
    if (error instanceof APIError) {
       return res.status(error.status).json(error)
-   } else {
-      // fallback error
-      return res
-         .status(STATUS_500_INTERNAL_SERVER_ERROR)
-         .json({ message: `Erreur de base de donnée / ${error}`, status: STATUS_500_INTERNAL_SERVER_ERROR })
    }
+   // fallback error
+   return res
+      .status(STATUS_500_INTERNAL_SERVER_ERROR)
+      .json({ message: `Erreur de base de donnée / ${error}`, status: STATUS_500_INTERNAL_SERVER_ERROR })
 }
 
 export const checkValidUserWithPrivilege = (privilege, req) => {
@@ -56,7 +52,6 @@ export const checkValidUserWithPrivilege = (privilege, req) => {
       if (!token) {
          throw new APIError({
             message: "Non authentified user",
-            detailMessage: "toto",
             status: STATUS_401_UNAUTHORIZED,
          })
       }

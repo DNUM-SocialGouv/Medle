@@ -44,6 +44,7 @@ function onError(err, req, res) {
 }
 
 function onNoMatch(req, res) {
+   console.error("req", req)
    return sendError(req, res, createError(STATUS_405_METHOD_NOT_ALLOWED, "Method not allowed"))
 }
 
