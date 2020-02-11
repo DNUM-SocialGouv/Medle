@@ -6,13 +6,17 @@ import Login from "../components/Login"
 import { handleAPIResponse } from "../utils/errors"
 import { registerAndRedirectUser } from "../utils/auth"
 import PropTypes from "prop-types"
+import { matopush, trackEvent, CATEGORY, ACTION } from "../utils/matomo"
 
 const LoginPage = ({ message }) => {
    const [error, setError] = useState(message || "")
    const isValidUserData = ({ email, password }) => !!(email && password)
    let isMounted = false
+   console.log("dans loginPage")
 
    const authentication = userData => {
+      matopush(["trackEvent", "click", "button-test-matomo"])
+
       isMounted = true
       return new Promise((resolve, reject) => {
          if (isMounted) setError("")
@@ -37,6 +41,7 @@ const LoginPage = ({ message }) => {
                   const json = await handleAPIResponse(response)
 
                   registerAndRedirectUser(json)
+                  trackEvent(CATEGORY.auth, ACTION.auth.connection)
                   resolve("OK")
                } catch (error) {
                   console.error(`${error}`)
@@ -45,6 +50,7 @@ const LoginPage = ({ message }) => {
                   } else {
                      setError("Problème en base de données")
                   }
+                  trackEvent(CATEGORY.auth, ACTION.auth.deconnection)
                   reject(error)
                }
             }

@@ -136,3 +136,27 @@ As a reference see https://github.com/conventional-changelog/commitlint/tree/mas
 ## Conventions for closing automatically issues
 
 Add in commit message "Closes #123" where 123 is the issues's id to close.
+
+## Matomo
+
+`trackEvent(category, action, [name], [value])`
+
+avec :
+- category/action:
+    - acte
+        - déclaration
+        - suppression
+        - modification
+        - lecture
+    - etp
+        - déclaration
+        - modification
+        - validation annuelle
+    - stat
+        - lecture vivant
+        - lecture thanato
+        - lecture globale
+    - authentification
+        - connexion
+        - déconnexion
+        - erreur
