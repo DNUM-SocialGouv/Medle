@@ -76,9 +76,10 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
       } finally {
          setTimeout(async () => {
             setIsLoading(false)
-         }, 400)
+         }, 500)
       }
    }
+
    const clickPage = async requestedPage => {
       setIsError(false)
 
@@ -105,23 +106,24 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
                         placeholder="Rechercher un dossier par numéro, type de profil examiné, ..."
                         value={search}
                         onChange={onChange}
+                        autoComplete="off"
                      />
                   </Col>
                   <Col className="text-align-right" md={{ size: 3 }}>
-                     <Button style={{ minWidth: 100 }}>
+                     <Button style={{ minWidth: 100 }} disabled={isLoading}>
                         {isLoading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
                      </Button>
                   </Col>
                </FormGroup>
             </Form>
-
             {isError && (
                <Alert color="danger" className="mt-5 mb-5">
                   {isError}
                </Alert>
             )}
+            {!isError && !paginatedData.acts.length && <div className="mt-5 text-center">{"Aucun actes trouvés."}</div>}
 
-            {!isError && (
+            {!isError && !!paginatedData.acts.length && (
                <>
                   <Pagination aria-label="Page navigation example" className="mt-5">
                      <PaginationItem>
@@ -146,6 +148,7 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
                         <PaginationLink last href="#" onClick={() => clickPage(paginatedData.maxPage)} />
                      </PaginationItem>
                   </Pagination>
+
                   <style jsx global>{`
                      .pagination {
                         justify-content: center;
