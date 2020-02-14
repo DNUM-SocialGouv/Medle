@@ -35,7 +35,6 @@ const handler = async (req, res) => {
       }
    } catch (error) {
       // DB error
-      console.error("API error", JSON.stringify(error))
       sendAPIError(error, res)
    }
 }

@@ -36,6 +36,8 @@ export const createError = (code, message, original) => {
 }
 
 export const sendAPIError = (error, res) => {
+   console.error(error)
+
    if (error instanceof APIError) {
       return res.status(error.status).json(stringifyError(error))
    }

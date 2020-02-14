@@ -75,7 +75,6 @@ const handler = async (req, res) => {
 
          return res.status(STATUS_200_OK).json({ totalCount, currentPage: requestedPage, maxPage, byPage: LIMIT, acts })
       } catch (error) {
-         // DB error
          throw new APIError({
             status: STATUS_500_INTERNAL_SERVER_ERROR,
             message: "Erreur DB",
@@ -84,7 +83,7 @@ const handler = async (req, res) => {
          })
       }
    } catch (error) {
-      console.error(error)
+      // DB error
       sendAPIError(error, res)
    }
 }

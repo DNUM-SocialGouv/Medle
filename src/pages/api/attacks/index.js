@@ -21,8 +21,6 @@ const handler = async (req, res) => {
       return res.status(STATUS_200_OK).json(attacks)
    } catch (error) {
       // DB error
-      console.error(error)
-      console.error("API error", JSON.stringify(error))
       sendAPIError(error, res)
    }
 }
