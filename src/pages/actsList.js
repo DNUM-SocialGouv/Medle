@@ -3,7 +3,20 @@ import Link from "next/link"
 import PropTypes from "prop-types"
 import fetch from "isomorphic-unfetch"
 import moment from "moment"
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
+import {
+   Alert,
+   Button,
+   Col,
+   Container,
+   Form,
+   FormGroup,
+   Input,
+   Spinner,
+   Table,
+   Pagination,
+   PaginationItem,
+   PaginationLink,
+} from "reactstrap"
 
 import { buildOptionsFetch, withAuthentication } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
@@ -14,16 +27,30 @@ import { FORMAT_DATE } from "../utils/date"
 import { ACT_CONSULTATION } from "../utils/roles"
 import { handleAPIResponse } from "../utils/errors"
 
-const fetchData = async ({ search, optionsFetch }) => {
-   const bonus = search ? `?fuzzy=${search}` : ""
+const fetchData = async ({ search, requestedPage, optionsFetch }) => {
+   const arr = []
+   if (search) {
+      arr.push(`fuzzy=${search}`)
+   }
+   if (requestedPage) {
+      arr.push(`requestedPage=${requestedPage}`)
+   }
+   const bonus = arr.length ? "?" + arr.join("&") : ""
    const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}${bonus}`, optionsFetch)
 
    return handleAPIResponse(response)
 }
 
-const ActsListPage = ({ initialActs, currentUser }) => {
+const defaultPaginatedData = {
+   totalCount: 0,
+   currentPage: 1,
+   maxPage: 1,
+   acts: [],
+}
+
+const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
    const [search, setSearch] = useState("")
-   const [acts, setActs] = useState(initialActs || [])
+   const [paginatedData, setPaginatedData] = useState(_paginatedData || defaultPaginatedData)
    const [isError, setIsError] = useState()
    const [isLoading, setIsLoading] = useState(false)
 
@@ -40,16 +67,27 @@ const ActsListPage = ({ initialActs, currentUser }) => {
       setIsLoading(true)
       setIsError(false)
 
-      let acts
-
       try {
-         acts = await fetchData({ search })
+         const paginatedData = await fetchData({ search })
+         setPaginatedData(paginatedData)
       } catch (error) {
          console.error("APP error", error)
          setIsError("Erreur en base de données")
       } finally {
-         setIsLoading(false)
-         setActs(acts || [])
+         setTimeout(async () => {
+            setIsLoading(false)
+         }, 400)
+      }
+   }
+   const clickPage = async requestedPage => {
+      setIsError(false)
+
+      try {
+         const paginatedData = await fetchData({ search, requestedPage })
+         setPaginatedData(paginatedData)
+      } catch (error) {
+         console.error("APP error", error)
+         setIsError("Erreur en base de données")
       }
    }
 
@@ -70,16 +108,12 @@ const ActsListPage = ({ initialActs, currentUser }) => {
                      />
                   </Col>
                   <Col className="text-align-right" md={{ size: 3 }}>
-                     <Button>Chercher</Button>
+                     <Button style={{ minWidth: 100 }}>
+                        {isLoading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
+                     </Button>
                   </Col>
                </FormGroup>
             </Form>
-
-            {isLoading && (
-               <div style={{ width: 100 }} className="mx-auto mt-5 mb-3">
-                  <Spinner color="primary">Loading...</Spinner>
-               </div>
-            )}
 
             {isError && (
                <Alert color="danger" className="mt-5 mb-5">
@@ -87,37 +121,67 @@ const ActsListPage = ({ initialActs, currentUser }) => {
                </Alert>
             )}
 
-            {!isError && !isLoading && (
-               <Table responsive className="mt-5 table-hover">
-                  <thead>
-                     <tr className="table-light">
-                        <th>N° dossier interne</th>
-                        <th>N° PV</th>
-                        <th>Date</th>
-                        <th>Type de profil</th>
-                        <th>{"Type d'acte"}</th>
-                        <th></th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     {acts.map(act => (
-                        <tr key={act.id}>
-                           <td>
-                              <b>{act.internal_number}</b>
-                           </td>
-                           <td>{act.pv_number}</td>
-                           <td>{act.examination_date && moment(act.examination_date).format(FORMAT_DATE)}</td>
-                           <td>{act.profile}</td>
-                           <td>{act.extra_data && <VerticalList content={act.extra_data.examinationTypes} />}</td>
-                           <td>
-                              <Link href="/actDetail/[id]" as={`/actDetail/${act.id}`}>
-                                 <a>{"Voir >"}</a>
-                              </Link>
-                           </td>
+            {!isError && (
+               <>
+                  <Pagination aria-label="Page navigation example" className="mt-5">
+                     <PaginationItem>
+                        <PaginationLink first href="#" onClick={() => clickPage(0)} />
+                     </PaginationItem>
+                     <PaginationItem>
+                        <PaginationLink previous href="#" onClick={() => clickPage(paginatedData.currentPage - 1)} />
+                     </PaginationItem>
+                     {Array(paginatedData.maxPage)
+                        .fill(0)
+                        .map((_, index) => (
+                           <PaginationItem key={index} active={paginatedData.currentPage == index + 1}>
+                              <PaginationLink href="#" onClick={() => clickPage(index + 1)}>
+                                 {index + 1}
+                              </PaginationLink>
+                           </PaginationItem>
+                        ))}
+                     <PaginationItem>
+                        <PaginationLink next href="#" onClick={() => clickPage(paginatedData.currentPage + 1)} />
+                     </PaginationItem>
+                     <PaginationItem>
+                        <PaginationLink last href="#" onClick={() => clickPage(paginatedData.maxPage)} />
+                     </PaginationItem>
+                  </Pagination>
+                  <style jsx global>{`
+                     .pagination {
+                        justify-content: center;
+                     }
+                  `}</style>
+                  <Table responsive className="table-hover">
+                     <thead>
+                        <tr className="table-light">
+                           <th>N° dossier interne</th>
+                           <th>N° PV</th>
+                           <th>Date</th>
+                           <th>Type de profil</th>
+                           <th>{"Type d'acte"}</th>
+                           <th></th>
                         </tr>
-                     ))}
-                  </tbody>
-               </Table>
+                     </thead>
+                     <tbody>
+                        {paginatedData.acts.map(act => (
+                           <tr key={act.id}>
+                              <td>
+                                 <b>{act.internal_number}</b>
+                              </td>
+                              <td>{act.pv_number}</td>
+                              <td>{act.examination_date && moment(act.examination_date).format(FORMAT_DATE)}</td>
+                              <td>{act.profile}</td>
+                              <td>{act.extra_data && <VerticalList content={act.extra_data.examinationTypes} />}</td>
+                              <td>
+                                 <Link href="/actDetail/[id]" as={`/actDetail/${act.id}`}>
+                                    <a>{"Voir >"}</a>
+                                 </Link>
+                              </td>
+                           </tr>
+                        ))}
+                     </tbody>
+                  </Table>
+               </>
             )}
          </Container>
       </Layout>
@@ -128,8 +192,8 @@ ActsListPage.getInitialProps = async ctx => {
    const optionsFetch = buildOptionsFetch(ctx)
 
    try {
-      const acts = await fetchData({ optionsFetch })
-      return { initialActs: acts }
+      const paginatedData = await fetchData({ optionsFetch })
+      return { paginatedData }
    } catch (error) {
       console.error("APP error", error)
    }
@@ -137,7 +201,7 @@ ActsListPage.getInitialProps = async ctx => {
 }
 
 ActsListPage.propTypes = {
-   initialActs: PropTypes.array,
+   paginatedData: PropTypes.object.isRequired,
    currentUser: PropTypes.object.isRequired,
 }
 

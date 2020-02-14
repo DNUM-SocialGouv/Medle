@@ -1,9 +1,7 @@
-// Caveat : extends the Error API in JS doesn't allow to easily get message or stack trace which are not serializable by default.
-// https://stackoverflow.com/a/26199752/2728710 explains how to use it but it's too overkill anyway so let's use our own object to carry error
-class MedleError {
+class MedleError extends Error {
    constructor({ message, detailMessage, uri }) {
+      super(message)
       this.name = this.constructor.name
-      this.message = message
       this.detailMessage = detailMessage
       this.uri = uri
    }
@@ -34,4 +32,10 @@ export const handleAPIResponse = async response => {
       }
    }
    return response.json()
+}
+
+export const stringifyError = error => {
+   // eslint-disable-next-line no-unused-vars
+   const [stack, ...keys] = Object.getOwnPropertyNames(error)
+   return JSON.stringify(error, keys, " ")
 }
