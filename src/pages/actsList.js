@@ -3,24 +3,12 @@ import Link from "next/link"
 import PropTypes from "prop-types"
 import fetch from "isomorphic-unfetch"
 import moment from "moment"
-import {
-   Alert,
-   Button,
-   Col,
-   Container,
-   Form,
-   FormGroup,
-   Input,
-   Spinner,
-   Table,
-   Pagination,
-   PaginationItem,
-   PaginationLink,
-} from "reactstrap"
+import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 
 import { buildOptionsFetch, withAuthentication } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
 import { Title1 } from "../components/StyledComponents"
+import Pagination from "../components/Pagination"
 import Layout from "../components/Layout"
 import { VerticalList } from "../components/VerticalList"
 import { FORMAT_DATE } from "../utils/date"
@@ -125,35 +113,7 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
 
             {!isError && !!paginatedData.acts.length && (
                <>
-                  <Pagination aria-label="Page navigation example" className="mt-5">
-                     <PaginationItem>
-                        <PaginationLink first href="#" onClick={() => clickPage(0)} />
-                     </PaginationItem>
-                     <PaginationItem>
-                        <PaginationLink previous href="#" onClick={() => clickPage(paginatedData.currentPage - 1)} />
-                     </PaginationItem>
-                     {Array(paginatedData.maxPage)
-                        .fill(0)
-                        .map((_, index) => (
-                           <PaginationItem key={index} active={paginatedData.currentPage == index + 1}>
-                              <PaginationLink href="#" onClick={() => clickPage(index + 1)}>
-                                 {index + 1}
-                              </PaginationLink>
-                           </PaginationItem>
-                        ))}
-                     <PaginationItem>
-                        <PaginationLink next href="#" onClick={() => clickPage(paginatedData.currentPage + 1)} />
-                     </PaginationItem>
-                     <PaginationItem>
-                        <PaginationLink last href="#" onClick={() => clickPage(paginatedData.maxPage)} />
-                     </PaginationItem>
-                  </Pagination>
-
-                  <style jsx global>{`
-                     .pagination {
-                        justify-content: center;
-                     }
-                  `}</style>
+                  <Pagination data={paginatedData} fn={clickPage} />
                   <Table responsive className="table-hover">
                      <thead>
                         <tr className="table-light">
