@@ -74,7 +74,7 @@ const FillEmploymentsPage = ({
                </small>
             </p>
 
-            {!isEmpty(errors) && <Alert color="danger">{errors.general || "Erreur en base de données"}</Alert>}
+            {!isEmpty(errors) && <Alert color="danger">{errors.general || "Erreur serveur"}</Alert>}
 
             {success && <Alert color="primary">{success}</Alert>}
 
@@ -258,7 +258,7 @@ FillEmploymentsPage.getInitialProps = async ctx => {
    } catch (error) {
       console.error(error)
       return {
-         error: "Erreur en base de données",
+         error: "Erreur serveur",
          currentMonth,
          currentMonthName: NAME_MONTHS[currentMonth] + " " + currentYear,
          allMonths,

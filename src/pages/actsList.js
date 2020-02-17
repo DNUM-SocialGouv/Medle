@@ -60,7 +60,7 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
          setPaginatedData(paginatedData)
       } catch (error) {
          console.error("APP error", error)
-         setIsError("Erreur en base de données")
+         setIsError("Erreur serveur")
       } finally {
          setTimeout(async () => {
             setIsLoading(false)
@@ -76,7 +76,7 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
          setPaginatedData(paginatedData)
       } catch (error) {
          console.error("APP error", error)
-         setIsError("Erreur en base de données")
+         setIsError("Erreur serveur")
       }
    }
 

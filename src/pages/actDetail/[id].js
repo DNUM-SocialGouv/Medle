@@ -80,7 +80,7 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
 
             {!isEmpty(isError) && (
                <Alert color="danger" className="mt-5 mb-5">
-                  {isError.general || "Erreur en base de données"}
+                  {isError.general || "Erreur serveur"}
                </Alert>
             )}
          </Container>
@@ -141,7 +141,7 @@ ActDetail.getInitialProps = async ctx => {
       return { initialAct: json, id }
    } catch (error) {
       console.error(error)
-      return { error: "Erreur en base de données" }
+      return { error: "Erreur serveur" }
    }
 }
 

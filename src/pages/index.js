@@ -43,7 +43,7 @@ const LoginPage = ({ message }) => {
                   if (error.status && error.status === 401) {
                      setError("L'authentification est incorrecte")
                   } else {
-                     setError("Problème en base de données")
+                     setError("Problème serveur")
                   }
                   reject(error)
                }
