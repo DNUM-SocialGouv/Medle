@@ -44,7 +44,7 @@ export const sendAPIError = (error, res) => {
    // fallback error
    return res
       .status(STATUS_500_INTERNAL_SERVER_ERROR)
-      .json({ message: `Erreur de base de donnée / ${error}`, status: STATUS_500_INTERNAL_SERVER_ERROR })
+      .json({ message: `Erreur serveur / ${error}`, status: STATUS_500_INTERNAL_SERVER_ERROR })
 }
 
 export const checkValidUserWithPrivilege = (privilege, req) => {
