@@ -40,7 +40,7 @@ const LoginPage = ({ message }) => {
                resolve("OK")
             } catch (error) {
                console.error(`${error}`)
-               if (error.status && error.status === 401) {
+               if ((error.status && error.status === 401) || error instanceof ValidationError) {
                   setError("L'authentification est incorrecte")
                } else {
                   setError("Problème serveur")
