@@ -5,6 +5,8 @@ import knex from "../../../knex/knex"
 import { ACT_MANAGEMENT } from "../../../utils/roles"
 import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
 
+const MAX_VALUE = 100000
+
 const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
@@ -21,18 +23,14 @@ const handler = async (req, res) => {
             if (fuzzy) {
                builder.where("name", "ilike", `%${fuzzy}%`)
             }
-            if (!all) {
-               builder.limit(5)
-            }
          })
+         .limit(all ? MAX_VALUE : 10)
          .orderBy("name")
-         .select("id", "name")
+         .select("id as value", "name as label")
 
       return res.status(STATUS_200_OK).json(askers)
    } catch (error) {
       // DB error
-      console.error(error)
-      console.error("API error", JSON.stringify(error))
       sendAPIError(error, res)
    }
 }

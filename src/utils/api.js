@@ -7,7 +7,7 @@ import {
 } from "./http"
 import { isAllowed, NO_PRIVILEGE_REQUIRED } from "./roles"
 import { checkToken, decodeToken } from "./jwt"
-import { APIError } from "./errors"
+import { APIError, stringifyError } from "./errors"
 
 // see Micro.sendError
 export const sendError = (req, res, error) => {
@@ -36,13 +36,15 @@ export const createError = (code, message, original) => {
 }
 
 export const sendAPIError = (error, res) => {
+   console.error(error)
+
    if (error instanceof APIError) {
-      return res.status(error.status).json(error)
+      return res.status(error.status).json(stringifyError(error))
    }
    // fallback error
    return res
       .status(STATUS_500_INTERNAL_SERVER_ERROR)
-      .json({ message: `Erreur de base de donnée / ${error}`, status: STATUS_500_INTERNAL_SERVER_ERROR })
+      .json({ message: `Erreur serveur / ${error}`, status: STATUS_500_INTERNAL_SERVER_ERROR })
 }
 
 export const checkValidUserWithPrivilege = (privilege, req) => {

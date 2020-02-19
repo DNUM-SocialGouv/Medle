@@ -54,8 +54,7 @@ const handler = async (req, res) => {
 
       return res.status(STATUS_200_OK).json({ message: `Acte ${id} modifié` })
    } catch (error) {
-      // Authentication or DB error
-      console.error("API error", JSON.stringify(error))
+      // DB error
       sendAPIError(error, res)
    }
 }

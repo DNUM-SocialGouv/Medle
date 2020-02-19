@@ -6,7 +6,7 @@ import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "react
 import moment from "moment"
 
 import { handleAPIResponse } from "../utils/errors"
-import AskerAutocomplete from "../components/AskerAutocomplete"
+import AskerSelect from "../components/AskerSelect"
 import {
    API_URL,
    ACT_DECLARATION_ENDPOINT,
@@ -143,6 +143,7 @@ const ActDeclaration = ({ act, currentUser }) => {
 
    const reducer = (state, action) => {
       // console.log("ActDeclaration:reducer", action)
+      console.log("reducer", state, action)
 
       setErrors(deleteProperty(errors, action.type))
 
@@ -240,7 +241,7 @@ const ActDeclaration = ({ act, currentUser }) => {
             console.error(error)
             setErrors(errors => ({
                ...errors,
-               general: json && json.message ? json.message : "Erreur en base de données",
+               general: json && json.message ? json.message : "Erreur serveur",
             }))
          }
       } else {
@@ -264,7 +265,7 @@ const ActDeclaration = ({ act, currentUser }) => {
             console.error(error)
             setErrors(errors => ({
                ...errors,
-               general: json && json.message ? json.message : "Erreur en base de données",
+               general: json && json.message ? json.message : "Erreur serveur",
             }))
          }
       }
@@ -363,7 +364,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                </Col>
                <Col md="8">
                   <Label htmlFor="askerId">Demandeur</Label>
-                  <AskerAutocomplete
+                  <AskerSelect
                      dispatch={dispatch}
                      id="askerId"
                      askerId={state.askerId}

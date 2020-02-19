@@ -71,7 +71,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
             json = await fetchDataMonth({ hospitalId, year, month })
          } catch (error) {
             console.error(error)
-            return { error: "Erreur en base de données" }
+            return { error: "Erreur serveur" }
          } finally {
             setDataMonth(json || [])
          }
@@ -124,7 +124,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                   )}
                </div>
 
-               {!isEmpty(errors) && <Alert color="danger">{errors.general || "Erreur en base de données"}</Alert>}
+               {!isEmpty(errors) && <Alert color="danger">{errors.general || "Erreur serveur"}</Alert>}
 
                <Row>
                   <Col className="mr-3">

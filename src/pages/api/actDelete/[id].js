@@ -50,7 +50,6 @@ const handler = async (req, res) => {
       return res.status(STATUS_200_OK).end()
    } catch (error) {
       // DB error
-      console.error("API error", JSON.stringify(error))
       sendAPIError(error, res)
    }
 }
