@@ -3,7 +3,7 @@ import Head from "next/head"
 import fetch from "isomorphic-unfetch"
 import { API_URL, LOGIN_ENDPOINT } from "../config"
 import Login from "../components/Login"
-import { handleAPIResponse } from "../utils/errors"
+import { handleAPIResponse, ValidationError } from "../utils/errors"
 import { registerAndRedirectUser } from "../utils/auth"
 import PropTypes from "prop-types"
 import { trackEvent, CATEGORY, ACTION } from "../utils/matomo"
@@ -21,37 +21,32 @@ const LoginPage = ({ message }) => {
          setTimeout(async () => {
             const valid = isValidUserData(userData)
 
-            if (!valid) {
-               setError("L'authentification est incorrecte")
-               console.error("L'authentification est incorrecte")
+            const { email, password } = userData
 
-               trackEvent(CATEGORY.auth, ACTION.auth.error, (userData && userData.email) || "no email")
-
-               reject("L'authentification est incorrecte")
-            } else {
-               const { email, password } = userData
-
-               try {
-                  const response = await fetch(API_URL + LOGIN_ENDPOINT, {
-                     method: "POST",
-                     headers: { "Content-Type": "application/json" },
-                     body: JSON.stringify({ email, password }),
-                  })
-                  const json = await handleAPIResponse(response)
-
-                  registerAndRedirectUser(json)
-                  trackEvent(CATEGORY.auth, ACTION.auth.connection)
-                  resolve("OK")
-               } catch (error) {
-                  console.error(`${error}`)
-                  if (error.status && error.status === 401) {
-                     setError("L'authentification est incorrecte")
-                  } else {
-                     setError("Problème serveur")
-                  }
-                  trackEvent(CATEGORY.auth, ACTION.auth.deconnection)
-                  reject(error)
+            try {
+               if (!valid) {
+                  throw new ValidationError("L'authentification est incorrecte")
                }
+
+               const response = await fetch(API_URL + LOGIN_ENDPOINT, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email, password }),
+               })
+               const json = await handleAPIResponse(response)
+
+               registerAndRedirectUser(json)
+               trackEvent(CATEGORY.auth, ACTION.auth.connection)
+               resolve("OK")
+            } catch (error) {
+               console.error(`${error}`)
+               if (error.status && error.status === 401) {
+                  setError("L'authentification est incorrecte")
+               } else {
+                  setError("Problème serveur")
+               }
+               trackEvent(CATEGORY.auth, ACTION.auth.error, (userData && userData.email) || "no email")
+               reject(error)
             }
          }, 1000)
       })
