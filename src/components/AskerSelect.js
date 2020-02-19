@@ -19,12 +19,20 @@ const getSuggestions = async value => {
    return isEmpty(json) ? [] : json
 }
 
+const cache = {}
+
 const getAskerById = async id => {
    let json
+
+   console.log("cache(id)", cache[id])
+
+   if (cache[id]) return cache[id]
 
    try {
       const response = await fetch(`${API_URL}${ASKERS_VIEW_ENDPOINT}/${id}`)
       json = await handleAPIResponse(response)
+
+      cache[id] = { value: id, label: json.name }
    } catch (error) {
       console.error(error)
    }
@@ -48,8 +56,7 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
    return (
       <>
          <AsyncSelect
-            cacheOptions
-            defaultOptions
+            defaultOptions={Object.values(cache)}
             loadOptions={getSuggestions}
             isClearable={true}
             placeholder="Tapez le nom du demandeur"
