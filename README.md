@@ -31,7 +31,6 @@ For DATABASE_URL, be sure to use the matching password you have just created bef
 ```js
 NODE_ENV=development
 
-APP_URL=http://localhost
 API_URL=http://localhost/api
 
 POSTGRES_USER=medle
@@ -62,9 +61,8 @@ For development purpose, it is more handy to use `yarn dev` to benefit from the 
 So, you only run the db container
 `docker-compose up --build -d db`
 
-Modify `.env` for APP_URL and APP_API
+Modify `.env` for APP_API
 ```js
-APP_URL=http://localhost:3000
 API_URL=http://localhost:3000/api
 ```
 
