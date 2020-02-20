@@ -4,8 +4,6 @@ import { ThemeProvider } from "styled-components"
 import { initMatomo } from "../utils/matomo"
 import * as Sentry from "@sentry/node"
 
-// import "../style.css" // hack/workaround to accept CSS module in Next... see https://github.com/zeit/next.js/issues/5264#issuecomment-424000127
-// import "../../public/css/socialgouv-bootstrap.min.css"
 import "@socialgouv/bootstrap.core/dist/socialgouv-bootstrap.min.css"
 
 const theme = {
