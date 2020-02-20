@@ -23,7 +23,6 @@
     "@sentry/node": "^5.12.4",
     "@socialgouv/bootstrap.core": "^0.2.0",
     "@socialgouv/jours-feries": "^1.0.0",
-    "@zeit/next-css": "^1.0.1",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.3.1",
     "dotenv": "^8.2.0",
