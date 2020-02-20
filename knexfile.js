@@ -5,21 +5,21 @@ console.log("Database URL", process.env.DATABASE_URL)
 
 const { join } = require("path")
 
+if (process.env.POSTGRES_SSL) {
+   console.log("Knex Postgres with SSL")
+   const pg = require("pg")
+   pg.defaults.ssl = true
+}
+
 const knexConfig = {
    development: {
       client: "pg",
-      connection: process.env.DATABASE_URL || {
-         host: "127.0.0.1",
-         user: "medlexxx", //host.docker.internal
-         password: "medlexxx",
-         database: "medlexxx",
-         port: "5432",
-      },
+      connection: process.env.DATABASE_URL,
       pool: {
          min: 0,
-         max: 7,
+         max: 15,
          afterCreate: function(connection, callback) {
-            connection.query("SET timezone = 'posix/Europe/Paris';", function(err) {
+            connection.query("SET timezone = 'Europe/Paris';", function(err) {
                callback(err, connection)
             })
          },
@@ -36,9 +36,9 @@ const knexConfig = {
       connection: process.env.DATABASE_URL,
       pool: {
          min: 0,
-         max: 7,
+         max: 15,
          afterCreate: function(connection, callback) {
-            connection.query("SET timezone = 'posix/Europe/Paris';", function(err) {
+            connection.query("SET timezone = 'Europe/Paris';", function(err) {
                callback(err, connection)
             })
          },
@@ -55,18 +55,15 @@ const knexConfig = {
       connection: process.env.DATABASE_URL,
       pool: {
          min: 0,
-         max: 7,
+         max: 15,
          afterCreate: function(connection, callback) {
-            connection.query("SET timezone = 'posix/Europe/Paris';", function(err) {
+            connection.query("SET timezone = 'Europe/Paris';", function(err) {
                callback(err, connection)
             })
          },
       },
       migrations: {
          directory: join(__dirname, "src/knex/migrations"),
-      },
-      seeds: {
-         directory: join(__dirname, "src/knex/seeds/production"),
       },
    },
 }
