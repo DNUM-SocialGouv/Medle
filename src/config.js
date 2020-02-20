@@ -1,4 +1,8 @@
-export const API_URL = process.env.API_URL
+import getConfig from "next/config"
+
+const { publicRuntimeConfig } = getConfig()
+
+export const API_URL = publicRuntimeConfig.API_URL
 export const ACT_DECLARATION_ENDPOINT = "/actDeclaration"
 export const ACT_SEARCH_ENDPOINT = "/acts/search"
 export const ACT_DETAIL_ENDPOINT = "/actDetail"
