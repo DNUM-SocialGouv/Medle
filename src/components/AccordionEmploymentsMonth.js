@@ -244,7 +244,7 @@ AccordionEmploymentsMonth.propTypes = {
    monthName: PropTypes.string.isRequired,
    month: PropTypes.string.isRequired,
    year: PropTypes.string.isRequired,
-   hospitalId: PropTypes.string.isRequired,
+   hospitalId: PropTypes.number.isRequired,
    update: PropTypes.func.isRequired,
    readOnly: PropTypes.bool.isRequired,
    currentUser: PropTypes.object,
