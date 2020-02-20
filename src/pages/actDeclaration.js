@@ -130,9 +130,6 @@ const reduceByMode = (state, action) => {
 }
 
 const ActDeclaration = ({ act, currentUser }) => {
-   // useTraceUpdate(props)
-
-   // console.log("ActDeclaration:render")
    const router = useRouter()
    const { internalNumber, pvNumber } = router.query
    const refPersonType = useRef()
@@ -142,7 +139,6 @@ const ActDeclaration = ({ act, currentUser }) => {
    const { id: userId, hospitalId } = currentUser
 
    const reducer = (state, action) => {
-      // console.log("ActDeclaration:reducer", action)
       console.log("reducer", state, action)
 
       setErrors(deleteProperty(errors, action.type))
