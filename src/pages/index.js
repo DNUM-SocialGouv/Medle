@@ -10,7 +10,9 @@ import { trackEvent, CATEGORY, ACTION } from "../utils/matomo"
 
 const LoginPage = ({ message }) => {
    const [error, setError] = useState(message || "")
-   const isValidUserData = ({ email, password }) => !!(email && password)
+   const checkUserData = ({ email, password }) => {
+      if (!email || !password) throw new ValidationError("Les champs ne peuvent pas être vides")
+   }
    let isMounted = false
 
    const authentication = userData => {
@@ -19,14 +21,10 @@ const LoginPage = ({ message }) => {
          if (isMounted) setError("")
 
          setTimeout(async () => {
-            const valid = isValidUserData(userData)
-
             const { email, password } = userData
 
             try {
-               if (!valid) {
-                  throw new ValidationError("L'authentification est incorrecte")
-               }
+               checkUserData(userData)
 
                const response = await fetch(API_URL + LOGIN_ENDPOINT, {
                   method: "POST",
@@ -39,7 +37,7 @@ const LoginPage = ({ message }) => {
                trackEvent(CATEGORY.auth, ACTION.auth.connection)
                resolve("OK")
             } catch (error) {
-               console.error(`${error}`)
+               console.error(error)
                if ((error.status && error.status === 401) || error instanceof ValidationError) {
                   setError("L'authentification est incorrecte")
                } else {
