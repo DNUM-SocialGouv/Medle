@@ -253,8 +253,8 @@ var tarteaucitron = {
       "use strict"
       var cdn = tarteaucitron.cdn,
          language = tarteaucitron.getLanguage(),
-         pathToLang = cdn + "lang/tarteaucitron." + language + ".js?v=" + tarteaucitron.version,
-         pathToServices = cdn + "tarteaucitron.services.js?v=" + tarteaucitron.version,
+         pathToLang = cdn + "tarteaucitron/lang/tarteaucitron." + language + ".js?v=" + tarteaucitron.version,
+         pathToServices = cdn + "tarteaucitron/tarteaucitron.services.js?v=" + tarteaucitron.version,
          linkElement = document.createElement("link"),
          defaults = {
             adblocker: false,
@@ -298,7 +298,7 @@ var tarteaucitron = {
       if (!tarteaucitron.parameters.useExternalCss) {
          linkElement.rel = "stylesheet"
          linkElement.type = "text/css"
-         linkElement.href = cdn + "css/tarteaucitron.css?v=" + tarteaucitron.version
+         linkElement.href = cdn + "tarteaucitron/css/tarteaucitron.css?v=" + tarteaucitron.version
          document.getElementsByTagName("head")[0].appendChild(linkElement)
       }
       // Step 2: load language and services
