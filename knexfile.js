@@ -1,6 +1,6 @@
 const { join } = require("path")
 
-if (process.env.POSTGRES_SSL) {
+if (process.env.POSTGRES_SSL && process.env.POSTGRES_SSL === "true") {
    const pg = require("pg")
    pg.defaults.ssl = true
 }
