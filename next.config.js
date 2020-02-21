@@ -17,6 +17,7 @@ module.exports = {
       POSTGRES_SSL: process.env.POSTGRES_SSL,
       API_URL: process.env.API_URL,
       TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
+      DEBUG_MODE: process.env.DEBUG_MODE,
    },
    serverRuntimeConfig: {
       // Will only be available on the server side. Needs getInitialProps on page to be available

@@ -11,6 +11,7 @@ import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
 import { isEmpty } from "../utils/misc"
 import { handleAPIResponse } from "../utils/errors"
 import { isAllowed, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
+import { logError } from "../utils/logger"
 
 export const hasErrors = dataMonth => {
    const errors = {}
@@ -70,7 +71,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
          try {
             json = await fetchDataMonth({ hospitalId, year, month })
          } catch (error) {
-            console.error(error)
+            logError(error)
             return { error: "Erreur serveur" }
          } finally {
             setDataMonth(json || [])
@@ -100,7 +101,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
          await updateDataMonth({ hospitalId, year, month, dataMonth })
          toggleReadOnly()
       } catch (error) {
-         console.error(error)
+         logError(error)
          setErrors({ general: "Erreur lors de la mise à jour des ETP" })
       }
    }

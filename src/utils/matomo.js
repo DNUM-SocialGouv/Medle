@@ -1,8 +1,9 @@
 import Router from "next/router"
+import { logInfo } from "./logger"
 
 export function initMatomo({ siteId, piwikUrl, jsTrackerFile = "piwik.js", phpTrackerFile = "piwik.php" }) {
-   console.log("initialisation de Matomo")
-   console.log(`piwikUrl ${piwikUrl} (${siteId})`)
+   logInfo("Initialisation de Matomo")
+   logInfo(`piwikUrl ${piwikUrl} (${siteId})`)
 
    window._paq = window._paq || []
    let previousPath = ""

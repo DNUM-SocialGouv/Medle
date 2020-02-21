@@ -8,6 +8,7 @@ import {
 import { isAllowed, NO_PRIVILEGE_REQUIRED } from "./roles"
 import { checkToken, decodeToken } from "./jwt"
 import { APIError, stringifyError } from "./errors"
+import { logError } from "./logger"
 
 // see Micro.sendError
 export const sendError = (req, res, error) => {
@@ -17,7 +18,7 @@ export const sendError = (req, res, error) => {
    res.status(statusCode || STATUS_500_INTERNAL_SERVER_ERROR).json({ message })
 
    if (error instanceof Error) {
-      console.error(error.stack)
+      logError(error.stack)
    } else {
       console.warn("thrown error must be an instance Error")
    }
@@ -36,7 +37,7 @@ export const createError = (code, message, original) => {
 }
 
 export const sendAPIError = (error, res) => {
-   console.error(error)
+   logError(error)
 
    if (error instanceof APIError) {
       return res.status(error.status).json(stringifyError(error))
@@ -75,7 +76,7 @@ export const checkValidUserWithPrivilege = (privilege, req) => {
          const currentUser = decodeToken(token)
          email = currentUser.email
       } catch (error) {
-         console.error("Token couldn't been decoded")
+         logError("Token couldn't been decoded")
       }
       throw new APIError({
          message: `Invalid token for user (${email ? email : "unknown user"})`,

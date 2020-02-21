@@ -5,6 +5,7 @@ import knex from "../../../knex/knex"
 import { buildActFromJSON } from "../../../knex/models/acts"
 import { ACT_MANAGEMENT } from "../../../utils/roles"
 import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
+import { logError } from "../../../utils/logger"
 
 const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -17,9 +18,7 @@ const handler = async (req, res) => {
       const data = await req.body
 
       if (!data || !data.hospitalId) {
-         console.error(
-            `Bad request ${STATUS_400_BAD_REQUEST} (${currentUser.email ? currentUser.email : "unknown user"})`,
-         )
+         logError(`Bad request ${STATUS_400_BAD_REQUEST} (${currentUser.email ? currentUser.email : "unknown user"})`)
          return res.status(STATUS_400_BAD_REQUEST).json({ message: "Bad request" })
       }
 

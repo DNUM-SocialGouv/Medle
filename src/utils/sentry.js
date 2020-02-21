@@ -21,7 +21,7 @@ module.exports = (release = process.env.SENTRY_RELEASE) => {
       // Instead, dump the errors to the console
       sentryOptions.integrations = [
          new SentryIntegrations.Debug({
-            // Trigger DevTools debugger instead of using console.log
+            // Trigger DevTools debugger instead of using console log
             debugger: false,
          }),
       ]

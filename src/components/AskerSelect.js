@@ -5,6 +5,7 @@ import AsyncSelect from "react-select/async"
 import { API_URL, ASKERS_SEARCH_ENDPOINT, ASKERS_VIEW_ENDPOINT } from "../config"
 import { isEmpty } from "../utils/misc"
 import { handleAPIResponse } from "../utils/errors"
+import { logError } from "../utils/logger"
 
 const getSuggestions = async value => {
    const bonus = value ? `?fuzzy=${value}` : ""
@@ -14,7 +15,7 @@ const getSuggestions = async value => {
       const response = await fetch(`${API_URL}${ASKERS_SEARCH_ENDPOINT}${bonus}`)
       json = await handleAPIResponse(response)
    } catch (error) {
-      console.error(error)
+      logError(error)
    }
    return isEmpty(json) ? [] : json
 }
@@ -31,7 +32,7 @@ const getAskerById = async id => {
       json = await handleAPIResponse(response)
       cache[id] = { value: id, label: json.name }
    } catch (error) {
-      console.error(error)
+      logError(error)
    }
    return isEmpty(json) ? null : { value: id, label: json.name }
 }

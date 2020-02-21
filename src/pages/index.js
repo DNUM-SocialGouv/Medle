@@ -7,6 +7,7 @@ import { handleAPIResponse, ValidationError } from "../utils/errors"
 import { registerAndRedirectUser } from "../utils/auth"
 import PropTypes from "prop-types"
 import { trackEvent, CATEGORY, ACTION } from "../utils/matomo"
+import { logError } from "../utils/logger"
 
 const LoginPage = ({ message }) => {
    const [error, setError] = useState(message || "")
@@ -37,7 +38,7 @@ const LoginPage = ({ message }) => {
                trackEvent(CATEGORY.auth, ACTION.auth.connection)
                resolve("OK")
             } catch (error) {
-               console.error(error)
+               logError(error)
                if ((error.status && error.status === 401) || error instanceof ValidationError) {
                   setError("L'authentification est incorrecte")
                } else {
@@ -85,7 +86,7 @@ LoginPage.getInitialProps = async ctx => {
    if (sessionTimeout) {
       return { message: "Votre session s'est terminée." }
    }
-   return {}
+   return { message: "" }
 }
 
 export default LoginPage

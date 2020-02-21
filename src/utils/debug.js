@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from "react"
 import { useRouter } from "next/router"
+import { logInfo } from "./logger"
 
 // useEffect(() => {
-//    console.log("XX dans useEffect")
+//    logInfo("XX dans useEffect")
 //    const routeChangeComplete = async () => {
-//       console.log("XXX dans routeChangeComplete")
+//       logInfo("XXX dans routeChangeComplete")
 //       window.scrollTo(0, 0)
 
-//       console.log("mainRef", mainRef)
+//       logInfo("mainRef", mainRef)
 
 //       if (mainRef && mainRef.current) {
 //          mainRef.current.focus()
@@ -24,13 +25,13 @@ export const DebugRouter = () => {
    const router = useRouter()
 
    router.events.on("routeChangeStart", url => {
-      console.log("event routeChangeStart", url)
+      logInfo("event routeChangeStart", url)
    })
    router.events.on("routeChangeComplete", url => {
-      console.log("event routeChangeComplete", url)
+      logInfo("event routeChangeComplete", url)
    })
    router.events.on("routeChangeError", (err, url) => {
-      console.log("event routeChangeError", url, err)
+      logInfo("event routeChangeError", url, err)
    })
 
    return null
@@ -50,7 +51,7 @@ export const useTraceUpdate = props => {
          return ps
       }, {})
       if (Object.keys(changedProps).length > 0) {
-         console.log("Changed props:", changedProps)
+         logInfo("Changed props:", changedProps)
       }
       prev.current = props
    })
@@ -58,6 +59,6 @@ export const useTraceUpdate = props => {
 
 // usage: <Logger label="Mon composant à loguer" />
 export const Logger = props => {
-   console.log(`${props.label} rendered`)
+   logInfo(`${props.label} rendered`)
    return null // irrelevant
 }

@@ -1,12 +1,14 @@
 require("dotenv").config()
 
-console.log("process.env.NODE_ENV", process.env.NODE_ENV)
-console.log("Database URL", process.env.DATABASE_URL)
+import { logInfo } from "./src/utils/logger"
+
+logInfo("process.env.NODE_ENV", process.env.NODE_ENV)
+logInfo("Database URL", process.env.DATABASE_URL)
 
 const { join } = require("path")
 
 if (process.env.POSTGRES_SSL) {
-   console.log("Knex Postgres with SSL")
+   logInfo("Knex Postgres with SSL")
    const pg = require("pg")
    pg.defaults.ssl = true
 }

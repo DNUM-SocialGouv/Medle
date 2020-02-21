@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
 
-import { withAuthentication, getCurrentUser, buildOptionsFetch } from "../utils/auth"
+import { withAuthentication, getCurrentUser, buildOptionsFetch, redirectIfUnauthorized } from "../utils/auth"
 import { isAllowed, EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 import Layout from "../components/Layout"
 import AccordionEmploymentsMonth, {
@@ -13,6 +13,7 @@ import AccordionEmploymentsMonth, {
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { isEmpty } from "../utils/misc"
 import { now } from "../utils/date"
+import { logError } from "../utils/logger"
 
 const FillEmploymentsPage = ({
    currentMonth,
@@ -53,7 +54,7 @@ const FillEmploymentsPage = ({
 
          setSuccess("Vos informations ont bien été enregistrées.")
       } catch (error) {
-         console.error(error)
+         logError(error)
          setErrors({ general: "Erreur lors de la mise à jour des ETP" })
       }
    }
@@ -256,7 +257,10 @@ FillEmploymentsPage.getInitialProps = async ctx => {
          year: currentYear,
       }
    } catch (error) {
-      console.error(error)
+      logError(error)
+
+      redirectIfUnauthorized(error, ctx)
+
       return {
          error: "Erreur serveur",
          currentMonth,

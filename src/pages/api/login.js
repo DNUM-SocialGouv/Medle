@@ -13,6 +13,7 @@ import {
 } from "../../utils/http"
 import { createError, sendError, sendSuccess } from "../../utils/api"
 import { timeout } from "../../utils/auth"
+import { logError } from "../../utils/logger"
 
 const validPassword = password => {
    return password.length
@@ -44,7 +45,7 @@ function onError(err, req, res) {
 }
 
 function onNoMatch(req, res) {
-   console.error("req", req)
+   logError("req", req)
    return sendError(req, res, createError(STATUS_405_METHOD_NOT_ALLOWED, "Method not allowed"))
 }
 
