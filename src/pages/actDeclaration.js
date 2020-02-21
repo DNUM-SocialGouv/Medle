@@ -456,7 +456,7 @@ ActDeclaration.getInitialProps = async ctx => {
       } catch (error) {
          logError(error)
 
-         redirectIfUnauthorized(error)
+         redirectIfUnauthorized(error, ctx)
       }
    }
 

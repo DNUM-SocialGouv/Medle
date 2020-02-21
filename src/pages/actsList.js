@@ -161,7 +161,7 @@ ActsListPage.getInitialProps = async ctx => {
    } catch (error) {
       logError("APP error", error)
 
-      redirectIfUnauthorized(error)
+      redirectIfUnauthorized(error, ctx)
    }
    return {}
 }
