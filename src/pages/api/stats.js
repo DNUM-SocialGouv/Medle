@@ -25,12 +25,12 @@ export default async (req, res) => {
       const result = { currentDate: date.now }
 
       result.acts = stats.reduce((acc, curr) => {
-         acc[curr.id] = { name: curr.name, total: curr.count }
+         acc[curr.id] = { name: curr.name, total: parseInt(curr.count, 10), last7days: 0 }
          return acc
       }, {})
 
       stats7days.forEach(elt => {
-         result.acts[elt.id].last7days = elt.count
+         result.acts[elt.id].last7days = parseInt(elt.count, 10)
       })
 
       return res.status(STATUS_200_OK).json(result)
