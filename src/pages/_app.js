@@ -19,14 +19,18 @@ const theme = {
 
 logInfo("----------- MEDLE configuration --------")
 
-logInfo("SENTRY DSN", process.env.SENTRY_DSN)
-logInfo("MATOMO_SITE_ID", process.env.MATOMO_SITE_ID)
-logInfo("process.env.MATOMO_URL", process.env.MATOMO_URL)
-
+logInfo("NODE_ENV", process.env.NODE_ENV)
 logInfo("DEBUG_MODE", publicRuntimeConfig.DEBUG_MODE)
-logInfo("POSTGRES_SSL", publicRuntimeConfig.POSTGRES_SSL)
+
+logInfo("SENTRY_DSN", process.env.SENTRY_DSN)
+logInfo("MATOMO_SITE_ID", process.env.MATOMO_SITE_ID)
+logInfo("MATOMO_URL", process.env.MATOMO_URL)
+
 logInfo("API_URL", publicRuntimeConfig.API_URL)
 logInfo("TEST_CURRENT_DATE", publicRuntimeConfig.TEST_CURRENT_DATE)
+
+logInfo("POSTGRES_SSL", publicRuntimeConfig.POSTGRES_SSL)
+logInfo("DATABASE_URL", process.env.DATABASE_URL)
 
 logInfo("-----------------------------------------")
 
@@ -40,8 +44,6 @@ export default class MyApp extends App {
          siteId: process.env.MATOMO_SITE_ID,
          piwikUrl: process.env.MATOMO_URL,
       })
-
-      logInfo("process.env.NODE_ENV", process.env.NODE_ENV)
    }
 
    render() {

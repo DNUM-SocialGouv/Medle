@@ -3,7 +3,6 @@ import { logInfo } from "./logger"
 
 export function initMatomo({ siteId, piwikUrl, jsTrackerFile = "piwik.js", phpTrackerFile = "piwik.php" }) {
    logInfo("Initialisation de Matomo")
-   logInfo(`piwikUrl ${piwikUrl} (${siteId})`)
 
    window._paq = window._paq || []
    let previousPath = ""

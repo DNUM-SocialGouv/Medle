@@ -5,7 +5,7 @@ import * as jwt from "jsonwebtoken"
 import { isAllowed, START_PAGES } from "./roles"
 import moment from "moment"
 import { fetchReferenceData, clearReferenceData } from "./init"
-import { logError } from "./logger"
+import { logDebug, logError } from "./logger"
 
 // Timeout config : keep this timeout values in sync
 export const timeout = {
@@ -114,7 +114,7 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
    Wrapper.getInitialProps = async ctx => {
       const currentUser = getCurrentUser(ctx)
 
-      console.log("currentUser", currentUser)
+      logDebug("currentUser", currentUser)
 
       if (!currentUser || sessionTooOld(currentUser)) {
          logError("Pas de currentUser 1 trouvé en cookie ou en SessionStorage. Redirection sur index")

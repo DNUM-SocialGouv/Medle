@@ -22,6 +22,7 @@ module.exports = {
    serverRuntimeConfig: {
       // Will only be available on the server side. Needs getInitialProps on page to be available
       JWT_SECRET: process.env.JWT_SECRET,
+      DATABASE_URL: process.env.DATABASE_URL,
    },
    webpack: (config, { isServer, buildId }) => {
       config.plugins.push(
