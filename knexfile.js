@@ -1,5 +1,3 @@
-import { logInfo } from "./src/utils/logger"
-
 const { join } = require("path")
 
 if (process.env.POSTGRES_SSL) {
