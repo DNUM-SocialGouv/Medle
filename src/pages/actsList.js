@@ -5,7 +5,7 @@ import fetch from "isomorphic-unfetch"
 import moment from "moment"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 
-import { buildOptionsFetch, withAuthentication } from "../utils/auth"
+import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
 import { Title1 } from "../components/StyledComponents"
 import Pagination from "../components/Pagination"
@@ -14,6 +14,7 @@ import { VerticalList } from "../components/VerticalList"
 import { FORMAT_DATE } from "../utils/date"
 import { ACT_CONSULTATION } from "../utils/roles"
 import { handleAPIResponse } from "../utils/errors"
+import { logError } from "../utils/logger"
 
 const fetchData = async ({ search, requestedPage, optionsFetch }) => {
    const arr = []
@@ -59,7 +60,7 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
          const paginatedData = await fetchData({ search })
          setPaginatedData(paginatedData)
       } catch (error) {
-         console.error("APP error", error)
+         logError("APP error", error)
          setIsError("Erreur serveur")
       } finally {
          setTimeout(async () => {
@@ -75,7 +76,7 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
          const paginatedData = await fetchData({ search, requestedPage })
          setPaginatedData(paginatedData)
       } catch (error) {
-         console.error("APP error", error)
+         logError("APP error", error)
          setIsError("Erreur serveur")
       }
    }
@@ -158,7 +159,9 @@ ActsListPage.getInitialProps = async ctx => {
       const paginatedData = await fetchData({ optionsFetch })
       return { paginatedData }
    } catch (error) {
-      console.error("APP error", error)
+      logError("APP error", error)
+
+      redirectIfUnauthorized(error)
    }
    return {}
 }

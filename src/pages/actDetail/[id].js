@@ -15,8 +15,9 @@ import ColumnAct from "../../components/ColumnAct"
 import { Title1, Title2 } from "../../components/StyledComponents"
 import { isEmpty } from "../../utils/misc"
 import { handleAPIResponse } from "../../utils/errors"
-import { buildOptionsFetch, withAuthentication } from "../../utils/auth"
+import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT } from "../../utils/roles"
+import { logError } from "../../utils/logger"
 import { profiles } from "../../utils/actsConstants"
 
 const ActDetail = ({ initialAct, id, error, currentUser }) => {
@@ -39,7 +40,7 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
             await fetch(API_URL + ACT_DELETE_ENDPOINT + "/" + id)
             await router.push("/actsList")
          } catch (error) {
-            console.error(error)
+            logError(error)
             setIsError(error)
          }
       }
@@ -140,7 +141,9 @@ ActDetail.getInitialProps = async ctx => {
       json = await handleAPIResponse(response)
       return { initialAct: json, id }
    } catch (error) {
-      console.error(error)
+      logError(error)
+      redirectIfUnauthorized(error, ctx)
+
       return { error: "Erreur serveur" }
    }
 }

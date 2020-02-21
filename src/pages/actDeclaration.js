@@ -4,7 +4,6 @@ import Router, { useRouter } from "next/router"
 import fetch from "isomorphic-unfetch"
 import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "reactstrap"
 import moment from "moment"
-
 import { handleAPIResponse } from "../utils/errors"
 import AskerSelect from "../components/AskerSelect"
 import {
@@ -19,9 +18,11 @@ import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../utils/roles"
-import { buildOptionsFetch, withAuthentication } from "../utils/auth"
+import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
 import { now } from "../utils/date"
 import { profiles, orderedProfileValues } from "../utils/actsConstants"
+import { logError, logDebug } from "../utils/logger"
+
 // import { useTraceUpdate } from "../utils/debug"
 
 // internalNumber & pvNumber found by query, in update situation
@@ -139,7 +140,7 @@ const ActDeclaration = ({ act, currentUser }) => {
    const { id: userId, hospitalId } = currentUser
 
    const reducer = (state, action) => {
-      console.log("reducer", state, action)
+      logDebug("reducer", state, action)
 
       setErrors(deleteProperty(errors, action.type))
 
@@ -164,11 +165,9 @@ const ActDeclaration = ({ act, currentUser }) => {
 
             const errors = hasErrors(newState, setErrors)
 
-            console.error(errors)
-
             if (!isEmpty(errors)) {
                setErrors(errors)
-               console.error("erreur dans profile")
+               logError(errors)
             } else {
                setErrors({})
                refPersonType.current.scrollIntoView({
@@ -209,8 +208,8 @@ const ActDeclaration = ({ act, currentUser }) => {
       }
 
       if (!isEmpty(errors)) {
-         console.error(errors)
-         console.error(`Erreur state non valide`, state)
+         logError(`State non valide`, state)
+         logError(errors)
          setErrors(errors)
          return
       }
@@ -234,7 +233,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                },
             })
          } catch (error) {
-            console.error(error)
+            logError(error)
             setErrors(errors => ({
                ...errors,
                general: json && json.message ? json.message : "Erreur serveur",
@@ -258,7 +257,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                },
             })
          } catch (error) {
-            console.error(error)
+            logError(error)
             setErrors(errors => ({
                ...errors,
                general: json && json.message ? json.message : "Erreur serveur",
@@ -291,7 +290,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                setWarnings({ ...warnings, [id]: null })
             }
          } catch (error) {
-            console.error("Erreur d'API pour recherche d'internal number")
+            logError("Erreur d'API pour recherche d'internal number")
             setWarnings({})
          }
       }
@@ -455,7 +454,9 @@ ActDeclaration.getInitialProps = async ctx => {
          const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id, optionsFetch)
          act = await handleAPIResponse(response)
       } catch (error) {
-         console.error(error)
+         logError(error)
+
+         redirectIfUnauthorized(error)
       }
    }
 

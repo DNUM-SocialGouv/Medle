@@ -5,6 +5,7 @@ import * as jwt from "jsonwebtoken"
 import { isAllowed, START_PAGES } from "./roles"
 import moment from "moment"
 import { fetchReferenceData, clearReferenceData } from "./init"
+import { logError } from "./logger"
 
 // Timeout config : keep this timeout values in sync
 export const timeout = {
@@ -73,7 +74,7 @@ const getTokenFromCookie = ctx => {
       .filter(elt => /token/.test(elt))
 
    if (!res.length || res.length !== 1) {
-      console.error("Erreur dans le cookie token")
+      logError("Erreur dans le cookie token")
       return ""
    } else {
       return res[0].replace(/token=/, "")
@@ -113,13 +114,15 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
    Wrapper.getInitialProps = async ctx => {
       const currentUser = getCurrentUser(ctx)
 
+      console.log("currentUser", currentUser)
+
       if (!currentUser || sessionTooOld(currentUser)) {
-         console.error("Pas de currentUser 1 trouvé en cookie ou en SessionStorage. Redirection sur index")
+         logError("Pas de currentUser 1 trouvé en cookie ou en SessionStorage. Redirection sur index")
          isomorphicRedirect(ctx, "/index?sessionTimeout=1")
       }
 
       if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
-         console.error("Rôle incorrect. Redirection sur page permissionError")
+         logError("Rôle incorrect. Redirection sur page permissionError")
          isomorphicRedirect(ctx, "/permissionError")
       }
 
@@ -129,4 +132,12 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
    }
 
    return Wrapper
+}
+
+export const redirectIfUnauthorized = (error, ctx) => {
+   console.log("error.Status", error.status)
+
+   if (error && error.status === 401) {
+      isomorphicRedirect(ctx, "/index?sessionTimeout=1")
+   }
 }
