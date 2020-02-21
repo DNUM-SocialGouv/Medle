@@ -36,7 +36,7 @@ const Header = ({ currentUser }) => {
    return (
       <header>
          <Navbar expand="md" className="navbar-medle">
-            <NavbarBrand href="/home">
+            <NavbarBrand>
                <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>
             </NavbarBrand>
             <NavbarToggler onClick={toggle} />
@@ -217,25 +217,25 @@ const Sidebar = ({ page, currentUser }) => {
                   </a>
                </Link>
             )}
-            <Link href="/home">
+            <Link href="/_error">
                <a className="list-group-item list-group-item-action">
                   <EqualizerIcon width={30} /> <br />
                   {"Statistiques"}
                </a>
             </Link>
-            <Link href="/home">
+            <Link href="/_error">
                <a className="list-group-item list-group-item-action">
                   <PhoneIcon width={30} /> <br />
                   {"Annuaire"}
                </a>
             </Link>
-            <Link href="/home">
+            <Link href="/_error">
                <a className="list-group-item list-group-item-action">
                   <LocalLibraryIcon width={30} /> <br />
                   {"Ressources"}
                </a>
             </Link>
-            <Link href="/home">
+            <Link href="/_error">
                <a className="list-group-item list-group-item-action">
                   <SettingsIcon width={30} /> <br />
                   {"Paramètres"}
