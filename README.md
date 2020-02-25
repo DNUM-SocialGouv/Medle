@@ -158,3 +158,11 @@ avec :
         - connexion
         - déconnexion
         - erreur
+
+## Annex
+
+### Add askers reminder
+
+```sql
+INSERT INTO askers (name, type) VALUES ('CRS autoroutière', 'primary');
+```
