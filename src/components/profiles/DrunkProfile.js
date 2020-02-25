@@ -33,8 +33,8 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
          <ActBlock
             type="location"
             title="Lieu de l'examen"
-            values={["UMJ", "Commissariat", "Gendarmerie", "In situ"]}
-            mode="toggleMultiple"
+            values={["UMJ", "Commissariat", "Gendarmerie"]}
+            mode="toggle"
             dispatch={dispatch}
             state={state.location || []}
             invalid={!!errors.location}

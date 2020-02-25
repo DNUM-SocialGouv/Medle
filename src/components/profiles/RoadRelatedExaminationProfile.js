@@ -33,7 +33,7 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
          <ActBlock
             type="location"
             title="Lieu de l'examen"
-            values={["UMJ", "Lieu de contrôle", "Commissariat / gendarmerie"]}
+            values={["UMJ", "Lieu de contrôle", "Commissariat", "Gendarmerie"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.location || []}

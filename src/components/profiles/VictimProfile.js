@@ -74,6 +74,24 @@ const VictimEdit = ({ dispatch, state, errors }) => {
             invalid={!!errors.examinations}
          />
          <ActBlock
+            type="location"
+            title="Lieu de l'examen"
+            values={[
+               "UMJ",
+               "Service d'hosp. public",
+               "Service d'hosp. privé",
+               "Établissement pénitentiaire",
+               "Centre de rétention",
+               "Maison de retraite",
+               "Commissariat",
+               "Gendarmerie",
+            ]}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.location || []}
+            invalid={!!errors.location}
+         />
+         <ActBlock
             type="periodOfDay"
             title="Heure de l'examen"
             values={periods}
@@ -134,12 +152,14 @@ const VictimRead = act => {
                <ColumnAct header={"Examens complémentaires"} content={act && act.examinations} />
             </Col>
             <Col className="mr-3">
+               <ColumnAct header={"Lieu de l'examen"} content={act.location} />
+            </Col>
+            <Col className="mr-3">
                <ColumnAct header={"Genre"} content={act && act.personGender} />
             </Col>
             <Col className="mr-3">
                <ColumnAct header={"Âge"} content={act && act.personAgeTag} />
             </Col>
-            <Col className="mr-3"></Col>
             <Col className="mr-3"></Col>
          </Row>
       </>

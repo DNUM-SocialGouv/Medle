@@ -34,7 +34,7 @@ const RestrainedEdit = ({ dispatch, state, errors }) => {
             type="location"
             title="Lieu de l'examen"
             values={["UMJ", "Locaux douaniers", "Centre de rétention"]}
-            mode="toggleMultiple"
+            mode="toggle"
             dispatch={dispatch}
             state={state.location || []}
             invalid={!!errors.location}

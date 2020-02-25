@@ -43,7 +43,7 @@ const CustodyEdit = ({ dispatch, state, errors }) => {
             type="location"
             title="Lieu de l'examen"
             values={["UMJ", "Commissariat", "Gendarmerie", "Tribunal"]}
-            mode="toggleMultiple"
+            mode="toggle"
             dispatch={dispatch}
             state={state.location || []}
             invalid={!!errors.location}
