@@ -25,7 +25,7 @@ services:
          context: .
          # build-time variables
          args:
-            - SENTRY_DSN=https://75f34cada95a4c189d69bc05e8aa324f@sentry.tools.factory.social.gouv.fr/29
+            - SENTRY_DSN=https://75f34cada95a4c189d69bc05e8aa324f@sentry.fabrique.social.gouv.fr/29
             - SENTRY_TOKEN=1234
             - MATOMO_URL=https://matomo.fabrique.social.gouv.fr
             - MATOMO_SITE_ID=16
