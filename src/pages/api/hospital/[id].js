@@ -24,9 +24,7 @@ const handler = async (req, res) => {
       }
 
       // SQL query
-      const hospital = await knex("hospitals")
-         .where("id", id)
-         .first()
+      const [hospital] = await knex("hospitals").where("id", id)
 
       if (hospital) {
          return res.status(STATUS_200_OK).json(hospital)

@@ -8,10 +8,9 @@ export default async (req, res) => {
 
    try {
       // SQL query
-      const globalCount = await knex("acts")
+      const [globalCount] = await knex("acts")
          .whereNull("deleted_at")
          .count()
-         .first()
 
       const stats = await knex("acts")
          .joinRaw("inner join hospitals h on acts.hospital_id = h.id")
@@ -27,7 +26,7 @@ export default async (req, res) => {
          .select("h.id", "h.name")
          .count()
 
-      const date = await knex.select(knex.raw("now()")).first()
+      const [date] = await knex.select(knex.raw("now()"))
 
       const result = { currentDate: moment(date.now).format("DD/MM/YYYY"), globalCount: parseInt(globalCount.count) }
 

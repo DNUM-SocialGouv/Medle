@@ -267,6 +267,7 @@ const ActDeclaration = ({ act, currentUser }) => {
    }
 
    const shouldDisplayProfile = () => {
+      //TODO: vérifier que les conditions sont toujours bonnes
       // creation case
       if (state.profile && !errors.internalNumber && !errors.examinationDate) return true
       // update case

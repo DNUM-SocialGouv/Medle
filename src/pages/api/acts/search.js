@@ -47,10 +47,9 @@ const handler = async (req, res) => {
          req.query.requestedPage && !isNaN(req.query.requestedPage) && parseInt(req.query.requestedPage)
 
       try {
-         const actsCount = await knex("acts")
+         const [actsCount] = await knex("acts")
             .where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy }))
             .count()
-            .first()
 
          const totalCount = parseInt(actsCount.count)
          const maxPage = Math.ceil(totalCount / LIMIT)

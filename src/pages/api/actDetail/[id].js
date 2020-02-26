@@ -30,7 +30,7 @@ const handler = async (req, res) => {
       }
 
       // SQL query
-      const act = await knex("acts")
+      const [act] = await knex("acts")
          .leftJoin("askers", "acts.asker_id", "askers.id")
          .join("hospitals", "acts.hospital_id", "hospitals.id")
          .join("users", "acts.added_by", "users.id")
@@ -43,7 +43,6 @@ const handler = async (req, res) => {
             "users.first_name as user_first_name",
             "users.last_name as user_last_name",
          ])
-         .first()
 
       // scope verification
       if (act && scope.includes(act.hospital_id)) {

@@ -23,9 +23,7 @@ const handler = async (req, res) => {
       }
 
       // SQL query
-      const askers = await knex("askers")
-         .where("id", id)
-         .first()
+      const [askers] = await knex("askers").where("id", id)
 
       if (askers) {
          return res.status(STATUS_200_OK).json(askers)

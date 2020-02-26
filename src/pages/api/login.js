@@ -76,10 +76,9 @@ handler
          }
 
          // SQL query
-         const user = await knex("users")
+         const [user] = await knex("users")
             .where("email", email)
             .whereNull("deleted_at")
-            .first()
 
          if (user && (await compareWithHash(password, user.password))) {
             const token = generateToken(user)

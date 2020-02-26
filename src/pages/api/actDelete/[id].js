@@ -29,10 +29,9 @@ const handler = async (req, res) => {
       }
 
       // SQL query
-      const act = await knex("acts")
+      const [act] = await knex("acts")
          .where("id", id)
          .whereNull("deleted_at")
-         .first()
 
       if (!act) {
          return res.status(STATUS_404_NOT_FOUND).end()

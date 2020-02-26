@@ -33,13 +33,12 @@ const handler = async (req, res) => {
 
       // SQL query
       if (req.method === METHOD_GET) {
-         const results = await knex("employments")
+         const [results] = await knex("employments")
             .whereNull("deleted_at")
             .where("year", year)
             .where("month", month)
             .where("hospital_id", hospitalId)
             .select("data_month")
-            .first()
 
          if (results) {
             return res.status(STATUS_200_OK).json(results.data_month)
