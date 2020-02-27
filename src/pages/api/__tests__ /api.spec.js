@@ -45,7 +45,7 @@ describe("endpoints", () => {
    })
 
    it("should return more than 100 commissariats in France for askers endpoint", async () => {
-      const response = await fetch(`${API_URL + ASKERS_SEARCH_ENDPOINT}?fuzzy=commissariat`, headers)
+      const response = await fetch(`${API_URL + ASKERS_SEARCH_ENDPOINT}?fuzzy=commissariat&all=true`, headers)
 
       const askers = await handleAPIResponse(response)
       expect(askers.length).toBeGreaterThan(100)
