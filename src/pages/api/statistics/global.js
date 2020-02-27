@@ -1,7 +1,7 @@
 import Cors from "micro-cors"
 import moment from "moment"
 
-import { STATUS_200_OK, STATUS_400_BAD_REQUEST, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
+import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { STATS_GLOBAL } from "../../../utils/roles"
 import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
@@ -48,26 +48,81 @@ const handler = async (req, res) => {
          ":" + JSON.stringify(scope) + ":",
       )
 
-      //   if (!data || !data.hospitalId) {
-      //      logError(`Bad request ${STATUS_400_BAD_REQUEST} (${currentUser.email ? currentUser.email : "unknown user"})`)
-      //      return res.status(STATUS_400_BAD_REQUEST).json({ message: "Bad request" })
-      //   }
-
-      //   // SQL query
-      //   const ids = await knex("acts").insert(buildActFromJSON(data), "id")
-
       const [globalCount] = await knex("acts")
+         .select(knex.raw("count(1)::integer"))
          .whereNull("deleted_at")
-         .whereIn("hospital_id", scope)
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
          .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
          .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
-         .count()
 
-      // and hospital_id = ANY(:hids) -- ex: '{5, 6, 7}'
-      // and created_at > TO_DATE(:start, 'DD/MM/YYYY')
-      // and created_at <= current_date;
+      const [averageCount] = await knex("acts_by_day")
+         .select(knex.raw("avg(nb_acts)::integer"))
+         .whereIn("hospital_id", scope)
+         .whereRaw(`day >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
+         .whereRaw(`day <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
 
-      console.log("globalCount", globalCount.count)
+      const livingDeadOthers = await knex("acts")
+         .select(
+            knex.raw(
+               "case " +
+                  "when profile = 'Personne décédée' then 'Thanato' " +
+                  "when profile = 'Autre activité/Assises' then 'Assises' " +
+                  "when profile = 'Autre activité/Reconstitution' then 'Reconstitution' " +
+                  "else 'Vivant' end as type, count(*)::integer",
+            ),
+         )
+         .whereNull("deleted_at")
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
+         .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
+         .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
+         .groupBy("type")
+
+      const [actsWithSamePV] = await knex
+         .with("acts_with_same_pv", builder => {
+            builder
+               .select(knex.raw("pv_number, count(1) as count"))
+               .from("acts")
+               .whereNull("deleted_at")
+               .where(builder => {
+                  if (!isNational) {
+                     builder.whereIn("hospital_id", scope)
+                  }
+               })
+               .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
+               .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
+               .whereRaw("pv_number is not null and pv_number <> ''")
+               .groupBy("pv_number")
+               .havingRaw("count(1) > 1")
+         })
+         .select(knex.raw("sum(count)::integer"))
+         .from("acts_with_same_pv")
+
+      const [averageWithSamePV] = await knex
+         .with("acts_with_same_pv", builder => {
+            builder
+               .select(knex.raw("count(*) as count"))
+               .from("acts")
+               .whereNull("deleted_at")
+               .where(builder => {
+                  if (!isNational) {
+                     builder.whereIn("hospital_id", scope)
+                  }
+               })
+               .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
+               .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
+               .whereRaw("pv_number is not null and pv_number <> ''")
+               .groupBy("pv_number")
+         })
+         .select(knex.raw("avg(count)::integer"))
+         .from("acts_with_same_pv")
 
       return res.status(STATUS_200_OK).json({
          inputs: {
@@ -76,7 +131,14 @@ const handler = async (req, res) => {
             isNational,
             scope,
          },
-         globalCount,
+         globalCount: globalCount.count || 0,
+         averageCount: averageCount.avg || 0,
+         livingDeadOthers: livingDeadOthers.reduce(
+            (acc, current) => ({ ...acc, [current.type]: current.count || 0 }),
+            {},
+         ),
+         actsWithSamePV: actsWithSamePV.sum || 0,
+         averageWithSamePV: averageWithSamePV.avg || 0,
       })
    } catch (error) {
       // DB error
