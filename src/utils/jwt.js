@@ -1,10 +1,10 @@
 import * as jwt from "jsonwebtoken"
 import getConfig from "next/config"
-const { serverRuntimeConfig } = getConfig()
 import { timeout } from "./auth"
+const { serverRuntimeConfig } = getConfig() || {}
 
 const jwtConfig = {
-   secret: serverRuntimeConfig.JWT_SECRET || "JHo$aY@2&o7m", // only for dev
+   secret: (serverRuntimeConfig && serverRuntimeConfig.JWT_SECRET) || "JHo$aY@2&o7m", // only for dev
    options: {
       expiresIn: timeout.jwt,
       algorithm: "HS256",
@@ -27,8 +27,8 @@ export const generateToken = ({
    role,
    hospital_id: hospitalId,
    scope,
-}) =>
-   jwt.sign(
+}) => {
+   return jwt.sign(
       {
          id,
          firstName,
@@ -41,3 +41,4 @@ export const generateToken = ({
       jwtConfig.secret,
       jwtConfig.options,
    )
+}

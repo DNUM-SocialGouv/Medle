@@ -1,5 +1,5 @@
 import getConfig from "next/config"
-const { publicRuntimeConfig } = getConfig()
+const { publicRuntimeConfig } = getConfig() || { DEBUG_MODE: true }
 
 export const logError = (...message) => console.error(...message)
 export const logInfo = (...message) => console.info(...message)

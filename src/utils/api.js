@@ -5,7 +5,7 @@ import {
    STATUS_405_METHOD_NOT_ALLOWED,
    STATUS_500_INTERNAL_SERVER_ERROR,
 } from "./http"
-import { isAllowed, NO_PRIVILEGE_REQUIRED } from "./roles"
+import { isAllowed } from "./roles"
 import { checkToken, decodeToken } from "./jwt"
 import { APIError, stringifyError } from "./errors"
 import { logError } from "./logger"
@@ -61,15 +61,17 @@ export const checkValidUserWithPrivilege = (privilege, req) => {
 
       const currentUser = checkToken(token)
 
-      if (privilege !== NO_PRIVILEGE_REQUIRED && !isAllowed(currentUser.role, privilege)) {
+      if (!isAllowed(currentUser.role, privilege)) {
          throw new APIError({
-            message: `Not allowed role  (${currentUser.email ? currentUser.email : "unknown user"})`,
+            message: `Not allowed role (${currentUser.email ? currentUser.email : "unknown user"})`,
             status: STATUS_403_FORBIDDEN,
          })
       } else {
          return currentUser
       }
    } catch (error) {
+      if (error instanceof APIError) throw error
+
       let email
       try {
          // Let's try to get user informations even if the token is not valid

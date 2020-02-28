@@ -71,4 +71,5 @@ export const START_PAGES = {
    OPERATOR_GENERIC: "/actsList",
 }
 
-export const isAllowed = (role, privilege) => ROLES[role] && ROLES[role].includes(privilege)
+export const isAllowed = (role, privilege) =>
+   privilege === NO_PRIVILEGE_REQUIRED || (ROLES[role] && ROLES[role].includes(privilege))

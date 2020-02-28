@@ -97,9 +97,9 @@ const periodOfDayValues = {
 const getSituationDate = dateStr => {
    const publicHolidays = joursFeries(moment(dateStr).format("YYYY"))
 
-   const allDates = Object.values(publicHolidays).map(elt => moment(elt).format("YYYY-MM-DD"))
+   const publicHolidaysDates = Object.values(publicHolidays).map(elt => moment(elt).format("YYYY-MM-DD"))
 
-   if (allDates.includes(dateStr)) {
+   if (publicHolidaysDates.includes(dateStr)) {
       return "sunday"
    }
 

@@ -117,7 +117,7 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
       logDebug("currentUser", currentUser)
 
       if (!currentUser || sessionTooOld(currentUser)) {
-         logError("Pas de currentUser 1 trouvé en cookie ou en SessionStorage. Redirection sur index")
+         logError("Pas de currentUser trouvé en cookie ou en SessionStorage. Redirection sur index")
          isomorphicRedirect(ctx, "/index?sessionTimeout=1")
       }
 
