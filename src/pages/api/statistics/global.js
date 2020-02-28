@@ -48,7 +48,7 @@ const handler = async (req, res) => {
          ":" + JSON.stringify(scope) + ":",
       )
 
-      const [globalCount] = await knex("acts")
+      const fetchGlobalCount = knex("acts")
          .select(knex.raw("count(1)::integer"))
          .whereNull("deleted_at")
          .where(builder => {
@@ -59,13 +59,13 @@ const handler = async (req, res) => {
          .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
          .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
 
-      const [averageCount] = await knex("acts_by_day")
+      const fetchAverageCount = knex("acts_by_day")
          .select(knex.raw("avg(nb_acts)::integer"))
          .whereIn("hospital_id", scope)
          .whereRaw(`day >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
          .whereRaw(`day <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
 
-      const livingDeadOthers = await knex("acts")
+      const fetchLivingDeadOthers = knex("acts")
          .select(
             knex.raw(
                "case " +
@@ -85,7 +85,7 @@ const handler = async (req, res) => {
          .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
          .groupBy("type")
 
-      const [actsWithSamePV] = await knex
+      const fetchActsWithSamePV = knex
          .with("acts_with_same_pv", builder => {
             builder
                .select(knex.raw("pv_number, count(1) as count"))
@@ -105,7 +105,7 @@ const handler = async (req, res) => {
          .select(knex.raw("sum(count)::integer"))
          .from("acts_with_same_pv")
 
-      const [averageWithSamePV] = await knex
+      const fetchAverageWithSamePV = knex
          .with("acts_with_same_pv", builder => {
             builder
                .select(knex.raw("count(*) as count"))
@@ -124,21 +124,29 @@ const handler = async (req, res) => {
          .select(knex.raw("avg(count)::integer"))
          .from("acts_with_same_pv")
 
-      return res.status(STATUS_200_OK).json({
-         inputs: {
-            startDate: startDate.format(FORMAT_DATE),
-            endDate: endDate.format(FORMAT_DATE),
-            isNational,
-            scope,
-         },
-         globalCount: globalCount.count || 0,
-         averageCount: averageCount.avg || 0,
-         livingDeadOthers: livingDeadOthers.reduce(
-            (acc, current) => ({ ...acc, [current.type]: current.count || 0 }),
-            {},
-         ),
-         actsWithSamePV: actsWithSamePV.sum || 0,
-         averageWithSamePV: averageWithSamePV.avg || 0,
+      Promise.all([
+         fetchGlobalCount,
+         fetchAverageCount,
+         fetchLivingDeadOthers,
+         fetchActsWithSamePV,
+         fetchAverageWithSamePV,
+      ]).then(([globalCount, averageCount, livingDeadOthers, actsWithSamePV, averageWithSamePV]) => {
+         return res.status(STATUS_200_OK).json({
+            inputs: {
+               startDate: startDate.format(FORMAT_DATE),
+               endDate: endDate.format(FORMAT_DATE),
+               isNational,
+               scope,
+            },
+            globalCount: globalCount.count || 0,
+            averageCount: averageCount.avg || 0,
+            livingDeadOthers: livingDeadOthers.reduce(
+               (acc, current) => ({ ...acc, [current.type]: current.count || 0 }),
+               {},
+            ),
+            actsWithSamePV: actsWithSamePV.sum || 0,
+            averageWithSamePV: averageWithSamePV.avg || 0,
+         })
       })
    } catch (error) {
       // DB error
