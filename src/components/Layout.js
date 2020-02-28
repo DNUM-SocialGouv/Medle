@@ -217,7 +217,7 @@ const Sidebar = ({ page, currentUser }) => {
                   </a>
                </Link>
             )}
-            <Link href="/_error">
+            <Link href="/statistics">
                <a className="list-group-item list-group-item-action">
                   <EqualizerIcon width={30} /> <br />
                   {"Statistiques"}

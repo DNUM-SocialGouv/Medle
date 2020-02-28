@@ -15,6 +15,17 @@ const handler = async (req, res) => {
       // privilege verification
       const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
+      /**
+       * TODO: gérer le scope plus finement + ajout d'un champ hospitalsFilter, pour filtrer par liste d'établissements, filtre manuel de l'utilsateur
+       *
+       * Si pas de currentUser.role == ["OPERATOR_ACT", etc..] -> le user est un user d'hôpital. Son scope local est son seul hôpital
+       * Si currentUser.role == ["REGIONAL_SUPERVISOR", etc..] -> son scope local est l'ensemble des établissements composants la "région"
+       * Si currentUser.rol == ["PUBLIC_SUPERVISOR", etc..] -> il n'a pas de scope local. Les requêtes ne sont pas filtrées par scope
+       *
+       * ATTENTION: le hospitalsFilter doit être compatible avec le scope.
+       *
+       */
+
       let scope = currentUser.scope || []
       scope = currentUser.hospitalId ? [...scope, currentUser.hospitalId] : scope
 
@@ -40,14 +51,6 @@ const handler = async (req, res) => {
 
       isNational = isNational === true
 
-      console.log(
-         "xxxx",
-         startDate.format(FORMAT_DATE),
-         endDate.format(FORMAT_DATE),
-         isNational,
-         ":" + JSON.stringify(scope) + ":",
-      )
-
       const fetchGlobalCount = knex("acts")
          .select(knex.raw("count(1)::integer"))
          .whereNull("deleted_at")
@@ -61,7 +64,11 @@ const handler = async (req, res) => {
 
       const fetchAverageCount = knex("acts_by_day")
          .select(knex.raw("avg(nb_acts)::integer"))
-         .whereIn("hospital_id", scope)
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
          .whereRaw(`day >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
          .whereRaw(`day <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
 
@@ -130,7 +137,7 @@ const handler = async (req, res) => {
          fetchLivingDeadOthers,
          fetchActsWithSamePV,
          fetchAverageWithSamePV,
-      ]).then(([globalCount, averageCount, livingDeadOthers, actsWithSamePV, averageWithSamePV]) => {
+      ]).then(([[globalCount], [averageCount], livingDeadOthers, [actsWithSamePV], [averageWithSamePV]]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
                startDate: startDate.format(FORMAT_DATE),
