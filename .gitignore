@@ -30,7 +30,6 @@ yarn-error.log*
 # Other #
 #########
 .idea
-.vscode
 
 # environment variable file
 .env
