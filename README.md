@@ -166,3 +166,7 @@ avec :
 ```sql
 INSERT INTO askers (name, type) VALUES ('CRS autoroutière', 'primary');
 ```
+
+### Knex usage
+
+Knex migration tips: https://medium.com/@j3y/beyond-basic-knex-js-database-migrations-22263b0fcd7c

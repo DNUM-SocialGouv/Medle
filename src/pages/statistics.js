@@ -2,7 +2,6 @@ import React from "react"
 import { PropTypes } from "prop-types"
 import { Pie, PieChart, Cell, Legend } from "recharts"
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline"
-import Tooltip from "@material-ui/core/Tooltip"
 
 import { API_URL, GLOBAL_STATISTICS_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
@@ -33,21 +32,14 @@ const StatBlock = ({ children }) => {
       </div>
    )
 }
+
+StatBlock.propTypes = {
+   children: PropTypes.array,
+}
+
 const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber, secondLabel }) => {
    return (
-      <div
-         style={{
-            width: "300px",
-            height: "260px",
-            border: "1px solid rgba(46,91,255,0.08)",
-            display: "inline-block",
-            color: "#BBB",
-            borderRadius: 1,
-            padding: "10px 10px 10px 20px",
-            margin: "10px 20px",
-            boxShadow: "0 10px 20px 0 rgba(46,91,255,0.07)",
-         }}
-      >
+      <StatBlock>
          <Title2 className="mb-4">{title}</Title2>
          <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{firstNumber}</p>
 
@@ -75,7 +67,7 @@ const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber, second
          >
             {secondLabel}
          </p>
-      </div>
+      </StatBlock>
    )
 }
 
@@ -85,6 +77,50 @@ StatBlockNumbers.propTypes = {
    firstLabel: PropTypes.string,
    secondNumber: PropTypes.number,
    secondLabel: PropTypes.string,
+}
+const StatBlockPieChart = ({ data, hoverTitle, title }) => {
+   return (
+      <StatBlock>
+         <div style={{ display: "inline-flex", verticalAlign: "middle", alignItems: "center" }} title={hoverTitle}>
+            <span
+               style={{
+                  height: 24,
+                  color: "#212529",
+                  fontFamily: "Evolventa",
+                  fontSize: 18,
+                  textAlign: "center",
+                  fontWeight: 400,
+               }}
+            >
+               {title}
+            </span>
+            <HelpOutlineIcon fontSize="small" />
+         </div>
+         <PieChart width={280} height={210}>
+            <Pie
+               data={data}
+               dataKey="value"
+               cx="50%"
+               cy="50%"
+               outerRadius={80}
+               innerRadius={20}
+               labelLine={false}
+               label={RenderCustomizedLabel}
+            >
+               {data.map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+               ))}
+            </Pie>
+            <Legend wrapperStyle={{ color: "#9f9f9f" }} />
+         </PieChart>
+      </StatBlock>
+   )
+}
+
+StatBlockPieChart.propTypes = {
+   data: PropTypes.array,
+   hoverTitle: PropTypes.string,
+   title: PropTypes.string,
 }
 
 const colors = ["#307df6", "#ed6b67", "#eaa844", "#7ce0c3", "#ad33d8"]
@@ -130,7 +166,6 @@ const StatisticsPage = ({ stats, currentUser }) => {
          <Container
             style={{ width: "100%", maxWidth: 1050, display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}
          >
-            {/* <div>{"on trouve" + JSON.stringify(stats)}</div> */}
             <StatBlockNumbers
                title="Actes réalisés"
                firstNumber={stats.globalCount}
@@ -138,43 +173,11 @@ const StatisticsPage = ({ stats, currentUser }) => {
                secondNumber={stats.averageCount}
                secondLabel="Actes par jour en moyenne."
             />
-            <StatBlock>
-               <div
-                  style={{ display: "inline-flex", verticalAlign: "middle", alignItems: "center" }}
-                  title="Hors assises et reconstitutions"
-               >
-                  <span
-                     style={{
-                        height: 24,
-                        color: "#212529",
-                        fontFamily: "Evolventa",
-                        fontSize: 18,
-                        textAlign: "center",
-                        fontWeight: 400,
-                     }}
-                  >
-                     Répartition Vivant/Thanato{"  "}
-                  </span>
-                  <HelpOutlineIcon fontSize="small" />
-               </div>
-               <PieChart width={280} height={210}>
-                  <Pie
-                     data={livingDeceaseddData}
-                     dataKey="value"
-                     cx="50%"
-                     cy="50%"
-                     outerRadius={80}
-                     innerRadius={20}
-                     labelLine={false}
-                     label={RenderCustomizedLabel}
-                  >
-                     {livingDeceaseddData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-                     ))}
-                  </Pie>
-                  <Legend wrapperStyle={{ color: "#9f9f9f" }} />
-               </PieChart>
-            </StatBlock>
+            <StatBlockPieChart
+               data={livingDeceaseddData}
+               hoverTitle="Hors assises et reconstitutions"
+               title="Répartition Vivant/Thanato"
+            />
             <StatBlockNumbers
                title="Actes hors examens"
                firstNumber={stats.profilesDistribution.reconstitution}
