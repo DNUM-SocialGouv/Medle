@@ -72,14 +72,14 @@ const handler = async (req, res) => {
          .whereRaw(`day >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
          .whereRaw(`day <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
 
-      const fetchLivingDeadOthers = knex("acts")
+      const fetchProfilesDistribution = knex("acts")
          .select(
             knex.raw(
                "case " +
-                  "when profile = 'Personne décédée' then 'Thanato' " +
-                  "when profile = 'Autre activité/Assises' then 'Assises' " +
-                  "when profile = 'Autre activité/Reconstitution' then 'Reconstitution' " +
-                  "else 'Vivant' end as type, count(*)::integer",
+                  "when profile = 'Personne décédée' then 'deceased' " +
+                  "when profile = 'Autre activité/Assises' then 'criminalCourt' " +
+                  "when profile = 'Autre activité/Reconstitution' then 'reconstitution' " +
+                  "else 'living' end as type, count(*)::integer",
             ),
          )
          .whereNull("deleted_at")
@@ -134,10 +134,10 @@ const handler = async (req, res) => {
       Promise.all([
          fetchGlobalCount,
          fetchAverageCount,
-         fetchLivingDeadOthers,
+         fetchProfilesDistribution,
          fetchActsWithSamePV,
          fetchAverageWithSamePV,
-      ]).then(([[globalCount], [averageCount], livingDeadOthers, [actsWithSamePV], [averageWithSamePV]]) => {
+      ]).then(([[globalCount], [averageCount], profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
                startDate: startDate.format(FORMAT_DATE),
@@ -147,7 +147,7 @@ const handler = async (req, res) => {
             },
             globalCount: globalCount.count || 0,
             averageCount: averageCount.avg || 0,
-            livingDeadOthers: livingDeadOthers.reduce(
+            profilesDistribution: profilesDistribution.reduce(
                (acc, current) => ({ ...acc, [current.type]: current.count || 0 }),
                {},
             ),
