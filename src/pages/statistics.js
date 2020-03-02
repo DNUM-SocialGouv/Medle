@@ -73,7 +73,7 @@ const StatisticsPage = ({ stats, currentUser }) => {
    ]
 
    return (
-      <Layout page="actDeclaration" currentUser={currentUser}>
+      <Layout page="statistics" currentUser={currentUser}>
          <Title1 className="mt-5 mb-5">{"Statistiques"}</Title1>
          <Container style={{ maxWidth: 1050 }}>
             {/* <div>{"on trouve" + JSON.stringify(stats)}</div> */}

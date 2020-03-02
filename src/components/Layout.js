@@ -218,7 +218,11 @@ const Sidebar = ({ page, currentUser }) => {
                </Link>
             )}
             <Link href="/statistics">
-               <a className="list-group-item list-group-item-action">
+               <a
+                  className={
+                     "list-group-item list-group-item-action " + (page === "statistics" ? "selected" : "unselected")
+                  }
+               >
                   <EqualizerIcon width={30} /> <br />
                   {"Statistiques"}
                </a>
