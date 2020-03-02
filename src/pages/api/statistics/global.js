@@ -5,8 +5,8 @@ import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { STATS_GLOBAL } from "../../../utils/roles"
 import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
-import { logError } from "../../../utils/logger"
-import { now, FORMAT_DATE } from "../../../utils/date"
+// import { logError } from "../../../utils/logger"
+import { ISO_DATE, now } from "../../../utils/date"
 
 const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -24,6 +24,8 @@ const handler = async (req, res) => {
        *
        * ATTENTION: le hospitalsFilter doit être compatible avec le scope.
        *
+       * TODO: on peut appeler le WS en GET alors que c'est censé être interdit...
+       *
        */
 
       let scope = currentUser.scope || []
@@ -32,20 +34,23 @@ const handler = async (req, res) => {
       // request verification
       let { startDate, endDate, isNational } = await req.body
 
+      console.log("startDate", startDate)
+      console.log("endDate", endDate)
+
       const defaultEndDate = now()
       const defaultStartDate = date => moment(date).startOf("year")
 
       if (!endDate) {
          endDate = defaultEndDate
       } else {
-         endDate = moment(endDate, FORMAT_DATE)
+         endDate = moment(endDate, ISO_DATE)
          endDate = endDate.isValid() ? endDate : defaultEndDate
       }
 
       if (!startDate) {
          startDate = defaultStartDate(endDate)
       } else {
-         startDate = moment(startDate, FORMAT_DATE)
+         startDate = moment(startDate, ISO_DATE)
          startDate = startDate.isValid() && startDate.isBefore(endDate) ? startDate : defaultStartDate(endDate)
       }
 
@@ -59,8 +64,8 @@ const handler = async (req, res) => {
                builder.whereIn("hospital_id", scope)
             }
          })
-         .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
-         .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
+         .whereRaw(`created_at >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+         .whereRaw(`created_at <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
 
       const fetchAverageCount = knex("acts_by_day")
          .select(knex.raw("avg(nb_acts)::integer"))
@@ -69,8 +74,8 @@ const handler = async (req, res) => {
                builder.whereIn("hospital_id", scope)
             }
          })
-         .whereRaw(`day >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
-         .whereRaw(`day <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
+         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
 
       const fetchProfilesDistribution = knex("acts")
          .select(
@@ -88,8 +93,8 @@ const handler = async (req, res) => {
                builder.whereIn("hospital_id", scope)
             }
          })
-         .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
-         .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
+         .whereRaw(`created_at >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+         .whereRaw(`created_at <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
          .groupBy("type")
 
       const fetchActsWithSamePV = knex
@@ -103,8 +108,8 @@ const handler = async (req, res) => {
                      builder.whereIn("hospital_id", scope)
                   }
                })
-               .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
-               .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
+               .whereRaw(`created_at >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+               .whereRaw(`created_at <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
                .whereRaw("pv_number is not null and pv_number <> ''")
                .groupBy("pv_number")
                .havingRaw("count(1) > 1")
@@ -123,8 +128,8 @@ const handler = async (req, res) => {
                      builder.whereIn("hospital_id", scope)
                   }
                })
-               .whereRaw(`created_at >= TO_DATE(?, '${FORMAT_DATE}')`, startDate.format(FORMAT_DATE))
-               .whereRaw(`created_at <= TO_DATE(?, '${FORMAT_DATE}')`, endDate.format(FORMAT_DATE))
+               .whereRaw(`created_at >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+               .whereRaw(`created_at <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
                .whereRaw("pv_number is not null and pv_number <> ''")
                .groupBy("pv_number")
          })
@@ -140,8 +145,8 @@ const handler = async (req, res) => {
       ]).then(([[globalCount], [averageCount], profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
-               startDate: startDate.format(FORMAT_DATE),
-               endDate: endDate.format(FORMAT_DATE),
+               startDate: startDate.format(ISO_DATE),
+               endDate: endDate.format(ISO_DATE),
                isNational,
                scope,
             },
