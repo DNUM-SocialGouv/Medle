@@ -1,6 +1,9 @@
 import React from "react"
 import { PropTypes } from "prop-types"
 import { Pie, PieChart, Cell, Legend } from "recharts"
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline"
+import Tooltip from "@material-ui/core/Tooltip"
+
 import { API_URL, GLOBAL_STATISTICS_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
 import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
@@ -30,9 +33,58 @@ const StatBlock = ({ children }) => {
       </div>
    )
 }
+const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber, secondLabel }) => {
+   return (
+      <div
+         style={{
+            width: "300px",
+            height: "260px",
+            border: "1px solid rgba(46,91,255,0.08)",
+            display: "inline-block",
+            color: "#BBB",
+            borderRadius: 1,
+            padding: "10px 10px 10px 20px",
+            margin: "10px 20px",
+            boxShadow: "0 10px 20px 0 rgba(46,91,255,0.07)",
+         }}
+      >
+         <Title2 className="mb-4">{title}</Title2>
+         <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{firstNumber}</p>
 
-StatBlock.propTypes = {
-   children: PropTypes.object,
+         <p
+            style={{
+               color: "#4a4a4a",
+               marginTop: -25,
+               marginLeft: 2,
+               fontSize: 15,
+               fontFamily: "Source Sans Pro",
+            }}
+            className="mb-4"
+         >
+            {firstLabel}
+         </p>
+         <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{secondNumber}</p>
+         <p
+            style={{
+               color: "#4a4a4a",
+               marginTop: -25,
+               marginLeft: 2,
+               fontSize: 15,
+               fontFamily: "Source Sans Pro",
+            }}
+         >
+            {secondLabel}
+         </p>
+      </div>
+   )
+}
+
+StatBlockNumbers.propTypes = {
+   title: PropTypes.string,
+   firstNumber: PropTypes.number,
+   firstLabel: PropTypes.string,
+   secondNumber: PropTypes.number,
+   secondLabel: PropTypes.string,
 }
 
 const colors = ["#307df6", "#ed6b67", "#eaa844", "#7ce0c3", "#ad33d8"]
@@ -61,70 +113,82 @@ RenderCustomizedLabel.propTypes = {
 }
 
 const StatisticsPage = ({ stats, currentUser }) => {
-   const livingDeadData = [
+   const livingDeceaseddData = [
       {
          name: "Vivant",
-         value: stats.livingDeadOthers["Vivant"] || 0,
+         value: stats.profilesDistribution.living || 0,
       },
       {
          name: "Thanato",
-         value: stats.livingDeadOthers["Thanato"] || 0,
+         value: stats.profilesDistribution.deceased || 0,
       },
    ]
 
    return (
       <Layout page="statistics" currentUser={currentUser}>
          <Title1 className="mt-5 mb-5">{"Statistiques"}</Title1>
-         <Container style={{ maxWidth: 1050 }}>
+         <Container
+            style={{ width: "100%", maxWidth: 1050, display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}
+         >
             {/* <div>{"on trouve" + JSON.stringify(stats)}</div> */}
+            <StatBlockNumbers
+               title="Actes réalisés"
+               firstNumber={stats.globalCount}
+               firstLabel="Actes au total (tous confondus)."
+               secondNumber={stats.averageCount}
+               secondLabel="Actes par jour en moyenne."
+            />
             <StatBlock>
-               <Title2 className="mb-4">Actes réalisés</Title2>
-               <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{stats.globalCount}</p>
-
-               <p
-                  style={{
-                     color: "#4a4a4a",
-                     marginTop: -25,
-                     marginLeft: 2,
-                     fontSize: 15,
-                     fontFamily: "Source Sans Pro",
-                  }}
-                  className="mb-4"
+               <div
+                  style={{ display: "inline-flex", verticalAlign: "middle", alignItems: "center" }}
+                  title="Hors assises et reconstitutions"
                >
-                  Actes au total (tous confondus).
-               </p>
-               <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{stats.averageCount}</p>
-               <p
-                  style={{
-                     color: "#4a4a4a",
-                     marginTop: -25,
-                     marginLeft: 2,
-                     fontSize: 15,
-                     fontFamily: "Source Sans Pro",
-                  }}
-               >
-                  Actes par jour en moyenne.
-               </p>
-            </StatBlock>
-            <StatBlock>
-               <Title2>Répartition Vivant/Thanato</Title2>
-               <PieChart width={280} height={200}>
+                  <span
+                     style={{
+                        height: 24,
+                        color: "#212529",
+                        fontFamily: "Evolventa",
+                        fontSize: 18,
+                        textAlign: "center",
+                        fontWeight: 400,
+                     }}
+                  >
+                     Répartition Vivant/Thanato{"  "}
+                  </span>
+                  <HelpOutlineIcon fontSize="small" />
+               </div>
+               <PieChart width={280} height={210}>
                   <Pie
-                     data={livingDeadData}
+                     data={livingDeceaseddData}
+                     dataKey="value"
                      cx="50%"
                      cy="50%"
                      outerRadius={80}
+                     innerRadius={20}
                      labelLine={false}
                      label={RenderCustomizedLabel}
                   >
-                     {livingDeadData.map((entry, index) => (
+                     {livingDeceaseddData.map((_, index) => (
                         <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                      ))}
                   </Pie>
                   <Legend wrapperStyle={{ color: "#9f9f9f" }} />
                </PieChart>
             </StatBlock>
-            <StatBlock>Card 3</StatBlock>
+            <StatBlockNumbers
+               title="Actes hors examens"
+               firstNumber={stats.profilesDistribution.reconstitution}
+               firstLabel="Reconstitutions."
+               secondNumber={stats.profilesDistribution.criminalCourt}
+               secondLabel="Participations aux assises."
+            />
+            <StatBlockNumbers
+               title="Réquisitions"
+               firstNumber={stats.actsWithSamePV}
+               firstLabel="Actes avec le même numéro de réquisition."
+               secondNumber={stats.averageWithSamePV}
+               secondLabel="Actes par numéro en moyenne sur ces numéros récurrents."
+            />
          </Container>
       </Layout>
    )
