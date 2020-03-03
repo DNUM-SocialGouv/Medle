@@ -9,6 +9,7 @@ import { ISO_DATE, now } from "../../utils/date"
 
 import { API_URL, GLOBAL_STATISTICS_ENDPOINT } from "../../config"
 import { handleAPIResponse } from "../../utils/errors"
+import { METHOD_POST } from "../../utils/http"
 import { Label, Title1, Title2, ValidationButton } from "../../components/StyledComponents"
 import { STATS_GLOBAL } from "../../utils/roles"
 import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
@@ -274,7 +275,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 const fetchStatistics = async ({ startDate, endDate, optionsFetch }) => {
    const response = await fetch(API_URL + GLOBAL_STATISTICS_ENDPOINT, {
       headers: { "Content-Type": "application/json" },
-      method: "POST",
+      method: METHOD_POST,
       body: JSON.stringify({ startDate, endDate, ...optionsFetch }),
    })
 

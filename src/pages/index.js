@@ -4,6 +4,7 @@ import fetch from "isomorphic-unfetch"
 import { API_URL, LOGIN_ENDPOINT } from "../config"
 import Login from "../components/Login"
 import { handleAPIResponse, ValidationError } from "../utils/errors"
+import { METHOD_POST } from "../utils/http"
 import { registerAndRedirectUser } from "../utils/auth"
 import PropTypes from "prop-types"
 import { trackEvent, CATEGORY, ACTION } from "../utils/matomo"
@@ -28,7 +29,7 @@ const LoginPage = ({ message }) => {
                checkUserData(userData)
 
                const response = await fetch(API_URL + LOGIN_ENDPOINT, {
-                  method: "POST",
+                  method: METHOD_POST,
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ email, password }),
                })

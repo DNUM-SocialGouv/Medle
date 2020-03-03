@@ -14,6 +14,7 @@ import {
    ACT_SEARCH_ENDPOINT,
 } from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
+import { METHOD_POST } from "../utils/http"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
@@ -219,7 +220,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       if (!state.id) {
          try {
             const response = await fetch(API_URL + ACT_DECLARATION_ENDPOINT, {
-               method: "POST",
+               method: METHOD_POST,
                headers: { "Content-Type": "application/json" },
                body: JSON.stringify(state),
             })
@@ -242,7 +243,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       } else {
          try {
             const response = await fetch(API_URL + ACT_EDIT_ENDPOINT + "/" + state.id, {
-               method: "POST",
+               method: METHOD_POST,
                headers: { "Content-Type": "application/json" },
                body: JSON.stringify(state),
             })

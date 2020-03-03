@@ -1,5 +1,6 @@
 import { ASKERS_SEARCH_ENDPOINT, ATTACKS_ENDPOINT, LOGIN_ENDPOINT } from "../../../config"
 import { handleAPIResponse } from "../../../utils/errors"
+import { METHOD_POST } from "../../../utils/http"
 import fetch from "isomorphic-unfetch"
 
 /**
@@ -15,7 +16,7 @@ let headers
 
 const buildOptionsFetch = async () => {
    const response = await fetch(API_URL + LOGIN_ENDPOINT, {
-      method: "POST",
+      method: METHOD_POST,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
    })

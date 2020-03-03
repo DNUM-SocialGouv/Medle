@@ -9,6 +9,7 @@ import fetch from "isomorphic-unfetch"
 import { Label, AnchorButton } from "../components/StyledComponents"
 import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
 import { isEmpty } from "../utils/misc"
+import { METHOD_PUT } from "../utils/http"
 import { handleAPIResponse } from "../utils/errors"
 import { isAllowed, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 import { logError } from "../utils/logger"
@@ -51,7 +52,7 @@ export const fetchDataMonth = async ({ hospitalId, year, month, optionsFetch }) 
 
 export const updateDataMonth = async ({ hospitalId, year, month, dataMonth }) => {
    const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
-      method: "PUT",
+      method: METHOD_PUT,
       body: JSON.stringify(dataMonth),
    })
    await handleAPIResponse(response)
