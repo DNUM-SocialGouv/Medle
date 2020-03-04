@@ -1,5 +1,4 @@
 import React from "react"
-import Layout from "../components/Layout"
 import { Alert, Container } from "reactstrap"
 import { Title1 } from "../components/StyledComponents"
 
