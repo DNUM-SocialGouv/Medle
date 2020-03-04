@@ -67,11 +67,11 @@ export const Button = styled(RSButton)`
 
 export const ValidationButton = styled(Button)`
    background: #307df6;
-   border-radius: 0;
+   border-radius: 5px;
    border: 0;
    color: white;
    margin: 0 1em;
-   padding: 0.25em 1.5em;
+   padding: 0.1em 1.5em;
    font-family: "Source Sans Pro";
 `
 

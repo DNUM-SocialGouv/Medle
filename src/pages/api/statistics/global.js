@@ -154,7 +154,7 @@ const handler = async (req, res) => {
             averageCount: averageCount.avg || 0,
             profilesDistribution: profilesDistribution.reduce(
                (acc, current) => ({ ...acc, [current.type]: current.count || 0 }),
-               {},
+               { deceased: 0, criminalCourt: 0, reconstitution: 0, living: 0 },
             ),
             actsWithSamePV: actsWithSamePV.sum || 0,
             averageWithSamePV: averageWithSamePV.avg || 0,
