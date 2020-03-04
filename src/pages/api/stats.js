@@ -2,6 +2,7 @@ import knex from "../../knex/knex"
 import { STATUS_200_OK } from "../../utils/http"
 import { sendAPIError } from "../../utils/api"
 import moment from "moment"
+import { FORMAT_DATE } from "../../utils/date"
 
 export default async (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -28,7 +29,7 @@ export default async (req, res) => {
 
       const [date] = await knex.select(knex.raw("now()"))
 
-      const result = { currentDate: moment(date.now).format("DD/MM/YYYY"), globalCount: parseInt(globalCount.count) }
+      const result = { currentDate: moment(date.now).format(FORMAT_DATE), globalCount: parseInt(globalCount.count) }
 
       result.acts = stats.reduce((acc, curr) => {
          acc[curr.id] = { name: curr.name, total: parseInt(curr.count, 10), last7days: 0 }

@@ -155,8 +155,8 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    const [statistics, setStatistics] = useState(_statistics)
    const [errors, setErrors] = useState({})
    const [state, setState] = useState({
-      startDate: moment(now()).format("YYYY-MM-DD"),
-      endDate: moment(now()).format("YYYY-MM-DD"),
+      startDate: moment(now()).format(ISO_DATE),
+      endDate: moment(now()).format(ISO_DATE),
    })
 
    const livingDeceaseddData = [

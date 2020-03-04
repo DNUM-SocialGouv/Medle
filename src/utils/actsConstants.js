@@ -10,6 +10,7 @@ import ReconstitutionProfile from "../components/profiles/ReconstitutionProfile"
 import RestrainedProfile from "../components/profiles/RestrainedProfile"
 import RoadRelatedExaminationProfile from "../components/profiles/RoadRelatedExaminationProfile"
 import VictimProfile from "../components/profiles/VictimProfile"
+import { ISO_DATE } from "./date"
 
 export const orderedProfileValues = [
    "Victime (vivante)",
@@ -97,7 +98,7 @@ const periodOfDayValues = {
 const getSituationDate = dateStr => {
    const publicHolidays = joursFeries(moment(dateStr).format("YYYY"))
 
-   const publicHolidaysDates = Object.values(publicHolidays).map(elt => moment(elt).format("YYYY-MM-DD"))
+   const publicHolidaysDates = Object.values(publicHolidays).map(elt => moment(elt).format(ISO_DATE))
 
    if (publicHolidaysDates.includes(dateStr)) {
       return "sunday"

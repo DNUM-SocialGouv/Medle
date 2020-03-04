@@ -1,4 +1,5 @@
 import moment from "moment"
+import { ISO_DATE } from "../../utils/date"
 
 export const buildActsFromDB = acts =>
    acts.map(elt => ({
@@ -45,7 +46,7 @@ export const buildActFromDB = data => ({
    id: data.id,
    internalNumber: data.internal_number,
    pvNumber: data.pv_number,
-   examinationDate: moment(data.examination_date).format("YYYY-MM-DD"),
+   examinationDate: moment(data.examination_date).format(ISO_DATE),
    profile: data.profile,
    asker: { id: data.asker_id, name: data.asker_name },
    user: {

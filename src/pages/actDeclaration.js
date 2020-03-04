@@ -20,7 +20,7 @@ import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../utils/roles"
 import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
-import { now } from "../utils/date"
+import { now, ISO_DATE } from "../utils/date"
 import { profiles, orderedProfileValues } from "../utils/actsConstants"
 import { logError, logDebug } from "../utils/logger"
 
@@ -34,7 +34,7 @@ const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) 
       return {
          pvNumber: pvNumber || "",
          internalNumber: internalNumber || "",
-         examinationDate: moment(now()).format("YYYY-MM-DD"),
+         examinationDate: moment(now()).format(ISO_DATE),
          askerId: null,
          profile: "",
          addedBy: userId || "",
@@ -325,7 +325,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                      id="examinationDate"
                      invalid={errors && !!errors.examinationDate}
                      type="date"
-                     value={state.examinationDate || moment(now()).format("YYYY-MM-DD")}
+                     value={state.examinationDate || moment(now()).format(ISO_DATE)}
                      // value={state.examinationDate}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                   />
