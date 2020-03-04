@@ -33,12 +33,8 @@ NODE_ENV=development
 
 API_URL=http://localhost/api
 
-POSTGRES_USER=medle
-POSTGRES_PASSWORD=jJFWsfW5ePbN7J
-
-# API variables
-
-# for container app usage (like production)
+# for container app usage
+POSTGRES_SSL=false
 DATABASE_URL=psql://medle:jJFWsfW5ePbN7J@db:5432/medle
 
 # JWT
@@ -57,11 +53,11 @@ This is supposed to work now!
 ## 🏗️ Development usage
 
 For development purpose, it is more handy to use `yarn dev` to benefit from the hot reload offered by Next.
+This command takes into account the `.env.dev` file and not the `.env`.
 
-So, you only run the db container
-`docker-compose up --build -d db`
+You only have to run the db container (and not the app): `docker-compose up --build -d db`
 
-Modify `.env` for APP_API
+Modify `.env.dev` for APP_API
 ```js
 API_URL=http://localhost:3000/api
 ```
@@ -77,6 +73,11 @@ So you have to use an DATABASE_URL with __5432__ port, like `DATABASE_URL=psql:/
 
 On the other hand, when you use `yarn dev`, the node process is on localhost and is therefore outside the docker network.
 In this case, you need to use a DATABASE_URL with __5434__ port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@localhost:5434/medle`.
+
+Don't forgete also that in Docker, the db is not in non SSL mode.
+So the `POSTGRES_SSL` must be set to false.
+
+With a managed Postgres, `POSTGRES_SSL` must be set to true.
 
 ## 🌱 Migration and seeds
 
@@ -112,6 +113,7 @@ Make a new seed file, then:
 
 `sudo docker-compose exec app yarn seed:run`
 
+Knex migration tips: https://medium.com/@j3y/beyond-basic-knex-js-database-migrations-22263b0fcd7c
 
 ## 🖋️ Conventions for commit messages
 
@@ -167,6 +169,3 @@ avec :
 INSERT INTO askers (name, type) VALUES ('CRS autoroutière', 'primary');
 ```
 
-### Knex usage
-
-Knex migration tips: https://medium.com/@j3y/beyond-basic-knex-js-database-migrations-22263b0fcd7c
