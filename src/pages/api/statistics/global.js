@@ -64,8 +64,8 @@ const handler = async (req, res) => {
                builder.whereIn("hospital_id", scope)
             }
          })
-         .whereRaw(`created_at >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-         .whereRaw(`created_at <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
 
       const fetchAverageCount = knex("acts_by_day")
          .select(knex.raw("avg(nb_acts)::integer"))
@@ -93,8 +93,8 @@ const handler = async (req, res) => {
                builder.whereIn("hospital_id", scope)
             }
          })
-         .whereRaw(`created_at >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-         .whereRaw(`created_at <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
          .groupBy("type")
 
       const fetchActsWithSamePV = knex
@@ -108,8 +108,8 @@ const handler = async (req, res) => {
                      builder.whereIn("hospital_id", scope)
                   }
                })
-               .whereRaw(`created_at >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-               .whereRaw(`created_at <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+               .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+               .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
                .whereRaw("pv_number is not null and pv_number <> ''")
                .groupBy("pv_number")
                .havingRaw("count(1) > 1")
@@ -128,8 +128,8 @@ const handler = async (req, res) => {
                      builder.whereIn("hospital_id", scope)
                   }
                })
-               .whereRaw(`created_at >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-               .whereRaw(`created_at <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+               .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+               .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
                .whereRaw("pv_number is not null and pv_number <> ''")
                .groupBy("pv_number")
          })

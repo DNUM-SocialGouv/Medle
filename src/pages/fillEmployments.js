@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
 
-import { withAuthentication, getCurrentUser, buildOptionsFetch, redirectIfUnauthorized } from "../utils/auth"
+import { withAuthentication, getCurrentUser, buildAuthHeaders, redirectIfUnauthorized } from "../utils/auth"
 import { isAllowed, EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 import Layout from "../components/Layout"
 import AccordionEmploymentsMonth, {
@@ -213,7 +213,7 @@ const FillEmploymentsPage = ({
 }
 
 FillEmploymentsPage.getInitialProps = async ctx => {
-   const optionsFetch = buildOptionsFetch(ctx)
+   const authHeaders = buildAuthHeaders(ctx)
 
    const { hospitalId } = getCurrentUser(ctx)
 
@@ -247,7 +247,7 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       .map(elt => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, month: elt }))
 
    try {
-      const json = await fetchDataMonth({ hospitalId, year: currentYear, month: currentMonth, optionsFetch })
+      const json = await fetchDataMonth({ hospitalId, year: currentYear, month: currentMonth, authHeaders })
 
       return {
          currentMonth,

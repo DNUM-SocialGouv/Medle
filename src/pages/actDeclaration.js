@@ -19,7 +19,7 @@ import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../utils/roles"
-import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
 import { now, ISO_DATE } from "../utils/date"
 import { profiles, orderedProfileValues } from "../utils/actsConstants"
 import { logError, logDebug } from "../utils/logger"
@@ -443,7 +443,7 @@ const transformDBActForState = act => {
 }
 
 ActDeclaration.getInitialProps = async ctx => {
-   const optionsFetch = buildOptionsFetch(ctx)
+   const authHeaders = buildAuthHeaders(ctx)
 
    const {
       query: { id },
@@ -453,7 +453,7 @@ ActDeclaration.getInitialProps = async ctx => {
 
    if (id) {
       try {
-         const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id, optionsFetch)
+         const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id, { headers: authHeaders })
          act = await handleAPIResponse(response)
       } catch (error) {
          logError(error)

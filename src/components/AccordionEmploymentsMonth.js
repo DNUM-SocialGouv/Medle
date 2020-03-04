@@ -45,8 +45,10 @@ export const hasErrors = dataMonth => {
    return errors
 }
 
-export const fetchDataMonth = async ({ hospitalId, year, month, optionsFetch }) => {
-   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, optionsFetch)
+export const fetchDataMonth = async ({ hospitalId, year, month, authHeaders }) => {
+   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
+      headers: authHeaders,
+   })
    return handleAPIResponse(response)
 }
 

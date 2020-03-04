@@ -28,7 +28,7 @@ const primaryAskers = [
    "Juge d'instruction",
 ]
 
-const buildOptionsFetch = async () => {
+const buildAuthHeaders = async () => {
    const response = await fetch(API_URL + ACT_LOGIN, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -106,7 +106,7 @@ const getAskersToAdd = (newAskers, existingAskers) => {
    return { askersToAdd, askersNotToAdd }
 }
 
-buildOptionsFetch()
+buildAuthHeaders()
    .then(options =>
       Promise.all([fetchAskersThirdParty(options), fetchExistingAskers(options)]).then(
          ([newAskers, existingAskers]) => {

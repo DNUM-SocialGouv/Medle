@@ -5,7 +5,7 @@ import fetch from "isomorphic-unfetch"
 import moment from "moment"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 
-import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
 import { API_URL, ACT_SEARCH_ENDPOINT } from "../config"
 import { Title1 } from "../components/StyledComponents"
 import Pagination from "../components/Pagination"
@@ -16,7 +16,7 @@ import { ACT_CONSULTATION } from "../utils/roles"
 import { handleAPIResponse } from "../utils/errors"
 import { logError } from "../utils/logger"
 
-const fetchData = async ({ search, requestedPage, optionsFetch }) => {
+const fetchData = async ({ search, requestedPage, authHeaders }) => {
    const arr = []
    if (search) {
       arr.push(`fuzzy=${search}`)
@@ -25,7 +25,7 @@ const fetchData = async ({ search, requestedPage, optionsFetch }) => {
       arr.push(`requestedPage=${requestedPage}`)
    }
    const bonus = arr.length ? "?" + arr.join("&") : ""
-   const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}${bonus}`, optionsFetch)
+   const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}${bonus}`, { headers: authHeaders })
 
    return handleAPIResponse(response)
 }
@@ -153,10 +153,10 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
 }
 
 ActsListPage.getInitialProps = async ctx => {
-   const optionsFetch = buildOptionsFetch(ctx)
+   const authHeaders = buildAuthHeaders(ctx)
 
    try {
-      const paginatedData = await fetchData({ optionsFetch })
+      const paginatedData = await fetchData({ authHeaders })
       return { paginatedData }
    } catch (error) {
       logError("APP error", error)

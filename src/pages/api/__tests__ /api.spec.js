@@ -14,7 +14,7 @@ const password = "test"
 
 let headers
 
-const buildOptionsFetch = async () => {
+const buildAuthHeaders = async () => {
    const response = await fetch(API_URL + LOGIN_ENDPOINT, {
       method: METHOD_POST,
       headers: { "Content-Type": "application/json" },
@@ -35,14 +35,14 @@ const buildOptionsFetch = async () => {
 }
 
 describe("endpoints", () => {
-   beforeAll(buildOptionsFetch)
+   beforeAll(buildAuthHeaders)
 
    it("should return all attacks for attacks endpoint", async () => {
       const response = await fetch(API_URL + ATTACKS_ENDPOINT, headers)
 
       const attacks = await handleAPIResponse(response)
 
-      expect(attacks.length).toBe(2)
+      expect(attacks.length).toBeGreaterThanOrEqual(2)
    })
 
    it("should return more than 100 commissariats in France for askers endpoint", async () => {

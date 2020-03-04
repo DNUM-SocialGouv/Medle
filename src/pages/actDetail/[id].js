@@ -15,7 +15,7 @@ import ColumnAct from "../../components/ColumnAct"
 import { Title1, Title2 } from "../../components/StyledComponents"
 import { isEmpty } from "../../utils/misc"
 import { handleAPIResponse } from "../../utils/errors"
-import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT } from "../../utils/roles"
 import { logError } from "../../utils/logger"
 import { profiles } from "../../utils/actsConstants"
@@ -131,13 +131,13 @@ const ActDetail = ({ initialAct, id, error, currentUser }) => {
 }
 
 ActDetail.getInitialProps = async ctx => {
-   const optionsFetch = buildOptionsFetch(ctx)
+   const authHeaders = buildAuthHeaders(ctx)
 
    const { id } = ctx.query
 
    let json
    try {
-      const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id, optionsFetch)
+      const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id, { headers: authHeaders })
       json = await handleAPIResponse(response)
       return { initialAct: json, id }
    } catch (error) {

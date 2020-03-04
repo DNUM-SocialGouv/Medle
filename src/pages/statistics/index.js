@@ -12,7 +12,7 @@ import { handleAPIResponse } from "../../utils/errors"
 import { METHOD_POST } from "../../utils/http"
 import { Label, Title1, Title2, ValidationButton } from "../../components/StyledComponents"
 import { STATS_GLOBAL } from "../../utils/roles"
-import { buildOptionsFetch, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { logError } from "../../utils/logger"
 import Layout from "../../components/Layout"
 
@@ -272,21 +272,21 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    )
 }
 
-const fetchStatistics = async ({ startDate, endDate, optionsFetch }) => {
+const fetchStatistics = async ({ startDate, endDate, authHeaders }) => {
    const response = await fetch(API_URL + GLOBAL_STATISTICS_ENDPOINT, {
-      headers: { "Content-Type": "application/json" },
       method: METHOD_POST,
-      body: JSON.stringify({ startDate, endDate, ...optionsFetch }),
+      body: JSON.stringify({ startDate, endDate }),
+      headers: { "Content-Type": "application/json", ...authHeaders },
    })
 
    return handleAPIResponse(response)
 }
 
 StatisticsPage.getInitialProps = async ctx => {
-   const optionsFetch = buildOptionsFetch(ctx)
+   const authHeaders = buildAuthHeaders(ctx)
 
    try {
-      const statistics = await fetchStatistics({ optionsFetch })
+      const statistics = await fetchStatistics({ authHeaders })
       return { statistics }
    } catch (error) {
       logError(error)

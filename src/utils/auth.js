@@ -46,10 +46,12 @@ export const registerAndRedirectUser = json => {
 export const getCurrentUser = ctx => {
    if (ctx && ctx.req) {
       // Server side navigation
+      logDebug("getCurrentUser from server side")
       const res = getTokenFromCookie(ctx)
       return res ? jwt.decode(res) : null
    } else {
       // Client side navigation
+      logDebug("getCurrentUser from client side")
       return getCurrentUserFromSessionStorage()
    }
 }
@@ -82,15 +84,13 @@ const getTokenFromCookie = ctx => {
 }
 
 // On server side, fetch needs to carry the cookie which contains the JWT token, so here we prepare the options
-export const buildOptionsFetch = ctx => {
+export const buildAuthHeaders = ctx => {
    const token = getTokenFromCookie(ctx)
    return token
       ? {
-           headers: {
-              cookie: `token=${token}`,
-           },
+           cookie: `token=${token}`,
         }
-      : null
+      : {}
 }
 
 export const isomorphicRedirect = (ctx, url) => {
