@@ -137,20 +137,20 @@ const Footer = () => (
             </Col>
             <Col>
                <ul>
-                  <li>
+                  {/* <li>
                      <Link href={"/conditions"}>
                         <a>{"Conditions générales d'utilisation"}</a>
                      </Link>
-                  </li>
+                  </li> */}
                   <li>
                      <Link href={"/statistics"}>
                         <a>Statistiques</a>
                      </Link>
                   </li>
                   <li>
-                     <Link href={"/contact"}>
-                        <a>Contactez-nous</a>
-                     </Link>
+                     {/* <Link> */}
+                     <a href="mailto:contact.medle@fabrique.social.gouv.fr">Contactez-nous</a>
+                     {/* </Link> */}
                   </li>
                </ul>
             </Col>
@@ -227,24 +227,24 @@ const Sidebar = ({ page, currentUser }) => {
                   {"Statistiques"}
                </a>
             </Link>
-            <Link href="/_error">
-               <a className="list-group-item list-group-item-action">
-                  <PhoneIcon width={30} /> <br />
-                  {"Annuaire"}
-               </a>
-            </Link>
-            <Link href="/_error">
-               <a className="list-group-item list-group-item-action">
-                  <LocalLibraryIcon width={30} /> <br />
-                  {"Ressources"}
-               </a>
-            </Link>
-            <Link href="/_error">
-               <a className="list-group-item list-group-item-action">
-                  <SettingsIcon width={30} /> <br />
-                  {"Paramètres"}
-               </a>
-            </Link>
+            {/* <Link href="/_error"> */}
+            <a className="list-group-item list-group-item-action">
+               <PhoneIcon width={30} /> <br />
+               {"Annuaire"}
+            </a>
+            {/* </Link> */}
+            {/* <Link href="/_error"> */}
+            <a className="list-group-item list-group-item-action">
+               <LocalLibraryIcon width={30} /> <br />
+               {"Ressources"}
+            </a>
+            {/* </Link> */}
+            {/* <Link href="/_error"> */}
+            <a className="list-group-item list-group-item-action">
+               <SettingsIcon width={30} /> <br />
+               {"Paramètres"}
+            </a>
+            {/* </Link> */}
          </div>
          <style jsx>{`
             a {
