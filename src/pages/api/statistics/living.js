@@ -1,5 +1,4 @@
 import Cors from "micro-cors"
-import moment from "moment"
 
 import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
@@ -7,8 +6,8 @@ import { STATS_GLOBAL } from "../../../utils/roles"
 import { sendAPIError } from "../../../utils/api"
 import { checkValidUserWithPrivilege, getAllScope } from "../../../utils/auth"
 // import { logError } from "../../../utils/logger"
-import { ISO_DATE, now } from "../../../utils/date"
-import { normalizeEndDate, normalizeStartDate } from "../../../common/api/statistics"
+import { ISO_DATE } from "../../../utils/date"
+import { normalizeDates } from "../../../common/api/statistics"
 import { fetchProfilesDistribution } from "../../../knex/queries/statistics"
 
 const handler = async (req, res) => {
@@ -34,17 +33,48 @@ const handler = async (req, res) => {
       const scope = getAllScope(currentUser)
 
       // request verification
-      let { startDate, endDate, isNational } = await req.body
+      const { startDate: _startDate, endDate: _endDate } = await req.body
+      let { isNational } = await req.body
 
       console.log("startDate", startDate)
       console.log("endDate", endDate)
 
-      endDate = normalizeEndDate(endDate)
-      startDate = normalizeStartDate(startDate, endDate)
+      // endDate = normalizeEndDate(endDate)
+      // startDate = normalizeStartDate(startDate, endDate)
+
+      const { startDate, endDate } = normalizeDates({ startDate: _startDate, endDate: _endDate })
 
       isNational = isNational === true
 
-      Promise.all([fetchProfilesDistribution({ startDate, endDate, isNational, scope })]).then(profilesDistribution => {
+      const fetchGlobalCount = knex("acts")
+         .select(knex.raw("count(1)::integer"))
+         .whereNull("deleted_at")
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
+         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+         .whereRaw(
+            `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`,
+         )
+
+      const fetchAverageCount = knex("living_acts_by_day")
+         .select(knex.raw("avg(nb_acts)::integer"))
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
+         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+
+      Promise.all([
+         fetchGlobalCount,
+         fetchAverageCount,
+         fetchProfilesDistribution({ startDate, endDate, isNational, scope }),
+      ]).then(([[globalCount], [averageCount], profilesDistribution]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
                startDate: startDate.format(ISO_DATE),
@@ -52,6 +82,8 @@ const handler = async (req, res) => {
                isNational,
                scope,
             },
+            globalCount: globalCount.count || 0,
+            averageCount: averageCount.avg || 0,
             profilesDistribution: profilesDistribution.reduce(
                (acc, current) => ({ ...acc, [current.type]: current.count }),
                { deceased: 0, criminalCourt: 0, reconstitution: 0, living: 0 },
