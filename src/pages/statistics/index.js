@@ -4,7 +4,12 @@ import { Pie, PieChart, Cell, Legend } from "recharts"
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline"
 import { Button, ButtonGroup, Container, Form, FormGroup, Input } from "reactstrap"
 
-import { API_URL, GLOBAL_STATISTICS_ENDPOINT } from "../../config"
+import {
+   API_URL,
+   GLOBAL_STATISTICS_ENDPOINT,
+   LIVING_STATISTICS_ENDPOINT,
+   DEACEASED_STATISTICS_ENDPOINT,
+} from "../../config"
 import { handleAPIResponse } from "../../utils/errors"
 import { METHOD_POST } from "../../utils/http"
 import Layout from "../../components/Layout"
@@ -178,7 +183,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       e.preventDefault()
 
       const { startDate, endDate } = state
-      const statistics = await fetchStatistics({ startDate, endDate })
+      const statistics = await fetchStatistics({ type, startDate, endDate })
       setState({
          ...state,
          startDate: statistics.inputs.startDate,
@@ -344,8 +349,15 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    )
 }
 
-const fetchStatistics = async ({ startDate, endDate, authHeaders }) => {
-   const response = await fetch(API_URL + GLOBAL_STATISTICS_ENDPOINT, {
+const fetchStatistics = async ({ type = "Global", startDate, endDate, authHeaders }) => {
+   const obj = {
+      Vivant: LIVING_STATISTICS_ENDPOINT,
+      Thanato: DEACEASED_STATISTICS_ENDPOINT,
+   }
+
+   const endpoint = obj[type] || GLOBAL_STATISTICS_ENDPOINT
+
+   const response = await fetch(API_URL + endpoint, {
       method: METHOD_POST,
       body: JSON.stringify({ startDate, endDate }),
       headers: { "Content-Type": "application/json", ...authHeaders },

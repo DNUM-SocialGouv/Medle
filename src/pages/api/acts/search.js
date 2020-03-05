@@ -3,7 +3,8 @@ import Cors from "micro-cors"
 import { STATUS_200_OK, STATUS_500_INTERNAL_SERVER_ERROR, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { ACT_CONSULTATION } from "../../../utils/roles"
-import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
+import { sendAPIError } from "../../../utils/api"
+import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { APIError } from "../../../utils/errors"
 
 const LIMIT = 100

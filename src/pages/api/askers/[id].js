@@ -9,7 +9,8 @@ import {
    METHOD_OPTIONS,
 } from "../../../utils/http"
 import { ACT_MANAGEMENT } from "../../../utils/roles"
-import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
+import { sendAPIError } from "../../../utils/api"
+import { checkValidUserWithPrivilege } from "../../../utils/auth"
 
 const handler = async (req, res) => {
    try {

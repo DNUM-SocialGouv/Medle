@@ -4,9 +4,11 @@ import moment from "moment"
 import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { STATS_GLOBAL } from "../../../utils/roles"
-import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
+import { sendAPIError } from "../../../utils/api"
+import { checkValidUserWithPrivilege, getAllScope } from "../../../utils/auth"
 // import { logError } from "../../../utils/logger"
 import { ISO_DATE, now } from "../../../utils/date"
+import { normalizeEndDate, normalizeStartDate } from "../../../common/api/statistics"
 
 const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -28,8 +30,7 @@ const handler = async (req, res) => {
        *
        */
 
-      let scope = currentUser.scope || []
-      scope = currentUser.hospitalId ? [...scope, currentUser.hospitalId] : scope
+      const scope = getAllScope(currentUser)
 
       // request verification
       let { startDate, endDate, isNational } = await req.body
@@ -37,22 +38,8 @@ const handler = async (req, res) => {
       console.log("startDate", startDate)
       console.log("endDate", endDate)
 
-      const defaultEndDate = now()
-      const defaultStartDate = date => moment(date).startOf("year")
-
-      if (!endDate) {
-         endDate = defaultEndDate
-      } else {
-         endDate = moment(endDate, ISO_DATE)
-         endDate = endDate.isValid() ? endDate : defaultEndDate
-      }
-
-      if (!startDate) {
-         startDate = defaultStartDate(endDate)
-      } else {
-         startDate = moment(startDate, ISO_DATE)
-         startDate = startDate.isValid() && startDate.isBefore(endDate) ? startDate : defaultStartDate(endDate)
-      }
+      endDate = normalizeEndDate(endDate)
+      startDate = normalizeStartDate(startDate, endDate)
 
       isNational = isNational === true
 
@@ -153,7 +140,7 @@ const handler = async (req, res) => {
             globalCount: globalCount.count || 0,
             averageCount: averageCount.avg || 0,
             profilesDistribution: profilesDistribution.reduce(
-               (acc, current) => ({ ...acc, [current.type]: current.count || 0 }),
+               (acc, current) => ({ ...acc, [current.type]: current.count }),
                { deceased: 0, criminalCourt: 0, reconstitution: 0, living: 0 },
             ),
             actsWithSamePV: actsWithSamePV.sum || 0,

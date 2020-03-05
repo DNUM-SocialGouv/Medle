@@ -1,4 +1,4 @@
-import { checkValidUserWithPrivilege } from "../api"
+import { checkValidUserWithPrivilege } from "../auth"
 import { generateToken } from "../jwt"
 import { ACT_MANAGEMENT, EMPLOYMENT_MANAGEMENT } from "../roles"
 

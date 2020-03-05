@@ -10,7 +10,8 @@ import {
 import knex from "../../../knex/knex"
 import { buildActFromJSON } from "../../../knex/models/acts"
 import { ACT_MANAGEMENT } from "../../../utils/roles"
-import { checkValidUserWithPrivilege, sendAPIError } from "../../../utils/api"
+import { sendAPIError } from "../../../utils/api"
+import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
 
 const handler = async (req, res) => {

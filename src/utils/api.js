@@ -48,45 +48,6 @@ export const sendAPIError = (error, res) => {
       .json({ message: `Erreur serveur / ${error}`, status: STATUS_500_INTERNAL_SERVER_ERROR })
 }
 
-export const checkValidUserWithPrivilege = (privilege, req) => {
-   const { token } = req.cookies
-
-   try {
-      if (!token) {
-         throw new APIError({
-            message: "Non authentified user",
-            status: STATUS_401_UNAUTHORIZED,
-         })
-      }
-
-      const currentUser = checkToken(token)
-
-      if (!isAllowed(currentUser.role, privilege)) {
-         throw new APIError({
-            message: `Not allowed role (${currentUser.email ? currentUser.email : "unknown user"})`,
-            status: STATUS_403_FORBIDDEN,
-         })
-      } else {
-         return currentUser
-      }
-   } catch (error) {
-      if (error instanceof APIError) throw error
-
-      let email
-      try {
-         // Let's try to get user informations even if the token is not valid
-         const currentUser = decodeToken(token)
-         email = currentUser.email
-      } catch (error) {
-         logError("Token couldn't been decoded")
-      }
-      throw new APIError({
-         message: `Invalid token for user (${email ? email : "unknown user"})`,
-         status: STATUS_401_UNAUTHORIZED,
-      })
-   }
-}
-
 export const sendMethodNotAllowedError = res => {
    return res.status(STATUS_405_METHOD_NOT_ALLOWED).end()
 }

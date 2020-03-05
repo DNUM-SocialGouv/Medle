@@ -1,18 +1,15 @@
 import React from "react"
 import Router from "next/router"
-import { API_URL, LOGOUT_ENDPOINT } from "../config"
 import * as jwt from "jsonwebtoken"
-import { isAllowed, START_PAGES } from "./roles"
 import moment from "moment"
+
+import { API_URL, LOGOUT_ENDPOINT, timeout } from "../config"
+import { isAllowed, START_PAGES } from "./roles"
 import { fetchReferenceData, clearReferenceData } from "./init"
 import { logDebug, logError } from "./logger"
-
-// Timeout config : keep this timeout values in sync
-export const timeout = {
-   jwt: "7h",
-   cookie: 7 * 60 * 60,
-   session: { hours: 7 },
-}
+import { STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "./http"
+import { checkToken, decodeToken } from "./jwt"
+import { APIError } from "./errors"
 
 /**
  * Remarks on cookie & session storage:
@@ -138,4 +135,48 @@ export const redirectIfUnauthorized = (error, ctx) => {
    if (error && error.status === 401) {
       isomorphicRedirect(ctx, "/index?sessionTimeout=1")
    }
+}
+
+export const checkValidUserWithPrivilege = (privilege, req) => {
+   const { token } = req.cookies
+
+   try {
+      if (!token) {
+         throw new APIError({
+            message: "Non authentified user",
+            status: STATUS_401_UNAUTHORIZED,
+         })
+      }
+
+      const currentUser = checkToken(token)
+
+      if (!isAllowed(currentUser.role, privilege)) {
+         throw new APIError({
+            message: `Not allowed role (${currentUser.email ? currentUser.email : "unknown user"})`,
+            status: STATUS_403_FORBIDDEN,
+         })
+      } else {
+         return currentUser
+      }
+   } catch (error) {
+      if (error instanceof APIError) throw error
+
+      let email
+      try {
+         // Let's try to get user informations even if the token is not valid
+         const currentUser = decodeToken(token)
+         email = currentUser.email
+      } catch (error) {
+         logError("Token couldn't been decoded")
+      }
+      throw new APIError({
+         message: `Invalid token for user (${email ? email : "unknown user"})`,
+         status: STATUS_401_UNAUTHORIZED,
+      })
+   }
+}
+
+export const getAllScope = user => {
+   const scope = user.scope || []
+   return user.hospitalId ? [...scope, user.hospitalId] : scope
 }

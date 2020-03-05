@@ -12,15 +12,12 @@ import {
    METHOD_POST,
 } from "../../utils/http"
 import { createError, sendError, sendSuccess } from "../../utils/api"
-import { timeout } from "../../utils/auth"
+import { timeout } from "../../config"
 import { logError } from "../../utils/logger"
 
 const validPassword = password => {
    return password.length
 }
-
-// const maxDurationCookies = 7 * 60 * 60 // 7 heures max. TODO: mettre en config (cf. expiration JWT)
-const maxDurationCookies = timeout.cookie
 
 const extractPublicData = ({
    id,
@@ -83,7 +80,7 @@ handler
          if (user && (await compareWithHash(password, user.password))) {
             const token = generateToken(user)
 
-            res.setHeader("Set-Cookie", `token=${token}; Path=/; HttpOnly; Max-Age=${maxDurationCookies}`)
+            res.setHeader("Set-Cookie", `token=${token}; Path=/; HttpOnly; Max-Age=${timeout.cookie}`)
             return sendSuccess(req, res).json(extractPublicData(user))
             // res.status(STATUS_200_OK).json({ token })
          } else {
