@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { PropTypes } from "prop-types"
 import { Button, ButtonGroup, Container, Form, FormGroup, Input } from "reactstrap"
+import fetch from "isomorphic-unfetch"
 
 import {
    API_URL,
@@ -54,6 +55,17 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       setStatistics(statistics)
    }
 
+   const changeTab = async type => {
+      setType(type)
+      const statistics = await fetchStatistics({ type, startDate: state.startDate, endDate: state.endDate })
+      setState({
+         ...state,
+         startDate: statistics.inputs.startDate,
+         endDate: statistics.inputs.endDate,
+      })
+      setStatistics(statistics)
+   }
+
    return (
       <Layout page="statistics" currentUser={currentUser}>
          <Title1 className="mt-5 mb-3">{"Statistiques"}</Title1>
@@ -62,7 +74,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                <Button
                   className="statistics-tab-button"
                   color="primary"
-                  onClick={() => setType("Global")}
+                  onClick={() => changeTab("Global")}
                   outline={type !== "Global"}
                >
                   Global&nbsp;
@@ -70,7 +82,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                <Button
                   className="statistics-tab-button"
                   color="primary"
-                  onClick={() => setType("Vivant")}
+                  onClick={() => changeTab("Vivant")}
                   outline={type !== "Vivant"}
                >
                   &nbsp;Vivant
@@ -78,7 +90,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                <Button
                   className="statistics-tab-button"
                   color="primary"
-                  onClick={() => setType("Thanato")}
+                  onClick={() => changeTab("Thanato")}
                   outline={type !== "Thanato"}
                >
                   Thanato
