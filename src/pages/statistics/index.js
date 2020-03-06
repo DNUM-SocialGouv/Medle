@@ -19,6 +19,38 @@ import { logError } from "../../utils/logger"
 import { pluralize } from "../../utils/misc"
 import { StatBlockNumbers, StatBlockPieChart } from "../../components/StatBlock"
 
+// handy skeleton structure to avoid future "undefined" management
+const statisticsDefault = {
+   inputs: {},
+   globalCount: 0,
+   averageCount: 0,
+   profilesDistribution: {}, // nested object can't be merged in JS so empty object is enough
+   actsWithSamePV: 0,
+   averageWithSamePV: 0,
+   actsWithPv: {},
+   actTypes: {},
+   hours: {},
+   examinations: {},
+}
+
+const fetchStatistics = async ({ type = "Global", startDate, endDate, authHeaders }) => {
+   const obj = {
+      Vivant: LIVING_STATISTICS_ENDPOINT,
+      Thanato: DEACEASED_STATISTICS_ENDPOINT,
+   }
+
+   const endpoint = obj[type] || GLOBAL_STATISTICS_ENDPOINT
+
+   const response = await fetch(API_URL + endpoint, {
+      method: METHOD_POST,
+      body: JSON.stringify({ startDate, endDate }),
+      headers: { "Content-Type": "application/json", ...authHeaders },
+   })
+
+   const statistics = await handleAPIResponse(response)
+   return { ...statisticsDefault, ...statistics }
+}
+
 const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    const [statistics, setStatistics] = useState(_statistics)
    const [type, setType] = useState("Global")
@@ -35,6 +67,74 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       {
          name: "Thanato",
          value: statistics.profilesDistribution.deceased || 0,
+      },
+   ]
+
+   const actsWithPvData = [
+      {
+         name: "Avec",
+         value: statistics.actsWithPv.withRequisition || 0,
+      },
+      {
+         name: "Sans (non renseigné)",
+         value: statistics.actsWithPv.withoutRequisition || 0,
+      },
+      {
+         name: "Recueil de preuves sans plainte",
+         value: statistics.actsWithPv.withoutPlaint || 0,
+      },
+   ]
+
+   const actTypesData = [
+      {
+         name: "Somatique",
+         value: statistics.actTypes.somatic || 0,
+      },
+      {
+         name: "Psychiatrique",
+         value: statistics.actTypes.psychiatric || 0,
+      },
+   ]
+
+   const hoursData = [
+      {
+         name: "Journée",
+         value: statistics.hours.day || 0,
+      },
+      {
+         name: "Soirée",
+         value: statistics.hours.evening || 0,
+      },
+      {
+         name: "Nuit profonde",
+         value: statistics.hours.night || 0,
+      },
+   ]
+
+   const examinationsData = [
+      {
+         name: "Biologie",
+         value: statistics.examinations.biology || 0,
+      },
+      {
+         name: "Imagerie",
+         value: statistics.examinations.image || 0,
+      },
+      {
+         name: "Toxicologie",
+         value: statistics.examinations.toxicology || 0,
+      },
+      {
+         name: "Anapath",
+         value: statistics.examinations.anapath || 0,
+      },
+      {
+         name: "Génétique",
+         value: statistics.examinations.genetic || 0,
+      },
+      {
+         name: "Autres",
+         value: statistics.examinations.others || 0,
       },
    ]
 
@@ -58,6 +158,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    const changeTab = async type => {
       setType(type)
       const statistics = await fetchStatistics({ type, startDate: state.startDate, endDate: state.endDate })
+      console.log("statistics", statistics)
       setState({
          ...state,
          startDate: statistics.inputs.startDate,
@@ -193,10 +294,14 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                      secondNumber={statistics.averageCount}
                      secondLabel={`Acte${pluralize(statistics.averageCount)} par jour en moyenne.`}
                   />
-                  <StatBlockPieChart data={livingDeceaseddData} title="Numéro de réquisitions" />
-                  <StatBlockPieChart data={livingDeceaseddData} title="Types d'actes" />
-                  <StatBlockPieChart data={livingDeceaseddData} title="Horaires" />
-                  <StatBlockPieChart data={livingDeceaseddData} title="Examens complémentaires" />
+                  <StatBlockPieChart data={actsWithPvData} title="Numéro de réquisitions" />
+                  <StatBlockPieChart data={actTypesData} title="Types d'actes" />
+                  <StatBlockPieChart
+                     data={hoursData}
+                     title="Horaires"
+                     hoverTitle="Journée (8h30-18h30) / Soirée (18h30-00h) / Nuit profonde (00h-8h30)"
+                  />
+                  <StatBlockPieChart data={examinationsData} title="Examens complémentaires" />
                </div>
             )}
             {type === "Thanato" && (
@@ -223,39 +328,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    )
 }
 
-const fetchStatistics = async ({ type = "Global", startDate, endDate, authHeaders }) => {
-   const obj = {
-      Vivant: LIVING_STATISTICS_ENDPOINT,
-      Thanato: DEACEASED_STATISTICS_ENDPOINT,
-   }
-
-   const endpoint = obj[type] || GLOBAL_STATISTICS_ENDPOINT
-
-   const response = await fetch(API_URL + endpoint, {
-      method: METHOD_POST,
-      body: JSON.stringify({ startDate, endDate }),
-      headers: { "Content-Type": "application/json", ...authHeaders },
-   })
-
-   return handleAPIResponse(response)
-}
-
-// handy skeleton structure to avoid future "undefined" management
-const statisticsDefault = {
-   inputs: {},
-   globalCount: 0,
-   averageCount: 0,
-   profilesDistribution: {}, // nested object can't be merged in JS so empty object is enough
-   actsWithSamePV: 0,
-   averageWithSamePV: 0,
-}
-
 StatisticsPage.getInitialProps = async ctx => {
    const authHeaders = buildAuthHeaders(ctx)
 
    try {
-      const statistics = await fetchStatistics({ authHeaders })
-      return { statistics: { ...statisticsDefault, ...statistics } }
+      return { statistics: await fetchStatistics({ authHeaders }) }
    } catch (error) {
       logError(error)
       redirectIfUnauthorized(error, ctx)

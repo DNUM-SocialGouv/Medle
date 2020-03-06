@@ -10,7 +10,7 @@ import { ISO_DATE } from "../../../utils/date"
 import { normalizeInputs } from "../../../common/api/statistics"
 import { fetchProfilesDistribution } from "../../../knex/queries/statistics"
 
-const handler = async (req, res) => {
+const handler = (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    try {
@@ -34,50 +34,156 @@ const handler = async (req, res) => {
       // request verification
       const { startDate, endDate, isNational } = normalizeInputs(req.body)
 
-      const fetchGlobalCount = knex("acts")
-         .select(knex.raw("count(1)::integer"))
-         .whereNull("deleted_at")
-         .where(builder => {
-            if (!isNational) {
-               builder.whereIn("hospital_id", scope)
-            }
-         })
-         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-         .whereRaw(
-            `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`,
-         )
+      const fetchGlobalCount = () =>
+         knex("acts")
+            .select(knex.raw("count(1)::integer"))
+            .whereNull("deleted_at")
+            .where(builder => {
+               if (!isNational) {
+                  builder.whereIn("hospital_id", scope)
+               }
+            })
+            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+            .whereRaw(
+               `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`,
+            )
 
-      const fetchAverageCount = knex("living_acts_by_day")
-         .select(knex.raw("avg(nb_acts)::integer"))
-         .where(builder => {
-            if (!isNational) {
-               builder.whereIn("hospital_id", scope)
-            }
-         })
-         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+      const fetchAverageCount = () =>
+         knex("living_acts_by_day")
+            .select(knex.raw("avg(nb_acts)::integer"))
+            .where(builder => {
+               if (!isNational) {
+                  builder.whereIn("hospital_id", scope)
+               }
+            })
+            .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+            .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+
+      const fetchActsWithPv = () =>
+         knex("acts")
+            .select(
+               knex.raw(
+                  "case when pv_number is not null and pv_number <> '' then 'withRequisition' " +
+                     "when asker_id is null then 'withoutPlaint' " +
+                     "else 'withoutRequisition' " +
+                     "end as type," +
+                     "count(*)::integer",
+               ),
+            )
+            .where(builder => {
+               if (!isNational) {
+                  builder.whereIn("hospital_id", scope)
+               }
+            })
+            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+            .groupBy("type")
+
+      const fetchActTypes = () =>
+         knex("acts")
+            .select(knex.raw("count(*)::integer, extra_data->'examinationTypes' as name"))
+            .whereRaw(
+               `extra_data->'examinationTypes' @> '["Psychiatrique"]' or ` +
+                  `extra_data->'examinationTypes' @> '["Somatique"]'`,
+            )
+            .where(builder => {
+               if (!isNational) {
+                  builder.whereIn("hospital_id", scope)
+               }
+            })
+            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+            .groupByRaw(`extra_data->'examinationTypes'`)
+
+      const fetchHours = () =>
+         knex("acts")
+            .select(
+               knex.raw(
+                  `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as day,` +
+                     `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as evening,` +
+                     `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as night`,
+               ),
+            )
+            .where(builder => {
+               if (!isNational) {
+                  builder.whereIn("hospital_id", scope)
+               }
+            })
+            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+
+      const fetchExaminations = () =>
+         knex("acts")
+            .select(
+               knex.raw(
+                  `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as biology,` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as image,` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as toxicology,` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as anapath,` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as genetic,` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as others`,
+               ),
+            )
+            .where(builder => {
+               if (!isNational) {
+                  builder.whereIn("hospital_id", scope)
+               }
+            })
+            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
 
       Promise.all([
-         fetchGlobalCount,
-         fetchAverageCount,
+         fetchGlobalCount(),
+         fetchAverageCount(),
          fetchProfilesDistribution({ startDate, endDate, isNational, scope }),
-      ]).then(([[globalCount], [averageCount], profilesDistribution]) => {
-         return res.status(STATUS_200_OK).json({
-            inputs: {
-               startDate,
-               endDate,
-               isNational,
-               scope,
-            },
-            globalCount: globalCount.count || 0,
-            averageCount: averageCount.avg || 0,
-            profilesDistribution: profilesDistribution.reduce(
-               (acc, current) => ({ ...acc, [current.type]: current.count }),
-               { deceased: 0, criminalCourt: 0, reconstitution: 0, living: 0 },
-            ),
-         })
-      })
+         fetchActsWithPv(),
+         fetchActTypes(),
+         fetchHours(),
+         fetchExaminations(),
+      ]).then(
+         ([[globalCount], [averageCount], profilesDistribution, actsWithPv, actTypes, [hours], [examinations]]) => {
+            console.log("examinations", examinations)
+            return res.status(STATUS_200_OK).json({
+               inputs: {
+                  startDate,
+                  endDate,
+                  isNational,
+                  scope,
+               },
+               globalCount: globalCount.count || 0,
+               averageCount: averageCount.avg || 0,
+               profilesDistribution: profilesDistribution.reduce(
+                  (acc, current) => ({ ...acc, [current.type]: current.count }),
+                  { deceased: 0, criminalCourt: 0, reconstitution: 0, living: 0 },
+               ),
+               actsWithPv: actsWithPv.reduce(
+                  (acc, current) => ({
+                     ...acc,
+                     [current.type]: current.count,
+                  }),
+                  {
+                     withRequisition: 0,
+                     withoutRequisition: 0,
+                     withoutPlaint: 0,
+                  },
+               ),
+               actTypes: actTypes.reduce(
+                  (acc, current) => {
+                     const [name] = current.name
+                     if (name === "Somatique") return { ...acc, somatic: current.count }
+                     else if (name === "Psychiatrique") return { ...acc, psychiatric: current.count }
+                  },
+                  {
+                     somatic: 0,
+                     psychiatric: 0,
+                  },
+               ),
+               hours,
+               examinations,
+            })
+         },
+      )
    } catch (error) {
       // DB error
       sendAPIError(error, res)
