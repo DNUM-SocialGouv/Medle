@@ -18,6 +18,6 @@ export const fetchProfilesDistribution = ({ startDate, endDate, isNational, scop
             builder.whereIn("hospital_id", scope)
          }
       })
-      .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-      .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+      .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+      .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
       .groupBy("type")

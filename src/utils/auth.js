@@ -176,7 +176,7 @@ export const checkValidUserWithPrivilege = (privilege, req) => {
    }
 }
 
-export const getAllScope = user => {
+export const getReachableScope = user => {
    const scope = user.scope || []
    return user.hospitalId ? [...scope, user.hospitalId] : scope
 }

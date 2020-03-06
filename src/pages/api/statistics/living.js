@@ -4,10 +4,10 @@ import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { STATS_GLOBAL } from "../../../utils/roles"
 import { sendAPIError } from "../../../utils/api"
-import { checkValidUserWithPrivilege, getAllScope } from "../../../utils/auth"
+import { checkValidUserWithPrivilege, getReachableScope } from "../../../utils/auth"
 // import { logError } from "../../../utils/logger"
 import { ISO_DATE } from "../../../utils/date"
-import { normalizeDates } from "../../../common/api/statistics"
+import { normalizeInputs } from "../../../common/api/statistics"
 import { fetchProfilesDistribution } from "../../../knex/queries/statistics"
 
 const handler = async (req, res) => {
@@ -16,6 +16,7 @@ const handler = async (req, res) => {
    try {
       // privilege verification
       const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
+      const scope = getReachableScope(currentUser)
 
       /**
        * TODO: gérer le scope plus finement + ajout d'un champ hospitalsFilter, pour filtrer par liste d'établissements, filtre manuel de l'utilsateur
@@ -30,21 +31,8 @@ const handler = async (req, res) => {
        *
        */
 
-      const scope = getAllScope(currentUser)
-
       // request verification
-      const { startDate: _startDate, endDate: _endDate } = await req.body
-      let { isNational } = await req.body
-
-      console.log("startDate", startDate)
-      console.log("endDate", endDate)
-
-      // endDate = normalizeEndDate(endDate)
-      // startDate = normalizeStartDate(startDate, endDate)
-
-      const { startDate, endDate } = normalizeDates({ startDate: _startDate, endDate: _endDate })
-
-      isNational = isNational === true
+      const { startDate, endDate, isNational } = normalizeInputs(req.body)
 
       const fetchGlobalCount = knex("acts")
          .select(knex.raw("count(1)::integer"))
@@ -77,8 +65,8 @@ const handler = async (req, res) => {
       ]).then(([[globalCount], [averageCount], profilesDistribution]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
-               startDate: startDate.format(ISO_DATE),
-               endDate: endDate.format(ISO_DATE),
+               startDate,
+               endDate,
                isNational,
                scope,
             },

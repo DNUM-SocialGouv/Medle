@@ -9,7 +9,7 @@ const defaultStartDate = date =>
       .format(ISO_DATE)
 
 export const normalizeDates = ({ startDate, endDate } = {}) => {
-   // get now is null or with bad format
+   // get now if end date is null or not well formatted
    endDate = !endDate ? defaultEndDate() : moment(endDate, ISO_DATE, true).isValid() ? endDate : defaultEndDate()
 
    // get start date thrown if well formated and before end date, get 1st january of the year of end date if not
@@ -21,3 +21,8 @@ export const normalizeDates = ({ startDate, endDate } = {}) => {
 
    return { startDate, endDate }
 }
+
+export const normalizeInputs = ({ startDate, endDate, isNational }) => ({
+   ...normalizeDates({ startDate, endDate }),
+   isNational: isNational === true,
+})
