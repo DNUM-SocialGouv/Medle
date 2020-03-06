@@ -1,7 +1,5 @@
 const { join } = require("path")
 
-require("dotenv").config() // Attention: nécessaire pour les migrations & seed Knex !!!
-
 console.info("process.env.DATABASE_URL", process.env.DATABASE_URL)
 
 if (process.env.POSTGRES_SSL && process.env.POSTGRES_SSL === "true") {
