@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json .
 COPY yarn.lock .
 
-RUN yarn install --production --frozen-lockfile
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
@@ -34,7 +34,7 @@ ENV TEST_CURRENT_DATE=$TEST_CURRENT_DATE
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN yarn build
+RUN yarn build && yarn --production
 
 USER node
 
