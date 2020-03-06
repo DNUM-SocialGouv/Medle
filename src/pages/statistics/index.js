@@ -158,7 +158,6 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    const changeTab = async type => {
       setType(type)
       const statistics = await fetchStatistics({ type, startDate: state.startDate, endDate: state.endDate })
-      console.log("statistics", statistics)
       setState({
          ...state,
          startDate: statistics.inputs.startDate,

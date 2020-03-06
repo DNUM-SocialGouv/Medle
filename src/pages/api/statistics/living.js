@@ -8,7 +8,6 @@ import { checkValidUserWithPrivilege, getReachableScope } from "../../../utils/a
 // import { logError } from "../../../utils/logger"
 import { ISO_DATE } from "../../../utils/date"
 import { normalizeInputs } from "../../../common/api/statistics"
-import { fetchProfilesDistribution } from "../../../knex/queries/statistics"
 
 const handler = (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -83,15 +82,15 @@ const handler = (req, res) => {
       const fetchActTypes = () =>
          knex("acts")
             .select(knex.raw("count(*)::integer, extra_data->'examinationTypes' as name"))
-            .whereRaw(
-               `extra_data->'examinationTypes' @> '["Psychiatrique"]' or ` +
-                  `extra_data->'examinationTypes' @> '["Somatique"]'`,
-            )
             .where(builder => {
                if (!isNational) {
                   builder.whereIn("hospital_id", scope)
                }
             })
+            .whereRaw(
+               `(extra_data->'examinationTypes' @> '["Psychiatrique"]' or ` +
+                  `extra_data->'examinationTypes' @> '["Somatique"]')`,
+            )
             .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
             .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
             .groupByRaw(`extra_data->'examinationTypes'`)
@@ -136,54 +135,46 @@ const handler = (req, res) => {
       Promise.all([
          fetchGlobalCount(),
          fetchAverageCount(),
-         fetchProfilesDistribution({ startDate, endDate, isNational, scope }),
          fetchActsWithPv(),
          fetchActTypes(),
          fetchHours(),
          fetchExaminations(),
-      ]).then(
-         ([[globalCount], [averageCount], profilesDistribution, actsWithPv, actTypes, [hours], [examinations]]) => {
-            console.log("examinations", examinations)
-            return res.status(STATUS_200_OK).json({
-               inputs: {
-                  startDate,
-                  endDate,
-                  isNational,
-                  scope,
+      ]).then(([[globalCount], [averageCount], actsWithPv, actTypes, [hours], [examinations]]) => {
+         return res.status(STATUS_200_OK).json({
+            inputs: {
+               startDate,
+               endDate,
+               isNational,
+               scope,
+            },
+            globalCount: globalCount.count || 0,
+            averageCount: averageCount.avg || 0,
+            actsWithPv: actsWithPv.reduce(
+               (acc, current) => ({
+                  ...acc,
+                  [current.type]: current.count,
+               }),
+               {
+                  withRequisition: 0,
+                  withoutRequisition: 0,
+                  withoutPlaint: 0,
                },
-               globalCount: globalCount.count || 0,
-               averageCount: averageCount.avg || 0,
-               profilesDistribution: profilesDistribution.reduce(
-                  (acc, current) => ({ ...acc, [current.type]: current.count }),
-                  { deceased: 0, criminalCourt: 0, reconstitution: 0, living: 0 },
-               ),
-               actsWithPv: actsWithPv.reduce(
-                  (acc, current) => ({
-                     ...acc,
-                     [current.type]: current.count,
-                  }),
-                  {
-                     withRequisition: 0,
-                     withoutRequisition: 0,
-                     withoutPlaint: 0,
-                  },
-               ),
-               actTypes: actTypes.reduce(
-                  (acc, current) => {
-                     const [name] = current.name
-                     if (name === "Somatique") return { ...acc, somatic: current.count }
-                     else if (name === "Psychiatrique") return { ...acc, psychiatric: current.count }
-                  },
-                  {
-                     somatic: 0,
-                     psychiatric: 0,
-                  },
-               ),
-               hours,
-               examinations,
-            })
-         },
-      )
+            ),
+            actTypes: actTypes.reduce(
+               (acc, current) => {
+                  const [name] = current.name
+                  if (name === "Somatique") return { ...acc, somatic: current.count }
+                  else if (name === "Psychiatrique") return { ...acc, psychiatric: current.count }
+               },
+               {
+                  somatic: 0,
+                  psychiatric: 0,
+               },
+            ),
+            hours,
+            examinations,
+         })
+      })
    } catch (error) {
       // DB error
       sendAPIError(error, res)
