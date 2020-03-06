@@ -74,20 +74,24 @@ StatBlockNumbers.propTypes = {
 export const StatBlockPieChart = ({ data, hoverTitle, title }) => {
    return (
       <StatBlock>
-         <div style={{ display: "inline-flex", verticalAlign: "middle", alignItems: "center" }} title={hoverTitle}>
+         <div
+            className="text-center"
+            style={{ display: "inline-flex", verticalAlign: "middle", alignItems: "center", width: "100%" }}
+            title={hoverTitle}
+         >
             <span
                style={{
                   height: 24,
                   color: "#212529",
                   fontFamily: "Evolventa",
                   fontSize: 18,
-                  textAlign: "center",
                   fontWeight: 400,
+                  width: "100%",
                }}
             >
                {title}
             </span>
-            <HelpOutlineIcon fontSize="small" />
+            {hoverTitle && <HelpOutlineIcon fontSize="small" />}
          </div>
          <PieChart width={280} height={210}>
             <Pie
@@ -95,7 +99,7 @@ export const StatBlockPieChart = ({ data, hoverTitle, title }) => {
                dataKey="value"
                cx="50%"
                cy="50%"
-               outerRadius={80}
+               outerRadius={70}
                innerRadius={20}
                labelLine={false}
                label={RenderCustomizedLabel}
