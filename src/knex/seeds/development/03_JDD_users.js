@@ -53,6 +53,16 @@ exports.seed = function(knex) {
                role: "OPERATOR_ACT",
                hospital_id: 4,
             },
+            {
+               id: 6,
+               created_at: knex.fn.now(),
+               first_name: "acte-tours",
+               last_name: "test",
+               email: "acte@tours.fr",
+               password: "$2a$10$RCEEeI.gFf1occ6h4DxMyuX.JhVPD3edsevOYnqICcQl5yM1LO4Vy",
+               role: "OPERATOR_ACT",
+               hospital_id: 1,
+            },
          ])
       })
 }
