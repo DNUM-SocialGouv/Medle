@@ -34,7 +34,7 @@ ENV TEST_CURRENT_DATE=$TEST_CURRENT_DATE
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN yarn build && yarn --production
+RUN yarn build
 
 USER node
 
