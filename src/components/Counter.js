@@ -1,5 +1,6 @@
 import React from "react"
-import { AddCircleOutline, RemoveCircleOutline } from "@material-ui/icons"
+import AddCircleOutline from "@material-ui/icons/AddCircleOutline"
+import RemoveCircleOutline from "@material-ui/icons/RemoveCircleOutline"
 import PropTypes from "prop-types"
 
 const Counter = ({ children, dispatch, state, type }) => {
