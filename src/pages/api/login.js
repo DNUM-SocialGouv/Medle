@@ -26,6 +26,7 @@ const extractPublicData = ({
    email,
    role,
    hospital_id: hospitalId,
+   hospital_name: hospitalName,
    scope,
 }) => ({
    id,
@@ -34,6 +35,7 @@ const extractPublicData = ({
    email,
    role,
    hospitalId,
+   hospitalName,
    scope,
 })
 
@@ -74,8 +76,20 @@ handler
 
          // SQL query
          const [user] = await knex("users")
+            .leftJoin("hospitals", "users.hospital_id", "hospitals.id")
             .where("email", email)
-            .whereNull("deleted_at")
+            .whereNull("users.deleted_at")
+            .select(
+               "users.id",
+               "users.first_name",
+               "users.last_name",
+               "users.email",
+               "users.password",
+               "users.role",
+               "users.hospital_id",
+               "hospitals.name as hospital_name",
+               "users.scope",
+            )
 
          if (user && (await compareWithHash(password, user.password))) {
             const token = generateToken(user)

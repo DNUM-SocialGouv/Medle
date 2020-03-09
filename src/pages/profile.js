@@ -8,7 +8,7 @@ import { ROLES_DESCRIPTION } from "../utils/roles"
 import { capitalize } from "../utils/misc"
 
 const ProfilePage = ({ currentUser }) => {
-   const { id, firstName, lastName, email, role, hospitalId, scope } = currentUser
+   const { id, firstName, lastName, email, role, hospitalName, scope } = currentUser
    return (
       <Layout currentUser={currentUser}>
          <Container style={{ maxWidth: 500 }}>
@@ -54,17 +54,13 @@ const ProfilePage = ({ currentUser }) => {
                            </span>
                         </Col>
                      </Row>
-                     {hospitalId && (
-                        <Row className="mt-4">
-                           <Col>
-                              <i>Hôpital de rattachement</i>
-                              <br />
-                              {hospitalId}
-                           </Col>
+                     {hospitalName && (
+                        <Row className="mt-3">
+                           <Col>{hospitalName}</Col>
                         </Row>
                      )}
                      {scope && scope.length && (
-                        <Row className="mt-4">
+                        <Row className="mt-3">
                            <Col>
                               <i>Périmètre</i>
                               <br />
