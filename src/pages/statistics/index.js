@@ -1,7 +1,8 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { PropTypes } from "prop-types"
 import { Button, ButtonGroup, Container, Form, FormGroup, Input } from "reactstrap"
 import fetch from "isomorphic-unfetch"
+import moize from "moize"
 
 import {
    API_URL,
@@ -15,7 +16,7 @@ import Layout from "../../components/Layout"
 import { Label, Title1, ValidationButton } from "../../components/StyledComponents"
 import { STATS_GLOBAL } from "../../utils/roles"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
-import { logError } from "../../utils/logger"
+import { logError, logDebug } from "../../utils/logger"
 import { pluralize } from "../../utils/misc"
 import { StatBlockNumbers, StatBlockPieChart } from "../../components/StatBlock"
 
@@ -51,6 +52,10 @@ const fetchStatistics = async ({ type = "Global", startDate, endDate, authHeader
    return { ...statisticsDefault, ...statistics }
 }
 
+const MAX_AGE = 1000 * 60 * 5 // five minutes;
+
+const memoizedFetchStatistics = moize({ maxAge: MAX_AGE, isDeepEqual: true })(fetchStatistics)
+
 const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    const [statistics, setStatistics] = useState(_statistics)
    const [type, setType] = useState("Global")
@@ -58,6 +63,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       startDate: statistics.inputs.startDate,
       endDate: statistics.inputs.endDate,
    })
+
+   useEffect(() => {
+      logDebug("Suppression du cache du WS de statistiques")
+      memoizedFetchStatistics.clear()
+   }, [])
 
    const livingDeceaseddData = [
       {
@@ -146,7 +156,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       e.preventDefault()
 
       const { startDate, endDate } = state
-      const statistics = await fetchStatistics({ type, startDate, endDate })
+      const statistics = await memoizedFetchStatistics({ type, startDate, endDate })
       setState({
          ...state,
          startDate: statistics.inputs.startDate,
@@ -157,7 +167,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 
    const changeTab = async type => {
       setType(type)
-      const statistics = await fetchStatistics({ type, startDate: state.startDate, endDate: state.endDate })
+      const statistics = await memoizedFetchStatistics({ type, startDate: state.startDate, endDate: state.endDate })
       setState({
          ...state,
          startDate: statistics.inputs.startDate,
@@ -331,7 +341,7 @@ StatisticsPage.getInitialProps = async ctx => {
    const authHeaders = buildAuthHeaders(ctx)
 
    try {
-      return { statistics: await fetchStatistics({ authHeaders }) }
+      return { statistics: await memoizedFetchStatistics({ authHeaders }) }
    } catch (error) {
       logError(error)
       redirectIfUnauthorized(error, ctx)
