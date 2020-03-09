@@ -33,16 +33,15 @@ const handler = (req, res) => {
       // request verification
       const { startDate, endDate, isNational } = normalizeInputs(req.body)
 
-      const fetchGlobalCount = knex("acts")
-         .select(knex.raw("count(1)::integer"))
-         .whereNull("deleted_at")
+      const fetchGlobalCount = knex("acts_by_day")
+         .select(knex.raw("sum(nb_acts)::integer as count"))
          .where(builder => {
             if (!isNational) {
                builder.whereIn("hospital_id", scope)
             }
          })
-         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
 
       const fetchAverageCount = knex("acts_by_day")
          .select(knex.raw("avg(nb_acts)::integer"))
@@ -54,24 +53,15 @@ const handler = (req, res) => {
          .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
          .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
 
-      const fetchProfilesDistribution = knex("acts")
-         .select(
-            knex.raw(
-               "case " +
-                  "when profile = 'Personne décédée' then 'deceased' " +
-                  "when profile = 'Autre activité/Assises' then 'criminalCourt' " +
-                  "when profile = 'Autre activité/Reconstitution' then 'reconstitution' " +
-                  "else 'living' end as type, count(*)::integer",
-            ),
-         )
-         .whereNull("deleted_at")
+      const fetchProfilesDistribution = knex("acts_by_day")
+         .select(knex.raw("type, sum(nb_acts)::integer as count"))
          .where(builder => {
             if (!isNational) {
                builder.whereIn("hospital_id", scope)
             }
          })
-         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
          .groupBy("type")
 
       const fetchActsWithSamePV = knex
@@ -131,7 +121,7 @@ const handler = (req, res) => {
             averageCount: averageCount.avg || 0,
             profilesDistribution: profilesDistribution.reduce(
                (acc, current) => ({ ...acc, [current.type]: current.count }),
-               { deceased: 0, criminalCourt: 0, reconstitution: 0, living: 0 },
+               { "Personne décédée": 0, "Autre activité/Assises": 0, "Autre activité/Reconstitution": 0, Vivant: 0 },
             ),
             actsWithSamePV: actsWithSamePV.sum || 0,
             averageWithSamePV: averageWithSamePV.avg || 0,

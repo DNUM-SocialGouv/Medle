@@ -49,7 +49,7 @@ const handler = (req, res) => {
             )
 
       const fetchAverageCount = () =>
-         knex("living_acts_by_day")
+         knex("acts_by_day")
             .select(knex.raw("avg(nb_acts)::integer"))
             .where(builder => {
                if (!isNational) {
@@ -58,14 +58,15 @@ const handler = (req, res) => {
             })
             .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
             .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+            .whereRaw(`type = 'Vivant'`)
 
       const fetchActsWithPv = () =>
          knex("acts")
             .select(
                knex.raw(
-                  "case when pv_number is not null and pv_number <> '' then 'withRequisition' " +
-                     "when asker_id is null then 'withoutPlaint' " +
-                     "else 'withoutRequisition' " +
+                  "case when pv_number is not null and pv_number <> '' then 'Avec réquisition' " +
+                     "when asker_id is null then 'Recueil de preuve sans plainte' " +
+                     "else 'Sans réquisition' " +
                      "end as type," +
                      "count(*)::integer",
                ),
@@ -99,9 +100,9 @@ const handler = (req, res) => {
          knex("acts")
             .select(
                knex.raw(
-                  `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as day,` +
-                     `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as evening,` +
-                     `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as night`,
+                  `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
+                     `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
+                     `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`,
                ),
             )
             .where(builder => {
@@ -116,12 +117,12 @@ const handler = (req, res) => {
          knex("acts")
             .select(
                knex.raw(
-                  `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as biology,` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as image,` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as toxicology,` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as anapath,` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as genetic,` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as others`,
+                  `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as "Biologie",` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as "Imagerie",` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as "Toxicologie",` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as "Génétique",` +
+                     `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`,
                ),
             )
             .where(builder => {
@@ -155,20 +156,20 @@ const handler = (req, res) => {
                   [current.type]: current.count,
                }),
                {
-                  withRequisition: 0,
-                  withoutRequisition: 0,
-                  withoutPlaint: 0,
+                  "Avec réquisition": 0,
+                  "Sans réquisition": 0,
+                  "Recueil de preuve sans plainte": 0,
                },
             ),
             actTypes: actTypes.reduce(
                (acc, current) => {
                   const [name] = current.name
-                  if (name === "Somatique") return { ...acc, somatic: current.count }
-                  else if (name === "Psychiatrique") return { ...acc, psychiatric: current.count }
+                  if (name === "Somatique") return { ...acc, Somatique: current.count }
+                  else if (name === "Psychiatrique") return { ...acc, Psychiatrique: current.count }
                },
                {
-                  somatic: 0,
-                  psychiatric: 0,
+                  Somatique: 0,
+                  Psychiatrique: 0,
                },
             ),
             hours,

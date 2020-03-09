@@ -72,79 +72,79 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    const livingDeceaseddData = [
       {
          name: "Vivant",
-         value: statistics.profilesDistribution.living || 0,
+         value: statistics.profilesDistribution["Vivant"] || 0,
       },
       {
          name: "Thanato",
-         value: statistics.profilesDistribution.deceased || 0,
+         value: statistics.profilesDistribution["Personne décédée"] || 0,
       },
    ]
 
    const actsWithPvData = [
       {
          name: "Avec",
-         value: statistics.actsWithPv.withRequisition || 0,
+         value: statistics.actsWithPv["Avec réquisition"] || 0,
       },
       {
          name: "Sans (non renseigné)",
-         value: statistics.actsWithPv.withoutRequisition || 0,
+         value: statistics.actsWithPv["Sans réquisition"] || 0,
       },
       {
          name: "Recueil de preuves sans plainte",
-         value: statistics.actsWithPv.withoutPlaint || 0,
+         value: statistics.actsWithPv["Recueil de preuve sans plainte"] || 0,
       },
    ]
 
    const actTypesData = [
       {
          name: "Somatique",
-         value: statistics.actTypes.somatic || 0,
+         value: statistics.actTypes["Somatique"] || 0,
       },
       {
          name: "Psychiatrique",
-         value: statistics.actTypes.psychiatric || 0,
+         value: statistics.actTypes["Psychiatrique"] || 0,
       },
    ]
 
    const hoursData = [
       {
          name: "Journée",
-         value: statistics.hours.day || 0,
+         value: statistics.hours["Journée"] || 0,
       },
       {
          name: "Soirée",
-         value: statistics.hours.evening || 0,
+         value: statistics.hours["Soirée"] || 0,
       },
       {
          name: "Nuit profonde",
-         value: statistics.hours.night || 0,
+         value: statistics.hours["Nuit profonde"] || 0,
       },
    ]
 
    const examinationsData = [
       {
          name: "Biologie",
-         value: statistics.examinations.biology || 0,
+         value: statistics.examinations["Biologie"] || 0,
       },
       {
          name: "Imagerie",
-         value: statistics.examinations.image || 0,
+         value: statistics.examinations["Imagerie"] || 0,
       },
       {
          name: "Toxicologie",
-         value: statistics.examinations.toxicology || 0,
+         value: statistics.examinations["Toxicologie"] || 0,
       },
       {
          name: "Anapath",
-         value: statistics.examinations.anapath || 0,
+         value: statistics.examinations["Anapath"] || 0,
       },
       {
          name: "Génétique",
-         value: statistics.examinations.genetic || 0,
+         value: statistics.examinations["Génétique"] || 0,
       },
       {
          name: "Autres",
-         value: statistics.examinations.others || 0,
+         value: statistics.examinations["Autres"] || 0,
       },
    ]
 
@@ -222,7 +222,6 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                      id="startDate"
                      type="date"
                      value={state.startDate}
-                     // value={state.examinationDate}
                      onChange={onChange}
                      style={{ maxWidth: 150 }}
                   />
@@ -231,14 +230,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                   <Label htmlFor="examinationDate" className="ml-2 mr-2">
                      {"au"}
                   </Label>
-                  <Input
-                     id="endDate"
-                     type="date"
-                     value={state.endDate}
-                     // value={state.examinationDate}
-                     onChange={onChange}
-                     style={{ maxWidth: 150 }}
-                  />
+                  <Input id="endDate" type="date" value={state.endDate} onChange={onChange} style={{ maxWidth: 150 }} />
                </FormGroup>
                <ValidationButton color="primary" size="lg" className="center" onClick={onSubmit}>
                   Go
@@ -268,11 +260,13 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                   />
                   <StatBlockNumbers
                      title="Actes hors examens"
-                     firstNumber={statistics.profilesDistribution.reconstitution}
-                     firstLabel={`Reconstitution${pluralize(statistics.profilesDistribution.reconstitution)}.`}
-                     secondNumber={statistics.profilesDistribution.criminalCourt}
+                     firstNumber={statistics.profilesDistribution["Autre activité/Reconstitution"]}
+                     firstLabel={`Reconstitution${pluralize(
+                        statistics.profilesDistribution["Autre activité/Reconstitution"],
+                     )}.`}
+                     secondNumber={statistics.profilesDistribution["Autre activité/Assises"]}
                      secondLabel={`Participation${pluralize(
-                        statistics.profilesDistribution.reconstitution,
+                        statistics.profilesDistribution["Autre activité/Assises"],
                      )} aux assises.`}
                   />
                   <StatBlockNumbers

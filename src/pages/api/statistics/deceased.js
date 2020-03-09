@@ -44,11 +44,9 @@ const handler = (req, res) => {
          })
          .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
          .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-         .whereRaw(
-            `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`,
-         )
+         .whereRaw(`profile = 'Personne décédée'`)
 
-      const fetchAverageCount = knex("living_acts_by_day")
+      const fetchAverageCount = knex("acts_by_day")
          .select(knex.raw("avg(nb_acts)::integer"))
          .where(builder => {
             if (!isNational) {
@@ -57,12 +55,9 @@ const handler = (req, res) => {
          })
          .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
          .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+         .whereRaw(`type = 'Personne décédée'`)
 
-      Promise.all([
-         fetchGlobalCount,
-         fetchAverageCount,
-         fetchProfilesDistribution({ startDate, endDate, isNational, scope }),
-      ]).then(([[globalCount], [averageCount], profilesDistribution]) => {
+      Promise.all([fetchGlobalCount, fetchAverageCount]).then(([[globalCount], [averageCount]]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
                startDate,
@@ -72,10 +67,6 @@ const handler = (req, res) => {
             },
             globalCount: globalCount.count || 0,
             averageCount: averageCount.avg || 0,
-            profilesDistribution: profilesDistribution.reduce(
-               (acc, current) => ({ ...acc, [current.type]: current.count }),
-               { deceased: 0, criminalCourt: 0, reconstitution: 0, living: 0 },
-            ),
          })
       })
    } catch (error) {
