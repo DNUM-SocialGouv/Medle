@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { PropTypes } from "prop-types"
-import { Button, ButtonGroup, Container, Form, FormGroup, Input } from "reactstrap"
+import { Container, Form, FormGroup, Input } from "reactstrap"
 import fetch from "isomorphic-unfetch"
 import moize from "moize"
 
@@ -13,7 +13,8 @@ import {
 import { handleAPIResponse } from "../../utils/errors"
 import { METHOD_POST } from "../../utils/http"
 import Layout from "../../components/Layout"
-import { Label, Title1, ValidationButton } from "../../components/StyledComponents"
+import TabButton from "../../components/TabButton"
+import { Label, Title1, SmallButton } from "../../components/StyledComponents"
 import { STATS_GLOBAL } from "../../utils/roles"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { logError, logDebug } from "../../utils/logger"
@@ -180,39 +181,6 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       <Layout page="statistics" currentUser={currentUser}>
          <Title1 className="mt-5 mb-3">{"Statistiques"}</Title1>
          <Container style={{ textAlign: "center" }}>
-            <ButtonGroup className="pb-4">
-               <Button
-                  className="statistics-tab-button"
-                  color="primary"
-                  onClick={() => changeTab("Global")}
-                  outline={type !== "Global"}
-               >
-                  Global&nbsp;
-               </Button>
-               <Button
-                  className="statistics-tab-button"
-                  color="primary"
-                  onClick={() => changeTab("Vivant")}
-                  outline={type !== "Vivant"}
-               >
-                  &nbsp;Vivant
-               </Button>
-               <Button
-                  className="statistics-tab-button"
-                  color="primary"
-                  onClick={() => changeTab("Thanato")}
-                  outline={type !== "Thanato"}
-               >
-                  Thanato
-               </Button>
-            </ButtonGroup>
-            <style jsx global>{`
-               .statistics-tab-button.btn-outline-primary:hover {
-                  background-color: white !important;
-                  color: #0053b3;
-               }
-            `}</style>
-            <br />
             <Form inline className="pb-4 justify-content-center">
                <FormGroup>
                   <Label htmlFor="examinationDate" className="ml-2 mr-2">
@@ -232,20 +200,15 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                   </Label>
                   <Input id="endDate" type="date" value={state.endDate} onChange={onChange} style={{ maxWidth: 150 }} />
                </FormGroup>
-               <ValidationButton color="primary" size="lg" className="center" onClick={onSubmit}>
+               <SmallButton color="primary" size="lg" className="center" onClick={onSubmit}>
                   Go
-               </ValidationButton>
+               </SmallButton>
             </Form>
+
+            <TabButton labels={["Global", "Vivant", "Thanato"]} callback={changeTab}></TabButton>
+
             {type === "Global" && (
-               <div
-                  style={{
-                     width: "100%",
-                     maxWidth: 1050,
-                     display: "flex",
-                     flexWrap: "wrap",
-                     alignContent: "flex-start",
-                  }}
-               >
+               <div className="tab">
                   <StatBlockNumbers
                      title="Actes réalisés"
                      firstNumber={statistics.globalCount}
@@ -281,15 +244,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                </div>
             )}
             {type === "Vivant" && (
-               <div
-                  style={{
-                     width: "100%",
-                     maxWidth: 1050,
-                     display: "flex",
-                     flexWrap: "wrap",
-                     alignContent: "flex-start",
-                  }}
-               >
+               <div className="tab">
                   <StatBlockNumbers
                      title="Actes réalisés"
                      firstNumber={statistics.globalCount}
@@ -308,15 +263,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                </div>
             )}
             {type === "Thanato" && (
-               <div
-                  style={{
-                     width: "100%",
-                     maxWidth: 1050,
-                     display: "flex",
-                     flexWrap: "wrap",
-                     alignContent: "flex-start",
-                  }}
-               >
+               <div className="tab">
                   <StatBlockNumbers
                      title="Actes réalisés"
                      firstNumber={statistics.globalCount}
@@ -327,6 +274,15 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                </div>
             )}
          </Container>
+         <style jsx>{`
+            .tab {
+               width: 100%;
+               max-width: 1050 px;
+               display: flex;
+               flex-wrap: wrap;
+               align-content: flex-start;
+            }
+         `}</style>
       </Layout>
    )
 }

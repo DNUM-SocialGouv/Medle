@@ -74,6 +74,25 @@ export const ValidationButton = styled(Button)`
    padding: 0.1em 1.5em;
    font-family: "Source Sans Pro";
 `
+export const SmallButton = styled.button`
+   background: #307df6;
+   border-radius: 5px;
+   border: 0;
+   color: white;
+   margin: 0 1em;
+   padding: 0.1em 1em;
+   font-family: "Source Sans Pro";
+   min-height: 35px;
+`
+export const TabButton = styled(Button)`
+   background: #307df6;
+   border-radius: 5px;
+   border: 0;
+   color: white;
+   margin: 0 1em;
+   padding: 0.1em 1.5em;
+   font-family: "Source Sans Pro";
+`
 
 export const Title1 = styled.h1`
    height: 26px;
