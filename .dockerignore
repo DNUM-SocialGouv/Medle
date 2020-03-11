@@ -1,1 +1,7 @@
-node_modules
+.git
+.github
+.k8s
+.vscode
+*.md
+**/node_modules
+**/.next/cache
