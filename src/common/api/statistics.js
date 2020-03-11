@@ -15,7 +15,7 @@ export const normalizeDates = ({ startDate, endDate } = {}) => {
    // get start date thrown if well formated and before end date, get 1st january of the year of end date if not
    startDate = !startDate
       ? defaultStartDate(endDate)
-      : moment(startDate, ISO_DATE, true).isValid() && moment(startDate, ISO_DATE).isBefore(endDate)
+      : moment(startDate, ISO_DATE, true).isValid() && moment(startDate, ISO_DATE).isSameOrBefore(endDate)
       ? startDate
       : defaultStartDate(endDate)
 
