@@ -68,7 +68,7 @@ const handler = async (req, res) => {
          // SQL query
          const acts = await knex("acts")
             .where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy }))
-            .orderBy([{ column: "acts.created_at", order: "desc" }])
+            .orderBy([{ column: "acts.examination_date", order: "desc" }])
             .limit(LIMIT)
             .offset(offset)
             .select("*")
