@@ -7,7 +7,7 @@ import { sendAPIError } from "../../../utils/api"
 import { checkValidUserWithPrivilege, getReachableScope } from "../../../utils/auth"
 // import { logError } from "../../../utils/logger"
 import { ISO_DATE } from "../../../utils/date"
-import { normalizeInputs } from "../../../common/api/statistics"
+import { normalizeInputs, averageOf } from "../../../common/api/statistics"
 
 const handler = (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -33,114 +33,107 @@ const handler = (req, res) => {
       // request verification
       const { startDate, endDate, isNational } = normalizeInputs(req.body)
 
-      const fetchGlobalCount = () =>
-         knex("acts")
-            .select(knex.raw("count(1)::integer"))
-            .whereNull("deleted_at")
-            .where(builder => {
-               if (!isNational) {
-                  builder.whereIn("hospital_id", scope)
-               }
-            })
-            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-            .whereRaw(
-               `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`,
-            )
+      const fetchGlobalCount = knex("acts")
+         .select(knex.raw("count(1)::integer"))
+         .whereNull("deleted_at")
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
+         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+         .whereRaw(
+            `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`,
+         )
 
-      const fetchAverageCount = () =>
-         knex("acts_by_day")
-            .select(knex.raw("avg(nb_acts)::integer"))
-            .where(builder => {
-               if (!isNational) {
-                  builder.whereIn("hospital_id", scope)
-               }
-            })
-            .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-            .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-            .whereRaw(`type = 'Vivant'`)
+      const fetchAverageCount = knex
+         .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("id", scope)
+            }
+         })
+         .where("type", "=", "Vivant")
+         .select(knex.raw("avg"))
 
-      const fetchActsWithPv = () =>
-         knex("acts")
-            .select(
-               knex.raw(
-                  "case when pv_number is not null and pv_number <> '' then 'Avec réquisition' " +
-                     "when asker_id is null then 'Recueil de preuve sans plainte' " +
-                     "else 'Sans réquisition' " +
-                     "end as type," +
-                     "count(*)::integer",
-               ),
-            )
-            .where(builder => {
-               if (!isNational) {
-                  builder.whereIn("hospital_id", scope)
-               }
-            })
-            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-            .groupBy("type")
+      const fetchActsWithPv = knex("acts")
+         .select(
+            knex.raw(
+               "case when pv_number is not null and pv_number <> '' then 'Avec réquisition' " +
+                  "when asker_id is null then 'Recueil de preuve sans plainte' " +
+                  "else 'Sans réquisition' " +
+                  "end as type," +
+                  "count(*)::integer",
+            ),
+         )
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
+         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+         .groupBy("type")
 
-      const fetchActTypes = () =>
-         knex("acts")
-            .select(knex.raw("count(*)::integer, extra_data->'examinationTypes' as name"))
-            .where(builder => {
-               if (!isNational) {
-                  builder.whereIn("hospital_id", scope)
-               }
-            })
-            .whereRaw(
-               `(extra_data->'examinationTypes' @> '["Psychiatrique"]' or ` +
-                  `extra_data->'examinationTypes' @> '["Somatique"]')`,
-            )
-            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-            .groupByRaw(`extra_data->'examinationTypes'`)
+      const fetchActTypes = knex("acts")
+         .select(knex.raw("count(*)::integer, extra_data->'examinationTypes' as name"))
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
+         .whereRaw(
+            `(extra_data->'examinationTypes' @> '["Psychiatrique"]' or ` +
+               `extra_data->'examinationTypes' @> '["Somatique"]')`,
+         )
+         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+         .groupByRaw(`extra_data->'examinationTypes'`)
 
-      const fetchHours = () =>
-         knex("acts")
-            .select(
-               knex.raw(
-                  `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
-                     `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
-                     `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`,
-               ),
-            )
-            .where(builder => {
-               if (!isNational) {
-                  builder.whereIn("hospital_id", scope)
-               }
-            })
-            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+      const fetchHours = knex("acts")
+         .select(
+            knex.raw(
+               `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
+                  `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
+                  `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`,
+            ),
+         )
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
+         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
 
-      const fetchExaminations = () =>
-         knex("acts")
-            .select(
-               knex.raw(
-                  `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as "Biologie",` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as "Imagerie",` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as "Toxicologie",` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as "Génétique",` +
-                     `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`,
-               ),
-            )
-            .where(builder => {
-               if (!isNational) {
-                  builder.whereIn("hospital_id", scope)
-               }
-            })
-            .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-            .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+      const fetchExaminations = knex("acts")
+         .select(
+            knex.raw(
+               `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as "Biologie",` +
+                  `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as "Imagerie",` +
+                  `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as "Toxicologie",` +
+                  `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
+                  `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as "Génétique",` +
+                  `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`,
+            ),
+         )
+         .where(builder => {
+            if (!isNational) {
+               builder.whereIn("hospital_id", scope)
+            }
+         })
+         .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+         .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
 
       Promise.all([
-         fetchGlobalCount(),
-         fetchAverageCount(),
-         fetchActsWithPv(),
-         fetchActTypes(),
-         fetchHours(),
-         fetchExaminations(),
-      ]).then(([[globalCount], [averageCount], actsWithPv, actTypes, [hours], [examinations]]) => {
+         fetchGlobalCount,
+         fetchAverageCount,
+         fetchActsWithPv,
+         fetchActTypes,
+         fetchHours,
+         fetchExaminations,
+      ]).then(([[globalCount], averageCount, actsWithPv, actTypes, [hours], [examinations]]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
                startDate,
@@ -149,7 +142,8 @@ const handler = (req, res) => {
                scope,
             },
             globalCount: globalCount.count || 0,
-            averageCount: averageCount.avg || 0,
+            averageCount:
+               averageCount && averageCount.length ? averageOf(averageCount.map(elt => parseFloat(elt.avg, 10))) : 0,
             actsWithPv: actsWithPv.reduce(
                (acc, current) => ({
                   ...acc,

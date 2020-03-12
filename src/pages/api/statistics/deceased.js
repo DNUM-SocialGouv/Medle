@@ -7,8 +7,7 @@ import { sendAPIError } from "../../../utils/api"
 import { checkValidUserWithPrivilege, getReachableScope } from "../../../utils/auth"
 // import { logError } from "../../../utils/logger"
 import { ISO_DATE } from "../../../utils/date"
-import { normalizeInputs } from "../../../common/api/statistics"
-import { fetchProfilesDistribution } from "../../../knex/queries/statistics"
+import { normalizeInputs, averageOf } from "../../../common/api/statistics"
 
 const handler = (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -46,18 +45,17 @@ const handler = (req, res) => {
          .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
          .whereRaw(`profile = 'Personne décédée'`)
 
-      const fetchAverageCount = knex("acts_by_day")
-         .select(knex.raw("avg(nb_acts)::integer"))
+      const fetchAverageCount = knex
+         .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
          .where(builder => {
             if (!isNational) {
-               builder.whereIn("hospital_id", scope)
+               builder.whereIn("id", scope)
             }
          })
-         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-         .whereRaw(`type = 'Personne décédée'`)
+         .where("type", "=", "Personne décédée")
+         .select(knex.raw("avg"))
 
-      Promise.all([fetchGlobalCount, fetchAverageCount]).then(([[globalCount], [averageCount]]) => {
+      Promise.all([fetchGlobalCount, fetchAverageCount]).then(([[globalCount], averageCount]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
                startDate,
@@ -66,7 +64,8 @@ const handler = (req, res) => {
                scope,
             },
             globalCount: globalCount.count || 0,
-            averageCount: averageCount.avg || 0,
+            averageCount:
+               averageCount && averageCount.length ? averageOf(averageCount.map(elt => parseFloat(elt.avg, 10))) : 0,
          })
       })
    } catch (error) {

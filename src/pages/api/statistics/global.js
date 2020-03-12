@@ -7,7 +7,7 @@ import { sendAPIError } from "../../../utils/api"
 import { checkValidUserWithPrivilege, getReachableScope } from "../../../utils/auth"
 // import { logError } from "../../../utils/logger"
 import { ISO_DATE } from "../../../utils/date"
-import { normalizeInputs } from "../../../common/api/statistics"
+import { normalizeInputs, averageOf } from "../../../common/api/statistics"
 
 const handler = (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -34,7 +34,7 @@ const handler = (req, res) => {
       const { startDate, endDate, isNational } = normalizeInputs(req.body)
 
       const fetchGlobalCount = knex("acts_by_day")
-         .select(knex.raw("sum(nb_acts)::integer as count"))
+         .select(knex.raw("sum(nb_acts)::integer  as count"))
          .where(builder => {
             if (!isNational) {
                builder.whereIn("hospital_id", scope)
@@ -43,15 +43,14 @@ const handler = (req, res) => {
          .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
          .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
 
-      const fetchAverageCount = knex("acts_by_day")
-         .select(knex.raw("avg(nb_acts)::integer"))
+      const fetchAverageCount = knex
+         .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
          .where(builder => {
             if (!isNational) {
-               builder.whereIn("hospital_id", scope)
+               builder.whereIn("id", scope)
             }
          })
-         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+         .select(knex.raw("avg"))
 
       const fetchProfilesDistribution = knex("acts_by_day")
          .select(knex.raw("type, sum(nb_acts)::integer as count"))
@@ -109,7 +108,7 @@ const handler = (req, res) => {
          fetchProfilesDistribution,
          fetchActsWithSamePV,
          fetchAverageWithSamePV,
-      ]).then(([[globalCount], [averageCount], profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
+      ]).then(([[globalCount], averageCount, profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
          return res.status(STATUS_200_OK).json({
             inputs: {
                startDate,
@@ -118,7 +117,8 @@ const handler = (req, res) => {
                scope,
             },
             globalCount: globalCount.count || 0,
-            averageCount: averageCount.avg || 0,
+            averageCount:
+               averageCount && averageCount.length ? averageOf(averageCount.map(elt => parseFloat(elt.avg, 10))) : 0,
             profilesDistribution: profilesDistribution.reduce(
                (acc, current) => ({ ...acc, [current.type]: current.count }),
                { "Personne décédée": 0, "Autre activité/Assises": 0, "Autre activité/Reconstitution": 0, Vivant: 0 },
