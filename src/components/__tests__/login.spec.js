@@ -1,5 +1,5 @@
 import React from "react"
-import { cleanup, render, fireEvent, waitForElement } from "@testing-library/react"
+import { cleanup, render, fireEvent, waitFor } from "@testing-library/react"
 import Login from "../Login"
 
 describe("<Login> component tests", () => {
@@ -12,7 +12,7 @@ describe("<Login> component tests", () => {
 
       fireEvent.click(getByText("Se connecter"))
 
-      const loading = await waitForElement(() => getByTestId("loading"))
+      const loading = await waitFor(() => getByTestId("loading"))
 
       expect(noop).toHaveBeenCalledTimes(1)
 
@@ -26,13 +26,13 @@ describe("<Login> component tests", () => {
 
       fireEvent.click(getByText("Se connecter"))
 
-      const loading = await waitForElement(() => getByTestId("loading"))
+      const loading = await waitFor(() => getByTestId("loading"))
 
       expect(noop).toHaveBeenCalledTimes(1)
 
       expect(loading).toBeTruthy()
 
-      const erreurDiv = await waitForElement(() => findByText("Erreur_xxx"))
+      const erreurDiv = await waitFor(() => findByText("Erreur_xxx"))
 
       expect(erreurDiv).toBeTruthy()
    })
