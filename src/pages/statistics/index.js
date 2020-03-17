@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { PropTypes } from "prop-types"
-import { Col, Container, Form, FormFeedback, FormGroup, Input, Row } from "reactstrap"
+
+import { Alert, Col, Container, Form, FormGroup, Input, Row } from "reactstrap"
 import fetch from "isomorphic-unfetch"
 import moize from "moize"
 import RSwitch from "react-switch"
@@ -19,7 +20,8 @@ import { Label, Title1 } from "../../components/StyledComponents"
 import { STATS_GLOBAL } from "../../utils/roles"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication, getReachableScope } from "../../utils/auth"
 import { logError, logDebug } from "../../utils/logger"
-import { pluralize } from "../../utils/misc"
+import { isEmpty, pluralize } from "../../utils/misc"
+
 import { StatBlockNumbers, StatBlockPieChart } from "../../components/StatBlock"
 import { isValidStartDate, isValidEndDate } from "../../common/api/statistics"
 
@@ -168,15 +170,15 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    }, [formState.endDate, formState.startDate, scopeFilter.scope, type])
 
    const onChange = e => {
+      setErrors({})
       if (e.target.id === "startDate") {
          if (!isValidStartDate(e.target.value, formState.endDate))
-            setErrors({ ...errors, startDate: "La date de début doit être avant la date de fin" })
+            setErrors({ startDate: "La date de début doit être avant la date de fin." })
       }
       if (e.target.id === "endDate") {
          if (!isValidEndDate(e.target.value))
             setErrors({
-               ...errors,
-               endDate: "La date de fin ne doit pas être future et doit être après la date de fin",
+               endDate: "La date de fin ne doit pas être future.",
             })
       }
       setFormState({ ...formState, [e.target.id]: e.target.value })
@@ -191,10 +193,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
          <Title1 className="mt-5 mb-4">{"Statistiques"}</Title1>
          <Container style={{ textAlign: "center" }}>
             <Form className="">
-               <Row className="mb-4">
-                  <Col md={{ size: 4, offset: 1 }} sm="6" xs="12" className="text-right">
-                     <FormGroup row className="justify-content-end">
-                        <Label htmlFor="examinationDate" className="mt-2 mr-2">
+               <Row className="mb-4 align-items-baseline">
+                  <Col lg={{ size: 4, offset: 2 }} md="6" sm="12" className="text-right">
+                     <FormGroup row className="justify-content-md-end justify-content-sm-center align-items-baseline">
+                        <Label htmlFor="examinationDate" className="mr-2">
                            {"Du"}
                         </Label>
                         <Input
@@ -203,15 +205,13 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                            invalid={errors && !!errors.startDate}
                            value={formState.startDate}
                            onChange={onChange}
-                           style={{ maxWidth: 150 }}
+                           style={{ maxWidth: 160 }}
                         />
-
-                        <FormFeedback>{errors && errors.startDate}</FormFeedback>
                      </FormGroup>
                   </Col>
-                  <Col md={{ size: 4 }} sm="6" xs="12">
-                     <FormGroup row className="justify-content-left">
-                        <Label htmlFor="examinationDate" className="mt-2 ml-3 mr-2">
+                  <Col lg={{ size: 4 }} md="6" sm="12">
+                     <FormGroup row className="justify-content-md-start justify-content-sm-center align-items-baseline">
+                        <Label htmlFor="examinationDate" className="mr-2 ml-md-3">
                            {"au"}
                         </Label>
                         <Input
@@ -220,18 +220,19 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                            invalid={errors && !!errors.startDate}
                            value={formState.endDate}
                            onChange={onChange}
-                           style={{ maxWidth: 150 }}
+                           style={{ maxWidth: 160 }}
                         />
-                        <FormFeedback>{errors && errors.startDate}</FormFeedback>
                      </FormGroup>
                   </Col>
-                  {/* <SmallButton color="primary" size="lg" className="center" onClick={onSubmit}>
-                  Go
-               </SmallButton> */}
-                  <Col md={{ size: 3 }} sm="12" xs="12">
-                     <div className="d-flex justify-content-end align-items-center" style={{ marginRight: 15 }}>
-                        <div className="justify-content-center">
-                           Ma structure
+                  <Col lg={{ size: 2 }} md="12" sm="12">
+                     <div
+                        className="d-flex justify-content-md-end justify-content-sm-center align-items-center"
+                        style={{ marginRight: 15 }}
+                     >
+                        <div className="d-flex align-items-center">
+                           <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#307df6" }}>
+                              Ma&nbsp;structure
+                           </span>
                            <RSwitch
                               checked={scopeFilter && scopeFilter.isNational}
                               onChange={toggleScopeFilter}
@@ -246,20 +247,31 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                               activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
                               height={13}
                               width={33}
-                              className="react-switch"
+                              className="ml-1 mr-1 react-switch"
                               id="material-switch"
                            />
-                           National
+                           <span style={{ color: scopeFilter && scopeFilter.isNational ? "#9c27b0" : "#000" }}>
+                              National
+                           </span>
                         </div>
                      </div>
                   </Col>
                </Row>
             </Form>
 
+            {!isEmpty(errors) && (
+               <Alert color="danger" className="ml-5 mr-5">
+                  <ul className="mb-0 d-flex justify-content-start align-items-center">
+                     {errors && errors.startDate && <li>{errors.startDate}</li>}
+                     {errors && errors.endDate && <li>{errors.endDate}</li>}
+                  </ul>
+               </Alert>
+            )}
+
             <TabButton labels={["Global", "Vivant", "Thanato"]} callback={setType}></TabButton>
 
             {type === "Global" && (
-               <div className="tab">
+               <div className="tab justify-content-sm-center justify-content-xl-start">
                   <StatBlockNumbers
                      title="Actes réalisés"
                      firstNumber={statistics.globalCount}
@@ -295,7 +307,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                </div>
             )}
             {type === "Vivant" && (
-               <div className="tab">
+               <div className="tab justify-content-sm-center justify-content-xl-start">
                   <StatBlockNumbers
                      title="Actes réalisés"
                      firstNumber={statistics.globalCount}
@@ -314,7 +326,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                </div>
             )}
             {type === "Thanato" && (
-               <div className="tab">
+               <div className="tab justify-content-sm-center justify-content-xl-start">
                   <StatBlockNumbers
                      title="Actes réalisés"
                      firstNumber={statistics.globalCount}
