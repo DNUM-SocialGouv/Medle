@@ -27,12 +27,13 @@ describe("tests on normalizeDates", () => {
          endDate: "2020-03-10",
       })
    })
+
    it("should return the 1st january for start date if it is not well formated", () => {
-      expect(normalizeDates({ startDate: "2010/10/10", endDate: "2020-10-10" })).toEqual({
+      expect(normalizeDates({ startDate: "2010/10/10", endDate: "2020-03-10" })).toEqual({
          startDate: moment("2020-10-10")
             .startOf("year")
             .format(ISO_DATE),
-         endDate: "2020-10-10",
+         endDate: "2020-03-10",
       })
    })
 })

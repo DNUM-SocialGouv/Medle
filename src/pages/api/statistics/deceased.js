@@ -15,7 +15,7 @@ const handler = (req, res) => {
    try {
       // privilege verification
       const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
-      const scope = getReachableScope(currentUser)
+      const reachableScope = getReachableScope(currentUser)
 
       /**
        * TODO: gérer le scope plus finement + ajout d'un champ hospitalsFilter, pour filtrer par liste d'établissements, filtre manuel de l'utilsateur
@@ -31,14 +31,14 @@ const handler = (req, res) => {
        */
 
       // request verification
-      const { startDate, endDate, isNational } = normalizeInputs(req.body)
+      const { startDate, endDate, scopeFilter } = normalizeInputs(req.body, reachableScope, currentUser.role)
 
       const fetchGlobalCount = knex("acts")
          .select(knex.raw("count(1)::integer"))
          .whereNull("deleted_at")
          .where(builder => {
-            if (!isNational) {
-               builder.whereIn("hospital_id", scope)
+            if (scopeFilter.length) {
+               builder.whereIn("hospital_id", scopeFilter)
             }
          })
          .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
@@ -48,8 +48,8 @@ const handler = (req, res) => {
       const fetchAverageCount = knex
          .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
          .where(builder => {
-            if (!isNational) {
-               builder.whereIn("id", scope)
+            if (scopeFilter.length) {
+               builder.whereIn("id", scopeFilter)
             }
          })
          .where("type", "=", "Personne décédée")
@@ -60,8 +60,7 @@ const handler = (req, res) => {
             inputs: {
                startDate,
                endDate,
-               isNational,
-               scope,
+               scopeFilter,
             },
             globalCount: globalCount.count || 0,
             averageCount:
