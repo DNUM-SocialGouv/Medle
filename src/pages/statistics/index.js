@@ -4,7 +4,7 @@ import { PropTypes } from "prop-types"
 import { Alert, Col, Container, Form, FormGroup, Input, Row } from "reactstrap"
 import fetch from "isomorphic-unfetch"
 import moize from "moize"
-import RSwitch from "react-switch"
+import Switch from "react-switch"
 
 import {
    API_URL,
@@ -233,7 +233,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                            <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#307df6" }}>
                               Ma&nbsp;structure
                            </span>
-                           <RSwitch
+                           <Switch
                               checked={scopeFilter && scopeFilter.isNational}
                               onChange={toggleScopeFilter}
                               onColor="#cd92d7"
@@ -268,7 +268,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                </Alert>
             )}
 
-            <TabButton labels={["Global", "Vivant", "Thanato"]} callback={setType}></TabButton>
+            <TabButton
+               labels={["Global", "Vivant", "Thanato"]}
+               colorScheme={scopeFilter && scopeFilter.isNational ? "violet" : "blue"}
+               callback={setType}
+            ></TabButton>
 
             {type === "Global" && (
                <div className="tab justify-content-sm-center justify-content-xl-start">
