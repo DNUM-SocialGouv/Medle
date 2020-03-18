@@ -105,7 +105,7 @@ const sessionTooOld = currentUser => {
    return currentUser.authentifiedAt && moment(currentUser.authentifiedAt).add(timeout.session) < moment()
 }
 
-export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
+export const withAuthentication = (WrappedComponent, requiredPrivilege, { redirect = true } = {}) => {
    const Wrapper = props => <WrappedComponent {...props} />
 
    Wrapper.getInitialProps = async ctx => {
@@ -113,14 +113,16 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege) => {
 
       logDebug("currentUser", currentUser)
 
-      if (!currentUser || sessionTooOld(currentUser)) {
-         logError("Pas de currentUser trouvé en cookie ou en SessionStorage. Redirection sur index")
-         isomorphicRedirect(ctx, "/index?sessionTimeout=1")
-      }
+      if (redirect) {
+         if (!currentUser || sessionTooOld(currentUser)) {
+            logError("Pas de currentUser trouvé en cookie ou en SessionStorage. Redirection sur index")
+            isomorphicRedirect(ctx, "/index?sessionTimeout=1")
+         }
 
-      if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
-         logError("Rôle incorrect. Redirection sur page permissionError")
-         isomorphicRedirect(ctx, "/permissionError")
+         if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
+            logError("Rôle incorrect. Redirection sur page permissionError")
+            isomorphicRedirect(ctx, "/permissionError")
+         }
       }
 
       const componentProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx))

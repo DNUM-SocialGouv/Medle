@@ -40,33 +40,35 @@ const Header = ({ currentUser }) => {
                <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>
             </NavbarBrand>
             <NavbarToggler onClick={toggle} />
-            <Collapse isOpen={isOpen} navbar>
-               <Nav className="ml-auto d-flex align-items-center" navbar>
-                  <NotificationsNoneIcon className="mr-2 medle-icons" width={"30px"} />
-                  <UncontrolledDropdown nav inNavbar>
-                     <DropdownToggle nav>
-                        <AccountCircleIcon className="medle-icons" width={30}>
-                           Mon compte&nbsp;
-                        </AccountCircleIcon>
-                     </DropdownToggle>
+            {currentUser && (
+               <Collapse isOpen={isOpen} navbar>
+                  <Nav className="ml-auto d-flex align-items-center" navbar>
+                     <NotificationsNoneIcon className="mr-2 medle-icons" width={"30px"} />
+                     <UncontrolledDropdown nav inNavbar>
+                        <DropdownToggle nav>
+                           <AccountCircleIcon className="medle-icons" width={30}>
+                              Mon compte&nbsp;
+                           </AccountCircleIcon>
+                        </DropdownToggle>
 
-                     <DropdownMenu right>
-                        {currentUser && (
-                           <DropdownItem>{currentUser.firstName + " " + currentUser.lastName} </DropdownItem>
-                        )}
-                        <DropdownItem divider />
-                        <Link href="/profile">
-                           <a>
-                              <DropdownItem>Profil</DropdownItem>
-                           </a>
-                        </Link>
-                        <DropdownItem>Administration</DropdownItem>
-                        <DropdownItem divider />
-                        <DropdownItem onClick={logout}>Se déconnecter</DropdownItem>
-                     </DropdownMenu>
-                  </UncontrolledDropdown>
-               </Nav>
-            </Collapse>
+                        <DropdownMenu right>
+                           {currentUser && (
+                              <DropdownItem>{currentUser.firstName + " " + currentUser.lastName} </DropdownItem>
+                           )}
+                           <DropdownItem divider />
+                           <Link href="/profile">
+                              <a>
+                                 <DropdownItem>Profil</DropdownItem>
+                              </a>
+                           </Link>
+                           <DropdownItem>Administration</DropdownItem>
+                           <DropdownItem divider />
+                           <DropdownItem onClick={logout}>Se déconnecter</DropdownItem>
+                        </DropdownMenu>
+                     </UncontrolledDropdown>
+                  </Nav>
+               </Collapse>
+            )}{" "}
          </Navbar>
          <style jsx global>{`
             .medle-icons {
@@ -152,6 +154,11 @@ const Footer = () => (
                      <a href="mailto:contact.medle@fabrique.social.gouv.fr">Contactez-nous</a>
                      {/* </Link> */}
                   </li>
+                  <li>
+                     <Link href={"/faq"}>
+                        <a>FAQ</a>
+                     </Link>
+                  </li>
                </ul>
             </Col>
          </Row>
@@ -175,6 +182,7 @@ const Footer = () => (
 )
 
 const Sidebar = ({ page, currentUser }) => {
+   if (!currentUser) return ""
    return (
       <>
          <div className="list-group list-group-flush text-center">

@@ -7,6 +7,7 @@ import { Container, Row } from "reactstrap"
 import { Button, Title1 } from "../components/StyledComponents"
 import Add from "@material-ui/icons/Add"
 import { withAuthentication } from "../utils/auth"
+import { ACT_MANAGEMENT } from "../utils/roles"
 
 const ActConfirmationPage = ({ currentUser }) => {
    const router = useRouter()
@@ -47,4 +48,4 @@ ActConfirmationPage.propTypes = {
    currentUser: PropTypes.object.isRequired,
 }
 
-export default withAuthentication(ActConfirmationPage)
+export default withAuthentication(ActConfirmationPage, ACT_MANAGEMENT)
