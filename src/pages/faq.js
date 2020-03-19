@@ -6,9 +6,9 @@ import { Title1, Title2 } from "../components/StyledComponents"
 import { withAuthentication } from "../utils/auth"
 
 const Section = ({ title }) => (
-   <Title2 className="border-bottom text-left text-capitalize font-weight-bold">{title}</Title2>
+   <Title2 className="text-left border-bottom text-capitalize font-weight-bold">{title}</Title2>
 )
-const Question = ({ title }) => <Title2 className="mb-3 mt-5 text-left text-info">{title}</Title2>
+const Question = ({ title }) => <Title2 className="mt-5 mb-3 text-left text-info">{title}</Title2>
 const Answer = ({ children }) => <p dangerouslySetInnerHTML={{ __html: children }} />
 
 Section.propTypes = {

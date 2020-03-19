@@ -191,8 +191,8 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    return (
       <Layout page="statistics" currentUser={currentUser}>
          <Title1 className="mt-5 mb-4">{"Statistiques"}</Title1>
-         <Container style={{ textAlign: "center" }}>
-            <Form className="">
+         <Container className="text-center">
+            <Form>
                <Row className="mb-4 align-items-baseline">
                   <Col lg={{ size: 4, offset: 2 }} md="6" sm="12" className="text-right">
                      <FormGroup row className="justify-content-md-end justify-content-sm-center align-items-baseline">
@@ -225,10 +225,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                      </FormGroup>
                   </Col>
                   <Col lg={{ size: 2 }} md="12" sm="12">
-                     <div
-                        className="d-flex justify-content-md-end justify-content-sm-center align-items-center"
-                        style={{ marginRight: 15 }}
-                     >
+                     <div className="d-flex justify-content-md-end justify-content-sm-center align-items-center mr-4">
                         <div className="d-flex align-items-center">
                            <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#307df6" }}>
                               Ma&nbsp;structure

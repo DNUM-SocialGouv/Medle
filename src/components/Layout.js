@@ -281,14 +281,14 @@ Sidebar.propTypes = {
 const Layout = ({ children, page, currentUser }) => {
    return (
       <>
-         <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between" }}>
+         <div className="d-flex flex-column justifiy-content-between min-vh-100">
             <Header currentUser={currentUser} />
             <div id="wrapper" className="d-flex">
                <div id="sidebar-wrapper" className="border-right">
                   <Sidebar page={page} currentUser={currentUser} />
                </div>
                <div id="page-content-wrapper">
-                  <main style={{ flexGrow: 1 }}>{children}</main>
+                  <main>{children}</main>
                </div>
             </div>
             <Footer />

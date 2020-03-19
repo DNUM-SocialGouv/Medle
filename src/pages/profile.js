@@ -12,28 +12,21 @@ const ProfilePage = ({ currentUser }) => {
    return (
       <Layout currentUser={currentUser}>
          <Container style={{ maxWidth: 500 }}>
-            <div
-               className="mt-5 pt-5 pb-4 pl-4 pr-4"
-               style={{
-                  boxShadow: "5px 5px 5px #d3d3d3",
-                  border: "1px solid #eee",
-                  borderRadius: "10px",
-               }}
-            >
+            <div className="mt-5 pt-5 pb-4 pl-4 pr-4 rounded shadow border border-light">
                <Row>
-                  <div style={{ width: "100%", textAlign: "center" }}>
+                  <div className="w-100 text-center">
                      <AccountCircleIcon
                         className="account-icon ml-4"
                         style={{ marginTop: -120, marginLeft: 25 }}
                         width={100}
                      />
                   </div>
-                  <Col sm="4" title={`id #${id}`} style={{ textTransform: "uppercase" }}>
+                  <Col sm="4" title={`id #${id}`} className="text-uppercase">
                      {"Données de l'utilisateur"}
                   </Col>
-                  <Col sm="8" className="pl-4" style={{ borderLeft: "1px solid #d3d3d3" }}>
+                  <Col sm="8" className="pl-4 border-left">
                      <Row>
-                        <Col style={{ fontWeight: "600" }}>
+                        <Col className="font-weight-bold">
                            {capitalize(firstName)} {capitalize(lastName)}
                         </Col>
                      </Row>
@@ -43,11 +36,10 @@ const ProfilePage = ({ currentUser }) => {
                      <Row className="mt-3">
                         <Col>
                            <span
+                              className="rounded px-4 py-2"
                               style={{
                                  backgroundColor: "#b2f5ea",
-                                 borderRadius: "0.25rem",
                                  color: "#2c7a7b",
-                                 padding: "0.25rem 0.5rem",
                               }}
                            >
                               {role && ROLES_DESCRIPTION[role] ? ROLES_DESCRIPTION[role] : "N/A"}
