@@ -8,23 +8,23 @@ const CriminalCourtEdit = ({ dispatch, state, errors }) => {
    return (
       <>
          <ActBlock
-            type="mode"
-            title="Modalités"
-            values={["Présentiel", "En visioconférence"]}
-            mode="toggle"
-            dispatch={dispatch}
-            state={state.mode || []}
-            invalid={!!errors.mode}
-         />
-
-         <ActBlock
             type="duration"
             title="Durée de la mobilisation"
-            values={["- de 1 heure", "1 à 3 heures", "+ de 3 heures"]}
+            values={["- de 3 heures", "3 à 6 heures", "+ de 6 heures"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.duration || ""}
             invalid={!!errors.duration}
+         />
+
+         <ActBlock
+            type="distance"
+            title="Distance"
+            values={["En visio", "- de 50 km", "50 à 150 km", "+ de 150 km"]}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.distance || []}
+            invalid={!!errors.distance}
          />
       </>
    )
@@ -32,11 +32,11 @@ const CriminalCourtEdit = ({ dispatch, state, errors }) => {
 
 const hasErrors = state => {
    const errors = {}
-   if (!state.mode || !state.mode.length) {
-      errors.mode = "Obligatoire"
-   }
    if (!state.duration) {
       errors.duration = "Obligatoire"
+   }
+   if (!state.distance) {
+      errors.distance = "Obligatoire"
    }
 
    return errors
@@ -56,10 +56,10 @@ const CriminalCourtRead = act => {
                <ColumnAct header={"Statut"} content={act && act.profile} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Modalités"} content={act && act.mode} />
+               <ColumnAct header={"Durée de la mobilisation"} content={act && act.duration} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Durée de la mobilisation"} content={act && act.duration} />
+               <ColumnAct header={"Distance"} content={act && act.distance} />
             </Col>
          </Row>
       </>

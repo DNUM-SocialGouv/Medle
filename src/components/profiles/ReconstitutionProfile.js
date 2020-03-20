@@ -16,9 +16,10 @@ const ReconstitutionEdit = ({ dispatch, state, errors }) => {
             state={state.duration || ""}
             invalid={!!errors.duration}
          />
+
          <ActBlock
             type="distance"
-            title="Distance du lieu de reconstitution"
+            title="Distance"
             values={["- de 50 km", "50 à 150 km", "+ de 150 km"]}
             mode="toggle"
             dispatch={dispatch}
@@ -40,7 +41,7 @@ const ReconstitutionRead = act => {
                <ColumnAct header={"Durée de la mobilisation"} content={act && act.duration} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Distance du lieu de reconstitution"} content={act.distance} />
+               <ColumnAct header={"Distance"} content={act.distance} />
             </Col>
             <Col className="mr-3"></Col>
          </Row>
