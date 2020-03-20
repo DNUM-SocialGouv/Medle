@@ -68,7 +68,9 @@ const handler = async (req, res) => {
          // SQL query
          const acts = await knex("acts")
             .where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy }))
-            .orderBy([{ column: "acts.examination_date", order: "desc" }])
+            .orderByRaw(
+               "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc",
+            )
             .limit(LIMIT)
             .offset(offset)
             .select("*")
