@@ -9,7 +9,7 @@ const Section = ({ title }) => (
    <Title2 className="text-left border-bottom text-capitalize font-weight-bold">{title}</Title2>
 )
 const Question = ({ title }) => <Title2 className="mt-5 mb-3 text-left text-info">{title}</Title2>
-const Answer = ({ children }) => <p dangerouslySetInnerHTML={{ __html: children }} />
+const Answer = ({ children }) => <div dangerouslySetInnerHTML={{ __html: children }} />
 
 Section.propTypes = {
    title: PropTypes.string.isRequired,
@@ -18,7 +18,7 @@ Question.propTypes = {
    title: PropTypes.string.isRequired,
 }
 Answer.propTypes = {
-   children: PropTypes.array,
+   children: PropTypes.string.isRequired,
 }
 
 const FaqPage = ({ currentUser }) => {
