@@ -86,8 +86,8 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
          <Title1 className="mt-5 mb-4">{"L'activité de votre UMJ/IML"}</Title1>
          <Container style={{ maxWidth: 980 }}>
             <Form onSubmit={onSubmit}>
-               <FormGroup row inline>
-                  <Col md={{ size: 6, offset: 3 }}>
+               <FormGroup row inline className="justify-content-center mb-4">
+                  <Col className="ml-auto" sm="9">
                      <Input
                         type="text"
                         name="es"
@@ -98,19 +98,19 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
                         autoComplete="off"
                      />
                   </Col>
-                  <Col className="text-align-right" md={{ size: 3 }}>
-                     <Button style={{ minWidth: 100 }} disabled={isLoading}>
+                  <Col sm="3" className="text-center mt-4 mt-sm-0">
+                     <Button className="w-lg-75" disabled={isLoading}>
                         {isLoading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
                      </Button>
                   </Col>
                </FormGroup>
             </Form>
             {isError && (
-               <Alert color="danger" className="mt-5 mb-5">
+               <Alert color="danger" className="mb-4">
                   {isError}
                </Alert>
             )}
-            {!isError && !paginatedData.acts.length && <div className="mt-5 text-center">{"Aucun actes trouvés."}</div>}
+            {!isError && !paginatedData.acts.length && <div className="text-center">{"Aucun actes trouvés."}</div>}
 
             {!isError && !!paginatedData.acts.length && (
                <>
@@ -138,7 +138,7 @@ const ActsListPage = ({ paginatedData: _paginatedData, currentUser }) => {
                               <td>{act.extra_data && <VerticalList content={act.extra_data.examinationTypes} />}</td>
                               <td>
                                  <Link href="/actDetail/[id]" as={`/actDetail/${act.id}`}>
-                                    <a>{"Voir >"}</a>
+                                    <a>Voir&nbsp;&gt;</a>
                                  </Link>
                               </td>
                            </tr>

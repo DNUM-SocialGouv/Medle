@@ -305,7 +305,7 @@ const ActDeclaration = ({ act, currentUser }) => {
             <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>
 
             <Row>
-               <Col>
+               <Col sm="6" md="4">
                   <Label htmlFor="internalNumber">Numéro interne</Label>
                   <Input
                      id="internalNumber"
@@ -319,7 +319,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                   {warnings && warnings.internalNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
-               <Col>
+               <Col sm="6" md="4">
                   <Label htmlFor="examinationDate">{"Date d'examen"}</Label>
                   <Input
                      id="examinationDate"
@@ -331,7 +331,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                   />
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
                </Col>
-               <Col style={{ textAlign: "center" }}>
+               <Col className="text-center mt-4 mt-md-0" sm="12" md="4">
                   <Label htmlFor="proofWithoutComplaint">Recueil de preuve sans plainte</Label>
                   <br />
                   <Input
@@ -346,7 +346,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                </Col>
             </Row>
             <Row>
-               <Col md="4">
+               <Col md="4" className="mt-4 mt-md-0">
                   <Label htmlFor="pvNumber">Numéro de PV</Label>
                   <Input
                      id="pvNumber"
@@ -359,7 +359,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                   />
                   {warnings && warnings.pvNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
                </Col>
-               <Col md="8">
+               <Col md="8" className="mt-4 mt-md-0">
                   <Label htmlFor="askerId">Demandeur</Label>
                   <AskerSelect
                      dispatch={dispatch}

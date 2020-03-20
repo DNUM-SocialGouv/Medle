@@ -10,6 +10,7 @@ import {
    Navbar,
    NavbarBrand,
    NavbarToggler,
+   NavItem,
    UncontrolledDropdown,
    DropdownToggle,
    DropdownMenu,
@@ -34,21 +35,26 @@ const Header = ({ currentUser }) => {
    const toggle = () => setIsOpen(!isOpen)
 
    return (
-      <header>
-         <Navbar expand="md" className="navbar-medle">
+      <header className="border-bottom">
+         <Navbar expand="md" light>
             <NavbarBrand>
-               <img src={"/images/logo.png"} alt="Logo" title="Logo"></img>
+               <img src={"/images/logo.png"} alt="Logo" title="Logo" width="100"></img>
             </NavbarBrand>
             <NavbarToggler onClick={toggle} />
             {currentUser && (
                <Collapse isOpen={isOpen} navbar>
-                  <Nav className="ml-auto d-flex align-items-center" navbar>
-                     <NotificationsNoneIcon className="mr-2 medle-icons" width={"30px"} />
+                  <Nav
+                     className="ml-auto d-flex justify-content-end align-items-md-center align-items-start mt-2 pt-2 pt-md-0"
+                     navbar
+                  >
+                     <NavItem className="">
+                        <NotificationsNoneIcon className="mr-2 text-black-50" width={30} />
+                        <span className="d-sm-inline d-md-none text-black-50">Notifs</span>
+                     </NavItem>
                      <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav>
-                           <AccountCircleIcon className="medle-icons" width={30}>
-                              Mon compte&nbsp;
-                           </AccountCircleIcon>
+                           <AccountCircleIcon className="text-black-50" width={30} />
+                           <span className="d-sm-inline d-md-none text-black-50">&nbsp;Mon compte</span>
                         </DropdownToggle>
 
                         <DropdownMenu right>
@@ -68,48 +74,8 @@ const Header = ({ currentUser }) => {
                      </UncontrolledDropdown>
                   </Nav>
                </Collapse>
-            )}{" "}
+            )}
          </Navbar>
-         <style jsx global>{`
-            .medle-icons {
-               color: #9b9b9b;
-               font-size: 30px !important;
-            }
-            header {
-               border-bottom: 1px solid #f3f3f3;
-            }
-            img[alt="Logo"] {
-               width: 100px;
-            }
-            .navbar-medle button.account {
-               padding: 0;
-            }
-            .navbar-medle button.account:hover {
-               background-color: ${colors.header.background} !important;
-            }
-
-            .navbar-medle .navbar-brand {
-               color: ${colors.header.color} !important;
-            }
-            .navbar-medle .nav-link {
-               color: ${colors.header.color} !important;
-            }
-            .menu-link,
-            .menu-link:hover,
-            .menu-link:link,
-            .menu-link:visited,
-            .menu-link:active {
-               border: 0;
-               color: ${colors.header.color} !important;
-               text-decoration: none;
-               background-color: ${colors.header.background} !important;
-            }
-            header .dropdown-item {
-               color: ${colors.header.color} !important;
-               text-decoration: none;
-               background-color: ${colors.header.background} !important;
-            }
-         `}</style>
       </header>
    )
 }
@@ -119,10 +85,10 @@ Header.propTypes = {
 }
 
 const Footer = () => (
-   <footer>
+   <footer className="pt-4 pb-5 m-0">
       <Container>
          <Row>
-            <Col>
+            <Col className="mr-5">
                <h4>Medle.fabrique.social.gouv.fr</h4>
                Un service proposé par la{" "}
                <a
@@ -137,8 +103,8 @@ const Footer = () => (
                   {" l'incubateur des ministères sociaux"}
                </a>
             </Col>
-            <Col>
-               <ul>
+            <Col className="mt-4 mt-md-0">
+               <ul className="pl-0 list-unstyled">
                   {/* <li>
                      <Link href={"/conditions"}>
                         <a>{"Conditions générales d'utilisation"}</a>
@@ -151,7 +117,7 @@ const Footer = () => (
                   </li>
                   <li>
                      {/* <Link> */}
-                     <a href="mailto:contact.medle@fabrique.social.gouv.fr">Contactez-nous</a>
+                     <a href="mailto:contact.medle@fabrique.social.gouv.fr">Contactez&#8209;nous</a>
                      {/* </Link> */}
                   </li>
                   <li>
@@ -165,17 +131,12 @@ const Footer = () => (
       </Container>
       <style jsx>{`
          footer {
-            margin: 50px 0 0;
-            padding: 30px 30px 40px;
             background-color: ${colors.footer.background};
             color: ${colors.footer.color};
          }
          footer a,
          footer a:hover {
             color: ${colors.footer.color};
-         }
-         ul {
-            list-style-type: none;
          }
       `}</style>
    </footer>
@@ -288,7 +249,7 @@ const Layout = ({ children, page, currentUser }) => {
                   <Sidebar page={page} currentUser={currentUser} />
                </div>
                <div id="page-content-wrapper">
-                  <main>{children}</main>
+                  <main className="pb-5">{children}</main>
                </div>
             </div>
             <Footer />
@@ -297,11 +258,6 @@ const Layout = ({ children, page, currentUser }) => {
             #sidebar-wrapper {
                min-height: 100vh;
                width: 140px;
-               margin-left: -15rem;
-               -webkit-transition: margin 0.25s ease-out;
-               -moz-transition: margin 0.25s ease-out;
-               -o-transition: margin 0.25s ease-out;
-               transition: margin 0.25s ease-out;
             }
 
             #sidebar-wrapper .sidebar-heading {
@@ -310,26 +266,7 @@ const Layout = ({ children, page, currentUser }) => {
             }
 
             #page-content-wrapper {
-               min-width: 100vw;
-            }
-
-            #wrapper.toggled #sidebar-wrapper {
-               margin-left: 0;
-            }
-
-            @media (min-width: 768px) {
-               #sidebar-wrapper {
-                  margin-left: 0;
-               }
-
-               #page-content-wrapper {
-                  min-width: 0;
-                  width: 100%;
-               }
-
-               #wrapper.toggled #sidebar-wrapper {
-                  margin-left: -15rem;
-               }
+               min-width: calc(100vw - 140px);
             }
          `}</style>
       </>

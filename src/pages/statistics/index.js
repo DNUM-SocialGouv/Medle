@@ -195,7 +195,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
             <Form>
                <Row className="mb-4 align-items-baseline">
                   <Col lg={{ size: 4, offset: 2 }} md="6" sm="12" className="text-right">
-                     <FormGroup row className="justify-content-md-end justify-content-sm-center align-items-baseline">
+                     <FormGroup row className="justify-content-md-end justify-content-center align-items-baseline">
                         <Label htmlFor="examinationDate" className="mr-2">
                            {"Du"}
                         </Label>
@@ -210,7 +210,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                      </FormGroup>
                   </Col>
                   <Col lg={{ size: 4 }} md="6" sm="12">
-                     <FormGroup row className="justify-content-md-start justify-content-sm-center align-items-baseline">
+                     <FormGroup row className="justify-content-md-start justify-content-center align-items-baseline">
                         <Label htmlFor="examinationDate" className="mr-2 ml-md-3">
                            {"au"}
                         </Label>
@@ -225,7 +225,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                      </FormGroup>
                   </Col>
                   <Col lg={{ size: 2 }} md="12" sm="12">
-                     <div className="d-flex justify-content-md-end justify-content-sm-center align-items-center mr-4">
+                     <div className="d-flex justify-content-lg-end justify-content-center align-items-center mr-4">
                         <div className="d-flex align-items-center">
                            <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#307df6" }}>
                               Ma&nbsp;structure

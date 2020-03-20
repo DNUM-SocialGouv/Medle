@@ -52,7 +52,7 @@ const TabButton = ({ labels, callback, colorScheme }) => {
             }
             .medle-btn-outline-violet:hover {
                color: #fff;
-               background-color: #9c27b0;
+               background-color: #cd92d7;
                border-color: #cd92d7;
             }
          `}</style>

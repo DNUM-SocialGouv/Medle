@@ -147,6 +147,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
                      <Col key={index} {...colOptions} className="mb-4">
                         <Button
                            style={{ fontSize: 14 }}
+                           className="h-100"
                            outline
                            color="secondary"
                            block

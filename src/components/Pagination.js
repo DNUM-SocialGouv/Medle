@@ -14,7 +14,7 @@ const Pagination = ({ data, fn }) => {
    if (data)
       return (
          <>
-            <RSPagination aria-label="Page navigation example" className="mt-5">
+            <RSPagination aria-label="Navigation">
                <PaginationItem>
                   <PaginationLink first href="#" onClick={() => fn(0)} />
                </PaginationItem>
