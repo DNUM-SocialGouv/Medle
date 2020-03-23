@@ -58,19 +58,9 @@ const LoginPage = ({ message }) => {
             <title>Medlé : connexion</title>
          </Head>
 
-         <div>
+         <div className="d-flex flex-column flex-md-row justify-content-center justify-content-md-center align-items-center min-vh-100">
             <Login authentication={authentication} error={error} />
          </div>
-
-         <style jsx>{`
-            div {
-               margin-top: 20vh;
-               display: flex;
-               justify-content: center;
-               align-items: flex-start;
-               background-color: white;
-            }
-         `}</style>
       </>
    )
 }

@@ -23,9 +23,9 @@ const Login = ({ authentication, error }) => {
 
    return (
       <>
-         <img src={"/images/logo.png"} alt="logo" title="logo" />
+         <img src={"/images/logo.png"} alt="logo" title="logo" className="my-5" />
          <div>
-            <div className="encadre">
+            <div className="encadre shadow border mx-4 px-3 py-4 rounded">
                <Form onSubmit={onSubmit} data-testid="authent-form" method="post">
                   <FormGroup>
                      <Label for="email">Adresse courriel</Label>
@@ -35,7 +35,7 @@ const Login = ({ authentication, error }) => {
                            type="email"
                            name="email"
                            id="email"
-                           placeholder="spike.spiegel@cowboy.fr"
+                           placeholder="adresse@mail.com"
                            ref={emailRef}
                            className={"form-control"}
                            autoComplete="username"
@@ -65,7 +65,7 @@ const Login = ({ authentication, error }) => {
                   </Alert>
                </Form>
             </div>
-            <div className="encadre mt-4">
+            <div className="encadre shadow border m-4 px-3 py-2 rounded">
                Vous êtes nouveau sur Medlé&nbsp;?{" "}
                <Link href="createAccount">
                   <a>Créer un compte</a>
@@ -73,15 +73,23 @@ const Login = ({ authentication, error }) => {
             </div>
          </div>
          <style jsx>{`
-            div.encadre {
+            .encadre {
                background-color: rgb(249, 249, 249);
-               border: 1px solid lightgrey;
-               padding: 20px;
-               border-radius: 10px;
             }
+            ::placeholder {
+               /* Chrome, Firefox, Opera, Safari 10.1+ */
+               color: #767676;
+               opacity: 1; /* Firefox */
+            }
+
             img[alt="logo"] {
-               margin: 100px 50px;
                width: 300px;
+            }
+
+            @media screen and (max-width: 768px) {
+               img[alt="logo"] {
+                  width: 200px;
+               }
             }
          `}</style>
       </>
