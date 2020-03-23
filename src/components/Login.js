@@ -81,6 +81,14 @@ const Login = ({ authentication, error }) => {
                color: #767676;
                opacity: 1; /* Firefox */
             }
+            :-ms-input-placeholder {
+               /* Internet Explorer 10-11 */
+               color: #767676;
+            }
+            ::-ms-input-placeholder {
+               /* Microsoft Edge */
+               color: #767676;
+            }
 
             img[alt="logo"] {
                width: 300px;
