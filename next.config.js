@@ -1,6 +1,8 @@
 const webpack = require("webpack")
+const withPlugins = require("next-compose-plugins")
+const withTM = require("next-transpile-modules")(["recharts"])
 
-module.exports = {
+module.exports = withPlugins([withTM], {
    cssLoaderOptions: {
       url: false,
    },
@@ -36,4 +38,4 @@ module.exports = {
 
       return config
    },
-}
+})
