@@ -1,8 +1,8 @@
 const webpack = require("webpack")
 const withPlugins = require("next-compose-plugins")
-const withTM = require("next-transpile-modules")(["recharts"])
+const withTM = require("next-transpile-modules")(["d3-scale", "d3-array"])
 
-module.exports = withPlugins([withTM], {
+const nextConfig = {
    cssLoaderOptions: {
       url: false,
    },
@@ -25,6 +25,8 @@ module.exports = withPlugins([withTM], {
       DATABASE_URL: process.env.DATABASE_URL,
    },
    webpack: (config, { isServer, buildId }) => {
+      //config.optimization.minimizer = []
+
       config.plugins.push(
          new webpack.DefinePlugin({
             // looks like it doesnt work for some reason
@@ -38,4 +40,6 @@ module.exports = withPlugins([withTM], {
 
       return config
    },
-})
+}
+
+module.exports = withPlugins([withTM], nextConfig)
