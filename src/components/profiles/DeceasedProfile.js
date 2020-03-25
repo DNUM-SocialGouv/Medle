@@ -21,6 +21,17 @@ const DeceasedEdit = ({ dispatch, state, errors }) => {
             state={state.examinationTypes || []}
             invalid={!!errors.examinationTypes}
          />
+         {state.examinationTypes && state.examinationTypes.includes("Levée de corps") && (
+            <ActBlock
+               type="distance"
+               title="Distance"
+               values={["- de 50 km", "50 à 150 km", "+ de 150 km"]}
+               mode="toggle"
+               dispatch={dispatch}
+               state={state.distance || ""}
+               invalid={!!errors.distance}
+            />
+         )}
          <ActBlock
             type="examinations"
             title="Examens complémentaires"
@@ -39,9 +50,7 @@ const DeceasedEdit = ({ dispatch, state, errors }) => {
             state={state.periodOfDay || ""}
             invalid={!!errors.periodOfDay}
          />
-
          <Title2 className="mb-2 mt-5">{"Profil de la personne décédée"}</Title2>
-
          <ActBlock
             type="personGender"
             title=""
@@ -79,7 +88,9 @@ const DeceasedRead = act => {
             <Col className="mr-3">
                <ColumnAct header={"Examens complémentaires"} content={act && act.examinations} />
             </Col>
-            <Col className="mr-3"></Col>
+            <Col className="mr-3">
+               {act.distance && <ColumnAct header={"Distance"} content={act && act.distance} />}
+            </Col>
          </Row>
 
          <Title2 className="pt-3">Profil</Title2>
@@ -102,6 +113,9 @@ const hasErrors = state => {
    const errors = {}
    if (!state.examinationTypes || !state.examinationTypes.length) {
       errors.examinationTypes = "Obligatoire"
+   }
+   if (state.examinationTypes && state.examinationTypes.includes("Levée de corps") && !state.distance) {
+      errors.distance = "Obligatoire"
    }
    if (!state.periodOfDay) {
       errors.periodOfDay = "Obligatoire"

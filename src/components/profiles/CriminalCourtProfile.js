@@ -23,7 +23,7 @@ const CriminalCourtEdit = ({ dispatch, state, errors }) => {
             values={["En visio", "- de 50 km", "50 à 150 km", "+ de 150 km"]}
             mode="toggle"
             dispatch={dispatch}
-            state={state.distance || []}
+            state={state.distance || ""}
             invalid={!!errors.distance}
          />
       </>
