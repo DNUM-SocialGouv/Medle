@@ -24,6 +24,7 @@ import SettingsIcon from "@material-ui/icons/Settings"
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle"
+import PeopleIcon from "../components/icons/people"
 
 import { logout } from "../utils/auth"
 import { colors } from "../theme"
@@ -44,7 +45,7 @@ const Header = ({ currentUser }) => {
             {currentUser && (
                <Collapse isOpen={isOpen} navbar>
                   <Nav
-                     className="ml-auto d-flex justify-content-end align-items-md-center align-items-start mt-2 pt-2 pt-md-0"
+                     className="pt-2 mt-2 ml-auto d-flex justify-content-end align-items-md-center align-items-start pt-md-0"
                      navbar
                   >
                      <NavItem className="">
@@ -146,7 +147,7 @@ const Sidebar = ({ page, currentUser }) => {
    if (!currentUser) return ""
    return (
       <>
-         <div className="list-group list-group-flush text-center">
+         <div className="text-center list-group list-group-flush">
             {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
                <Link href="/actDeclaration">
                   <a
@@ -181,7 +182,7 @@ const Sidebar = ({ page, currentUser }) => {
                         (page === "fillEmployments" ? "selected" : "unselected")
                      }
                   >
-                     <FormatListBulletedIcon width={30} /> <br />
+                     <PeopleIcon width={30} /> <br />
                      {"Personnel"}
                   </a>
                </Link>
