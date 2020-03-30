@@ -50,7 +50,7 @@ const DeceasedEdit = ({ dispatch, state, errors }) => {
             state={state.periodOfDay || ""}
             invalid={!!errors.periodOfDay}
          />
-         <Title2 className="mb-2 mt-5">{"Profil de la personne décédée"}</Title2>
+         <Title2 className="mt-5 mb-2">{"Profil de la personne décédée"}</Title2>
          <ActBlock
             type="personGender"
             title=""
@@ -65,7 +65,7 @@ const DeceasedEdit = ({ dispatch, state, errors }) => {
             type="personAgeTag"
             title=""
             subTitle="Âge"
-            values={["0-2 ans", "3-17 ans", "+ de 18 ans", "Non déterminé"]}
+            values={["0-2 ans", "3-6 ans", "7-17 ans", "+ de 18 ans", "Non déterminé"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personAgeTag || ""}
