@@ -1,6 +1,15 @@
 const webpack = require("webpack")
 const withPlugins = require("next-compose-plugins")
 const withTM = require("next-transpile-modules")(["d3-scale", "d3-array"])
+const images = require("remark-images")
+const emoji = require("remark-emoji")
+
+const withMDX = require("@next/mdx")({
+   extension: /\.mdx?$/,
+   options: {
+      mdPlugins: [images, emoji],
+   },
+})
 
 const nextConfig = {
    cssLoaderOptions: {
@@ -42,4 +51,15 @@ const nextConfig = {
    },
 }
 
-module.exports = withPlugins([withTM], nextConfig)
+module.exports = withPlugins(
+   [
+      [withTM],
+      [
+         withMDX,
+         {
+            pageExtensions: ["js", "jsx", "md", "mdx"],
+         },
+      ],
+   ],
+   nextConfig,
+)

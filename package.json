@@ -18,6 +18,8 @@
   "dependencies": {
     "@material-ui/core": "^4.5.0",
     "@material-ui/icons": "^4.4.3",
+    "@mdx-js/loader": "^1.5.8",
+    "@next/mdx": "^9.3.3",
     "@sentry/browser": "^5.12.4",
     "@sentry/integrations": "^5.12.4",
     "@sentry/node": "^5.12.4",
@@ -41,6 +43,8 @@
     "react-switch": "^5.0.1",
     "reactstrap": "^8.0.1",
     "recharts": "^2.0.0-beta.1",
+    "remark-emoji": "^2.1.0",
+    "remark-images": "^2.0.0",
     "styled-components": "^5.0.1"
   },
   "devDependencies": {
