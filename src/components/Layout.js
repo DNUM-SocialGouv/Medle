@@ -24,7 +24,7 @@ import SettingsIcon from "@material-ui/icons/Settings"
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle"
-import PeopleIcon from "../components/icons/people"
+import GroupIcon from "@material-ui/icons/Group"
 
 import { logout } from "../utils/auth"
 import { colors } from "../theme"
@@ -182,7 +182,7 @@ const Sidebar = ({ page, currentUser }) => {
                         (page === "fillEmployments" ? "selected" : "unselected")
                      }
                   >
-                     <PeopleIcon width={30} /> <br />
+                     <GroupIcon width={30} /> <br />
                      {"Personnel"}
                   </a>
                </Link>
