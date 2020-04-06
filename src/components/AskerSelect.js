@@ -37,14 +37,12 @@ const MAX_AGE = 1000 * 60 * 60 // 1 hour
 const memoizedGetSuggestions = moize({ maxAge: MAX_AGE, isPromise: false })(getSuggestions)
 const memoizedGetAskerById = moize({ maxAge: MAX_AGE })(getAskerById)
 
-const emptyValue = { value: "", label: "" }
-
 const AskerSelect = ({ dispatch, disabled, askerId }) => {
-   const [existingValue, setExistingValue] = useState(emptyValue)
+   const [existingValue, setExistingValue] = useState(null)
    const [previousValues, setPreviousValues] = useState([])
 
    useEffect(() => {
-      const fetchAskerValue = async id => setExistingValue(id ? await memoizedGetAskerById(id) : emptyValue)
+      const fetchAskerValue = async id => setExistingValue(id ? await memoizedGetAskerById(id) : null)
       const fetchPreviousValues = async () => {
          Promise.all(memoizedGetAskerById.values()).then(arr => {
             setPreviousValues(arr)

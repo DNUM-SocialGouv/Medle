@@ -14,7 +14,7 @@ import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../utils/roles"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
-import { now, ISO_DATE, isoToFr } from "../utils/date"
+import { now, ISO_DATE } from "../utils/date"
 import { profiles, orderedProfileValues } from "../utils/actsConstants"
 import { logError, logDebug } from "../utils/logger"
 
