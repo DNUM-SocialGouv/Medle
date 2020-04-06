@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react"
 import PropTypes from "prop-types"
 import Link from "next/link"
-import { Alert, Label, Button, Form, FormGroup, InputGroup, InputGroupAddon, Spinner } from "reactstrap"
+import { Alert, Label, Button, Form, FormGroup, InputGroup, InputGroupAddon, InputGroupText, Spinner } from "reactstrap"
 import RemoveRedEyeIcon from "@material-ui/icons/RemoveRedEye"
 
 const Login = ({ authentication, error }) => {
@@ -67,21 +67,23 @@ const Login = ({ authentication, error }) => {
                            autoComplete="current-password"
                         />
                         <InputGroupAddon addonType="append" style={{ backgroundColor: "#e9ecef" }}>
-                           <Button
+                           <InputGroupText
                               style={{
                                  borderColor: "#ced4da",
                                  backgroundColor: "#e9ecef",
-                                 color: "#495057",
-                                 minWidth: "80px",
                               }}
                               onClick={handleClick}
+                              className={hidden ? "" : "text-primary"}
                            >
-                              {hidden ? "Voir" : "Cacher"}
-                           </Button>
+                              <RemoveRedEyeIcon width={24} />
+                           </InputGroupText>
                         </InputGroupAddon>
                      </InputGroup>
                   </FormGroup>
-                  <Button block>{isLoading ? <Spinner color="light" data-testid="loading" /> : "Se connecter"}</Button>
+                  <Button block className="d-flex justify-content-center align-items-center">
+                     Se connecter&nbsp;
+                     {isLoading ? <Spinner size="sm" className="ml-2" color="light" data-testid="loading" /> : ""}
+                  </Button>
                   <Alert color="danger" isOpen={!!error} className="mt-3 mb-0" fade={false}>
                      {error}
                   </Alert>
