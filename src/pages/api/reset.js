@@ -21,8 +21,6 @@ const handler = async (req, res) => {
 
             const modified = await reset(id, password)
 
-            console.log("modified", modified)
-
             return res.status(STATUS_200_OK).json(modified)
          }
          default:

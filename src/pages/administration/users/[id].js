@@ -122,7 +122,6 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
    }
 
    const onSubmit = async data => {
-      console.log("data", data)
       setError("")
 
       try {

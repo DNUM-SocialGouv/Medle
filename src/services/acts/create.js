@@ -5,8 +5,6 @@ import { APIError } from "../../utils/errors"
 import { untransform } from "../../models/acts"
 
 export const create = async (data, currentUser) => {
-   console.log("data", data)
-
    if (!data || !data.hospitalId) {
       throw new APIError({
          status: STATUS_400_BAD_REQUEST,
