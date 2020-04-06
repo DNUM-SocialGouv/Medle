@@ -44,29 +44,21 @@ const fetchHospitals = async value => {
    }
 }
 const fetchUpdate = async user => {
-   try {
-      const response = await fetch(`${API_URL}${ADMIN_USERS_ENDPOINT}/${user.id}`, {
-         method: METHOD_PUT,
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify(user),
-      })
-      return await handleAPIResponse(response)
-   } catch (error) {
-      logError(error)
-   }
+   const response = await fetch(`${API_URL}${ADMIN_USERS_ENDPOINT}/${user.id}`, {
+      method: METHOD_PUT,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user),
+   })
+   return await handleAPIResponse(response)
 }
 // eslint-disable-next-line no-unused-vars
 const fetchCreate = async ({ id, ...user }) => {
-   try {
-      const response = await fetch(`${API_URL}${ADMIN_USERS_ENDPOINT}`, {
-         method: user.id ? METHOD_PUT : METHOD_POST,
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify(user),
-      })
-      return await handleAPIResponse(response)
-   } catch (error) {
-      logError(error)
-   }
+   const response = await fetch(`${API_URL}${ADMIN_USERS_ENDPOINT}`, {
+      method: user.id ? METHOD_PUT : METHOD_POST,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user),
+   })
+   return await handleAPIResponse(response)
 }
 
 const MandatorySign = () => <span style={{ color: "red" }}>*</span>
@@ -82,20 +74,29 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
          email: initialUser.email,
          role: initialUser.role,
          scope: initialUser.scope,
+         hospital: {
+            id: (initialUser && initialUser.hospital && initialUser.hospital.id) || "",
+            name: (initialUser && initialUser.hospital && initialUser.hospital.name) || "",
+         },
       },
    })
    // Special case due to react-select design : needs to store specifically the value of the select
-   const [hospital, setHospital] = useState({
-      selectedOption:
-         initialUser.hospital && initialUser.hospital.name
-            ? { value: initialUser.hospital.id, label: initialUser.hospital.name }
-            : { value: "", label: "" },
-   })
-   const [role, setRole] = useState({
-      selectedOption: initialUser.role
-         ? { value: initialUser.role, label: ROLES_DESCRIPTION[initialUser.role] }
-         : { value: "", label: "" },
-   })
+   const [hospital, setHospital] = useState(
+      initialUser && initialUser.hospital && initialUser.hospital.id && initialUser.hospital.name
+         ? {
+              value: initialUser.hospital.id,
+              label: initialUser.hospital.name,
+           }
+         : null,
+   )
+   const [role, setRole] = useState(
+      initialUser && initialUser.role
+         ? {
+              value: initialUser.role,
+              label: ROLES_DESCRIPTION[initialUser.role],
+           }
+         : null,
+   )
 
    const [error, setError] = useState("")
    const [success, setsuccess] = useState("")
@@ -123,6 +124,9 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
 
    const onSubmit = async data => {
       setError("")
+      setsuccess("")
+
+      console.log("data", data)
 
       try {
          if (isEmpty(formErrors)) {
@@ -136,28 +140,29 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
             }
          }
       } catch (error) {
-         setError("Erreur serveur")
+         setError("Erreur serveur.")
       }
    }
 
    const onRoleChange = selectedOption => {
-      selectedOption = selectedOption || { value: "", label: "" }
-
       // Needs transformation between format of react-select to expected format for API call
-      setValue("role", selectedOption.value)
+      setValue("role", (selectedOption && selectedOption.value) || null)
 
       // Needs to sync specifically the value to the react-select as well
       setRole(selectedOption)
    }
 
    const onHospitalChange = selectedOption => {
-      selectedOption = selectedOption || { value: "", label: "" }
-
       // Needs transformation between format of react-select to expected format for API call
-      setValue("hospital", {
-         id: (selectedOption && selectedOption.value) || "",
-         name: (selectedOption && selectedOption.label) || "",
-      })
+      setValue(
+         "hospital",
+         selectedOption && selectedOption.value
+            ? {
+                 id: selectedOption.value,
+                 name: selectedOption.label,
+              }
+            : null,
+      )
       // Needs to sync specifically the value to the react-select as well
       setHospital(selectedOption)
    }
@@ -232,7 +237,7 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                   <Col sm={9}>
                      <Select
                         options={Object.keys(ROLES).map(role => ({ value: role, label: ROLES_DESCRIPTION[role] }))}
-                        value={role.selectedOption}
+                        value={role}
                         onChange={onRoleChange}
                         noOptionsMessage={() => "Aucun résultat"}
                         placeholder="Choisissez un rôle"
@@ -248,7 +253,7 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                   <Col sm={9}>
                      <AsyncSelect
                         loadOptions={fetchHospitals}
-                        value={hospital.selectedOption}
+                        value={hospital}
                         onChange={onHospitalChange}
                         noOptionsMessage={() => "Aucun résultat"}
                         loadingMessage={() => "Chargement..."}
