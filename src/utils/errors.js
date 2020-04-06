@@ -1,23 +1,31 @@
+import { STATUS_500_INTERNAL_SERVER_ERROR } from "./http"
+
 class MedleError extends Error {
-   constructor({ message, detailMessage, uri }) {
+   constructor({ message, detail }) {
       super(message)
       this.name = this.constructor.name
-      this.detailMessage = detailMessage
-      this.uri = uri
+      this.detail = detail
    }
 }
 
 export class APIError extends MedleError {
-   constructor({ message, status, detailMessage, uri }) {
-      super({ message, detailMessage, uri })
+   constructor({ message, detail, status }) {
+      super({ message, detail })
       this.name = this.constructor.name
       this.status = status
    }
 }
+export class InternalError extends MedleError {
+   constructor({ detail }) {
+      super({ message: "Internal server error", detail })
+      this.name = this.constructor.name
+      this.status = STATUS_500_INTERNAL_SERVER_ERROR
+   }
+}
 
 export class ValidationError extends MedleError {
-   constructor(message, detailMessage) {
-      super({ message, detailMessage })
+   constructor(message, detail) {
+      super({ message, detail })
       this.name = this.constructor.name
    }
 }
@@ -25,8 +33,8 @@ export class ValidationError extends MedleError {
 export const handleAPIResponse = async response => {
    if (!response.ok) {
       try {
-         const { name, message, status, detailMessage, uri } = await response.json()
-         throw new APIError({ name, message, status, detailMessage, uri })
+         const { name, message, status, detail } = await response.json()
+         throw new APIError({ name, message, status, detail })
       } catch (error) {
          throw new APIError({ message: response.statusText, status: response.status })
       }

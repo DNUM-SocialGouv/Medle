@@ -2,26 +2,29 @@ import Cors from "micro-cors"
 
 import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
+import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { ACT_CONSULTATION } from "../../../utils/roles"
-import { sendAPIError } from "../../../utils/api"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 
 const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    try {
-      // privilege verification
-      checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
+      switch (req.method) {
+         case METHOD_GET: {
+            checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
-      // SQL query
-      const attacks = await knex("attacks")
-         .whereNull("deleted_at")
-         .orderBy("name")
-         .select("id", "name")
+            const attacks = await knex("attacks")
+               .whereNull("deleted_at")
+               .orderBy("name")
+               .select("id", "name")
 
-      return res.status(STATUS_200_OK).json(attacks)
+            return res.status(STATUS_200_OK).json(attacks)
+         }
+         default:
+            return sendMethodNotAllowedError(res)
+      }
    } catch (error) {
-      // DB error
       sendAPIError(error, res)
    }
 }

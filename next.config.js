@@ -26,6 +26,13 @@ const nextConfig = {
       API_URL: process.env.API_URL,
       TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
       DEBUG_MODE: process.env.DEBUG_MODE,
+      FEATURE_FLAGS: {
+         notification: false,
+         administration: false,
+         directory: false,
+         resources: false,
+         parameters: false,
+      },
    },
    serverRuntimeConfig: {
       // Will only be available on the server side. Needs getInitialProps on page to be available

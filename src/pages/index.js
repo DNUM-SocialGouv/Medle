@@ -33,9 +33,9 @@ const LoginPage = ({ message }) => {
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ email, password }),
                })
-               const json = await handleAPIResponse(response)
+               const user = await handleAPIResponse(response)
 
-               registerAndRedirectUser(json)
+               registerAndRedirectUser(user)
                trackEvent(CATEGORY.auth, ACTION.auth.connection)
                resolve("OK")
             } catch (error) {

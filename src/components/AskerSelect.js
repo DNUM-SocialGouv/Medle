@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import AsyncSelect from "react-select/async"
 import moize from "moize"
 
-import { API_URL, ASKERS_SEARCH_ENDPOINT, ASKERS_VIEW_ENDPOINT } from "../config"
+import { API_URL, ASKERS_ENDPOINT } from "../config"
 import { isEmpty } from "../utils/misc"
 import { handleAPIResponse } from "../utils/errors"
 import { logError } from "../utils/logger"
@@ -13,7 +13,7 @@ const getSuggestions = async value => {
 
    let json
    try {
-      const response = await fetch(`${API_URL}${ASKERS_SEARCH_ENDPOINT}${bonus}`)
+      const response = await fetch(`${API_URL}${ASKERS_ENDPOINT}${bonus}`)
       json = await handleAPIResponse(response)
    } catch (error) {
       logError(error)
@@ -25,7 +25,7 @@ const getAskerById = async id => {
    let json
 
    try {
-      const response = await fetch(`${API_URL}${ASKERS_VIEW_ENDPOINT}/${id}`)
+      const response = await fetch(`${API_URL}${ASKERS_ENDPOINT}/${id}`)
       json = await handleAPIResponse(response)
    } catch (error) {
       logError(error)

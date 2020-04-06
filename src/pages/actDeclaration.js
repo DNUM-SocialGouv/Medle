@@ -6,21 +6,15 @@ import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "react
 import moment from "moment"
 import { handleAPIResponse } from "../utils/errors"
 import AskerSelect from "../components/AskerSelect"
-import {
-   API_URL,
-   ACT_DECLARATION_ENDPOINT,
-   ACT_DETAIL_ENDPOINT,
-   ACT_EDIT_ENDPOINT,
-   ACT_SEARCH_ENDPOINT,
-} from "../config"
+import { API_URL, ACTS_ENDPOINT } from "../config"
 import { isEmpty, deleteProperty } from "../utils/misc"
-import { METHOD_POST } from "../utils/http"
+import { METHOD_POST, METHOD_PUT } from "../utils/http"
 import Layout from "../components/Layout"
 import ActBlock from "../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../utils/roles"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
-import { now, ISO_DATE } from "../utils/date"
+import { now, ISO_DATE, isoToFr } from "../utils/date"
 import { profiles, orderedProfileValues } from "../utils/actsConstants"
 import { logError, logDebug } from "../utils/logger"
 
@@ -138,7 +132,10 @@ const ActDeclaration = ({ act, currentUser }) => {
    const [errors, setErrors] = useState({})
    const [warnings, setWarnings] = useState({})
 
-   const { id: userId, hospitalId } = currentUser
+   const {
+      id: userId,
+      hospital: { id: hospitalId },
+   } = currentUser
 
    const reducer = (state, action) => {
       logDebug("reducer", state, action)
@@ -219,7 +216,7 @@ const ActDeclaration = ({ act, currentUser }) => {
 
       if (!state.id) {
          try {
-            const response = await fetch(API_URL + ACT_DECLARATION_ENDPOINT, {
+            const response = await fetch(API_URL + ACTS_ENDPOINT, {
                method: METHOD_POST,
                headers: { "Content-Type": "application/json" },
                body: JSON.stringify(state),
@@ -242,8 +239,8 @@ const ActDeclaration = ({ act, currentUser }) => {
          }
       } else {
          try {
-            const response = await fetch(API_URL + ACT_EDIT_ENDPOINT + "/" + state.id, {
-               method: METHOD_POST,
+            const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + state.id, {
+               method: METHOD_PUT,
                headers: { "Content-Type": "application/json" },
                body: JSON.stringify(state),
             })
@@ -283,7 +280,7 @@ const ActDeclaration = ({ act, currentUser }) => {
 
       if (state[id]) {
          try {
-            const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}${urlChunk}`)
+            const response = await fetch(`${API_URL}${ACTS_ENDPOINT}${urlChunk}`)
             const acts = await handleAPIResponse(response)
 
             if (acts && acts.length) {
@@ -331,7 +328,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                   />
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
                </Col>
-               <Col className="text-center mt-4 mt-md-0" sm="12" md="4">
+               <Col className="mt-4 text-center mt-md-0" sm="12" md="4">
                   <Label htmlFor="proofWithoutComplaint">Recueil de preuve sans plainte</Label>
                   <br />
                   <Input
@@ -372,7 +369,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                </Col>
             </Row>
 
-            <Title2 className="mb-4 mt-5" ref={refPersonType}>
+            <Title2 className="mt-5 mb-4" ref={refPersonType}>
                Qui a été examiné?
             </Title2>
 
@@ -412,7 +409,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                </Alert>
             )}
 
-            <div className="text-center mt-5">
+            <div className="mt-5 text-center">
                <ValidationButton color="primary" size="lg" className="center" onClick={validAndSubmitAct}>
                   {state.id ? "Modifier" : "Valider"}
                </ValidationButton>
@@ -428,7 +425,6 @@ ActDeclaration.propTypes = {
    currentUser: PropTypes.object.isRequired,
 }
 
-// TODO : à migrer dans la couche persistance
 const transformDBActForState = act => {
    const newAct = {
       ...act,
@@ -445,29 +441,20 @@ const transformDBActForState = act => {
 ActDeclaration.getInitialProps = async ctx => {
    const authHeaders = buildAuthHeaders(ctx)
 
-   const {
-      query: { id },
-   } = ctx
+   const { query } = ctx
 
-   let act
+   try {
+      if (!query || !query.id) return { act: {} }
 
-   if (id) {
-      try {
-         const response = await fetch(API_URL + ACT_DETAIL_ENDPOINT + "/" + id, { headers: authHeaders })
-         act = await handleAPIResponse(response)
-      } catch (error) {
-         logError(error)
+      const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + query.id, { headers: authHeaders })
+      const act = await handleAPIResponse(response)
 
-         redirectIfUnauthorized(error, ctx)
-      }
+      return { act: transformDBActForState(act) || {} }
+   } catch (error) {
+      logError(error)
+
+      redirectIfUnauthorized(error, ctx)
    }
-
-   let newAct
-   if (act) {
-      newAct = transformDBActForState(act)
-   }
-
-   return { act: newAct || {} }
 }
 
 export default withAuthentication(ActDeclaration, ACT_MANAGEMENT)

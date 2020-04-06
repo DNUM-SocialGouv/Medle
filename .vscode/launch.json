@@ -30,17 +30,27 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Next: Node",
-            "runtimeExecutable": "${workspaceFolder}/node_modules/next/dist/bin/next",
-            // "runtimeArgs": [
-            //     "--inspect"
-            // ],
-            "env": {
-                "NODE_OPTIONS": "--inspect-brk"
+            "name": "Next: Node old",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script",
+                "debug",
+                "--",
+
+                "--inspect-brk=39015"
+            ],
+             "port": 39015,
+             "console": "integratedTerminal"
             },
-            "port": 9229,
-            "console": "integratedTerminal"
-        }
+            {
+                "type": "node",
+                "request": "attach",
+                "name": "Next: Node",
+                "skipFiles": [
+                  "<node_internals>/**"
+                ],
+                "port": 9229
+              }
     ],
     "compounds": [
         {

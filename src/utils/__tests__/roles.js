@@ -4,6 +4,9 @@ describe("isAllowed", () => {
    it("an OPERATOR_ACT should have ACT_MANAGEMENT capability", async () => {
       expect(isAllowed("OPERATOR_ACT", "ACT_CONSULTATION")).toBeTruthy()
    })
+   it("an OPERATOR_ACT should not have ADMIN capability", async () => {
+      expect(isAllowed("OPERATOR_ACT", "ADMIN")).toBeFalsy()
+   })
    it("an OPERATOR_EMPLOYMENT should not have ACT_MANAGEMENT capability", async () => {
       expect(isAllowed("OPERATOR_EMPLOYMENT", "ACT_MANAGEMENT")).toBeFalsy()
    })

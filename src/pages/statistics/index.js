@@ -18,12 +18,14 @@ import Layout from "../../components/Layout"
 import TabButton from "../../components/TabButton"
 import { Label, Title1 } from "../../components/StyledComponents"
 import { STATS_GLOBAL } from "../../utils/roles"
-import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication, getReachableScope } from "../../utils/auth"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { logError, logDebug } from "../../utils/logger"
 import { isEmpty, pluralize } from "../../utils/misc"
 
 import { StatBlockNumbers, StatBlockPieChart } from "../../components/StatBlock"
-import { isValidStartDate, isValidEndDate } from "../../common/api/statistics"
+import { isValidStartDate, isValidEndDate } from "../../services/statistics/common"
+import { buildScope } from "../../services/scope"
+import { now, ISO_DATE } from "../../utils/date"
 
 // handy skeleton structure to avoid future "undefined" management
 const statisticsDefault = {
@@ -39,7 +41,17 @@ const statisticsDefault = {
    examinations: {},
 }
 
-const fetchStatistics = async ({ type = "Global", scopeFilter = [], startDate, endDate, authHeaders }) => {
+const defaultStartDate = now()
+   .startOf("year")
+   .format(ISO_DATE)
+
+const fetchStatistics = async ({
+   type = "Global",
+   scopeFilter = [],
+   startDate = defaultStartDate,
+   endDate = now(),
+   authHeaders,
+}) => {
    const obj = {
       Vivant: LIVING_STATISTICS_ENDPOINT,
       Thanato: DEACEASED_STATISTICS_ENDPOINT,
@@ -185,7 +197,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
    }
 
    const toggleScopeFilter = async checked => {
-      setScopeFilter({ isNational: checked, scope: checked ? [] : getReachableScope(currentUser) })
+      setScopeFilter({ isNational: checked, scope: checked ? [] : buildScope(currentUser) })
    }
 
    return (

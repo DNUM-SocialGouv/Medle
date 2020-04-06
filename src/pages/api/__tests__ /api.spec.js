@@ -1,4 +1,4 @@
-import { ASKERS_SEARCH_ENDPOINT, ATTACKS_ENDPOINT, LOGIN_ENDPOINT } from "../../../config"
+import { ASKERS_ENDPOINT, ATTACKS_ENDPOINT, LOGIN_ENDPOINT } from "../../../config"
 import { handleAPIResponse } from "../../../utils/errors"
 import { METHOD_POST } from "../../../utils/http"
 import fetch from "isomorphic-unfetch"
@@ -8,8 +8,9 @@ import fetch from "isomorphic-unfetch"
  * - medle-dev.fabrique.social.gouv.fr
  */
 
-const API_URL = "https://medle-dev.fabrique.social.gouv.fr/api"
-const email = "acte@tours.fr"
+// const API_URL = "https://medle-dev.fabrique.social.gouv.fr/api"
+const API_URL = "http://localhost:3000/api"
+const email = "acte@medle.fr"
 const password = "test"
 
 let headers
@@ -46,7 +47,7 @@ describe("endpoints", () => {
    })
 
    it("should return more than 100 commissariats in France for askers endpoint", async () => {
-      const response = await fetch(`${API_URL + ASKERS_SEARCH_ENDPOINT}?fuzzy=commissariat&all=true`, headers)
+      const response = await fetch(`${API_URL + ASKERS_ENDPOINT}?fuzzy=commissariat&all=true`, headers)
 
       const askers = await handleAPIResponse(response)
       expect(askers.length).toBeGreaterThan(100)

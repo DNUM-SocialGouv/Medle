@@ -29,6 +29,7 @@ import GroupIcon from "@material-ui/icons/Group"
 import { logout } from "../utils/auth"
 import { colors } from "../theme"
 import { isAllowed, ACT_MANAGEMENT, ACT_CONSULTATION, EMPLOYMENT_CONSULTATION } from "../utils/roles"
+import { isOpenFeature } from "../config"
 
 const Header = ({ currentUser }) => {
    const [isOpen, setIsOpen] = useState(false)
@@ -48,10 +49,12 @@ const Header = ({ currentUser }) => {
                      className="pt-2 mt-2 ml-auto d-flex justify-content-end align-items-md-center align-items-start pt-md-0"
                      navbar
                   >
-                     <NavItem className="">
-                        <NotificationsNoneIcon className="mr-2 text-black-50" width={30} />
-                        <span className="d-sm-inline d-md-none text-black-50">Notifs</span>
-                     </NavItem>
+                     {isOpenFeature("notification") && (
+                        <NavItem className="">
+                           <NotificationsNoneIcon className="mr-2 text-black-50" width={30} />
+                           <span className="d-sm-inline d-md-none text-black-50">Notifs</span>
+                        </NavItem>
+                     )}
                      <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav>
                            <AccountCircleIcon className="text-black-50" width={30} />
@@ -68,7 +71,13 @@ const Header = ({ currentUser }) => {
                                  <DropdownItem>Profil</DropdownItem>
                               </a>
                            </Link>
-                           <DropdownItem>Administration</DropdownItem>
+                           {isOpenFeature("administration") && (
+                              <DropdownItem>
+                                 <Link href="/administration/users">
+                                    <a>Administration</a>
+                                 </Link>
+                              </DropdownItem>
+                           )}
                            <DropdownItem divider />
                            <DropdownItem onClick={logout}>Se déconnecter</DropdownItem>
                         </DropdownMenu>
@@ -85,7 +94,7 @@ Header.propTypes = {
    currentUser: PropTypes.object,
 }
 
-const Footer = () => (
+export const Footer = () => (
    <footer className="pt-4 pb-5 m-0">
       <Container>
          <Row>
@@ -198,22 +207,28 @@ const Sidebar = ({ page, currentUser }) => {
                </a>
             </Link>
             {/* <Link href="/_error"> */}
-            <a className="list-group-item list-group-item-action">
-               <PhoneIcon width={30} /> <br />
-               {"Annuaire"}
-            </a>
+            {isOpenFeature("directory") && (
+               <a className="list-group-item list-group-item-action">
+                  <PhoneIcon width={30} /> <br />
+                  {"Annuaire"}
+               </a>
+            )}{" "}
             {/* </Link> */}
             {/* <Link href="/_error"> */}
-            <a className="list-group-item list-group-item-action">
-               <LocalLibraryIcon width={30} /> <br />
-               {"Ressources"}
-            </a>
+            {isOpenFeature("resources") && (
+               <a className="list-group-item list-group-item-action">
+                  <LocalLibraryIcon width={30} /> <br />
+                  {"Ressources"}
+               </a>
+            )}{" "}
             {/* </Link> */}
             {/* <Link href="/_error"> */}
-            <a className="list-group-item list-group-item-action">
-               <SettingsIcon width={30} /> <br />
-               {"Paramètres"}
-            </a>
+            {isOpenFeature("parameters") && (
+               <a className="list-group-item list-group-item-action">
+                  <SettingsIcon width={30} /> <br />
+                  {"Paramètres"}
+               </a>
+            )}{" "}
             {/* </Link> */}
          </div>
          <style jsx>{`

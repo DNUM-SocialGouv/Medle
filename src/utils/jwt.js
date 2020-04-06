@@ -19,26 +19,4 @@ export const decodeToken = token => {
    return jwt.decode(token)
 }
 
-export const generateToken = ({
-   id,
-   first_name: firstName,
-   last_name: lastName,
-   email,
-   role,
-   hospital_id: hospitalId,
-   scope,
-}) => {
-   return jwt.sign(
-      {
-         id,
-         firstName,
-         lastName,
-         email,
-         role,
-         hospitalId,
-         scope,
-      },
-      jwtConfig.secret,
-      jwtConfig.options,
-   )
-}
+export const generateToken = user => jwt.sign(user, jwtConfig.secret, jwtConfig.options)

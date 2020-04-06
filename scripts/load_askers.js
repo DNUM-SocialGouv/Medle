@@ -12,7 +12,7 @@ const moment = require("moment")
 // const API_URL = "http://localhost:3000"
 // const API_URL = "https://medle.fabrique.social.gouv.fr"
 const API_URL = "http://40.89.136.101"
-const ACT_SEARCH_ENDPOINT = "/api/askers/search"
+const ACTS_ENDPOINT = "/api/askers/search"
 const ACT_LOGIN = "/api/login"
 const USER_LOGIN = "medle@tours.fr"
 const USER_PASSWORD = "test"
@@ -77,7 +77,7 @@ const fetchAskersThirdParty = async options => {
 }
 
 const fetchExistingAskers = async options => {
-   const response = await fetch(`${API_URL}${ACT_SEARCH_ENDPOINT}?all=true`, options)
+   const response = await fetch(`${API_URL}${ACTS_ENDPOINT}?all=true`, options)
    const json = await response.json()
 
    if (!json) return {}

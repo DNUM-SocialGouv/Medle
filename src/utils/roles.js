@@ -10,6 +10,10 @@ export const ADD_USER_OPERATOR_EMPLOYMENT = "ADD_USER_OPERATOR_EMPLOYMENT" // pe
 export const ADD_USER_ADMIN_HOSPITAL = "ADD_USER_ADMIN_HOSPITAL" // peut ajouter un utilisateur administrateur d'un ETS pouvant créer des administrateurs d'actes et des administrateurs d'ETP pour un ou plusieurs ETS
 export const ADD_TYPE_VIOLENCE = "ADD_TYPE_VIOLENCE" // peut ajouter des types de violences occasionnellement (attentat, etc.)
 export const NO_PRIVILEGE_REQUIRED = "NO_PRIVILEGE_REQUIRED"
+export const ADMIN = "ADMIN"
+
+export const ADMIN_HOSPITAL = "ADMIN_HOSPITAL"
+export const SUPER_ADMIN = "SUPER_ADMIN"
 
 export const PRIVILEGES = [
    HOSPITAL_DETAILS_MANAGEMENT,
@@ -23,6 +27,8 @@ export const PRIVILEGES = [
    ADD_USER_OPERATOR_EMPLOYMENT,
    ADD_USER_ADMIN_HOSPITAL,
    ADD_TYPE_VIOLENCE,
+   NO_PRIVILEGE_REQUIRED,
+   ADMIN,
 ]
 
 export const ROLES = {
@@ -37,6 +43,7 @@ export const ROLES = {
       EMPLOYMENT_MANAGEMENT,
       STATS_LOCAL,
       STATS_GLOBAL,
+      ADMIN,
    ],
    OPERATOR_ACT: [ACT_CONSULTATION, ACT_MANAGEMENT, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un gestionnaire d'acte
    OPERATOR_EMPLOYMENT: [EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT, ACT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un gestionnaire d'ETP

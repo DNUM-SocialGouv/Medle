@@ -1,38 +1,39 @@
 import Cors from "micro-cors"
 
 import knex from "../../../knex/knex"
-import {
-   STATUS_200_OK,
-   STATUS_400_BAD_REQUEST,
-   STATUS_404_NOT_FOUND,
-   METHOD_GET,
-   METHOD_OPTIONS,
-} from "../../../utils/http"
+import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
 import { ACT_MANAGEMENT } from "../../../utils/roles"
-import { sendAPIError } from "../../../utils/api"
+import {
+   sendAPIError,
+   sendBadRequestError,
+   sendMethodNotAllowedError,
+   sendNotFoundError,
+} from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 
 const handler = async (req, res) => {
+   res.setHeader("Content-Type", "application/json")
+
    try {
-      // privilege verification
-      checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
+      switch (req.method) {
+         case METHOD_GET: {
+            checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-      // request verification
-      const { id } = req.query
-      if (!id || isNaN(id)) {
-         return res.status(STATUS_400_BAD_REQUEST).end()
-      }
+            const { id } = req.query
+            if (!id || isNaN(id)) {
+               return sendBadRequestError(res)
+            }
 
-      // SQL query
-      const [askers] = await knex("askers").where("id", id)
+            const [askers] = await knex("askers").where("id", id)
 
-      if (askers) {
-         return res.status(STATUS_200_OK).json(askers)
-      } else {
-         return res.status(STATUS_404_NOT_FOUND).end()
+            if (askers) return res.status(STATUS_200_OK).json(askers)
+
+            return sendNotFoundError(res)
+         }
+         default:
+            return sendMethodNotAllowedError(res)
       }
    } catch (error) {
-      // DB error
       sendAPIError(error, res)
    }
 }

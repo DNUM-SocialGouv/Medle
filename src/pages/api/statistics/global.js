@@ -1,133 +1,51 @@
 import Cors from "micro-cors"
 
 import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
-import knex from "../../../knex/knex"
 import { STATS_GLOBAL } from "../../../utils/roles"
-import { sendAPIError } from "../../../utils/api"
-import { checkValidUserWithPrivilege, getReachableScope } from "../../../utils/auth"
-// import { logError } from "../../../utils/logger"
-import { ISO_DATE } from "../../../utils/date"
-import { normalizeInputs, averageOf } from "../../../common/api/statistics"
+import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
+import { checkValidUserWithPrivilege } from "../../../utils/auth"
+import { buildGlobalStatistics } from "../../../services/statistics/global"
 
-const handler = (req, res) => {
+/**
+ * API endpoint for global statistics.
+ *
+ * Si pas de currentUser.role == ["OPERATOR_ACT", etc..] -> le user est un user d'hôpital. Son scope local est son seul hôpital
+ * Si currentUser.role == ["REGIONAL_SUPERVISOR", etc..] -> son scope local est l'ensemble des établissements composants la "région"
+ * Si currentUser.rol == ["PUBLIC_SUPERVISOR", etc..] -> il n'a pas de scope local. Les requêtes ne sont pas filtrées par scope
+ *
+ * ATTENTION: le scopeFilter doit être compatible avec le scope accessible par l'utilisateur (reachableScope).
+ *
+ */
+const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
 
    try {
-      // privilege verification
-      const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
-      const reachableScope = getReachableScope(currentUser)
+      switch (req.method) {
+         case METHOD_POST: {
+            const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-      /**
-       * TODO: gérer le scope plus finement + ajout d'un champ hospitalsFilter, pour filtrer par liste d'établissements, filtre manuel de l'utilsateur
-       *
-       * Si pas de currentUser.role == ["OPERATOR_ACT", etc..] -> le user est un user d'hôpital. Son scope local est son seul hôpital
-       * Si currentUser.role == ["REGIONAL_SUPERVISOR", etc..] -> son scope local est l'ensemble des établissements composants la "région"
-       * Si currentUser.rol == ["PUBLIC_SUPERVISOR", etc..] -> il n'a pas de scope local. Les requêtes ne sont pas filtrées par scope
-       *
-       * ATTENTION: le hospitalsFilter doit être compatible avec le scope.
-       *
-       * TODO: on peut appeler le WS en GET alors que c'est censé être interdit...
-       *
-       */
+            const {
+               inputs,
+               globalCount,
+               averageCount,
+               profilesDistribution,
+               actsWithSamePV,
+               averageWithSamePV,
+            } = await buildGlobalStatistics(req.body, currentUser)
 
-      // request verification
-      const { startDate, endDate, scopeFilter } = normalizeInputs(req.body, reachableScope, currentUser.role)
-
-      const fetchGlobalCount = knex("acts_by_day")
-         .select(knex.raw("sum(nb_acts)::integer  as count"))
-         .where(builder => {
-            if (scopeFilter.length) {
-               builder.whereIn("hospital_id", scopeFilter)
-            }
-         })
-         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-
-      const fetchAverageCount = knex
-         .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
-         .where(builder => {
-            if (scopeFilter.length) {
-               builder.whereIn("id", scopeFilter)
-            }
-         })
-         .select(knex.raw("avg"))
-
-      const fetchProfilesDistribution = knex("acts_by_day")
-         .select(knex.raw("type, sum(nb_acts)::integer as count"))
-         .where(builder => {
-            if (scopeFilter.length) {
-               builder.whereIn("hospital_id", scopeFilter)
-            }
-         })
-         .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-         .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-         .groupBy("type")
-
-      const fetchActsWithSamePV = knex
-         .with("acts_with_same_pv", builder => {
-            builder
-               .select(knex.raw("pv_number, count(1) as count"))
-               .from("acts")
-               .whereNull("deleted_at")
-               .where(builder => {
-                  if (scopeFilter.length) {
-                     builder.whereIn("hospital_id", scopeFilter)
-                  }
-               })
-               .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-               .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-               .whereRaw("pv_number is not null and pv_number <> ''")
-               .groupBy("pv_number")
-               .havingRaw("count(1) > 1")
-         })
-         .select(knex.raw("sum(count)::integer"))
-         .from("acts_with_same_pv")
-
-      const fetchAverageWithSamePV = knex
-         .with("acts_with_same_pv", builder => {
-            builder
-               .select(knex.raw("count(*) as count"))
-               .from("acts")
-               .whereNull("deleted_at")
-               .where(builder => {
-                  if (scopeFilter.length) {
-                     builder.whereIn("hospital_id", scopeFilter)
-                  }
-               })
-               .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-               .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-               .whereRaw("pv_number is not null and pv_number <> ''")
-               .groupBy("pv_number")
-         })
-         .select(knex.raw("avg(count)::integer"))
-         .from("acts_with_same_pv")
-
-      Promise.all([
-         fetchGlobalCount,
-         fetchAverageCount,
-         fetchProfilesDistribution,
-         fetchActsWithSamePV,
-         fetchAverageWithSamePV,
-      ]).then(([[globalCount], averageCount, profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
-         return res.status(STATUS_200_OK).json({
-            inputs: {
-               startDate,
-               endDate,
-               scopeFilter,
-            },
-            globalCount: globalCount.count || 0,
-            averageCount:
-               averageCount && averageCount.length ? averageOf(averageCount.map(elt => parseFloat(elt.avg, 10))) : 0,
-            profilesDistribution: profilesDistribution.reduce(
-               (acc, current) => ({ ...acc, [current.type]: current.count }),
-               { "Personne décédée": 0, "Autre activité/Assises": 0, "Autre activité/Reconstitution": 0, Vivant: 0 },
-            ),
-            actsWithSamePV: actsWithSamePV.sum || 0,
-            averageWithSamePV: averageWithSamePV.avg || 0,
-         })
-      })
+            return res.status(STATUS_200_OK).json({
+               inputs,
+               globalCount,
+               averageCount,
+               profilesDistribution,
+               actsWithSamePV,
+               averageWithSamePV,
+            })
+         }
+         default:
+            return sendMethodNotAllowedError(res)
+      }
    } catch (error) {
-      // DB error
       sendAPIError(error, res)
    }
 }

@@ -14,6 +14,22 @@ import { Title1, Title2, Label, ValidationButton } from "../components/StyledCom
 import { isEmpty } from "../utils/misc"
 import { now } from "../utils/date"
 import { logError } from "../utils/logger"
+import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "../utils/http"
+
+const NAME_MONTHS = {
+   "01": "janvier",
+   "02": "février",
+   "03": "mars",
+   "04": "avril",
+   "05": "mai",
+   "06": "juin",
+   "07": "juillet",
+   "08": "août",
+   "09": "septembre",
+   "10": "octobre",
+   "11": "novembre",
+   "12": "décembre",
+}
 
 const FillEmploymentsPage = ({
    currentMonth,
@@ -29,7 +45,7 @@ const FillEmploymentsPage = ({
 
    const [dataMonth, setDataMonth] = useState(_dataMonth)
 
-   const { hospitalId } = currentUser
+   const { hospital } = currentUser
 
    const previousMonths = allMonths && allMonths.length ? allMonths.slice(1) : []
 
@@ -50,7 +66,7 @@ const FillEmploymentsPage = ({
       }
 
       try {
-         await updateDataMonth({ hospitalId, year, month: monthNumber, dataMonth })
+         await updateDataMonth({ hospitalId: hospital.id, year, month: monthNumber, dataMonth })
 
          setSuccess("Vos informations ont bien été enregistrées.")
       } catch (error) {
@@ -200,7 +216,7 @@ const FillEmploymentsPage = ({
                      monthName={monthName}
                      month={month}
                      year={year}
-                     hospitalId={hospitalId}
+                     hospitalId={hospital.id}
                      onChange={event => handleChange(event, month)}
                      update={update}
                      currentUser={currentUser}
@@ -212,30 +228,7 @@ const FillEmploymentsPage = ({
    )
 }
 
-FillEmploymentsPage.getInitialProps = async ctx => {
-   const authHeaders = buildAuthHeaders(ctx)
-
-   const { hospitalId } = getCurrentUser(ctx)
-
-   if (!hospitalId) {
-      return { error: "Vous n'avez pas d'établissement de santé à gérer." }
-   }
-
-   const NAME_MONTHS = {
-      "01": "janvier",
-      "02": "février",
-      "03": "mars",
-      "04": "avril",
-      "05": "mai",
-      "06": "juin",
-      "07": "juillet",
-      "08": "août",
-      "09": "septembre",
-      "10": "octobre",
-      "11": "novembre",
-      "12": "décembre",
-   }
-
+const buildDates = () => {
    const moment = now()
    const currentMonth = moment.format("MM")
    const currentYear = moment.format("YYYY")
@@ -246,8 +239,33 @@ FillEmploymentsPage.getInitialProps = async ctx => {
       .reverse()
       .map(elt => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, month: elt }))
 
+   return {
+      currentYear,
+      currentMonth,
+      allMonths,
+   }
+}
+
+const buildErrorText = (error, conf, defaultValue) => (error && error.status && conf[error.status]) || defaultValue
+
+FillEmploymentsPage.getInitialProps = async ctx => {
+   const { currentYear, currentMonth, allMonths } = buildDates()
+
    try {
-      const json = await fetchDataMonth({ hospitalId, year: currentYear, month: currentMonth, authHeaders })
+      const authHeaders = buildAuthHeaders(ctx)
+
+      const { hospital } = getCurrentUser(ctx)
+
+      if (!hospital || !hospital.id) {
+         throw new Error("Vous n'avez pas d'établissement de santé à gérer.")
+      }
+
+      const json = await fetchDataMonth({
+         hospitalId: hospital.id,
+         year: currentYear,
+         month: currentMonth,
+         authHeaders,
+      })
 
       return {
          currentMonth,
@@ -261,8 +279,18 @@ FillEmploymentsPage.getInitialProps = async ctx => {
 
       redirectIfUnauthorized(error, ctx)
 
+      const errorText = buildErrorText(
+         error,
+         {
+            [STATUS_400_BAD_REQUEST]: "Paramètres incorrects",
+            [STATUS_401_UNAUTHORIZED]: "Non autorisé",
+            [STATUS_403_FORBIDDEN]: "Non autorisé",
+         },
+         "Erreur interne",
+      )
+
       return {
-         error: "Erreur serveur",
+         error: errorText,
          currentMonth,
          currentMonthName: NAME_MONTHS[currentMonth] + " " + currentYear,
          allMonths,
@@ -272,14 +300,13 @@ FillEmploymentsPage.getInitialProps = async ctx => {
 }
 
 FillEmploymentsPage.propTypes = {
-   currentMonth: PropTypes.string,
-   currentMonthName: PropTypes.string,
-   dataMonth: PropTypes.object,
-   allMonths: PropTypes.array,
-   error: PropTypes.string,
-   // hospitalId: PropTypes.string.isRequired,
    year: PropTypes.string.isRequired,
-   currentUser: PropTypes.object.isRequired,
+   allMonths: PropTypes.array.isRequired,
+   currentMonth: PropTypes.string.isRequired,
+   currentMonthName: PropTypes.string.isRequired,
+   dataMonth: PropTypes.object,
+   error: PropTypes.string,
+   currentUser: PropTypes.object,
 }
 
 FillEmploymentsPage.defaultProps = {
