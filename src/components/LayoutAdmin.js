@@ -100,7 +100,7 @@ const Sidebar = ({ page, currentUser }) => {
                   </a>
                </Link>
             )}
-            {isAllowed(currentUser.role, ACT_CONSULTATION) && (
+            {currentUser.role == "SUPER_ADMIN" && (
                <Link href="/administration/hospitals">
                   <a
                      className={
@@ -112,7 +112,7 @@ const Sidebar = ({ page, currentUser }) => {
                   </a>
                </Link>
             )}
-            {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
+            {currentUser.role == "SUPER_ADMIN" && (
                <Link href="/administration/askers">
                   <a
                      className={
@@ -125,7 +125,7 @@ const Sidebar = ({ page, currentUser }) => {
                   </a>
                </Link>
             )}
-            {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
+            {currentUser.role == "SUPER_ADMIN" && (
                <Link href="/administration/attacks">
                   <a
                      className={
@@ -138,7 +138,7 @@ const Sidebar = ({ page, currentUser }) => {
                   </a>
                </Link>
             )}
-            {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
+            {currentUser.role == "SUPER_ADMIN" && (
                <Link href="/administration/employments">
                   <a
                      className={
@@ -151,7 +151,7 @@ const Sidebar = ({ page, currentUser }) => {
                   </a>
                </Link>
             )}
-            {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
+            {currentUser.role == "SUPER_ADMIN" && (
                <Link href="/administration/acts">
                   <a
                      className={
