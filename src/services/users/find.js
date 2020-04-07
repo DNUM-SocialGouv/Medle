@@ -15,7 +15,7 @@ export const find = async ({ id, currentUser }) => {
 
    const scope = buildScope(currentUser)
 
-   const [user] = await knex("users")
+   let [user] = await knex("users")
       .leftJoin("hospitals", "users.hospital_id", "hospitals.id")
       .where("users.id", id)
       .where(makeWhereClause({ scope }))
@@ -31,5 +31,16 @@ export const find = async ({ id, currentUser }) => {
          "users.scope",
       )
 
-   return user ? transform(user) : null
+   user = transform(user)
+
+   if (user && user.scope && user.scope.length) {
+      const userScope = await knex("hospitals")
+         .whereNull("deleted_at")
+         .whereIn("id", user.scope)
+         .select("id", "name")
+
+      user = { ...user, scope: userScope }
+   }
+
+   return user
 }

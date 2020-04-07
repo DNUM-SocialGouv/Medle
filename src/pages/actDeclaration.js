@@ -132,10 +132,9 @@ const ActDeclaration = ({ act, currentUser }) => {
    const [errors, setErrors] = useState({})
    const [warnings, setWarnings] = useState({})
 
-   const {
-      id: userId,
-      hospital: { id: hospitalId },
-   } = currentUser
+   const { id: userId, hospital } = currentUser
+
+   const hospitalId = (hospital && hospital.id) || null
 
    const reducer = (state, action) => {
       logDebug("reducer", state, action)
@@ -294,6 +293,18 @@ const ActDeclaration = ({ act, currentUser }) => {
          }
       }
    }
+
+   if (!hospitalId)
+      return (
+         <Layout page="actDeclaration" currentUser={currentUser}>
+            <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
+            <Container style={{ maxWidth: 720 }}>
+               <Alert color="danger">
+                  {"Cette fonctionnalité n'est disponible que si vous avez un établissement d'appartenance."}
+               </Alert>
+            </Container>
+         </Layout>
+      )
 
    return (
       <Layout page="actDeclaration" currentUser={currentUser}>

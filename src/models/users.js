@@ -4,18 +4,24 @@ import { APIError } from "../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../utils/http"
 
 // from DB entity to JS entity
-export const transform = dbData => ({
-   id: dbData.id,
-   firstName: dbData.first_name,
-   lastName: dbData.last_name,
-   email: dbData.email,
-   role: dbData.role,
-   scope: dbData.scope,
-   hospital: {
-      id: dbData.hospital_id,
-      name: dbData.hospital_name || "",
-   },
-})
+export const transform = dbData => {
+   return !dbData
+      ? null
+      : {
+           id: dbData.id,
+           firstName: dbData.first_name,
+           lastName: dbData.last_name,
+           email: dbData.email,
+           role: dbData.role,
+           scope: dbData.scope,
+           hospital: !dbData.hospital_id
+              ? null
+              : {
+                   id: dbData.hospital_id,
+                   name: dbData.hospital_name || "",
+                },
+        }
+}
 
 export const transformAll = list => list.map(memData => transform(memData))
 

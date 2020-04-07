@@ -75,6 +75,19 @@ const FillEmploymentsPage = ({
       }
    }
 
+   if (!hospital || !hospital.id)
+      return (
+         <Layout page="fillEmployments" currentUser={currentUser}>
+            <Title1 className="mt-5 mb-5">{"Déclaration du personnel"}</Title1>
+            <Container style={{ maxWidth: 720 }}>
+               <Title2 className="mb-4 text-capitalize">{currentMonthName}</Title2>
+               <Alert color="danger">
+                  {"Cette fonctionnalité n'est disponible que si vous avez un établissement d'appartenance."}
+               </Alert>
+            </Container>
+         </Layout>
+      )
+
    return (
       <Layout page="fillEmployments" currentUser={currentUser}>
          <Title1 className="mt-5 mb-5">{"Déclaration du personnel"}</Title1>
