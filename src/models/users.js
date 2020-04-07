@@ -33,7 +33,10 @@ export const untransform = memData => {
       password: memData.password || "defaultpassword",
       email: memData.email,
       role: memData.role,
-      scope: JSON.stringify(memData.scope), // Array needs to be explicitly stringified in PG
+      scope:
+         !memData.scope || !memData.scope.length
+            ? null
+            : JSON.stringify(memData.scope.map(curr => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
       hospital_id: (memData.hospital && memData.hospital.id) || null,
    }
 
@@ -55,22 +58,19 @@ const schema = yup.object().shape({
    password: yup.string(),
    scope: yup
       .array()
-      .of(
-         yup
-            .number()
-            .positive()
-            .integer(),
-      )
       .default(() => [])
       .nullable(),
 
-   hospital: yup.object().shape({
-      id: yup
-         .number()
-         .positive()
-         .integer(),
-      name: yup.string(),
-   }),
+   hospital: yup
+      .object()
+      .shape({
+         id: yup
+            .number()
+            .positive()
+            .integer(),
+         name: yup.string(),
+      })
+      .nullable(),
 })
 
 const configValidate = {

@@ -74,28 +74,49 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
          email: initialUser.email,
          role: initialUser.role,
          scope: initialUser.scope,
-         hospital: {
-            id: (initialUser && initialUser.hospital && initialUser.hospital.id) || "",
-            name: (initialUser && initialUser.hospital && initialUser.hospital.name) || "",
-         },
+         hospital:
+            !initialUser || !initialUser.hospital
+               ? null
+               : {
+                    id: initialUser.hospital.id,
+                    name: initialUser.hospital.name,
+                 },
       },
    })
+
+   const mapForSelect = (data, fnValue, fnLabel) => {
+      if (!data) return null
+      return { value: fnValue(data), label: fnLabel(data) }
+   }
+
+   const mapArrayForSelect = (data, fnValue, fnLabel) => {
+      if (!data || !data.length) return null
+      return data.map(curr => ({ value: fnValue(curr), label: fnLabel(curr) }))
+   }
+
    // Special case due to react-select design : needs to store specifically the value of the select
-   const [hospital, setHospital] = useState(
-      initialUser && initialUser.hospital && initialUser.hospital.id && initialUser.hospital.name
-         ? {
-              value: initialUser.hospital.id,
-              label: initialUser.hospital.name,
-           }
-         : null,
-   )
    const [role, setRole] = useState(
-      initialUser && initialUser.role
-         ? {
-              value: initialUser.role,
-              label: ROLES_DESCRIPTION[initialUser.role],
-           }
-         : null,
+      mapForSelect(
+         initialUser && initialUser.role,
+         elt => elt,
+         elt => ROLES_DESCRIPTION[elt],
+      ),
+   )
+
+   const [hospital, setHospital] = useState(
+      mapForSelect(
+         initialUser && initialUser.hospital,
+         elt => elt.id,
+         elt => elt.name,
+      ),
+   )
+
+   const [scope, setScope] = useState(
+      mapArrayForSelect(
+         initialUser && initialUser.scope,
+         elt => elt.id,
+         elt => elt.name,
+      ),
    )
 
    const [error, setError] = useState("")
@@ -125,8 +146,6 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
    const onSubmit = async data => {
       setError("")
       setsuccess("")
-
-      console.log("data", data)
 
       try {
          if (isEmpty(formErrors)) {
@@ -167,10 +186,23 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
       setHospital(selectedOption)
    }
 
+   const onScopeChange = selectedOption => {
+      // Needs transformation between format of react-select to expected format for API call
+      setValue(
+         "scope",
+         !selectedOption || !selectedOption.length
+            ? null
+            : selectedOption.map(curr => ({ id: curr.value, name: curr.label })),
+      )
+      // Needs to sync specifically the value to the react-select as well
+      setScope(selectedOption)
+   }
+
    useEffect(() => {
       // Extra field in form to store the value of the selects
       register({ name: "role" })
       register({ name: "hospital" })
+      register({ name: "scope" })
    }, [register])
 
    return (
@@ -265,10 +297,20 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                </FormGroup>
                <FormGroup row>
                   <Label for="scope" sm={3}>
-                     Établissements accessibles
+                     Établissements visibles
                   </Label>
                   <Col sm={9}>
-                     <Input type="text" name="scope" id="scope" innerRef={register} />
+                     <AsyncSelect
+                        loadOptions={fetchHospitals}
+                        isMulti
+                        value={scope}
+                        onChange={onScopeChange}
+                        noOptionsMessage={() => "Aucun résultat"}
+                        loadingMessage={() => "Chargement..."}
+                        placeholder="Choisissez un établissement"
+                        isClearable={true}
+                        isDisabled={disabled}
+                     />
                   </Col>
                </FormGroup>
                <div className="justify-content-center d-flex">
