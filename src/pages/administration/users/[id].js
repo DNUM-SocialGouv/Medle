@@ -283,12 +283,9 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                </div>
 
                {!isEmpty(initialUser) && (
-                  <div style={{ backgroundColor: "#f7d7d4" }} className="px-4 py-3 mt-5 rounded">
+                  <div style={{ border: "1px solid tomato" }} className="px-4 py-3 mt-5 rounded">
                      <Title1 className="mb-4">Zone dangereuse</Title1>
-                     <div
-                        style={{ color: "#7d2a21", borderColor: "#f4c7c2" }}
-                        className="d-flex justify-content-between align-items-center"
-                     >
+                     <div className="d-flex justify-content-between align-items-center">
                         Je souhaite supprimer cet utilisateur
                         <Button className="" color="danger" outline onClick={toggle}>
                            Supprimer
