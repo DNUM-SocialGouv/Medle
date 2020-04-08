@@ -42,7 +42,7 @@ const statisticsDefault = {
 }
 
 const defaultStartDate = now()
-   .startOf("year")
+   .dayOfYear(1)
    .format(ISO_DATE)
 
 const fetchStatistics = async ({

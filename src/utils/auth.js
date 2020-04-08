@@ -35,9 +35,7 @@ export const registerAndRedirectUser = user => {
    fetchReferenceData()
    sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
 
-   const startPage = startPageForRole(user.role)
-
-   Router.push(startPage)
+   Router.push(startPageForRole(user.role))
 }
 
 export const getCurrentUser = ctx => {
