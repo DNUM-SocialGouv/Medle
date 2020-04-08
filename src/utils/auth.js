@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken"
 import moment from "moment"
 
 import { API_URL, LOGOUT_ENDPOINT, timeout } from "../config"
-import { isAllowed, START_PAGES } from "./roles"
+import { isAllowed, startPageForRole } from "./roles"
 import { fetchReferenceData, clearReferenceData } from "./init"
 import { logDebug, logError } from "./logger"
 import { STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "./http"
@@ -31,11 +31,11 @@ export const logout = async () => {
    await Router.push("/index")
 }
 
-export const registerAndRedirectUser = json => {
+export const registerAndRedirectUser = user => {
    fetchReferenceData()
-   sessionStorage.setItem("currentUser", JSON.stringify({ ...json, authentifiedAt: moment() }))
+   sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
 
-   const startPage = START_PAGES[json.role] || "/actDeclaration"
+   const startPage = startPageForRole(user.role)
 
    Router.push(startPage)
 }

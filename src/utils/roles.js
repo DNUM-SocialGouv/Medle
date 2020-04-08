@@ -67,16 +67,19 @@ export const ROLES_DESCRIPTION = {
    OPERATOR_EMPLOYMENT: "Gestionnaire d'emplois", // no scope, 1 hospital_id
    OPERATOR_GENERIC: "Gestionnaire d'actes et ETP", // no scope, 1 hospital_id
    GUEST_HOSPITAL: "Invité", // no scope, 1 hospital_id
-   SUPER_ADMIN: "Administrateur de Medlé", // no scope, no hospital_id
    PUBLIC_SUPERVISOR: "Superviseur publique", // no scope, no hospital_id
    REGIONAL_SUPERVISOR: "Superviseur de plusieurs UMJ ou IML", // n hospitals in scope, no hospital_id
+   SUPER_ADMIN: "Administrateur de Medlé", // no scope, no hospital_id
 }
 
-export const START_PAGES = {
+const START_PAGES = {
    OPERATOR_EMPLOYMENT: "/fillEmployments",
-   OPERATOR_ACT: "/actsList",
-   OPERATOR_GENERIC: "/actsList",
+   PUBLIC_SUPERVISOR: "/statistics",
+   REGIONAL_SUPERVISOR: "/statistics",
+   SUPER_ADMIN: "/administration/users",
 }
+
+export const startPageForRole = role => START_PAGES[role] || "/actsList"
 
 export const isAllowed = (role, privilege) =>
    privilege === NO_PRIVILEGE_REQUIRED || (ROLES[role] && ROLES[role].includes(privilege))

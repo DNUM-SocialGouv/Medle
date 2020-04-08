@@ -314,14 +314,14 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                   </Col>
                </FormGroup>
                <div className="justify-content-center d-flex">
-                  <Button className="px-4 mt-5 mr-3" color="primary">
-                     {isEmpty(initialUser) ? "Ajouter" : "Modifier"}
-                  </Button>
                   <Link href="/administration/users">
-                     <Button className="px-4 mt-5 " outline color="primary">
+                     <Button className="px-4 mt-5 mr-3" outline color="primary">
                         Retour
                      </Button>
                   </Link>
+                  <Button className="px-4 mt-5 " color="primary">
+                     {isEmpty(initialUser) ? "Ajouter" : "Modifier"}
+                  </Button>
                </div>
 
                {!isEmpty(initialUser) && (
