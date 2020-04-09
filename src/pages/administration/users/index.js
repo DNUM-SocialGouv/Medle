@@ -49,12 +49,12 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
       <Layout currentUser={currentUser}>
          <Container
             style={{ maxWidth: 980, minWidth: 740 }}
-            className="mt-5 mb-4 d-flex justify-content-between align-items-center"
+            className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
          >
             <Title1 className="">{"Administration des utilisateurs"}</Title1>
             <Link href="/administration/users/[id]" as={`/administration/users/new`}>
                <a>
-                  <SearchButton className="mb-4 btn-outline-primary">
+                  <SearchButton className="btn-outline-primary">
                      <AddIcon />
                      &nbsp; Ajouter
                   </SearchButton>
@@ -77,7 +77,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                      />
                   </Col>
                   <Col className="flex-grow-0">
-                     <SearchButton className="w-lg-75 btn-primary" disabled={loading}>
+                     <SearchButton className="btn-primary" disabled={loading}>
                         {loading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
                      </SearchButton>
                   </Col>

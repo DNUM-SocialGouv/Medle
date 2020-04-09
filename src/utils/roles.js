@@ -5,15 +5,15 @@ export const EMPLOYMENT_CONSULTATION = "EMPLOYMENT_CONSULTATION" // peut consult
 export const EMPLOYMENT_MANAGEMENT = "EMPLOYMENT_MANAGEMENT" // peut ajouter/modifier les ETP pour un ou plusieurs ETS
 export const STATS_LOCAL = "STATS_LOCAL" // peut voir les stats pour un ou plusieurs ETS
 export const STATS_GLOBAL = "STATS_GLOBAL" // peut voir les stats publiques
-export const ADD_USER_OPERATOR_ACT = "ADD_USER_OPERATOR_ACT" // peut ajouter un utilisateur gestionnaire d'actes pour un ou plusieurs ETS
-export const ADD_USER_OPERATOR_EMPLOYMENT = "ADD_USER_OPERATOR_EMPLOYMENT" // peut ajouter un utilisateur gestionnaire d'ETP pour un ou plusieurs ETS
-export const ADD_USER_ADMIN_HOSPITAL = "ADD_USER_ADMIN_HOSPITAL" // peut ajouter un utilisateur administrateur d'un ETS pouvant créer des administrateurs d'actes et des administrateurs d'ETP pour un ou plusieurs ETS
+export const ADD_USER = "ADD_USER" // peut ajouter un utilisateur
 export const ADD_TYPE_VIOLENCE = "ADD_TYPE_VIOLENCE" // peut ajouter des types de violences occasionnellement (attentat, etc.)
 export const NO_PRIVILEGE_REQUIRED = "NO_PRIVILEGE_REQUIRED"
 export const ADMIN = "ADMIN"
 
 export const ADMIN_HOSPITAL = "ADMIN_HOSPITAL"
 export const SUPER_ADMIN = "SUPER_ADMIN"
+export const REGIONAL_SUPERVISOR = "REGIONAL_SUPERVISOR"
+export const PUBLIC_SUPERVISOR = "PUBLIC_SUPERVISOR"
 
 export const PRIVILEGES = [
    HOSPITAL_DETAILS_MANAGEMENT,
@@ -23,9 +23,7 @@ export const PRIVILEGES = [
    EMPLOYMENT_MANAGEMENT,
    STATS_LOCAL,
    STATS_GLOBAL,
-   ADD_USER_OPERATOR_ACT,
-   ADD_USER_OPERATOR_EMPLOYMENT,
-   ADD_USER_ADMIN_HOSPITAL,
+   ADD_USER,
    ADD_TYPE_VIOLENCE,
    NO_PRIVILEGE_REQUIRED,
    ADMIN,
@@ -34,8 +32,7 @@ export const PRIVILEGES = [
 export const ROLES = {
    ADMIN_HOSPITAL: [
       // ex: le responsable d'un UMJ et/ou d'un IML
-      ADD_USER_OPERATOR_ACT,
-      ADD_USER_OPERATOR_EMPLOYMENT,
+      ADD_USER,
       HOSPITAL_DETAILS_MANAGEMENT,
       ACT_CONSULTATION,
       ACT_MANAGEMENT,
@@ -80,6 +77,74 @@ const START_PAGES = {
 }
 
 export const startPageForRole = role => START_PAGES[role] || "/actsList"
+
+export const availableRolesForUser = user => {
+   switch (user && user.role) {
+      case "SUPER_ADMIN":
+         return [
+            "ADMIN_HOSPITAL",
+            "OPERATOR_ACT",
+            "OPERATOR_EMPLOYMENT",
+            "GUEST_HOSPITAL",
+            "PUBLIC_SUPERVISOR",
+            "REGIONAL_SUPERVISOR",
+            "SUPER_ADMIN",
+         ]
+      case "ADMIN_HOSPITAL":
+         return ["OPERATOR_ACT", "OPERATOR_EMPLOYMENT", "GUEST_HOSPITAL"]
+
+      default:
+         throw Error("This case is not expected to happen.")
+   }
+}
+export const rulesOfRoles = role => {
+   const genericProfile = {
+      hospitalDisabled: false,
+      hospitalRequired: true,
+      scopeDisabled: true,
+      scopeRequired: false,
+   }
+
+   switch (role) {
+      case "ADMIN_HOSPITAL":
+         return genericProfile
+      case "OPERATOR_ACT":
+         return genericProfile
+      case "OPERATOR_EMPLOYMENT":
+         return genericProfile
+      case "GUEST_HOSPITAL":
+         return genericProfile
+      case "PUBLIC_SUPERVISOR":
+         return {
+            hospitalDisabled: true,
+            hospitalRequired: false,
+            scopeDisabled: true,
+            scopeRequired: false,
+         }
+      case "REGIONAL_SUPERVISOR":
+         return {
+            hospitalDisabled: true,
+            hospitalRequired: false,
+            scopeDisabled: false,
+            scopeRequired: true,
+         }
+      case "SUPER_ADMIN":
+         return {
+            hospitalDisabled: true,
+            hospitalRequired: false,
+            scopeDisabled: true,
+            scopeRequired: false,
+         }
+
+      default:
+         return {
+            hospitalDisabled: false,
+            hospitalRequired: false,
+            scopeDisabled: false,
+            scopeRequired: false,
+         }
+   }
+}
 
 export const isAllowed = (role, privilege) =>
    privilege === NO_PRIVILEGE_REQUIRED || (ROLES[role] && ROLES[role].includes(privilege))

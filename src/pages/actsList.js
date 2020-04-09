@@ -72,7 +72,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                   {error}
                </Alert>
             )}
-            {!error && !paginatedData.elements.length && <div className="text-center">{"Aucun actes trouvés."}</div>}
+            {!error && !paginatedData.elements.length && <div className="text-center">{"Aucun acte trouvé."}</div>}
 
             {!error && !!paginatedData.elements.length && (
                <>
