@@ -73,7 +73,7 @@ const START_PAGES = {
    OPERATOR_EMPLOYMENT: "/fillEmployments",
    PUBLIC_SUPERVISOR: "/statistics",
    REGIONAL_SUPERVISOR: "/statistics",
-   SUPER_ADMIN: "/administration/users",
+   SUPER_ADMIN: "/statistics",
 }
 
 export const startPageForRole = role => START_PAGES[role] || "/actsList"

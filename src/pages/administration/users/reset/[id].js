@@ -8,7 +8,7 @@ import { METHOD_PATCH } from "../../../../utils/http"
 import { useForm } from "react-hook-form"
 
 import { API_URL, RESET_PWD_ENDPOINT } from "../../../../config"
-import Layout from "../../../../components/LayoutAdmin"
+import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"
 import { handleAPIResponse } from "../../../../utils/errors"
 import { withAuthentication } from "../../../../utils/auth"
@@ -51,7 +51,7 @@ const UserReset = ({ currentUser }) => {
    }
 
    return (
-      <Layout currentUser={currentUser}>
+      <Layout currentUser={currentUser} admin={true}>
          <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
             <Title1 className="mb-5">{"Utilisateur"}</Title1>
 

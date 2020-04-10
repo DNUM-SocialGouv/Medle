@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
 import { Alert, Col, Form, FormGroup, Input, Spinner, Table, Container } from "reactstrap"
-import Layout from "../../../components/LayoutAdmin"
+import Layout from "../../../components/Layout"
 import fetch from "isomorphic-unfetch"
 
 import { Title1 } from "../../../components/StyledComponents"
@@ -46,7 +46,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
    }
 
    return (
-      <Layout currentUser={currentUser}>
+      <Layout page="users" currentUser={currentUser} admin={true}>
          <Container
             style={{ maxWidth: 980, minWidth: 740 }}
             className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"

@@ -23,7 +23,7 @@ import AsyncSelect from "react-select/async"
 import Select from "react-select"
 
 import { API_URL, ADMIN_USERS_ENDPOINT, HOSPITALS_ENDPOINT } from "../../../config"
-import Layout from "../../../components/LayoutAdmin"
+import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"
 import { isEmpty } from "../../../utils/misc"
 import { handleAPIResponse } from "../../../utils/errors"
@@ -289,7 +289,7 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
    })
 
    return (
-      <Layout currentUser={currentUser}>
+      <Layout currentUser={currentUser} admin={true}>
          <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
             <Title1 className="mb-5">{"Utilisateur"}</Title1>
 
@@ -465,7 +465,7 @@ UserDetail.getInitialProps = async ctx => {
 
    const { id } = ctx.query
 
-   if (!id) return { initialUser: {} }
+   if (!id || isNaN(id)) return { initialUser: {} }
 
    try {
       const response = await fetch(API_URL + ADMIN_USERS_ENDPOINT + "/" + id, { headers: authHeaders })

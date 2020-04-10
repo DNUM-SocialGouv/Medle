@@ -25,10 +25,25 @@ import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle"
 import GroupIcon from "@material-ui/icons/Group"
+import FaceIcon from "@material-ui/icons/Face"
+import ArrowBackIcon from "@material-ui/icons/ArrowBack"
+import ApartmentIcon from "@material-ui/icons/Apartment"
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance"
+import BusinessCenterIcon from "@material-ui/icons/BusinessCenter"
+import WhatshotIcon from "@material-ui/icons/Whatshot"
+import ReceiptIcon from "@material-ui/icons/Receipt"
 
 import { logout } from "../utils/auth"
 import { colors } from "../theme"
-import { isAllowed, ACT_MANAGEMENT, ACT_CONSULTATION, EMPLOYMENT_CONSULTATION } from "../utils/roles"
+import {
+   isAllowed,
+   ACT_MANAGEMENT,
+   ACT_CONSULTATION,
+   ADMIN,
+   EMPLOYMENT_CONSULTATION,
+   SUPER_ADMIN,
+   startPageForRole,
+} from "../utils/roles"
 import { isOpenFeature } from "../config"
 
 const Header = ({ currentUser }) => {
@@ -71,13 +86,6 @@ const Header = ({ currentUser }) => {
                                  <DropdownItem>Profil</DropdownItem>
                               </a>
                            </Link>
-                           {isOpenFeature("administration") && (
-                              <DropdownItem>
-                                 <Link href="/administration/users">
-                                    <a>Administration</a>
-                                 </Link>
-                              </DropdownItem>
-                           )}
                            <DropdownItem divider />
                            <DropdownItem onClick={logout}>Se déconnecter</DropdownItem>
                         </DropdownMenu>
@@ -157,7 +165,7 @@ const Sidebar = ({ page, currentUser }) => {
    return (
       <>
          <div className="text-center list-group list-group-flush">
-            {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
+            {isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
                <Link href="/actDeclaration">
                   <a
                      className={
@@ -223,11 +231,13 @@ const Sidebar = ({ page, currentUser }) => {
             )}{" "}
             {/* </Link> */}
             {/* <Link href="/_error"> */}
-            {isOpenFeature("parameters") && (
-               <a className="list-group-item list-group-item-action">
-                  <SettingsIcon width={30} /> <br />
-                  {"Paramètres"}
-               </a>
+            {isOpenFeature("administration") && isAllowed(currentUser.role, ADMIN) && (
+               <Link href="/administration/users">
+                  <a className="list-group-item list-group-item-action">
+                     <SettingsIcon width={30} /> <br />
+                     {"Administration"}
+                  </a>
+               </Link>
             )}{" "}
             {/* </Link> */}
          </div>
@@ -255,14 +265,129 @@ Sidebar.propTypes = {
    currentUser: PropTypes.object,
 }
 
-const Layout = ({ children, page, currentUser }) => {
+const SidebarAdmin = ({ page, currentUser }) => {
+   if (!currentUser) return ""
+   return (
+      <>
+         <div className="list-group list-group-flush text-center">
+            {isAllowed(currentUser.role, ADMIN) && (
+               <Link href="/administration/users">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " + (page === "users" ? "selected" : "unselected")
+                     }
+                  >
+                     <FaceIcon className="text-black-50" width={30} />
+
+                     <br />
+                     {"Utilisateurs"}
+                  </a>
+               </Link>
+            )}
+            {currentUser.role == "SUPER_ADMIN" && (
+               <Link href="/administration/hospitals">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " + (page === "actsList" ? "selected" : "unselected")
+                     }
+                  >
+                     <ApartmentIcon width={30} /> <br />
+                     {"Établissements"}
+                  </a>
+               </Link>
+            )}
+            {currentUser.role == "SUPER_ADMIN" && (
+               <Link href="/administration/askers">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " +
+                        (page === "fillEmployments" ? "selected" : "unselected")
+                     }
+                  >
+                     <AccountBalanceIcon width={30} /> <br />
+                     {"Demandeurs"}
+                  </a>
+               </Link>
+            )}
+            {currentUser.role == "SUPER_ADMIN" && (
+               <Link href="/administration/attacks">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " +
+                        (page === "fillEmployments" ? "selected" : "unselected")
+                     }
+                  >
+                     <WhatshotIcon width={30} /> <br />
+                     {"Attentats"}
+                  </a>
+               </Link>
+            )}
+            {currentUser.role == "SUPER_ADMIN" && (
+               <Link href="/administration/employments">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " +
+                        (page === "fillEmployments" ? "selected" : "unselected")
+                     }
+                  >
+                     <BusinessCenterIcon width={30} /> <br />
+                     {"Emplois"}
+                  </a>
+               </Link>
+            )}
+            {currentUser.role == "SUPER_ADMIN" && (
+               <Link href="/administration/acts">
+                  <a
+                     className={
+                        "list-group-item list-group-item-action " +
+                        (page === "fillEmployments" ? "selected" : "unselected")
+                     }
+                  >
+                     <ReceiptIcon width={30} /> <br />
+                     {"Actes"}
+                  </a>
+               </Link>
+            )}
+            <Link href={startPageForRole(currentUser.role)}>
+               <a className="list-group-item list-group-item-action">
+                  <ArrowBackIcon width={30} /> <br />
+                  {"Retour"}
+               </a>
+            </Link>
+         </div>
+         <style jsx>{`
+            a {
+               font-variant: small-caps;
+               font-size: 12px;
+               font-family: "Source Sans Pro";
+               color: #9b9b9b;
+            }
+            a.selected {
+               border-left: 5px solid #9c27b0;
+               background-color: #e7f1fe !important;
+            }
+            a.unselected {
+               border-left: 5px solid #fff;
+            }
+         `}</style>
+      </>
+   )
+}
+
+SidebarAdmin.propTypes = {
+   page: PropTypes.string,
+   currentUser: PropTypes.object,
+}
+
+const Layout = ({ children, page, currentUser, admin = false }) => {
    return (
       <>
          <div className="d-flex flex-column justifiy-content-between min-vh-100">
             <Header currentUser={currentUser} />
             <div id="wrapper" className="d-flex">
                <div id="sidebar-wrapper" className="border-right">
-                  <Sidebar page={page} currentUser={currentUser} />
+                  {!admin && <Sidebar page={page} currentUser={currentUser} />}
+                  {admin && <SidebarAdmin page={page} currentUser={currentUser} />}
                </div>
                <div id="page-content-wrapper">
                   <main className="pb-5">{children}</main>
@@ -289,6 +414,11 @@ const Layout = ({ children, page, currentUser }) => {
    )
 }
 
-Layout.propTypes = { children: PropTypes.node.isRequired, page: PropTypes.string, currentUser: PropTypes.object }
+Layout.propTypes = {
+   children: PropTypes.node.isRequired,
+   page: PropTypes.string,
+   currentUser: PropTypes.object,
+   admin: PropTypes.bool,
+}
 
 export default Layout
