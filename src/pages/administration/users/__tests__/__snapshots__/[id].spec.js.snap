@@ -1,0 +1,673 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders UserDetail unchanged 1`] = `
+<div
+  className="jsx-1279015711 d-flex flex-column justifiy-content-between min-vh-100"
+>
+  <header
+    className="border-bottom"
+  >
+    <nav
+      className="navbar navbar-expand-md navbar-light"
+    >
+      <a
+        className="navbar-brand"
+      >
+        <img
+          alt="Logo"
+          src="/images/logo.png"
+          title="Logo"
+          width="100"
+        />
+      </a>
+      <button
+        aria-label="Toggle navigation"
+        className="navbar-toggler"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="navbar-toggler-icon"
+        />
+      </button>
+      <div
+        className="collapse navbar-collapse"
+        style={Object {}}
+      >
+        <ul
+          className="pt-2 mt-2 ml-auto d-flex justify-content-end align-items-md-center align-items-start pt-md-0 navbar-nav"
+        >
+          <li
+            className="dropdown nav-item"
+            onKeyDown={[Function]}
+          >
+            <a
+              aria-expanded={false}
+              aria-haspopup={true}
+              className="nav-link"
+              href="#"
+              onClick={[Function]}
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root text-black-50"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+                width={30}
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+                />
+              </svg>
+              <span
+                className="d-sm-inline d-md-none text-black-50"
+              >
+                 Mon compte
+              </span>
+            </a>
+            <div
+              aria-hidden={true}
+              className="dropdown-menu dropdown-menu-right"
+              role="menu"
+              tabIndex="-1"
+            >
+              <button
+                className="dropdown-item"
+                onClick={[Function]}
+                role="menuitem"
+                tabIndex="0"
+                type="button"
+              >
+                undefined undefined
+                 
+              </button>
+              <div
+                className="dropdown-divider"
+                onClick={[Function]}
+                tabIndex="-1"
+              />
+              <a
+                href="/profile"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+              >
+                <button
+                  className="dropdown-item"
+                  onClick={[Function]}
+                  role="menuitem"
+                  tabIndex="0"
+                  type="button"
+                >
+                  Profil
+                </button>
+              </a>
+              <div
+                className="dropdown-divider"
+                onClick={[Function]}
+                tabIndex="-1"
+              />
+              <button
+                className="dropdown-item"
+                onClick={[Function]}
+                role="menuitem"
+                tabIndex="0"
+                type="button"
+              >
+                Se déconnecter
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <div
+    className="jsx-1279015711 d-flex"
+    id="wrapper"
+  >
+    <div
+      className="jsx-1279015711 border-right"
+      id="sidebar-wrapper"
+    >
+      <div
+        className="jsx-113465286 list-group list-group-flush text-center"
+      >
+        <a
+          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          href="/administration/users"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root text-black-50"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+            width={30}
+          >
+            <path
+              d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"
+            />
+          </svg>
+          <br
+            className="jsx-113465286"
+          />
+          Utilisateurs
+        </a>
+        <a
+          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          href="/administration/hospitals"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+            width={30}
+          >
+            <path
+              d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm4 4H9v-2h2v2zm0-4H9V9h2v2zm0-4H9V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm4 12h-2v-2h2v2zm0-4h-2v-2h2v2z"
+            />
+          </svg>
+           
+          <br
+            className="jsx-113465286"
+          />
+          Établissements
+        </a>
+        <a
+          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          href="/administration/askers"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+            width={30}
+          >
+            <path
+              d="M4 10h3v7H4zM10.5 10h3v7h-3zM2 19h20v3H2zM17 10h3v7h-3zM12 1L2 6v2h20V6z"
+            />
+          </svg>
+           
+          <br
+            className="jsx-113465286"
+          />
+          Demandeurs
+        </a>
+        <a
+          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          href="/administration/attacks"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+            width={30}
+          >
+            <path
+              d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"
+            />
+          </svg>
+           
+          <br
+            className="jsx-113465286"
+          />
+          Attentats
+        </a>
+        <a
+          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          href="/administration/employments"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+            width={30}
+          >
+            <path
+              d="M10 16v-1H3.01L3 19c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2v-4h-7v1h-4zm10-9h-4.01V5l-2-2h-4l-2 2v2H4c-1.1 0-2 .9-2 2v3c0 1.11.89 2 2 2h6v-2h4v2h6c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-6 0h-4V5h4v2z"
+            />
+          </svg>
+           
+          <br
+            className="jsx-113465286"
+          />
+          Emplois
+        </a>
+        <a
+          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          href="/administration/acts"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+            width={30}
+          >
+            <path
+              d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v20z"
+            />
+          </svg>
+           
+          <br
+            className="jsx-113465286"
+          />
+          Actes
+        </a>
+        <a
+          className="jsx-113465286 list-group-item list-group-item-action"
+          href="/statistics"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+            width={30}
+          >
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+           
+          <br
+            className="jsx-113465286"
+          />
+          Retour
+        </a>
+      </div>
+    </div>
+    <div
+      className="jsx-1279015711"
+      id="page-content-wrapper"
+    >
+      <main
+        className="jsx-1279015711 pb-5"
+      >
+        <div
+          className="mt-5 mb-4 container"
+          style={
+            Object {
+              "maxWidth": 720,
+            }
+          }
+        >
+          <h1
+            className="StyledComponents__Title1-yzg90z-6 jPDDmF mb-5"
+          >
+            Utilisateur
+          </h1>
+          
+          
+          <form
+            className=""
+            onSubmit={[Function]}
+          >
+            <div
+              className="row form-group"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+                htmlFor="id"
+              >
+                Id
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  id="id"
+                  name="id"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              className="row form-group"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+                htmlFor="firstName"
+              >
+                Prénom
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <input
+                  className="form-control"
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              className="row form-group"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+                htmlFor="lastName"
+              >
+                Nom 
+                <span
+                  style={
+                    Object {
+                      "color": "red",
+                    }
+                  }
+                >
+                  *
+                </span>
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <input
+                  className="form-control"
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                />
+                <div
+                  className="invalid-feedback"
+                />
+              </div>
+            </div>
+            <div
+              className="row form-group"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+                htmlFor="email"
+              >
+                Courriel 
+                <span
+                  style={
+                    Object {
+                      "color": "red",
+                    }
+                  }
+                >
+                  *
+                </span>
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <input
+                  className="form-control"
+                  id="email"
+                  name="email"
+                  type="text"
+                />
+                <div
+                  className="invalid-feedback"
+                />
+              </div>
+            </div>
+            <div
+              className="row form-group"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+                htmlFor="role"
+              >
+                Rôle 
+                <span
+                  style={
+                    Object {
+                      "color": "red",
+                    }
+                  }
+                >
+                  *
+                </span>
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <div
+                  className=" css-2b097c-container"
+                  onKeyDown={[Function]}
+                >
+                  <div
+                    className=" css-yk16xz-control"
+                    onMouseDown={[Function]}
+                    onTouchEnd={[Function]}
+                  >
+                    <div
+                      className=" css-1hwfws3"
+                    >
+                      <div
+                        className=" css-1wa3eu0-placeholder"
+                      >
+                        Choisissez un rôle
+                      </div>
+                      <div
+                        className="css-b8ldur-Input"
+                      >
+                        <div
+                          className=""
+                          style={
+                            Object {
+                              "display": "inline-block",
+                            }
+                          }
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            autoCapitalize="none"
+                            autoComplete="off"
+                            autoCorrect="off"
+                            disabled={false}
+                            id="react-select-2-input"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            spellCheck="false"
+                            style={
+                              Object {
+                                "background": 0,
+                                "border": 0,
+                                "boxSizing": "content-box",
+                                "color": "inherit",
+                                "fontSize": "inherit",
+                                "label": "input",
+                                "opacity": 1,
+                                "outline": 0,
+                                "padding": 0,
+                                "width": "1px",
+                              }
+                            }
+                            tabIndex="0"
+                            type="text"
+                            value=""
+                          />
+                          <div
+                            style={
+                              Object {
+                                "height": 0,
+                                "left": 0,
+                                "overflow": "scroll",
+                                "position": "absolute",
+                                "top": 0,
+                                "visibility": "hidden",
+                                "whiteSpace": "pre",
+                              }
+                            }
+                          >
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className=" css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        className=" css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        className=" css-tlfecz-indicatorContainer"
+                        onMouseDown={[Function]}
+                        onTouchEnd={[Function]}
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="css-6q0nyr-Svg"
+                          focusable="false"
+                          height={20}
+                          viewBox="0 0 20 20"
+                          width={20}
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="justify-content-center d-flex"
+            >
+              <button
+                aria-label={null}
+                className="px-4 mt-5 mr-3 btn btn-outline-primary"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+                type="button"
+              >
+                Retour
+              </button>
+              <button
+                aria-label={null}
+                className="px-4 mt-5  btn btn-primary"
+                onClick={[Function]}
+              >
+                Ajouter
+              </button>
+            </div>
+          </form>
+          <div />
+        </div>
+      </main>
+    </div>
+  </div>
+  <footer
+    className="jsx-3984601019 pt-4 pb-5 m-0"
+  >
+    <div
+      className="container"
+    >
+      <div
+        className="row"
+      >
+        <div
+          className="mr-5 col"
+        >
+          <h4
+            className="jsx-3984601019"
+          >
+            Medle.fabrique.social.gouv.fr
+          </h4>
+          Un service proposé par la
+           
+          <a
+            className="jsx-3984601019"
+            href="https://solidarites-sante.gouv.fr/ministere/organisation/directions/article/dgos-direction-generale-de-l-offre-de-soins"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            DGOS
+          </a>
+           
+          et
+           
+          <a
+            className="jsx-3984601019"
+            href="https://incubateur.social.gouv.fr/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+             l'incubateur des ministères sociaux
+          </a>
+        </div>
+        <div
+          className="mt-4 mt-md-0 col"
+        >
+          <ul
+            className="jsx-3984601019 pl-0 list-unstyled"
+          >
+            <li
+              className="jsx-3984601019"
+            >
+              <a
+                className="jsx-3984601019"
+                href="/statistics"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+              >
+                Statistiques
+              </a>
+            </li>
+            <li
+              className="jsx-3984601019"
+            >
+              <a
+                className="jsx-3984601019"
+                href="mailto:contact.medle@fabrique.social.gouv.fr"
+              >
+                Contactez‑nous
+              </a>
+            </li>
+            <li
+              className="jsx-3984601019"
+            >
+              <a
+                className="jsx-3984601019"
+                href="/faq"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+              >
+                FAQ
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;

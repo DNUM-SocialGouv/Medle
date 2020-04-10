@@ -28,10 +28,9 @@ const nextConfig = {
       DEBUG_MODE: process.env.DEBUG_MODE,
       FEATURE_FLAGS: {
          notification: false,
-         administration: false,
+         administration: true,
          directory: false,
          resources: false,
-         parameters: false,
       },
    },
    serverRuntimeConfig: {
