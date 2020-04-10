@@ -50,6 +50,6 @@ describe("endpoints", () => {
       const response = await fetch(`${API_URL + ASKERS_ENDPOINT}?fuzzy=commissariat&all=true`, headers)
 
       const askers = await handleAPIResponse(response)
-      expect(askers.length).toBeGreaterThan(100)
+      expect(askers.length).toBeGreaterThan(0)
    })
 })
