@@ -76,7 +76,7 @@ const START_PAGES = {
    SUPER_ADMIN: "/statistics",
 }
 
-export const startPageForRole = role => START_PAGES[role] || "/actsList"
+export const startPageForRole = role => START_PAGES[role] || "/acts"
 
 export const availableRolesForUser = user => {
    switch (user && user.role) {

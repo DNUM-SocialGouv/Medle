@@ -1,7 +1,7 @@
-import { ASKERS_ENDPOINT, ATTACKS_ENDPOINT, ACTS_ENDPOINT } from "../../../config"
+import { ASKERS_ENDPOINT, ATTACKS_ENDPOINT } from "../../../config"
 import { handleAPIResponse } from "../../../utils/errors"
 import { authenticate } from "../../../clients/authentication"
-import { METHOD_POST } from "../../../utils/http"
+import { createAct, searchActsByKey } from "../../../clients/acts"
 
 const API_URL = process.env.API_URL
 
@@ -30,19 +30,17 @@ describe("/attacks", () => {
 
 describe("/acts", () => {
    it("should be possible to an act operator of Tours to add an act", async () => {
-      const { headers: headersTours } = await headersActUserTours()
+      const { headers } = await headersActUserTours()
 
-      await fetch(API_URL + ACTS_ENDPOINT, {
-         method: METHOD_POST,
-         headers: headersTours,
-         body: JSON.stringify({
+      await createAct({
+         act: {
             addedBy: 2,
             askerId: 8,
             examinationDate: "2020-04-14",
             examinations: ["Autres"],
             examinationTypes: ["Somatique", "Psychiatrique"],
             hospitalId: 1,
-            internalNumber: "azeaze",
+            internalNumber: "wxwxwx123123",
             location: "UMJ",
             periodOfDay: "Nuit profonde",
             personAgeTag: "0-2 ans",
@@ -51,14 +49,13 @@ describe("/acts", () => {
             pvNumber: "",
             violenceContexts: ["Autre type/Autre", "Infra-familiale (hors conjugale)"],
             violenceNatures: ["Sexuelle", "Attentat/Hyper Cacher"],
-         }),
+         },
+         headers,
       })
 
-      const response = await fetch(API_URL + ACTS_ENDPOINT, { headers: headersTours })
+      const acts = await searchActsByKey({ key: "internalNumber", value: "wxwxwx123123", headers })
 
-      const acts = await handleAPIResponse(response)
-
-      expect(acts.elements[0]).toMatchSnapshot({
+      expect(acts[0]).toMatchSnapshot({
          id: expect.any(Number),
       })
    })

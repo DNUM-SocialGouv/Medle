@@ -27,7 +27,7 @@ const IndexPage = ({ currentUser }) => {
             </Title1>
 
             <Row className="mt-5">
-               <Link href="/actDeclaration">
+               <Link href="/acts/declaration">
                   <Button className="mx-auto" primary="true">
                      <Add /> Ajouter un nouvel acte
                   </Button>
@@ -35,7 +35,7 @@ const IndexPage = ({ currentUser }) => {
             </Row>
 
             <Row className="mt-5">
-               <Link href="/actsList">
+               <Link href="/acts">
                   <a className="mx-auto">Retour à la liste des actes</a>
                </Link>
             </Row>

@@ -2,12 +2,13 @@ import React, { useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { PropTypes } from "prop-types"
-import Layout from "../components/Layout"
+import Layout from "../../components/Layout"
 import { Container, Row } from "reactstrap"
-import { Button, Title1 } from "../components/StyledComponents"
 import Add from "@material-ui/icons/Add"
-import { withAuthentication } from "../utils/auth"
-import { ACT_MANAGEMENT } from "../utils/roles"
+
+import { Button, Title1 } from "../../components/StyledComponents"
+import { withAuthentication } from "../../utils/auth"
+import { ACT_MANAGEMENT } from "../../utils/roles"
 
 const ActConfirmationPage = ({ currentUser }) => {
    const router = useRouter()
@@ -27,7 +28,7 @@ const ActConfirmationPage = ({ currentUser }) => {
             </Title1>
 
             <Row className="mt-5">
-               <Link href="/actDeclaration">
+               <Link href="/acts/declaration">
                   <Button className="mx-auto" primary="true">
                      <Add /> Ajouter un nouvel acte
                   </Button>
@@ -35,7 +36,7 @@ const ActConfirmationPage = ({ currentUser }) => {
             </Row>
 
             <Row className="mt-5">
-               <Link href="/actsList">
+               <Link href="/acts">
                   <a className="mx-auto">Retour à la liste des actes</a>
                </Link>
             </Row>

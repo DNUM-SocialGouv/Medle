@@ -2,23 +2,20 @@ import React, { useState } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import PropTypes from "prop-types"
-import fetch from "isomorphic-unfetch"
 import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap"
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 
 import { isoToFr } from "../../utils/date"
-import { API_URL, ACTS_ENDPOINT } from "../../config"
 import Layout from "../../components/Layout"
 import ColumnAct from "../../components/ColumnAct"
 import { Title1, Title2 } from "../../components/StyledComponents"
 import { isEmpty } from "../../utils/misc"
-import { handleAPIResponse } from "../../utils/errors"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT } from "../../utils/roles"
 import { logError } from "../../utils/logger"
 import { profiles } from "../../utils/actsConstants"
-import { METHOD_DELETE } from "../../utils/http"
+import { deleteAct, findAct } from "../../clients/acts"
 
 const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
    const router = useRouter()
@@ -31,28 +28,29 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
       return profiles[profile].read(act)
    }
 
-   const deleteAct = () => {
+   const onDeleteAct = () => {
       toggle()
 
-      const deleteAct = async id => {
+      const del = async id => {
          try {
-            await fetch(`${API_URL}${ACTS_ENDPOINT}/${id}`, { method: METHOD_DELETE })
-            router.push("/actsList")
+            await deleteAct({ id })
+
+            router.push("/acts")
          } catch (error) {
             logError(error)
             setIsError(error)
          }
       }
 
-      deleteAct(id)
+      del(id)
    }
 
    const editAct = id => {
-      return router.push(`/actDeclaration?id=${id}`)
+      return router.push(`/acts/declaration?id=${id}`)
    }
 
    return (
-      <Layout page="actsList" currentUser={currentUser}>
+      <Layout page="acts" currentUser={currentUser}>
          <Title1 className="mt-5 mb-5">{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
 
          {!isEmpty(isError) && (
@@ -112,7 +110,7 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
                                     des actes. Merci de confirmer votre choix.
                                  </ModalBody>
                                  <ModalFooter>
-                                    <Button color="primary" onClick={deleteAct}>
+                                    <Button color="primary" onClick={onDeleteAct}>
                                        Supprimer
                                     </Button>{" "}
                                     <Button color="secondary" onClick={toggle}>
@@ -125,7 +123,7 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
                      </Row>
                   )}
                   <div className="mt-5 text-center">
-                     <Link href="/actsList">
+                     <Link href="/acts">
                         <a>Retour à la liste des actes</a>
                      </Link>
                   </div>
@@ -137,16 +135,13 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
 }
 
 ActDetail.getInitialProps = async ctx => {
-   const authHeaders = buildAuthHeaders(ctx)
-
+   const headers = buildAuthHeaders(ctx)
    const { id } = ctx.query
 
-   let json
    try {
-      const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + id, { headers: authHeaders })
-      json = await handleAPIResponse(response)
+      const act = await findAct({ id, headers })
 
-      return { initialAct: json, id }
+      return { initialAct: act, id }
    } catch (error) {
       logError(error)
       redirectIfUnauthorized(error, ctx)

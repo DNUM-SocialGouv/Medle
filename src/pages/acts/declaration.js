@@ -1,25 +1,22 @@
 import React, { useReducer, useRef, useState } from "react"
 import PropTypes from "prop-types"
 import Router, { useRouter } from "next/router"
-import fetch from "isomorphic-unfetch"
 import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "reactstrap"
 import moment from "moment"
-import { handleAPIResponse } from "../utils/errors"
-import AskerSelect from "../components/AskerSelect"
-import { API_URL, ACTS_ENDPOINT } from "../config"
-import { isEmpty, deleteProperty } from "../utils/misc"
-import { METHOD_POST, METHOD_PUT } from "../utils/http"
-import Layout from "../components/Layout"
-import ActBlock from "../components/ActBlock"
-import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
-import { ACT_MANAGEMENT } from "../utils/roles"
-import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
-import { now, ISO_DATE } from "../utils/date"
-import { profiles, orderedProfileValues } from "../utils/actsConstants"
-import { logError, logDebug } from "../utils/logger"
-import { createAct } from "../clients/acts"
 
-// import { useTraceUpdate } from "../utils/debug"
+import AskerSelect from "../../components/AskerSelect"
+import { isEmpty, deleteProperty } from "../../utils/misc"
+import Layout from "../../components/Layout"
+import ActBlock from "../../components/ActBlock"
+import { Title1, Title2, Label, ValidationButton } from "../../components/StyledComponents"
+import { ACT_MANAGEMENT } from "../../utils/roles"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
+import { now, ISO_DATE } from "../../utils/date"
+import { profiles, orderedProfileValues } from "../../utils/actsConstants"
+import { logError, logDebug } from "../../utils/logger"
+import { createAct, findAct, searchActsByKey, updateAct } from "../../clients/acts"
+
+// import { useTraceUpdate } from "../../utils/debug"
 
 // internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
@@ -212,50 +209,39 @@ const ActDeclaration = ({ act, currentUser }) => {
          return
       }
 
-      let json
+      try {
+         if (!state.id) {
+            const id = createAct({ act: state })
 
-      if (!state.id) {
-         try {
-            json = createAct(state)
+            logDebug("Created act id: ", id)
 
             return Router.push({
-               pathname: "/actConfirmation",
+               pathname: "/acts/confirmation",
                query: {
                   internalNumber: state.internalNumber,
                   pvNumber: state.pvNumber,
                },
             })
-         } catch (error) {
-            logError(error)
-            setErrors(errors => ({
-               ...errors,
-               general: json && json.message ? json.message : "Erreur serveur",
-            }))
-         }
-      } else {
-         try {
-            const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + state.id, {
-               method: METHOD_PUT,
-               headers: { "Content-Type": "application/json" },
-               body: JSON.stringify(state),
-            })
-            json = await handleAPIResponse(response)
+         } else {
+            const updated = updateAct({ act: state })
+
+            logDebug("Nb updated rows: ", updated)
 
             return Router.push({
-               pathname: "/actConfirmation",
+               pathname: "/acts/confirmation",
                query: {
                   internalNumber: state.internalNumber,
                   pvNumber: state.pvNumber,
                   edit: true,
                },
             })
-         } catch (error) {
-            logError(error)
-            setErrors(errors => ({
-               ...errors,
-               general: json && json.message ? json.message : "Erreur serveur",
-            }))
          }
+      } catch (error) {
+         logError(error)
+         setErrors(errors => ({
+            ...errors,
+            general: error && error.message ? error.message : "Erreur serveur",
+         }))
       }
    }
 
@@ -268,20 +254,15 @@ const ActDeclaration = ({ act, currentUser }) => {
       return false
    }
 
-   const onBlurNumberInputs = async event => {
-      const { id } = event.target
-
-      const urlChunk = `?${id}=${state[id]}`
-
-      if (state[id]) {
+   const onBlurNumberInputs = name => async () => {
+      if (state[name]) {
          try {
-            const response = await fetch(`${API_URL}${ACTS_ENDPOINT}${urlChunk}`)
-            const acts = await handleAPIResponse(response)
+            const elements = await searchActsByKey({ key: name, value: state[name] })
 
-            if (acts && acts.length) {
-               setWarnings({ ...warnings, [id]: "Déjà utilisé" })
+            if (elements && elements.length) {
+               setWarnings({ ...warnings, [name]: "Déjà utilisé" })
             } else {
-               setWarnings({ ...warnings, [id]: null })
+               setWarnings({ ...warnings, [name]: null })
             }
          } catch (error) {
             logError("Erreur d'API pour recherche d'internal number")
@@ -292,7 +273,7 @@ const ActDeclaration = ({ act, currentUser }) => {
 
    if (!hospitalId)
       return (
-         <Layout page="actDeclaration" currentUser={currentUser}>
+         <Layout page="declaration" currentUser={currentUser}>
             <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
             <Container style={{ maxWidth: 720 }}>
                <Alert color="danger">
@@ -303,7 +284,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       )
 
    return (
-      <Layout page="actDeclaration" currentUser={currentUser}>
+      <Layout page="declaration" currentUser={currentUser}>
          <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
          <Container style={{ maxWidth: 720 }}>
             <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>
@@ -318,7 +299,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                      value={state.internalNumber}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                      autoComplete="off"
-                     onBlur={onBlurNumberInputs}
+                     onBlur={onBlurNumberInputs("internalNumber")}
                   />
                   {warnings && warnings.internalNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
@@ -359,7 +340,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                      disabled={!!state.proofWithoutComplaint}
                      onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
                      autoComplete="off"
-                     onBlur={onBlurNumberInputs}
+                     onBlur={onBlurNumberInputs("pvNumber")}
                   />
                   {warnings && warnings.pvNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
                </Col>
@@ -446,20 +427,17 @@ const transformDBActForState = act => {
 }
 
 ActDeclaration.getInitialProps = async ctx => {
-   const authHeaders = buildAuthHeaders(ctx)
-
+   const headers = buildAuthHeaders(ctx)
    const { query } = ctx
 
    try {
       if (!query || !query.id) return { act: {} }
 
-      const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + query.id, { headers: authHeaders })
-      const act = await handleAPIResponse(response)
+      const act = await findAct({ id: query.id, headers })
 
       return { act: transformDBActForState(act) || {} }
    } catch (error) {
       logError(error)
-
       redirectIfUnauthorized(error, ctx)
    }
 }

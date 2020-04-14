@@ -166,11 +166,10 @@ const Sidebar = ({ page, currentUser }) => {
       <>
          <div className="text-center list-group list-group-flush">
             {isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
-               <Link href="/actDeclaration">
+               <Link href="/acts/declaration">
                   <a
                      className={
-                        "list-group-item list-group-item-action " +
-                        (page === "actDeclaration" ? "selected" : "unselected")
+                        "list-group-item list-group-item-action " + (page === "declaration" ? "selected" : "unselected")
                      }
                   >
                      <AddCircleOutlineIcon width={30} />
@@ -180,10 +179,10 @@ const Sidebar = ({ page, currentUser }) => {
                </Link>
             )}
             {isAllowed(currentUser.role, ACT_CONSULTATION) && (
-               <Link href="/actsList">
+               <Link href="/acts">
                   <a
                      className={
-                        "list-group-item list-group-item-action " + (page === "actsList" ? "selected" : "unselected")
+                        "list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")
                      }
                   >
                      <FormatListBulletedIcon width={30} /> <br />
@@ -288,7 +287,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
                <Link href="/administration/hospitals">
                   <a
                      className={
-                        "list-group-item list-group-item-action " + (page === "actsList" ? "selected" : "unselected")
+                        "list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")
                      }
                   >
                      <ApartmentIcon width={30} /> <br />
