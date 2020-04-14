@@ -124,6 +124,19 @@ In staging mode:
 2. `sudo docker-compose exec app yarn seed:run` (will remove all data on env.DATABASE_URL and reset with the default data)
 3. `sudo docker-compose exec app yarn test` (will use env.API_URL for tests involving API endpoints)
 
+## Main src directories
+
+- clients: the API clients for the frontend
+- components: React component
+- faq: the mdx file for dynamically populating the FAQ page
+- knex: all Knex database backend stuff
+- models: the transformer of data, between the database format to/from JSON format used in the frontend
+- pages: Next page
+- pages/api: API endpoints
+- services: services for the backend (for API)
+- theme: CSS theme
+- utils: utilities functions necessary for frontend and backend
+
 ## 🖋️ Conventions for commit messages
 
 You need to use the commit lint convention for commit message.
