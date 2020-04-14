@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/acts should be possible to an act operator of Tours to add an act 1`] = `
+Object {
+  "asker": Object {
+    "id": 8,
+  },
+  "examinationDate": "2020-04-14",
+  "examinationTypes": Array [
+    "Somatique",
+    "Psychiatrique",
+  ],
+  "examinations": Array [
+    "Autres",
+  ],
+  "hospital": Object {
+    "id": 1,
+  },
+  "id": Any<Number>,
+  "internalNumber": "azeaze",
+  "location": "UMJ",
+  "periodOfDay": "Nuit profonde",
+  "personAgeTag": "0-2 ans",
+  "personGender": "Féminin",
+  "profile": "Victime (vivante)",
+  "pvNumber": "",
+  "user": Object {
+    "id": 2,
+  },
+  "violenceContexts": Array [
+    "Autre type/Autre",
+    "Infra-familiale (hors conjugale)",
+  ],
+  "violenceNatures": Array [
+    "Sexuelle",
+    "Attentat/Hyper Cacher",
+  ],
+}
+`;
+
+exports[`/attacks should return all attacks for attacks endpoint 1`] = `
+Array [
+  Object {
+    "id": 1,
+    "name": "Bataclan",
+  },
+  Object {
+    "id": 2,
+    "name": "Hyper Cacher",
+  },
+]
+`;
+
+exports[`/attacks should return all commissariats in France for askers endpoint 1`] = `
+Array [
+  Object {
+    "label": "Commissariat de Vincennes",
+    "value": 6,
+  },
+]
+`;

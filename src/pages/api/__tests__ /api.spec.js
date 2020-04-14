@@ -1,55 +1,65 @@
-import { ASKERS_ENDPOINT, ATTACKS_ENDPOINT, LOGIN_ENDPOINT } from "../../../config"
+import { ASKERS_ENDPOINT, ATTACKS_ENDPOINT, ACTS_ENDPOINT } from "../../../config"
 import { handleAPIResponse } from "../../../utils/errors"
+import { authenticate } from "../../../clients/authentication"
 import { METHOD_POST } from "../../../utils/http"
-import fetch from "isomorphic-unfetch"
 
-/**
- * Environnement de test :
- * - medle-dev.fabrique.social.gouv.fr
- */
+const API_URL = process.env.API_URL
 
-// const API_URL = "https://medle-dev.fabrique.social.gouv.fr/api"
-const API_URL = "http://localhost:3000/api"
-const email = "acte@medle.fr"
-const password = "test"
+const headersActUserTours = () => authenticate("acte@tours.fr", "test")
+//const headersActUserNantes = () => authenticate("acte@nantes.fr", "test")
 
-let headers
-
-const buildAuthHeaders = async () => {
-   const response = await fetch(API_URL + LOGIN_ENDPOINT, {
-      method: METHOD_POST,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-   })
-
-   const token = response.headers.get("set-cookie")
-
-   if (!token) {
-      throw new Error("Authentication failed")
-   }
-
-   headers = {
-      headers: {
-         cookie: token,
-      },
-   }
-}
-
-describe("endpoints", () => {
-   beforeAll(buildAuthHeaders)
-
+describe("/attacks", () => {
    it("should return all attacks for attacks endpoint", async () => {
-      const response = await fetch(API_URL + ATTACKS_ENDPOINT, headers)
+      const response = await fetch(API_URL + ATTACKS_ENDPOINT, await headersActUserTours())
 
       const attacks = await handleAPIResponse(response)
 
-      expect(attacks.length).toBeGreaterThanOrEqual(2)
+      expect(attacks).toMatchSnapshot()
    })
 
-   it("should return more than 100 commissariats in France for askers endpoint", async () => {
-      const response = await fetch(`${API_URL + ASKERS_ENDPOINT}?fuzzy=commissariat&all=true`, headers)
+   it("should return all commissariats in France for askers endpoint", async () => {
+      const response = await fetch(
+         `${API_URL + ASKERS_ENDPOINT}?fuzzy=commissariat&all=true`,
+         await headersActUserTours(),
+      )
 
       const askers = await handleAPIResponse(response)
-      expect(askers.length).toBeGreaterThan(0)
+      expect(askers).toMatchSnapshot()
+   })
+})
+
+describe("/acts", () => {
+   it("should be possible to an act operator of Tours to add an act", async () => {
+      const { headers: headersTours } = await headersActUserTours()
+
+      await fetch(API_URL + ACTS_ENDPOINT, {
+         method: METHOD_POST,
+         headers: headersTours,
+         body: JSON.stringify({
+            addedBy: 2,
+            askerId: 8,
+            examinationDate: "2020-04-14",
+            examinations: ["Autres"],
+            examinationTypes: ["Somatique", "Psychiatrique"],
+            hospitalId: 1,
+            internalNumber: "azeaze",
+            location: "UMJ",
+            periodOfDay: "Nuit profonde",
+            personAgeTag: "0-2 ans",
+            personGender: "Féminin",
+            profile: "Victime (vivante)",
+            pvNumber: "",
+            violenceContexts: ["Autre type/Autre", "Infra-familiale (hors conjugale)"],
+            violenceNatures: ["Sexuelle", "Attentat/Hyper Cacher"],
+         }),
+      })
+
+      const response = await fetch(API_URL + ACTS_ENDPOINT, { headers: headersTours })
+
+      const acts = await handleAPIResponse(response)
+
+      expect(acts.elements[0]).toMatchSnapshot({
+         id: expect.any(Number),
+      })
    })
 })

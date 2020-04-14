@@ -17,6 +17,7 @@ import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "..
 import { now, ISO_DATE } from "../utils/date"
 import { profiles, orderedProfileValues } from "../utils/actsConstants"
 import { logError, logDebug } from "../utils/logger"
+import { createAct } from "../clients/acts"
 
 // import { useTraceUpdate } from "../utils/debug"
 
@@ -215,12 +216,7 @@ const ActDeclaration = ({ act, currentUser }) => {
 
       if (!state.id) {
          try {
-            const response = await fetch(API_URL + ACTS_ENDPOINT, {
-               method: METHOD_POST,
-               headers: { "Content-Type": "application/json" },
-               body: JSON.stringify(state),
-            })
-            json = await handleAPIResponse(response)
+            json = createAct(state)
 
             return Router.push({
                pathname: "/actConfirmation",

@@ -1,14 +1,12 @@
 import React, { useState } from "react"
 import Head from "next/head"
-import fetch from "isomorphic-unfetch"
-import { API_URL, LOGIN_ENDPOINT } from "../config"
 import Login from "../components/Login"
-import { handleAPIResponse, ValidationError } from "../utils/errors"
-import { METHOD_POST } from "../utils/http"
+import { ValidationError } from "../utils/errors"
 import { registerAndRedirectUser } from "../utils/auth"
 import PropTypes from "prop-types"
 import { trackEvent, CATEGORY, ACTION } from "../utils/matomo"
 import { logError } from "../utils/logger"
+import { authenticate } from "../clients/authentication"
 
 const LoginPage = ({ message }) => {
    const [error, setError] = useState(message || "")
@@ -28,12 +26,7 @@ const LoginPage = ({ message }) => {
             try {
                checkUserData(userData)
 
-               const response = await fetch(API_URL + LOGIN_ENDPOINT, {
-                  method: METHOD_POST,
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ email, password }),
-               })
-               const user = await handleAPIResponse(response)
+               const { user } = await authenticate(email, password)
 
                registerAndRedirectUser(user)
                trackEvent(CATEGORY.auth, ACTION.auth.connection)

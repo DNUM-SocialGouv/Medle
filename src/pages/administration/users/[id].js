@@ -81,7 +81,7 @@ const mapArrayForSelect = (data, fnValue, fnLabel) => {
    return data.map(curr => ({ value: fnValue(curr), label: fnLabel(curr) }))
 }
 
-// React component
+// React component : only available for ADMIN or ADMIN_HOSPITAL
 const UserDetail = ({ initialUser = {}, currentUser }) => {
    const router = useRouter()
    const { id } = router.query
