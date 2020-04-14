@@ -24,7 +24,7 @@ create user medle with encrypted password 'jJFWsfW5ePbN7J';
 grant all privileges on database medle to medle
 ```
 
-Then create/modify an `.env` file in the root of the project (see `.env.sample` as a reference).
+Then create/modify an `.env` file in the root of the project (see `.env.dev` as a reference).
 
 For DATABASE_URL, be sure to use the matching password you have just created before.
 
@@ -53,14 +53,11 @@ This is supposed to work now!
 ## 🏗️ Development usage
 
 For development purpose, it is more handy to use `yarn dev` to benefit from the hot reload offered by Next.
-This command takes into account the `.env.dev` file and not the `.env`.
+Just copy the file `.env.dev` given as reference and named it as `.env` to be used by dotenv.
 
-You only have to run the db container (and not the app): `docker-compose up --build -d db`
+With this configuration, the API will run on `localhost:3000` and the database will be a Docker container running on your machine.
 
-Modify `.env.dev` for APP_API
-```js
-API_URL=http://localhost:3000/api
-```
+So you only have to run the db container (and not the app): `docker-compose up --build -d db`
 
 Now run `yarn` to install the dependencies, then `yarn dev`.
 
@@ -68,7 +65,7 @@ At the end, the app is running at http://localhost:3000.
 
 *Nota bene*
 
-Be careful. If you use the app from the container, it is considered inside the docker network.
+Be careful. If you use the app from the container (as we advise you), it is considered inside the docker network.
 So you have to use an DATABASE_URL with __5432__ port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@db:5432/medle`.
 
 On the other hand, when you use `yarn dev`, the node process is on localhost and is therefore outside the docker network.
@@ -81,7 +78,7 @@ With a managed Postgres, `POSTGRES_SSL` must be set to true.
 
 ## 🌱 Migration and seeds
 
-The database structure may evolve thanks to Knex.js migrations.
+The database structure is able to evolve thanks to Knex.js migrations.
 
 To initiate a migration, the easiest way is to use `migrate:make` script in package.json.
 
@@ -115,6 +112,18 @@ Make a new seed file, then:
 
 Knex migration tips: https://medium.com/@j3y/beyond-basic-knex-js-database-migrations-22263b0fcd7c
 
+## 🧪 How to test
+
+In development mode:
+1. `yarn dev`
+2. `yarn seed:run` (will remove all data on env.DATABASE_URL and reset with the default data)
+3. `yarn test` (will use env.API_URL for tests involving API endpoints)
+
+In staging mode:
+1. `sudo docker-compose up --build -d app`
+2. `sudo docker-compose exec app yarn seed:run` (will remove all data on env.DATABASE_URL and reset with the default data)
+3. `sudo docker-compose exec app yarn test` (will use env.API_URL for tests involving API endpoints)
+
 ## 🖋️ Conventions for commit messages
 
 You need to use the commit lint convention for commit message.
@@ -130,6 +139,7 @@ I.e, you must specify a type in prefix position, for the message using one of th
 - refactor: A code change that neither fixes a bug nor adds a feature
 - style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
 - test: Adding missing tests or correcting existing tests
+- chore: for tedious and necessary work, not listed before (try to minimize the use of this umbrella term)
 
 As a reference see https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-angular.
 
