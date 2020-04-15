@@ -5,14 +5,12 @@ import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
-import { fetchAttacks } from "../../utils/init"
 
 const getAttacks = () => {
    if (typeof sessionStorage !== "undefined") {
       return sessionStorage.getItem("attacks") ? JSON.parse(sessionStorage.getItem("attacks")).map(elt => elt.name) : []
    }
-   const attacks = fetchAttacks()
-   return attacks && attacks.length ? attacks.map(elt => elt.name) : []
+   return []
 }
 
 const VictimEdit = ({ dispatch, state, errors }) => {

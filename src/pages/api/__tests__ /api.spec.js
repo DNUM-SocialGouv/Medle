@@ -1,19 +1,15 @@
-import { ATTACKS_ENDPOINT } from "../../../config"
-import { handleAPIResponse } from "../../../utils/errors"
 import { authenticate } from "../../../clients/authentication"
 import { createAct, searchActsByKey } from "../../../clients/acts"
 import { searchAskersFuzzy } from "../../../clients/askers"
-
-const API_URL = process.env.API_URL
+import { findAllAttacks } from "../../../clients/attacks"
 
 const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 //const headersActUserNantes = () => authenticate("acte@nantes.fr", "test")
 
 describe("/attacks", () => {
    it("should return all attacks", async () => {
-      const response = await fetch(API_URL + ATTACKS_ENDPOINT, await headersActUserTours())
-
-      const attacks = await handleAPIResponse(response)
+      const { headers } = await headersActUserTours()
+      const attacks = await findAllAttacks({ headers })
 
       expect(attacks).toMatchSnapshot()
    })

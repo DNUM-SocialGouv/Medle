@@ -1,15 +1,9 @@
-import { API_URL, ATTACKS_ENDPOINT } from "../config"
-import { handleAPIResponse } from "../utils/errors"
-import { logInfo } from "./logger"
-
-export const fetchAttacks = async () => {
-   logInfo("Récupération des libellés des attentats")
-   const response = await fetch(API_URL + ATTACKS_ENDPOINT)
-   return handleAPIResponse(response)
-}
+import { findAllAttacks } from "../clients/attacks"
+import { logInfo } from "../utils/logger"
 
 export const fetchReferenceData = async () => {
-   const attacks = await fetchAttacks()
+   logInfo("Récupération des libellés des attentats")
+   const attacks = await findAllAttacks()
 
    sessionStorage.setItem("attacks", JSON.stringify(attacks))
 }
