@@ -1,7 +1,7 @@
-import { authenticate } from "../../../clients/authentication"
-import { createAct, searchActsByKey } from "../../../clients/acts"
-import { searchAskersFuzzy } from "../../../clients/askers"
-import { findAllAttacks } from "../../../clients/attacks"
+import { authenticate } from "../../clients/authentication"
+import { createAct, searchActsByKey } from "../../clients/acts"
+import { searchAskersFuzzy } from "../../clients/askers"
+import { findAllAttacks } from "../../clients/attacks"
 
 const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 //const headersActUserNantes = () => authenticate("acte@nantes.fr", "test")

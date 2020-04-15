@@ -1,4 +1,4 @@
-import { getSituationDate } from "../actsConstants"
+import { getSituationDate } from "../../utils/actsConstants"
 
 describe("getSituationDate", () => {
    it("01/01/2001 is public holiday so is considered sunday", () => {

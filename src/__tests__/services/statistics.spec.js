@@ -1,4 +1,4 @@
-import { normalizeDates } from "../statistics/common"
+import { normalizeDates } from "../../services/statistics/common"
 import { now, ISO_DATE } from "../../utils/date"
 
 describe("tests on normalizeDates", () => {
