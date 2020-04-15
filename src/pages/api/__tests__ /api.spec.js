@@ -1,7 +1,8 @@
-import { ASKERS_ENDPOINT, ATTACKS_ENDPOINT } from "../../../config"
+import { ATTACKS_ENDPOINT } from "../../../config"
 import { handleAPIResponse } from "../../../utils/errors"
 import { authenticate } from "../../../clients/authentication"
 import { createAct, searchActsByKey } from "../../../clients/acts"
+import { searchAskersFuzzy } from "../../../clients/askers"
 
 const API_URL = process.env.API_URL
 
@@ -20,12 +21,10 @@ describe("/attacks", () => {
 
 describe("/askers", () => {
    it("should return all commissariats in France", async () => {
-      const response = await fetch(
-         `${API_URL + ASKERS_ENDPOINT}?fuzzy=commissariat&all=true`,
-         await headersActUserTours(),
-      )
+      const { headers } = await headersActUserTours()
 
-      const askers = await handleAPIResponse(response)
+      const askers = await searchAskersFuzzy({ search: "commissariat", all: true, headers })
+
       expect(askers).toMatchSnapshot()
    })
 })

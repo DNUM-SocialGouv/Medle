@@ -6,8 +6,12 @@ import moize from "moize"
 
 const MAX_AGE = 1000 * 60 * 60 // 1 hour
 
-export const searchAskersFuzzy = async ({ search, headers }) => {
-   const bonus = search ? `?fuzzy=${search}` : ""
+export const searchAskersFuzzy = async ({ search, all = false, headers }) => {
+   search = search ? [`fuzzy=${search}`] : []
+   all = all ? ["all=true"] : []
+
+   let bonus = [...search, ...all]
+   bonus = bonus.length ? `?${bonus.join("&")}` : ""
 
    const response = await fetch(`${API_URL}${ASKERS_ENDPOINT}${bonus}`, { headers })
    const json = await handleAPIResponse(response)
