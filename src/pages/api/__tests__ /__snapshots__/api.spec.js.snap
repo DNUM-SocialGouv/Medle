@@ -38,7 +38,16 @@ Object {
 }
 `;
 
-exports[`/attacks should return all attacks for attacks endpoint 1`] = `
+exports[`/askers should return all commissariats in France 1`] = `
+Array [
+  Object {
+    "label": "Commissariat de Vincennes",
+    "value": 6,
+  },
+]
+`;
+
+exports[`/attacks should return all attacks 1`] = `
 Array [
   Object {
     "id": 1,
@@ -47,15 +56,6 @@ Array [
   Object {
     "id": 2,
     "name": "Hyper Cacher",
-  },
-]
-`;
-
-exports[`/attacks should return all commissariats in France for askers endpoint 1`] = `
-Array [
-  Object {
-    "label": "Commissariat de Vincennes",
-    "value": 6,
   },
 ]
 `;

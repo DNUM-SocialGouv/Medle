@@ -21,7 +21,7 @@ const handler = async (req, res) => {
 
             const modified = await reset(id, password)
 
-            return res.status(STATUS_200_OK).json(modified)
+            return res.status(STATUS_200_OK).json({ modified })
          }
          default:
             return sendMethodNotAllowedError(res)

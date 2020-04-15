@@ -1,50 +1,17 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import AsyncSelect from "react-select/async"
-import moize from "moize"
 
-import { API_URL, ASKERS_ENDPOINT } from "../config"
-import { isEmpty } from "../utils/misc"
-import { handleAPIResponse } from "../utils/errors"
-import { logError } from "../utils/logger"
-
-const getSuggestions = async value => {
-   const bonus = value ? `?fuzzy=${value}` : ""
-
-   let json
-   try {
-      const response = await fetch(`${API_URL}${ASKERS_ENDPOINT}${bonus}`)
-      json = await handleAPIResponse(response)
-   } catch (error) {
-      logError(error)
-   }
-   return isEmpty(json) ? [] : json
-}
-
-const getAskerById = async id => {
-   let json
-
-   try {
-      const response = await fetch(`${API_URL}${ASKERS_ENDPOINT}/${id}`)
-      json = await handleAPIResponse(response)
-   } catch (error) {
-      logError(error)
-   }
-   return isEmpty(json) ? null : { value: id, label: json.name }
-}
-
-const MAX_AGE = 1000 * 60 * 60 // 1 hour
-const memoizedGetSuggestions = moize({ maxAge: MAX_AGE, isPromise: false })(getSuggestions)
-const memoizedGetAskerById = moize({ maxAge: MAX_AGE })(getAskerById)
+import { memoizedFindAsker, memoizedSearchAskers } from "../clients/askers"
 
 const AskerSelect = ({ dispatch, disabled, askerId }) => {
    const [existingValue, setExistingValue] = useState(null)
    const [previousValues, setPreviousValues] = useState([])
 
    useEffect(() => {
-      const fetchAskerValue = async id => setExistingValue(id ? await memoizedGetAskerById(id) : null)
+      const fetchAskerValue = async id => setExistingValue(id ? await memoizedFindAsker({ id }) : null)
       const fetchPreviousValues = async () => {
-         Promise.all(memoizedGetAskerById.values()).then(arr => {
+         Promise.all(memoizedFindAsker.values()).then(arr => {
             setPreviousValues(arr)
          })
       }
@@ -61,7 +28,7 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
       <>
          <AsyncSelect
             defaultOptions={previousValues}
-            loadOptions={memoizedGetSuggestions}
+            loadOptions={search => memoizedSearchAskers({ search })}
             isClearable={true}
             placeholder="Tapez le nom du demandeur"
             noOptionsMessage={() => "Aucun résultat"}

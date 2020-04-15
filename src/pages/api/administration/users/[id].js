@@ -28,16 +28,16 @@ const handler = async (req, res) => {
 
             if (!deleted) return sendNotFoundError(res)
 
-            return res.status(STATUS_200_OK).json(deleted)
+            return res.status(STATUS_200_OK).json({ deleted })
          }
          case METHOD_PUT: {
             const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
-            const modified = await update(req.query, req.body, currentUser)
+            const updated = await update(req.query, req.body, currentUser)
 
-            if (!modified) return sendNotFoundError(res)
+            if (!updated) return sendNotFoundError(res)
 
-            return res.status(STATUS_200_OK).json(modified)
+            return res.status(STATUS_200_OK).json({ updated })
          }
          default:
             return sendMethodNotAllowedError(res)

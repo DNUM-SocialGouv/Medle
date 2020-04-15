@@ -12,8 +12,9 @@ import ColumnAct from "../../components/ColumnAct"
 import { Title1, Title2 } from "../../components/StyledComponents"
 import { isEmpty } from "../../utils/misc"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
+import { logDebug, logError } from "../../utils/logger"
 import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT } from "../../utils/roles"
-import { logError } from "../../utils/logger"
+
 import { profiles } from "../../utils/actsConstants"
 import { deleteAct, findAct } from "../../clients/acts"
 
@@ -33,7 +34,8 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
 
       const del = async id => {
          try {
-            await deleteAct({ id })
+            const { deleted } = await deleteAct({ id })
+            logDebug(`Nb deleted rows: ${deleted}`)
 
             router.push("/acts")
          } catch (error) {

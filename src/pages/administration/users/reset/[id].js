@@ -2,33 +2,16 @@ import React, { useState } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import PropTypes from "prop-types"
-import fetch from "isomorphic-unfetch"
 import { Alert, Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap"
-import { METHOD_PATCH } from "../../../../utils/http"
 import { useForm } from "react-hook-form"
 
-import { API_URL, RESET_PWD_ENDPOINT } from "../../../../config"
 import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"
-import { handleAPIResponse } from "../../../../utils/errors"
 import { withAuthentication } from "../../../../utils/auth"
 import { ADMIN } from "../../../../utils/roles"
-import { logError } from "../../../../utils/logger"
 import { isEmpty } from "../../../../utils/misc"
-
-const fetchPatch = async (id, password) => {
-   try {
-      const response = await fetch(`${API_URL}${RESET_PWD_ENDPOINT}`, {
-         method: METHOD_PATCH,
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({ id, password }),
-      })
-      const modified = await handleAPIResponse(response)
-      return modified
-   } catch (error) {
-      logError(error)
-   }
-}
+import { logDebug } from "../../../../utils/logger"
+import { patchUser } from "../../../../clients/users"
 
 const UserReset = ({ currentUser }) => {
    const { handleSubmit, register, errors: formErrors, watch } = useForm()
@@ -42,7 +25,8 @@ const UserReset = ({ currentUser }) => {
 
       try {
          if (isEmpty(formErrors)) {
-            await fetchPatch(id, data.firstValue)
+            const { modified } = await patchUser({ id, password: data.firstValue })
+            logDebug(`Nb modified rows: ${modified}`)
             setsuccess("Mot de passe mis à jour.")
          }
       } catch (error) {

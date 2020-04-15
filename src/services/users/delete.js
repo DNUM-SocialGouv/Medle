@@ -30,10 +30,10 @@ export const del = async ({ id, currentUser }) => {
       })
    }
 
-   const deleted = await knex("users")
+   const number = await knex("users")
       .where("id", id)
       .whereNull("deleted_at")
       .update({ deleted_at: knex.fn.now() })
 
-   return deleted
+   return number
 }

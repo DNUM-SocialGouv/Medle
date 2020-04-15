@@ -31,7 +31,7 @@ export const search = async ({ fuzzy, requestedPage, currentUser }) => {
    const users = await knex("users")
       .leftJoin("hospitals", "users.hospital_id", "hospitals.id")
       .where(makeWhereClause({ scope, fuzzy }))
-      .orderBy("users.created_at", "desc")
+      .orderByRaw("case when (users.updated_at is not null) then users.updated_at else users.created_at end desc")
       .limit(LIMIT)
       .offset(offset)
       .select(

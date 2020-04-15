@@ -9,15 +9,17 @@ const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 //const headersActUserNantes = () => authenticate("acte@nantes.fr", "test")
 
 describe("/attacks", () => {
-   it("should return all attacks for attacks endpoint", async () => {
+   it("should return all attacks", async () => {
       const response = await fetch(API_URL + ATTACKS_ENDPOINT, await headersActUserTours())
 
       const attacks = await handleAPIResponse(response)
 
       expect(attacks).toMatchSnapshot()
    })
+})
 
-   it("should return all commissariats in France for askers endpoint", async () => {
+describe("/askers", () => {
+   it("should return all commissariats in France", async () => {
       const response = await fetch(
          `${API_URL + ASKERS_ENDPOINT}?fuzzy=commissariat&all=true`,
          await headersActUserTours(),

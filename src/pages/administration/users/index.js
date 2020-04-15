@@ -2,39 +2,23 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
 import { Alert, Col, Form, FormGroup, Input, Spinner, Table, Container } from "reactstrap"
-import Layout from "../../../components/Layout"
-import fetch from "isomorphic-unfetch"
+import AddIcon from "@material-ui/icons/Add"
+import EditAttributesIcon from "@material-ui/icons/EditAttributes"
+import DoubleArrowIcon from "@material-ui/icons/DoubleArrow"
 
+import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
-import { API_URL, ADMIN_USERS_ENDPOINT } from "../../../config"
-import { handleAPIResponse } from "../../../utils/errors"
 import { logError } from "../../../utils/logger"
 import { ADMIN, ROLES_DESCRIPTION } from "../../../utils/roles"
 import { usePaginatedData } from "../../../utils/hooks"
 import Pagination from "../../../components/Pagination"
-import EditAttributesIcon from "@material-ui/icons/EditAttributes"
-import AddIcon from "@material-ui/icons/Add"
-import DoubleArrowIcon from "@material-ui/icons/DoubleArrow"
 import { SearchButton } from "../../../components/form/SearchButton"
-
-const fetchData = async ({ search, requestedPage, authHeaders }) => {
-   const arr = []
-   if (search) {
-      arr.push(`fuzzy=${search}`)
-   }
-   if (requestedPage) {
-      arr.push(`requestedPage=${requestedPage}`)
-   }
-   const bonus = arr.length ? "?" + arr.join("&") : ""
-   const response = await fetch(`${API_URL}${ADMIN_USERS_ENDPOINT}${bonus}`, { headers: authHeaders })
-
-   return handleAPIResponse(response)
-}
+import { searchUsersFuzzy } from "../../../clients/users"
 
 const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
    const [search, setSearch] = useState("")
-   const [paginatedData, error, loading, fetchPage] = usePaginatedData(fetchData, initialPaginatedData)
+   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchUsersFuzzy, initialPaginatedData)
 
    const onChange = e => {
       setSearch(e.target.value)
@@ -146,10 +130,10 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
 }
 
 AdminUserPage.getInitialProps = async ctx => {
-   const authHeaders = buildAuthHeaders(ctx)
+   const headers = buildAuthHeaders(ctx)
 
    try {
-      const paginatedData = await fetchData({ authHeaders })
+      const paginatedData = await searchUsersFuzzy({ headers })
       return { paginatedData }
    } catch (error) {
       logError("APP error", error)

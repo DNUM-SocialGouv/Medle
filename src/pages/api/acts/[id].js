@@ -29,16 +29,16 @@ const handler = async (req, res) => {
          case METHOD_DELETE: {
             const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-            const number = await del(req.query, currentUser)
+            const deleted = await del(req.query, currentUser)
 
-            return res.status(STATUS_200_OK).json({ deleted: number })
+            return res.status(STATUS_200_OK).json({ deleted })
          }
          case METHOD_PUT: {
             const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-            const number = await update(req.query, req.body, currentUser)
+            const updated = await update(req.query, req.body, currentUser)
 
-            return res.status(STATUS_200_OK).json({ updated: number })
+            return res.status(STATUS_200_OK).json({ updated })
          }
          default:
             return sendMethodNotAllowedError(res)

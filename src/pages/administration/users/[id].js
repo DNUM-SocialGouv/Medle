@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import PropTypes from "prop-types"
-import fetch from "isomorphic-unfetch"
 import {
    Button,
    Col,
@@ -22,52 +21,14 @@ import { useForm } from "react-hook-form"
 import AsyncSelect from "react-select/async"
 import Select from "react-select"
 
-import { API_URL, ADMIN_USERS_ENDPOINT, HOSPITALS_ENDPOINT } from "../../../config"
 import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"
 import { isEmpty } from "../../../utils/misc"
-import { handleAPIResponse } from "../../../utils/errors"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
-import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../../../utils/http"
 import { availableRolesForUser, rulesOfRoles, ADMIN, ADMIN_HOSPITAL, ROLES_DESCRIPTION } from "../../../utils/roles"
-import { logError } from "../../../utils/logger"
-
-const fetchHospitals = async value => {
-   const bonus = value ? `?fuzzy=${value}` : ""
-
-   try {
-      const response = await fetch(`${API_URL}${HOSPITALS_ENDPOINT}${bonus}`)
-      const hospitals = await handleAPIResponse(response)
-      return isEmpty(hospitals) ? [] : hospitals
-   } catch (error) {
-      logError(error)
-   }
-}
-const fetchUpdate = async user => {
-   const response = await fetch(`${API_URL}${ADMIN_USERS_ENDPOINT}/${user.id}`, {
-      method: METHOD_PUT,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-   })
-   return await handleAPIResponse(response)
-}
-// eslint-disable-next-line no-unused-vars
-const fetchCreate = async ({ id, ...user }) => {
-   const response = await fetch(`${API_URL}${ADMIN_USERS_ENDPOINT}`, {
-      method: user.id ? METHOD_PUT : METHOD_POST,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-   })
-   return await handleAPIResponse(response)
-}
-
-const deleteUser = async id => {
-   try {
-      await fetch(`${API_URL}${ADMIN_USERS_ENDPOINT}/${id}`, { method: METHOD_DELETE })
-   } catch (error) {
-      logError(error)
-   }
-}
+import { logError, logDebug } from "../../../utils/logger"
+import { searchHospitalsFuzzy } from "../../../clients/hospitals"
+import { createUser, deleteUser, findUser, updateUser } from "../../../clients/users"
 
 const MandatorySign = () => <span style={{ color: "red" }}>*</span>
 
@@ -167,15 +128,20 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
    const onDeleteUser = () => {
       toggle()
 
-      try {
-         deleteUser(id)
-         router.push("/administration/users")
-      } catch (error) {
-         setError(error)
+      const del = async id => {
+         try {
+            const { deleted } = await deleteUser({ id })
+            logDebug(`Nb deleted rows: ${deleted}`)
+            router.push("/administration/users")
+         } catch (error) {
+            setError(error)
+         }
       }
+
+      del(id)
    }
 
-   const onSubmit = async data => {
+   const onSubmit = async user => {
       setError("")
       setErrors({})
       setsuccess("")
@@ -198,12 +164,13 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
 
       try {
          if (isEmpty(formErrors)) {
-            if (data.id) {
-               await fetchUpdate(data)
+            if (user.id) {
+               const { updated } = await updateUser({ user })
+               logDebug(`Nb updated rows: ${updated}`)
                setsuccess("Utilisateur modifié.")
             } else {
-               const res = await fetchCreate(data)
-               setValue("id", (res && res.id) || "")
+               const { id } = await createUser({ user })
+               setValue("id", id || "")
                setsuccess("Utilisateur créé.")
             }
          }
@@ -379,7 +346,7 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                      </Label>
                      <Col sm={9}>
                         <AsyncSelect
-                           loadOptions={fetchHospitals}
+                           loadOptions={search => searchHospitalsFuzzy({ search })}
                            value={hospital}
                            onChange={onHospitalChange}
                            noOptionsMessage={() => "Aucun résultat"}
@@ -401,7 +368,7 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                      </Label>
                      <Col sm={9}>
                         <AsyncSelect
-                           loadOptions={fetchHospitals}
+                           loadOptions={search => searchHospitalsFuzzy({ search })}
                            isMulti
                            value={scope}
                            onChange={onScopeChange}
@@ -461,15 +428,14 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
 }
 
 UserDetail.getInitialProps = async ctx => {
-   const authHeaders = buildAuthHeaders(ctx)
+   const headers = buildAuthHeaders(ctx)
 
    const { id } = ctx.query
 
    if (!id || isNaN(id)) return { initialUser: {} }
 
    try {
-      const response = await fetch(API_URL + ADMIN_USERS_ENDPOINT + "/" + id, { headers: authHeaders })
-      const user = await handleAPIResponse(response)
+      const user = await findUser({ id, headers })
       return { initialUser: user }
    } catch (error) {
       logError(error)

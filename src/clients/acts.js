@@ -3,29 +3,9 @@ import { handleAPIResponse } from "../utils/errors"
 import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../utils/http"
 import fetch from "isomorphic-unfetch"
 
-export const createAct = async ({ act, headers }) => {
-   const response = await fetch(API_URL + ACTS_ENDPOINT, {
-      method: METHOD_POST,
-      headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify(act),
-   })
-   return handleAPIResponse(response)
-}
-
 export const findAct = async ({ id, headers }) => {
-   // const headers = buildAuthHeaders(ctx)
-
    const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + id, { headers })
    return handleAPIResponse(response)
-}
-
-export const updateAct = async ({ act, headers }) => {
-   const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + act.id, {
-      method: METHOD_PUT,
-      headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify(act),
-   })
-   return await handleAPIResponse(response)
 }
 
 export const searchActsByKey = async ({ key, value, headers }) => {
@@ -50,8 +30,25 @@ export const searchActsFuzzy = async ({ search, requestedPage, headers }) => {
    return handleAPIResponse(response)
 }
 
-export const deleteAct = async ({ id, headers }) => {
-   // const headers = buildAuthHeaders(ctx)
+export const createAct = async ({ act, headers }) => {
+   const response = await fetch(API_URL + ACTS_ENDPOINT, {
+      method: METHOD_POST,
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify(act),
+   })
+   return handleAPIResponse(response)
+}
 
-   return fetch(`${API_URL}${ACTS_ENDPOINT}/${id}`, { method: METHOD_DELETE, headers })
+export const updateAct = async ({ act, headers }) => {
+   const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + act.id, {
+      method: METHOD_PUT,
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify(act),
+   })
+   return handleAPIResponse(response)
+}
+
+export const deleteAct = async ({ id, headers }) => {
+   const response = await fetch(`${API_URL}${ACTS_ENDPOINT}/${id}`, { method: METHOD_DELETE, headers })
+   return handleAPIResponse(response)
 }

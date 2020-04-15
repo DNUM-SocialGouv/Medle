@@ -211,7 +211,7 @@ const ActDeclaration = ({ act, currentUser }) => {
 
       try {
          if (!state.id) {
-            const id = createAct({ act: state })
+            const { id } = createAct({ act: state })
 
             logDebug("Created act id: ", id)
 
@@ -223,7 +223,7 @@ const ActDeclaration = ({ act, currentUser }) => {
                },
             })
          } else {
-            const updated = updateAct({ act: state })
+            const { updated } = updateAct({ act: state })
 
             logDebug("Nb updated rows: ", updated)
 
