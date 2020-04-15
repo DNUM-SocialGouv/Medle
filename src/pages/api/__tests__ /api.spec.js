@@ -19,7 +19,7 @@ describe("/askers", () => {
    it("should return all commissariats in France", async () => {
       const { headers } = await headersActUserTours()
 
-      const askers = await searchAskersFuzzy({ search: "commissariat", all: true, headers })
+      const askers = await searchAskersFuzzy({ search: "tribunal", all: true, headers })
 
       expect(askers).toMatchSnapshot()
    })

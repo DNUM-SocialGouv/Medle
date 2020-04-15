@@ -93,6 +93,28 @@ exports.seed = function(knex) {
                hospital_id: 1,
                scope: null,
             },
+            {
+               id: 9,
+               created_at: "2020-01-20 19:55:53.300334",
+               first_name: "Utilisateur",
+               last_name: "Actes",
+               email: "acte@medle.fr",
+               password: "$2a$10$RCEEeI.gFf1occ6h4DxMyuX.JhVPD3edsevOYnqICcQl5yM1LO4Vy",
+               role: "OPERATOR_ACT",
+               hospital_id: 4,
+               scope: null,
+            },
+            {
+               id: 10,
+               created_at: "2020-01-20 19:55:53.300334",
+               first_name: "Utilisateur",
+               last_name: "ETP",
+               email: "etp@medle.fr",
+               password: "$2a$10$RCEEeI.gFf1occ6h4DxMyuX.JhVPD3edsevOYnqICcQl5yM1LO4Vy",
+               role: "OPERATOR_EMPLOYMENT",
+               hospital_id: 4,
+               scope: null,
+            },
          ])
       })
 }
