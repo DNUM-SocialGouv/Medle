@@ -38,7 +38,7 @@ Object {
 }
 `;
 
-exports[`/askers should return all commissariats in France 1`] = `
+exports[`/askers should return all criminal courts in France 1`] = `
 Array [
   Object {
     "label": "Section Détachée du Tribunal de Première Instance à Koné",

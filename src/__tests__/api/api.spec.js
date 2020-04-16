@@ -16,7 +16,7 @@ describe("/attacks", () => {
 })
 
 describe("/askers", () => {
-   it("should return all commissariats in France", async () => {
+   it("should return all criminal courts in France", async () => {
       const { headers } = await headersActUserTours()
 
       const askers = await searchAskersFuzzy({ search: "tribunal", all: true, headers })
