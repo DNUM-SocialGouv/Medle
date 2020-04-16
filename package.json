@@ -14,7 +14,8 @@
     "migrate:rollback": "node -r dotenv/config ./node_modules/knex/bin/cli migrate:rollback",
     "migrate:list": "node -r dotenv/config ./node_modules/knex/bin/cli migrate:list",
     "seed:make": "node -r dotenv/config ./node_modules/knex/bin/cli seed:make name_seed",
-    "seed:run": "node -r dotenv/config ./node_modules/knex/bin/cli seed:run"
+    "seed:run:dev": "node -r dotenv/config ./node_modules/knex/bin/cli seed:run --env development",
+    "seed:run:staging": "node -r dotenv/config ./node_modules/knex/bin/cli seed:run --env staging"
   },
   "dependencies": {
     "@material-ui/core": "^4.5.0",

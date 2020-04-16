@@ -43,7 +43,7 @@ const knexConfig = {
          directory: join(__dirname, "src/knex/migrations"),
       },
       seeds: {
-         directory: join(__dirname, "src/knex/seeds/development"),
+         directory: join(__dirname, "src/knex/seeds/staging"),
       },
    },
    production: {

@@ -5,7 +5,6 @@ exports.seed = function(knex) {
          return knex("hospitals").insert([
             {
                id: 1,
-               created_at: "2020-01-20 19:55:53.300334",
                finesse_number: "370000481",
                name: "CHRU de Tours",
                addr1: "2 BD TONNELLE",
@@ -16,7 +15,6 @@ exports.seed = function(knex) {
             },
             {
                id: 2,
-               created_at: "2020-01-20 19:55:53.300334",
                finesse_number: "450000088",
                name: "CHR d'Orléans",
                addr1: "14 AV DE L'HOPITAL",
@@ -27,7 +25,6 @@ exports.seed = function(knex) {
             },
             {
                id: 3,
-               created_at: "2020-01-20 19:55:53.300334",
                finesse_number: "440000289",
                name: "CHU de Nantes",
                addr1: "7 ALL DE L'ILE GLORIETTE",
@@ -38,7 +35,6 @@ exports.seed = function(knex) {
             },
             {
                id: 4,
-               created_at: "2020-01-20 19:55:53.300334",
                finesse_number: "490000031",
                name: "CHU d'Angers",
                addr1: "4 R LARREY",
