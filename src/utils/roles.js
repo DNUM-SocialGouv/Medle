@@ -70,13 +70,14 @@ export const ROLES_DESCRIPTION = {
 }
 
 const START_PAGES = {
+   ADMIN_HOSPITAL: "/acts",
    OPERATOR_EMPLOYMENT: "/fillEmployments",
    PUBLIC_SUPERVISOR: "/statistics",
    REGIONAL_SUPERVISOR: "/statistics",
    SUPER_ADMIN: "/statistics",
 }
 
-export const startPageForRole = role => START_PAGES[role] || "/acts"
+export const startPageForRole = role => START_PAGES[role] || "/statistics"
 
 export const availableRolesForUser = user => {
    switch (user && user.role) {
