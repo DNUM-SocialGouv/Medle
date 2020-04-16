@@ -44,3 +44,29 @@ export const find = async ({ id, currentUser }) => {
 
    return user
 }
+
+export const findByEmail = async email => {
+   if (!email) {
+      throw new APIError({
+         status: STATUS_400_BAD_REQUEST,
+         message: "Bad request",
+      })
+   }
+
+   let [user] = await knex("users")
+      .where("users.email", email)
+      .select(
+         "users.id",
+         "users.first_name",
+         "users.last_name",
+         "users.email",
+         "users.password",
+         "users.role",
+         "users.hospital_id",
+         "users.scope",
+      )
+
+   user = transform(user)
+
+   return user
+}

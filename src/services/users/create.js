@@ -1,8 +1,9 @@
 import knex from "../../knex/knex"
-import { STATUS_401_UNAUTHORIZED } from "../../utils/http"
+import { STATUS_401_UNAUTHORIZED, STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 import { SUPER_ADMIN } from "../../utils/roles"
 import { APIError } from "../../utils/errors"
 import { untransform, validate } from "../../models/users"
+import { findByEmail } from "./find"
 
 export const create = async (user, currentUser) => {
    await validate(user)
@@ -20,6 +21,15 @@ export const create = async (user, currentUser) => {
             message: "Not authorized",
          })
       }
+   }
+
+   const otherUser = await findByEmail(user.email)
+
+   if (otherUser) {
+      throw new APIError({
+         status: STATUS_406_NOT_ACCEPTABLE,
+         message: "Email already used",
+      })
    }
 
    const [newId] = await knex("users").insert(untransform(user), "id")

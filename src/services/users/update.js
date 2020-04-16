@@ -1,8 +1,9 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../../utils/http"
+import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 import { SUPER_ADMIN } from "../../utils/roles"
 import { APIError } from "../../utils/errors"
 import { untransform, validate } from "../../models/users"
+import { findByEmail } from "./find"
 
 export const update = async ({ id }, user, currentUser) => {
    if (!id || isNaN(id) || !user || parseInt(id, 10) !== parseInt(user.id, 10)) {
@@ -27,6 +28,15 @@ export const update = async ({ id }, user, currentUser) => {
             message: "Not authorized",
          })
       }
+   }
+
+   const otherUser = await findByEmail(user.email)
+
+   if (otherUser && otherUser.id !== user.id) {
+      throw new APIError({
+         status: STATUS_406_NOT_ACCEPTABLE,
+         message: "Email already used",
+      })
    }
 
    const number = await knex("users")

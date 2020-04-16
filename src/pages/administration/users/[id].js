@@ -169,13 +169,15 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                logDebug(`Nb updated rows: ${updated}`)
                setsuccess("Utilisateur modifié.")
             } else {
+               user.id = null
                const { id } = await createUser({ user })
                setValue("id", id || "")
                setsuccess("Utilisateur créé.")
             }
          }
       } catch (error) {
-         setError("Erreur serveur.")
+         console.log("error", JSON.stringify(error))
+         setError(error.status === 406 ? "Adresse courriel déjà utilisé." : "Erreur serveur.")
       }
    }
 
