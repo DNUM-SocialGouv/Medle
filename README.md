@@ -83,13 +83,17 @@ The database structure is able to evolve thanks to Knex.js migrations.
 To initiate a migration, the easiest way is to use `migrate:make` script in package.json.
 
 ```shell
-NODE_ENV=development yarn knex migrate:make init_schema --cwd ./src/knex
+yarn knex migrate:make my-name-of-migration
 ```
 
 Modify it accordingly to the business needs.
 
 To apply it, use `migrate:latest` script in package.json.
 
+In development mode
+`yarn migrate:latest`
+
+In production mode
 `sudo docker-compose exec app yarn migrate:latest`
 
 So on another platform like production, the pattern is:
@@ -104,27 +108,55 @@ If you're not happy with the migration done, you can rollback with the script `m
 
 `sudo docker-compose exec app yarn migrate:rollback`
 
-On the development platform, you may need to populate table in JS (you may yet do it directly with SQL client too).
+On the development platform (local or staging environment), you may need to populate table in JS (you may yet do it directly with SQL client too).
 
-Make a new seed file, then:
+Make a new seed file, in src/knex/seeds/development or src/knex/seeds/staging, then:
 
-`sudo docker-compose exec app yarn seed:run`
+In development mode, for applying the development seeds:
+`yarn seed:run:dev`
+
+In production mode, for applying the staging seeds:
+`sudo docker-compose exec app yarn seed:run:staging`
+
+Never, never, never <strike>give up</strike> apply this seeds in real production environment (under penalty of fetching a Postgres backup in Azure 😭).
 
 Knex migration tips: https://medium.com/@j3y/beyond-basic-knex-js-database-migrations-22263b0fcd7c
+
+### Migrations organization
+
+For migraton involving a table (creation, modificaton including index management, trigger management, etc.), this should be done in the directory src/knex/migrations like the file 20200317163657_create_indexes.js for example.
+
+For migrations involving a stored function or procedure, a view, materialized or not, this should be done in directory src/knex/versions, with a version number, with the master migration file mentioning it.
+
+For example, see this migration file named `20200312161718_create_function_avg_acts.js`:
+
+```js
+const v1 = require("../versions/functions/avg_acts/v1")
+
+exports.up = async function(knex) {
+   await knex.raw(v1.up)
+}
+
+exports.down = async function(knex) {
+   await knex.raw(v1.down)
+}
+```
+
+This way allows us to see the entire history of things like functions or views, which can be totally removed and recreated.
 
 ## 🧪 How to test
 
 In development mode:
 1. `yarn dev`
-2. `yarn seed:run` (will remove all data on env.DATABASE_URL and reset with the default data)
+2. `yarn seed:run:staging` (will remove all data on env.DATABASE_URL and reset with the default data)
 3. `yarn test` (will use env.API_URL for tests involving API endpoints)
 
 In staging mode:
 1. `sudo docker-compose up --build -d app`
-2. `sudo docker-compose exec app yarn seed:run` (will remove all data on env.DATABASE_URL and reset with the default data)
+2. `sudo docker-compose exec app yarn seed:run:staging` (will remove all data on env.DATABASE_URL and reset with the default data)
 3. `sudo docker-compose exec app yarn test` (will use env.API_URL for tests involving API endpoints)
 
-## Main src directories
+## 🗂️ Main src directories
 
 - clients: the API clients for the frontend
 - components: React component
@@ -160,7 +192,7 @@ As a reference see https://github.com/conventional-changelog/commitlint/tree/mas
 
 Add in commit message "Closes #123" where 123 is the issues's id to close.
 
-## Matomo
+## 📈 Matomo
 
 `trackEvent(category, action, [name], [value])`
 
