@@ -26,7 +26,6 @@ const handler = async (req, res) => {
 
             return res.status(STATUS_200_OK).json({ id })
          }
-
          default:
             return sendMethodNotAllowedError(res)
       }

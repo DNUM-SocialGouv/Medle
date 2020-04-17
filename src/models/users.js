@@ -23,26 +23,24 @@ export const transform = dbData => {
         }
 }
 
-export const transformAll = list => list.map(memData => transform(memData))
+export const transformAll = list => list.map(jsData => transform(jsData))
 
 // from JS entity to DB entity
-export const untransform = memData => {
-   const res = {
-      first_name: memData.firstName,
-      last_name: memData.lastName,
-      password: memData.password || "defaultpassword",
-      email: memData.email,
-      role: memData.role,
+export const untransform = jsData => {
+   const dbData = {
+      first_name: jsData.firstName,
+      last_name: jsData.lastName,
+      password: jsData.password || "defaultpassword",
+      email: jsData.email,
+      role: jsData.role,
       scope:
-         !memData.scope || !memData.scope.length
-            ? null
-            : JSON.stringify(memData.scope.map(curr => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
-      hospital_id: (memData.hospital && memData.hospital.id) || null,
+         !jsData.scope || !jsData.scope.length ? null : JSON.stringify(jsData.scope.map(curr => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
+      hospital_id: (jsData.hospital && jsData.hospital.id) || null,
    }
 
    // Pas d'id pour une création de user
-   if (memData.id) res.id = memData.id
-   return res
+   if (jsData.id) dbData.id = jsData.id
+   return dbData
 }
 
 const schema = yup.object().shape({
@@ -78,9 +76,9 @@ const configValidate = {
    abortEarly: false,
 }
 
-export const validate = async user => {
+export const validate = async jsData => {
    try {
-      const value = await schema.validate(user, configValidate)
+      const value = await schema.validate(jsData, configValidate)
       return value
    } catch (error) {
       logError(error)
@@ -92,4 +90,4 @@ export const validate = async user => {
    }
 }
 
-export const cast = async user => await schema.cast(user)
+export const cast = async jsData => await schema.cast(jsData)

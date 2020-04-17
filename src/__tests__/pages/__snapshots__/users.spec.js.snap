@@ -134,7 +134,7 @@ exports[`renders UserDetail unchanged 1`] = `
         className="jsx-113465286 list-group list-group-flush text-center"
       >
         <a
-          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          className="jsx-113465286 list-group-item list-group-item-action selected"
           href="/administration/users"
           onClick={[Function]}
           onMouseEnter={[Function]}
@@ -322,7 +322,6 @@ exports[`renders UserDetail unchanged 1`] = `
           >
             Utilisateur
           </h1>
-          
           
           <form
             className=""
@@ -606,14 +605,14 @@ exports[`renders UserDetail unchanged 1`] = `
            
           <a
             className="jsx-3984601019"
-            href="https://solidarites-sante.gouv.fr/ministere/organisation/directions/article/dgos-direction-generale-de-l-offre-de-soins"
+            href="https://solidarites-sante.gouv.fr/ministere/organisation/organisation-des-directions-et-services/article/organisation-de-la-direction-generale-de-l-offre-de-soins-dgos"
             rel="noreferrer noopener"
             target="_blank"
           >
             DGOS
           </a>
            
-          et
+          (ministère de la santé) et
            
           <a
             className="jsx-3984601019"
@@ -623,6 +622,8 @@ exports[`renders UserDetail unchanged 1`] = `
           >
              l'incubateur des ministères sociaux
           </a>
+           
+          (DINUM)
         </div>
         <div
           className="mt-4 mt-md-0 col"

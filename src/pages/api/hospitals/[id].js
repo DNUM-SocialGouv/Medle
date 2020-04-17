@@ -1,10 +1,10 @@
 import Cors from "micro-cors"
 
-import knex from "../../../knex/knex"
-import { STATUS_200_OK, STATUS_400_BAD_REQUEST, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
-import { NO_PRIVILEGE_REQUIRED } from "../../../utils/roles"
+import { STATUS_200_OK, METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_PUT } from "../../../utils/http"
+import { ADMIN, NO_PRIVILEGE_REQUIRED } from "../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
+import { del, find, update } from "../../../services/hospitals"
 
 const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -13,20 +13,32 @@ const handler = async (req, res) => {
       switch (req.method) {
          case METHOD_GET: {
             checkValidUserWithPrivilege(NO_PRIVILEGE_REQUIRED, req, res)
-            const { id } = req.body
 
-            if (!id || isNaN(id)) {
-               return res.status(STATUS_400_BAD_REQUEST).end()
-            }
+            const hospital = await find(req.query)
 
-            const [hospital] = await knex("hospitals").where("id", id)
-
-            if (hospital) {
-               return res.status(STATUS_200_OK).json(hospital)
-            } else {
-               return sendNotFoundError(res)
-            }
+            return hospital ? res.status(STATUS_200_OK).json(hospital) : sendNotFoundError(res)
          }
+         case METHOD_DELETE: {
+            // TODO: need to be an SUPER_ADMIN
+            const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+            const deleted = await del(req.query, currentUser)
+
+            if (!deleted) return sendNotFoundError(res)
+
+            return res.status(STATUS_200_OK).json({ deleted })
+         }
+         case METHOD_PUT: {
+            // TODO: need to be an SUPER_ADMIN
+            checkValidUserWithPrivilege(ADMIN, req, res)
+
+            const updated = await update(req.query, req.body)
+
+            if (!updated) return sendNotFoundError(res)
+
+            return res.status(STATUS_200_OK).json({ updated })
+         }
+
          default:
             return sendMethodNotAllowedError(res)
       }

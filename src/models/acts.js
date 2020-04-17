@@ -2,28 +2,32 @@ import moment from "moment"
 import { ISO_DATE } from "../utils/date"
 
 // from DB entity to JS entity
-export const transform = dbData => ({
-   id: dbData.id,
-   internalNumber: dbData.internal_number,
-   pvNumber: dbData.pv_number,
-   examinationDate: moment(dbData.examination_date).format(ISO_DATE),
-   profile: dbData.profile,
-   asker: { id: dbData.asker_id, name: dbData.asker_name },
-   user: {
-      id: dbData.added_by,
-      firstName: dbData.user_first_name,
-      lastName: dbData.user_last_name,
-      email: dbData.user_email,
-   },
-   hospital: { id: dbData.hospital_id, name: dbData.hospital_name },
-   ...dbData.extra_data,
-})
+export const transform = dbData => {
+   return !dbData
+      ? null
+      : {
+           id: dbData.id,
+           internalNumber: dbData.internal_number,
+           pvNumber: dbData.pv_number,
+           examinationDate: moment(dbData.examination_date).format(ISO_DATE),
+           profile: dbData.profile,
+           asker: { id: dbData.asker_id, name: dbData.asker_name },
+           user: {
+              id: dbData.added_by,
+              firstName: dbData.user_first_name,
+              lastName: dbData.user_last_name,
+              email: dbData.user_email,
+           },
+           hospital: { id: dbData.hospital_id, name: dbData.hospital_name },
+           ...dbData.extra_data,
+        }
+}
 
-export const transformAll = list => list.map(memData => transform(memData))
+export const transformAll = list => list.map(jsData => transform(jsData))
 
 // from JS entity to DB entity
-export const untransform = memData => {
-   const res = { extra_data: {} }
+export const untransform = jsData => {
+   const dbData = { extra_data: {} }
 
    const mainKeys = {
       id: "id",
@@ -36,13 +40,13 @@ export const untransform = memData => {
       hospitalId: "hospital_id",
    }
 
-   Object.keys(memData).forEach(key => {
+   Object.keys(jsData).forEach(key => {
       if (mainKeys[key]) {
-         res[mainKeys[key]] = memData[key]
+         dbData[mainKeys[key]] = jsData[key]
       } else {
-         res.extra_data[key] = memData[key]
+         dbData.extra_data[key] = jsData[key]
       }
    })
 
-   return res
+   return dbData
 }

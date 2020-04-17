@@ -4,39 +4,45 @@ import { PropTypes } from "prop-types"
 import { Alert, Col, Form, FormGroup, Input, Spinner, Table, Container } from "reactstrap"
 import AddIcon from "@material-ui/icons/Add"
 import EditAttributesIcon from "@material-ui/icons/EditAttributes"
-import DoubleArrowIcon from "@material-ui/icons/DoubleArrow"
 
 import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
-import { ADMIN, ROLES_DESCRIPTION } from "../../../utils/roles"
-import { usePaginatedData } from "../../../utils/hooks"
-import Pagination from "../../../components/Pagination"
+import { ADMIN } from "../../../utils/roles"
 import { SearchButton } from "../../../components/form/SearchButton"
-import { searchUsersFuzzy } from "../../../clients/users"
+import { searchHospitalsFuzzy } from "../../../clients/hospitals"
 
-const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
+const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
+   const [hospitals, setHospitals] = useState(initialHospitals)
    const [search, setSearch] = useState("")
-   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchUsersFuzzy, initialPaginatedData)
+   const [error, setError] = useState("")
+   const [loading, setLoading] = useState(false)
 
    const onChange = e => {
       setSearch(e.target.value)
    }
 
-   const onSubmit = e => {
+   const onSubmit = async e => {
       e.preventDefault()
-      fetchPage(search)(0)
+      setLoading(true)
+      try {
+         setHospitals(await searchHospitalsFuzzy({ search }))
+      } catch (error) {
+         setError("Erreur serveur.")
+      } finally {
+         setLoading(false)
+      }
    }
 
    return (
-      <Layout page="users" currentUser={currentUser} admin={true}>
+      <Layout page="hospitals" currentUser={currentUser} admin={true}>
          <Container
             style={{ maxWidth: 980, minWidth: 740 }}
             className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
          >
-            <Title1 className="">{"Administration des utilisateurs"}</Title1>
-            <Link href="/administration/users/[id]" as={`/administration/users/new`}>
+            <Title1 className="">{"Administration des établissements"}</Title1>
+            <Link href="/administration/hospitals/[id]" as={`/administration/hospitals/new`}>
                <a>
                   <SearchButton className="btn-outline-primary">
                      <AddIcon />
@@ -54,7 +60,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                         type="text"
                         name="es"
                         id="es"
-                        placeholder="Rechercher un utilisateur par nom, prénom, email.."
+                        placeholder="Rechercher un établissement par son nom, etc."
                         value={search}
                         onChange={onChange}
                         autoComplete="off"
@@ -72,49 +78,37 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                   {error}
                </Alert>
             )}
-            {!error && !paginatedData.elements.length && (
-               <div className="text-center">{"Aucun utilisateur trouvé."}</div>
-            )}
+            {!error && !hospitals.length && <div className="text-center">{"Aucun établissement trouvé."}</div>}
 
-            {!error && !!paginatedData.elements.length && (
+            {!error && !!hospitals.length && (
                <>
-                  <Pagination data={paginatedData} fn={fetchPage(search)} />
                   <Table responsive className="table-hover">
                      <thead>
                         <tr className="table-light">
                            <th>Nom</th>
-                           <th>Email</th>
-                           <th>Role</th>
-                           <th>Établissement</th>
-                           <th></th>
+                           <th>N° Finesse</th>
+                           <th>Ville</th>
+                           <th>Code postal</th>
                            <th></th>
                         </tr>
                      </thead>
                      <tbody>
-                        {paginatedData.elements.map(user => (
-                           <tr key={user.id}>
+                        {hospitals.map(hospital => (
+                           <tr key={hospital.id}>
                               <td>
-                                 <b>{`${user.firstName} ${user.lastName}`}</b>
+                                 <b>{`${hospital.name}`}</b>
                               </td>
-                              <td>{user.email}</td>
-                              <td>{user.role && ROLES_DESCRIPTION[user.role]}</td>
-                              <td>{user.hospital && user.hospital.name}</td>
+                              <td>{hospital.finesseNumber}</td>
+                              <td>{hospital.town}</td>
+                              <td>{hospital.postalCode}</td>
                               <td>
-                                 <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
+                                 <Link
+                                    href="/administration/hospitals/[id]"
+                                    as={`/administration/hospitals/${hospital.id}`}
+                                 >
                                     <a>
                                        Détails&nbsp;
                                        <EditAttributesIcon />
-                                    </a>
-                                 </Link>
-                              </td>
-                              <td>
-                                 <Link
-                                    href="/administration/users/reset/[id]"
-                                    as={`/administration/users/reset/${user.id}`}
-                                 >
-                                    <a>
-                                       Réinitialiser&nbsp;
-                                       <DoubleArrowIcon />
                                     </a>
                                  </Link>
                               </td>
@@ -129,12 +123,12 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
    )
 }
 
-AdminUserPage.getInitialProps = async ctx => {
+AdminHospitalPage.getInitialProps = async ctx => {
    const headers = buildAuthHeaders(ctx)
 
    try {
-      const paginatedData = await searchUsersFuzzy({ headers })
-      return { paginatedData }
+      const hospitals = await searchHospitalsFuzzy({ headers })
+      return { hospitals }
    } catch (error) {
       logError("APP error", error)
 
@@ -143,9 +137,9 @@ AdminUserPage.getInitialProps = async ctx => {
    return {}
 }
 
-AdminUserPage.propTypes = {
-   paginatedData: PropTypes.object,
+AdminHospitalPage.propTypes = {
+   hospitals: PropTypes.array,
    currentUser: PropTypes.object.isRequired,
 }
 
-export default withAuthentication(AdminUserPage, ADMIN)
+export default withAuthentication(AdminHospitalPage, ADMIN)

@@ -1,12 +1,10 @@
 import Cors from "micro-cors"
 
-import knex from "../../../knex/knex"
-import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
-import { NO_PRIVILEGE_REQUIRED } from "../../../utils/roles"
+import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS, METHOD_POST } from "../../../utils/http"
+import { ADMIN, NO_PRIVILEGE_REQUIRED } from "../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
-
-const MAX_VALUE = 100000
+import { create, search } from "../../../services/hospitals"
 
 const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -16,20 +14,16 @@ const handler = async (req, res) => {
          case METHOD_GET: {
             checkValidUserWithPrivilege(NO_PRIVILEGE_REQUIRED, req, res)
 
-            const { fuzzy, all } = req.query
-
-            const hospitals = await knex("hospitals")
-               .whereNull("deleted_at")
-               .where(builder => {
-                  if (fuzzy) {
-                     builder.where("name", "ilike", `%${fuzzy}%`)
-                  }
-               })
-               .limit(all ? MAX_VALUE : 10)
-               .orderBy("name")
-               .select("id as value", "name as label")
+            const hospitals = await search(req.query)
 
             return res.status(STATUS_200_OK).json(hospitals)
+         }
+         case METHOD_POST: {
+            checkValidUserWithPrivilege(ADMIN, req, res)
+
+            const id = await create(req.body)
+
+            return res.status(STATUS_200_OK).json({ id })
          }
          default:
             return sendMethodNotAllowedError(res)

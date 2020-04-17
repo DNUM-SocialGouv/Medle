@@ -288,7 +288,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
                <Link href="/administration/hospitals">
                   <a
                      className={
-                        "list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")
+                        "list-group-item list-group-item-action " + (page === "hospitals" ? "selected" : "unselected")
                      }
                   >
                      <ApartmentIcon width={30} /> <br />
@@ -300,8 +300,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
                <Link href="/administration/askers">
                   <a
                      className={
-                        "list-group-item list-group-item-action " +
-                        (page === "fillEmployments" ? "selected" : "unselected")
+                        "list-group-item list-group-item-action " + (page === "askers" ? "selected" : "unselected")
                      }
                   >
                      <AccountBalanceIcon width={30} /> <br />
@@ -313,8 +312,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
                <Link href="/administration/attacks">
                   <a
                      className={
-                        "list-group-item list-group-item-action " +
-                        (page === "fillEmployments" ? "selected" : "unselected")
+                        "list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")
                      }
                   >
                      <WhatshotIcon width={30} /> <br />
@@ -326,8 +324,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
                <Link href="/administration/employments">
                   <a
                      className={
-                        "list-group-item list-group-item-action " +
-                        (page === "fillEmployments" ? "selected" : "unselected")
+                        "list-group-item list-group-item-action " + (page === "employments" ? "selected" : "unselected")
                      }
                   >
                      <BusinessCenterIcon width={30} /> <br />
@@ -339,8 +336,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
                <Link href="/administration/acts">
                   <a
                      className={
-                        "list-group-item list-group-item-action " +
-                        (page === "fillEmployments" ? "selected" : "unselected")
+                        "list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")
                      }
                   >
                      <ReceiptIcon width={30} /> <br />

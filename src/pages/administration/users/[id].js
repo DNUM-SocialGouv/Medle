@@ -43,7 +43,7 @@ const mapArrayForSelect = (data, fnValue, fnLabel) => {
 }
 
 // React component : only available for ADMIN or ADMIN_HOSPITAL
-const UserDetail = ({ initialUser = {}, currentUser }) => {
+const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
    const router = useRouter()
    const { id } = router.query
    const { handleSubmit, register, errors: formErrors, setValue } = useForm({
@@ -93,7 +93,7 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
    const [scope, setScope] = useState(initialUserScopeSelect)
 
    // General error (alert)
-   const [error, setError] = useState("")
+   const [error, setError] = useState(initialError)
    // Fields errors, for those not managed by useForm
    const [errors, setErrors] = useState({})
    const [success, setsuccess] = useState("")
@@ -176,7 +176,6 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
             }
          }
       } catch (error) {
-         console.log("error", JSON.stringify(error))
          setError(error.status === 406 ? "Adresse courriel déjà utilisé." : "Erreur serveur.")
       }
    }
@@ -257,8 +256,17 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
       }),
    })
 
+   const searchHospitals = async search => {
+      const hospitals = await searchHospitalsFuzzy({ search })
+
+      return hospitals.map(hospital => ({
+         value: hospital.id,
+         label: hospital.name,
+      }))
+   }
+
    return (
-      <Layout currentUser={currentUser} admin={true}>
+      <Layout page="users" currentUser={currentUser} admin={true}>
          <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
             <Title1 className="mb-5">{"Utilisateur"}</Title1>
 
@@ -348,7 +356,7 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                      </Label>
                      <Col sm={9}>
                         <AsyncSelect
-                           loadOptions={search => searchHospitalsFuzzy({ search })}
+                           loadOptions={searchHospitals}
                            value={hospital}
                            onChange={onHospitalChange}
                            noOptionsMessage={() => "Aucun résultat"}
@@ -370,7 +378,7 @@ const UserDetail = ({ initialUser = {}, currentUser }) => {
                      </Label>
                      <Col sm={9}>
                         <AsyncSelect
-                           loadOptions={search => searchHospitalsFuzzy({ search })}
+                           loadOptions={searchHospitals}
                            isMulti
                            value={scope}
                            onChange={onScopeChange}
@@ -450,6 +458,7 @@ UserDetail.getInitialProps = async ctx => {
 UserDetail.propTypes = {
    initialUser: PropTypes.object,
    currentUser: PropTypes.object.isRequired,
+   error: PropTypes.string,
 }
 
 export default withAuthentication(UserDetail, ADMIN)
