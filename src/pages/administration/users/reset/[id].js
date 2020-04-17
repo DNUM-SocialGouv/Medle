@@ -41,7 +41,16 @@ const UserReset = ({ currentUser }) => {
 
             {error && <Alert color="danger">{error}</Alert>}
 
-            {success && <Alert>{success}</Alert>}
+            {success && (
+               <Alert color="success" className="d-flex justify-content-between align-items-center">
+                  {success}&nbsp;
+                  <Link href="/administration/users">
+                     <Button className="" outline color="success">
+                        <a>Retour</a>
+                     </Button>
+                  </Link>
+               </Alert>
+            )}
 
             <Form onSubmit={handleSubmit(onSubmit)}>
                <FormGroup row>

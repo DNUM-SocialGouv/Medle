@@ -8,7 +8,7 @@ export const transform = dbData => {
    return !dbData
       ? null
       : {
-           ...dbData.extra_data,
+           ...dbData.extra_data, // add it first so regular fields can't be overriden by bad luck
            id: dbData.id,
            finesseNumber: dbData.finesse_number,
            name: dbData.name,
