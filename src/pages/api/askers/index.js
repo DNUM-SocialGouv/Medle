@@ -26,7 +26,7 @@ const handler = async (req, res) => {
                   }
                })
                .limit(all ? MAX_VALUE : 10)
-               .orderBy("name")
+               .orderBy("name", "id")
                .select("id as value", "name as label")
 
             return res.status(STATUS_200_OK).json(askers)

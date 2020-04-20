@@ -317,14 +317,45 @@ exports[`renders UserDetail unchanged 1`] = `
             }
           }
         >
-          <h1
-            className="StyledComponents__Title1-yzg90z-6 jPDDmF mb-5"
+          <div
+            className="d-flex justify-content-between"
           >
-            Utilisateur
-          </h1>
+            <a
+              href="/administration/users"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root"
+                focusable="false"
+                role="presentation"
+                style={
+                  Object {
+                    "width": 15,
+                  }
+                }
+                viewBox="0 0 24 24"
+                width={30}
+              >
+                <path
+                  d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"
+                />
+              </svg>
+              Retour
+            </a>
+            <h1
+              className="StyledComponents__Title1-yzg90z-6 jPDDmF"
+            >
+              Utilisateur
+            </h1>
+            <span>
+               
+            </span>
+          </div>
           
           <form
-            className=""
+            className="mt-4"
             onSubmit={[Function]}
           >
             <div
@@ -568,7 +599,7 @@ exports[`renders UserDetail unchanged 1`] = `
                 onMouseEnter={[Function]}
                 type="button"
               >
-                Retour
+                Annuler
               </button>
               <button
                 aria-label={null}
