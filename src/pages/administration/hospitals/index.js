@@ -1,10 +1,8 @@
 import React, { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/router"
 import { PropTypes } from "prop-types"
 import { Alert, Col, Form, FormGroup, Input, Spinner, Table, Container } from "reactstrap"
 import AddIcon from "@material-ui/icons/Add"
-import EditAttributesIcon from "@material-ui/icons/EditAttributes"
 
 import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"

@@ -3,6 +3,7 @@ import Link from "next/link"
 import PropTypes from "prop-types"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 
+import { SearchButton } from "../../components/form/SearchButton"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { Title1 } from "../../components/StyledComponents"
 import Pagination from "../../components/Pagination"
@@ -29,11 +30,11 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
    return (
       <Layout page="acts" currentUser={currentUser}>
-         <Title1 className="mt-5 mb-4">{"L'activité de votre UMJ/IML"}</Title1>
+         <Title1 className="mt-5 mb-4">{"Tous les actes"}</Title1>
          <Container style={{ maxWidth: 980 }}>
             <Form onSubmit={onSubmit}>
                <FormGroup row inline className="mb-4 justify-content-center">
-                  <Col className="ml-auto" sm="9">
+                  <Col className="flex-grow-1">
                      <Input
                         type="text"
                         name="es"
@@ -44,10 +45,10 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                         autoComplete="off"
                      />
                   </Col>
-                  <Col sm="3" className="mt-4 text-center mt-sm-0">
-                     <Button className="w-lg-75" disabled={loading}>
+                  <Col className="flex-grow-0">
+                     <SearchButton className="btn-primary" disabled={loading} onClick={onSubmit}>
                         {loading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
-                     </Button>
+                     </SearchButton>
                   </Col>
                </FormGroup>
             </Form>
