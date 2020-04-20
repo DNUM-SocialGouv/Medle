@@ -1,29 +1,8 @@
 import { authenticate } from "../../clients/authentication"
 import { createAct, searchActsByKey } from "../../clients/acts"
-import { searchAskersFuzzy } from "../../clients/askers"
-import { findAllAttacks } from "../../clients/attacks"
 
 const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 //const headersActUserNantes = () => authenticate("acte@nantes.fr", "test")
-
-describe("/attacks", () => {
-   it("should return all attacks", async () => {
-      const { headers } = await headersActUserTours()
-      const attacks = await findAllAttacks({ headers })
-
-      expect(attacks).toMatchSnapshot()
-   })
-})
-
-describe("/askers", () => {
-   it("should return all criminal courts in France", async () => {
-      const { headers } = await headersActUserTours()
-
-      const askers = await searchAskersFuzzy({ search: "tribunal", all: true, headers })
-
-      expect(askers).toMatchSnapshot()
-   })
-})
 
 describe("/acts", () => {
    it("should be possible to an act operator of Tours to add an act", async () => {

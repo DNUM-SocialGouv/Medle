@@ -1,0 +1,694 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/askers should return all criminal courts in France 1`] = `
+Array [
+  Object {
+    "label": "Section Détachée du Tribunal de Première Instance à Koné",
+    "value": 36,
+  },
+  Object {
+    "label": "Section Détachée du Tribunal de Première Instance à Lifou",
+    "value": 35,
+  },
+  Object {
+    "label": "Section Détachée du Tribunal de Première Instance à Nuku-Hiva",
+    "value": 160,
+  },
+  Object {
+    "label": "Section Détachée du Tribunal de Première Instance à Raïatéa",
+    "value": 162,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Agen",
+    "value": 157,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Aix-en-Provence",
+    "value": 117,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Ajaccio",
+    "value": 139,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Albertville",
+    "value": 69,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Albi",
+    "value": 66,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Alençon",
+    "value": 21,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Alès",
+    "value": 81,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Amiens",
+    "value": 121,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Angers",
+    "value": 85,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Angoulême",
+    "value": 63,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Annecy",
+    "value": 111,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Argentan",
+    "value": 22,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Arras",
+    "value": 49,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Auch",
+    "value": 130,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Aurillac",
+    "value": 41,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Auxerre",
+    "value": 134,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Avesnes-sur-Helpe",
+    "value": 6,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Avignon",
+    "value": 24,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bar-le-Duc",
+    "value": 142,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Basse-Terre",
+    "value": 124,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bastia",
+    "value": 90,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bayonne",
+    "value": 58,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Beauvais",
+    "value": 93,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Belfort",
+    "value": 20,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bergerac",
+    "value": 83,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Besançon",
+    "value": 131,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Béthune",
+    "value": 51,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Béziers",
+    "value": 166,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Blois",
+    "value": 129,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bobigny",
+    "value": 72,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bonneville",
+    "value": 110,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bordeaux",
+    "value": 37,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Boulogne-sur-Mer",
+    "value": 50,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bourg-en-Bresse",
+    "value": 144,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bourges",
+    "value": 170,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Bourgoin-Jallieu",
+    "value": 45,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Brest",
+    "value": 53,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Brive-la-Gaillarde",
+    "value": 153,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Caen",
+    "value": 100,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Cahors",
+    "value": 147,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Cambrai",
+    "value": 9,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Carcassonne",
+    "value": 126,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Carpentras",
+    "value": 23,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Castres",
+    "value": 67,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Cayenne",
+    "value": 74,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Châlons-en-Champagne",
+    "value": 79,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Chalon-sur-Saône",
+    "value": 148,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Chambéry",
+    "value": 70,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Charleville-Mézières",
+    "value": 16,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Chartres",
+    "value": 108,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Châteauroux",
+    "value": 146,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Chaumont",
+    "value": 102,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Cherbourg-en-Cotentin",
+    "value": 137,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Clermont-Ferrand",
+    "value": 163,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Colmar",
+    "value": 27,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Compiègne",
+    "value": 95,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Coutances",
+    "value": 138,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Créteil",
+    "value": 143,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Cusset",
+    "value": 43,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Dax",
+    "value": 91,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Dieppe",
+    "value": 57,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Digne-les-Bains",
+    "value": 65,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Dijon",
+    "value": 30,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Douai",
+    "value": 10,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Draguignan",
+    "value": 113,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Dunkerque",
+    "value": 7,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Foix",
+    "value": 73,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Fontainebleau",
+    "value": 89,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Fort-de-France",
+    "value": 104,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Gap",
+    "value": 116,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Grasse",
+    "value": 13,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Grenoble",
+    "value": 47,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Guéret",
+    "value": 25,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Laon",
+    "value": 106,
+  },
+  Object {
+    "label": "Tribunal de grande instance de La Rochelle",
+    "value": 75,
+  },
+  Object {
+    "label": "Tribunal de grande instance de La Roche-sur-Yon",
+    "value": 96,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Laval",
+    "value": 120,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Libourne",
+    "value": 38,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Lille",
+    "value": 11,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Limoges",
+    "value": 40,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Lisieux",
+    "value": 99,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Lons-le-Saunier",
+    "value": 68,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Lorient",
+    "value": 4,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Lyon",
+    "value": 159,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Mâcon",
+    "value": 149,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Mamoudzou",
+    "value": 155,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Marseille",
+    "value": 119,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Meaux",
+    "value": 87,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Melun",
+    "value": 88,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Mende",
+    "value": 128,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Metz",
+    "value": 17,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Montargis",
+    "value": 1,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Montauban",
+    "value": 145,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Montbéliard",
+    "value": 132,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Mont-de-Marsan",
+    "value": 92,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Montluçon",
+    "value": 42,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Montpellier",
+    "value": 167,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Moulins",
+    "value": 44,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Mulhouse",
+    "value": 28,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Nancy",
+    "value": 172,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Nanterre",
+    "value": 103,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Nantes",
+    "value": 32,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Narbonne",
+    "value": 127,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Nevers",
+    "value": 136,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Nice",
+    "value": 14,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Nîmes",
+    "value": 80,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Niort",
+    "value": 39,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Paris",
+    "value": 133,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Pau",
+    "value": 59,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Périgueux",
+    "value": 82,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Perpignan",
+    "value": 77,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Epinal",
+    "value": 60,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Pointe-à-Pitre",
+    "value": 123,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Poitiers",
+    "value": 84,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Pontoise",
+    "value": 140,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Privas",
+    "value": 64,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Quimper",
+    "value": 52,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Reims",
+    "value": 78,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Rennes",
+    "value": 150,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Roanne",
+    "value": 61,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Rodez",
+    "value": 29,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Rouen",
+    "value": 55,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saint-Brieuc",
+    "value": 33,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saint-Denis-de-La-Réunion",
+    "value": 114,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saintes",
+    "value": 76,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saint-Etienne",
+    "value": 62,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saint-Malo",
+    "value": 151,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saint-Nazaire",
+    "value": 31,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saint-Omer",
+    "value": 48,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saint-Pierre",
+    "value": 115,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saint-Quentin",
+    "value": 105,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Sarreguemines",
+    "value": 18,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saumur",
+    "value": 86,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Saverne",
+    "value": 165,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Senlis",
+    "value": 94,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Sens",
+    "value": 135,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Soissons",
+    "value": 107,
+  },
+  Object {
+    "label": "Tribunal de grande instance des Sables-d'Olonne",
+    "value": 97,
+  },
+  Object {
+    "label": "Tribunal de grande instance de St Gaudens",
+    "value": 169,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Strasbourg",
+    "value": 164,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Tarascon",
+    "value": 118,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Tarbes",
+    "value": 26,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Thionville",
+    "value": 19,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Thonon-les-Bains",
+    "value": 109,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Toulon",
+    "value": 112,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Toulouse",
+    "value": 168,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Tours",
+    "value": 3,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Troyes",
+    "value": 122,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Tulle",
+    "value": 154,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Val de Briey",
+    "value": 171,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Valence",
+    "value": 12,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Valenciennes",
+    "value": 8,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Vannes",
+    "value": 5,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Verdun",
+    "value": 141,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Versailles",
+    "value": 54,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Vesoul",
+    "value": 71,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Vienne",
+    "value": 46,
+  },
+  Object {
+    "label": "Tribunal de grande instance de Villefranche-sur-Saône",
+    "value": 158,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Evreux",
+    "value": 125,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Evry",
+    "value": 156,
+  },
+  Object {
+    "label": "Tribunal de grande instance d'Orléans",
+    "value": 2,
+  },
+  Object {
+    "label": "Tribunal de grande instance du Havre",
+    "value": 56,
+  },
+  Object {
+    "label": "Tribunal de grande instance du Mans",
+    "value": 15,
+  },
+  Object {
+    "label": "Tribunal de grande instance du Puy-en-Velay",
+    "value": 152,
+  },
+  Object {
+    "label": "Tribunal de Première Instance de Mata-Utu",
+    "value": 98,
+  },
+  Object {
+    "label": "Tribunal de Première Instance de Nouméa",
+    "value": 34,
+  },
+  Object {
+    "label": "Tribunal de Première Instance de Papeete",
+    "value": 161,
+  },
+  Object {
+    "label": "Tribunal de Première Instance de Saint-Pierre-et-Miquelon",
+    "value": 101,
+  },
+]
+`;

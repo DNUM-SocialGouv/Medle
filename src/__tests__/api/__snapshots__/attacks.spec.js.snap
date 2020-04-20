@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/attacks should return all attacks 1`] = `
+Array [
+  Object {
+    "id": 1,
+    "name": "Bataclan",
+  },
+  Object {
+    "id": 2,
+    "name": "Hyper Cacher",
+  },
+]
+`;
