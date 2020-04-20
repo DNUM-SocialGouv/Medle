@@ -100,10 +100,10 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                <span>&nbsp;</span>
             </div>
 
-            {error && <Alert color="danger">{error}</Alert>}
+            {error && <Alert color="danger mt-4">{error}</Alert>}
 
             {success && (
-               <Alert color="success" className="d-flex justify-content-between align-items-center">
+               <Alert color="success" className="d-flex justify-content-between align-items-center mt-4">
                   {success}&nbsp;
                   <Link href="/administration/hospitals">
                      <Button className="" outline color="success">
@@ -113,7 +113,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                </Alert>
             )}
 
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
                <FormGroup row>
                   <Label for="id" sm={3}>
                      Id
