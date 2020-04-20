@@ -4,6 +4,7 @@ import Link from "next/link"
 import PropTypes from "prop-types"
 import { Alert, Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap"
 import { useForm } from "react-hook-form"
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 
 import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"
@@ -37,12 +38,21 @@ const UserReset = ({ currentUser }) => {
    return (
       <Layout currentUser={currentUser} admin={true}>
          <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
-            <Title1 className="mb-5">{"Utilisateur"}</Title1>
+            <div className="d-flex justify-content-between">
+               <Link href="/administration/users">
+                  <a>
+                     <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+                     Retour
+                  </a>
+               </Link>
+               <Title1>{"Utilisateur"}</Title1>
+               <span>&nbsp;</span>
+            </div>
 
-            {error && <Alert color="danger">{error}</Alert>}
+            {error && <Alert color="danger mt-4">{error}</Alert>}
 
             {success && (
-               <Alert color="success" className="d-flex justify-content-between align-items-center">
+               <Alert color="success" className="d-flex justify-content-between align-items-center mt-4">
                   {success}&nbsp;
                   <Link href="/administration/users">
                      <Button className="" outline color="success">
@@ -52,7 +62,7 @@ const UserReset = ({ currentUser }) => {
                </Alert>
             )}
 
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
                <FormGroup row>
                   <Label for="firstValue" sm={4}>
                      Mot de passe
@@ -100,7 +110,7 @@ const UserReset = ({ currentUser }) => {
                <div className="justify-content-center d-flex">
                   <Link href="/administration/users">
                      <Button className="px-4 mt-5 mr-3" outline color="primary">
-                        Retour
+                        Annuler
                      </Button>
                   </Link>
                   <Button className="px-4 mt-5 " color="primary" onClick={handleSubmit(onSubmit)}>

@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { PropTypes } from "prop-types"
 import { Alert, Col, Form, FormGroup, Input, Spinner, Table, Container } from "reactstrap"
 import AddIcon from "@material-ui/icons/Add"
@@ -89,29 +90,25 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                            <th>N° Finesse</th>
                            <th>Ville</th>
                            <th>Code postal</th>
-                           <th></th>
                         </tr>
                      </thead>
                      <tbody>
                         {hospitals.map(hospital => (
-                           <tr key={hospital.id}>
-                              <td>
-                                 <b>{`${hospital.name}`}</b>
-                              </td>
-                              <td>{hospital.finesseNumber}</td>
-                              <td>{hospital.town}</td>
-                              <td>{hospital.postalCode}</td>
+                           <tr key={hospital.id} className="position-relative">
                               <td>
                                  <Link
                                     href="/administration/hospitals/[id]"
                                     as={`/administration/hospitals/${hospital.id}`}
                                  >
-                                    <a>
-                                       Détails&nbsp;
-                                       <EditAttributesIcon />
+                                    <a className="stretched-link text-decoration-none text-body">
+                                       &nbsp;
+                                       <b>{`${hospital.name}`}</b>
                                     </a>
                                  </Link>
                               </td>
+                              <td>{hospital.finesseNumber}</td>
+                              <td>{hospital.town}</td>
+                              <td>{hospital.postalCode}</td>
                            </tr>
                         ))}
                      </tbody>

@@ -69,24 +69,22 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                            <th>Date</th>
                            <th>Type de profil</th>
                            <th>{"Type d'acte"}</th>
-                           <th></th>
                         </tr>
                      </thead>
                      <tbody>
                         {paginatedData.elements.map(act => (
-                           <tr key={act.id}>
+                           <tr key={act.id} className="position-relative">
                               <td>
-                                 <b>{act.internalNumber}</b>
+                                 <Link href="/acts/[id]" as={`/acts/${act.id}`}>
+                                    <a className="stretched-link text-decoration-none text-body">
+                                       <b>{act.internalNumber}</b>
+                                    </a>
+                                 </Link>
                               </td>
                               <td>{act.pvNumber}</td>
                               <td>{act.examinationDate && isoToFr(act.examinationDate)}</td>
                               <td>{act.profile}</td>
                               <td>{act.examinationTypes && <VerticalList content={act.examinationTypes} />}</td>
-                              <td>
-                                 <Link href="/acts/[id]" as={`/acts/${act.id}`}>
-                                    <a>Voir&nbsp;&gt;</a>
-                                 </Link>
-                              </td>
                            </tr>
                         ))}
                      </tbody>

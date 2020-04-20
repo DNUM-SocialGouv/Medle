@@ -18,6 +18,7 @@ import {
    ModalFooter,
 } from "reactstrap"
 import { useForm } from "react-hook-form"
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 
 import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"
@@ -88,7 +89,16 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
    return (
       <Layout page="hospitals" currentUser={currentUser} admin={true}>
          <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
-            <Title1 className="mb-5">{"Hôpital"}</Title1>
+            <div className="d-flex justify-content-between">
+               <Link href="/administration/hospitals">
+                  <a>
+                     <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+                     Retour
+                  </a>
+               </Link>
+               <Title1>{"Hôpital"}</Title1>
+               <span>&nbsp;</span>
+            </div>
 
             {error && <Alert color="danger">{error}</Alert>}
 
@@ -228,7 +238,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                <div className="justify-content-center d-flex">
                   <Link href="/administration/hospitals">
                      <Button className="px-4 mt-5 mr-3" outline color="primary">
-                        Retour
+                        Annuler
                      </Button>
                   </Link>
                   <Button className="px-4 mt-5 " color="primary">

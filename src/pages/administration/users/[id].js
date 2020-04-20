@@ -20,6 +20,7 @@ import {
 import { useForm } from "react-hook-form"
 import AsyncSelect from "react-select/async"
 import Select from "react-select"
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 
 import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"
@@ -268,12 +269,21 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
    return (
       <Layout page="users" currentUser={currentUser} admin={true}>
          <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
-            <Title1 className="mb-5">{"Utilisateur"}</Title1>
+            <div className="d-flex justify-content-between">
+               <Link href="/administration/users">
+                  <a>
+                     <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+                     Retour
+                  </a>
+               </Link>
+               <Title1>{"Utilisateur"}</Title1>
+               <span>&nbsp;</span>
+            </div>
 
-            {error && <Alert color="danger">{error}</Alert>}
+            {error && <Alert color="danger mt-4">{error}</Alert>}
 
             {success && (
-               <Alert color="success" className="d-flex justify-content-between align-items-center">
+               <Alert color="success" className="d-flex justify-content-between align-items-center mt-4">
                   {success}&nbsp;
                   <Link href="/administration/users">
                      <Button className="" outline color="success">
@@ -283,7 +293,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                </Alert>
             )}
 
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
                <FormGroup row>
                   <Label for="id" sm={3}>
                      Id
@@ -370,7 +380,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                            onChange={onHospitalChange}
                            noOptionsMessage={() => "Aucun résultat"}
                            loadingMessage={() => "Chargement..."}
-                           placeholder="Choisissez un établissement"
+                           placeholder="Tapez les premières lettres"
                            isClearable={true}
                            isDisabled={rules.hospitalDisabled}
                            styles={customStyles(errors.hospital)}
@@ -393,7 +403,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                            onChange={onScopeChange}
                            noOptionsMessage={() => "Aucun résultat"}
                            loadingMessage={() => "Chargement..."}
-                           placeholder="Choisissez un établissement"
+                           placeholder="Tapez les premières lettres"
                            isClearable={true}
                            isDisabled={rules.scopeDisabled}
                            styles={customStyles(errors.scope)}
@@ -405,7 +415,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                <div className="justify-content-center d-flex">
                   <Link href="/administration/users">
                      <Button className="px-4 mt-5 mr-3" outline color="primary">
-                        Retour
+                        Annuler
                      </Button>
                   </Link>
                   <Button className="px-4 mt-5 " color="primary">

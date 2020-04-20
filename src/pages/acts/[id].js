@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 import { Button, Col, Row, Alert, Container, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap"
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 
 import { isoToFr } from "../../utils/date"
 import Layout from "../../components/Layout"
@@ -53,24 +54,32 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
 
    return (
       <Layout page="acts" currentUser={currentUser}>
-         <Title1 className="mt-5 mb-5">{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
+         <Container style={{ maxWidth: 780 }} className="mt-5 mb-4">
+            <div className="d-flex justify-content-between">
+               <Link href="/acts">
+                  <a>
+                     <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+                     Retour
+                  </a>
+               </Link>
+               <Title1>{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
+               <span>&nbsp;</span>
+            </div>
 
-         {!isEmpty(isError) && (
-            <Container style={{ maxWidth: 780 }}>
+            {!isEmpty(isError) && (
                <Alert color="danger" className="mt-5 mb-5">
                   {isError || "Erreur serveur"}
                </Alert>
-            </Container>
-         )}
-         {isEmpty(isError) && (
-            <>
-               <Container style={{ maxWidth: 780 }}>
+            )}
+
+            {isEmpty(isError) && (
+               <>
                   <div className="px-2 py-2">
                      <Title2 className="mt-3 mb-4">{"Identification de l'acte"}</Title2>
                      <Row>
                         <Col className="mr-3">
                            <ColumnAct header={"Numéro de PV"} content={act && act.pvNumber} />
-                        </Col>{" "}
+                        </Col>
                         <Col className="mr-3">
                            <ColumnAct header={"Demandeur"} content={act && act.asker && act.asker.name} />
                         </Col>
@@ -88,9 +97,8 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
                      </Row>
                      {getProfiledRender({ profile: act.profile, act })}
                   </div>
-               </Container>
+                  <br />
 
-               <Container style={{ maxWidth: 780 }} className="mt-4">
                   {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
                      <Row>
                         <Col>
@@ -124,14 +132,9 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
                         </Col>
                      </Row>
                   )}
-                  <div className="mt-5 text-center">
-                     <Link href="/acts">
-                        <a>Retour à la liste des actes</a>
-                     </Link>
-                  </div>
-               </Container>
-            </>
-         )}
+               </>
+            )}
+         </Container>
       </Layout>
    )
 }
