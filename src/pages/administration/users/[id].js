@@ -414,20 +414,33 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                )}
                <div className="justify-content-center d-flex">
                   <Link href="/administration/users">
-                     <Button className="px-4 mt-5 mr-3" outline color="primary">
+                     <Button className="px-4 mt-3 mr-3" outline color="primary">
                         Annuler
                      </Button>
                   </Link>
-                  <Button className="px-4 mt-5 " color="primary">
+                  <Button className="px-4 mt-3" color="primary">
                      {isEmpty(initialUser) ? "Ajouter" : "Modifier"}
                   </Button>
                </div>
                {!isEmpty(initialUser) && (
-                  <div style={{ border: "1px solid tomato" }} className="px-4 py-3 mt-5 rounded">
-                     <Title1 className="mb-4">Zone dangereuse</Title1>
+                  <div style={{ border: "1px solid tomato" }} className="px-4 pt-3 pb-4 mt-5 rounded">
+                     <Title1 className="mb-4 mt-2">Zone dangereuse</Title1>
                      <div className="d-flex justify-content-between align-items-center">
-                        Je souhaite supprimer cet utilisateur
-                        <Button className="" color="danger" outline onClick={toggle}>
+                        Je réinitialise le mot de passe de cet utilisateur
+                        <Link
+                           href="/administration/users/reset/[id]"
+                           as={`/administration/users/reset/${initialUser.id}`}
+                        >
+                           <a>
+                              <Button className="text-white" color="warning" style={{ minWidth: 150 }}>
+                                 Réinitialiser
+                              </Button>
+                           </a>
+                        </Link>
+                     </div>
+                     <div className="d-flex justify-content-between align-items-center mt-3">
+                        Je supprime cet utilisateur
+                        <Button className="" color="danger" outline onClick={toggle} style={{ minWidth: 150 }}>
                            Supprimer
                         </Button>
                      </div>

@@ -38,16 +38,7 @@ const UserReset = ({ currentUser }) => {
    return (
       <Layout currentUser={currentUser} admin={true}>
          <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
-            <div className="d-flex justify-content-between">
-               <Link href="/administration/users">
-                  <a>
-                     <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-                     Retour
-                  </a>
-               </Link>
-               <Title1>{"Utilisateur"}</Title1>
-               <span>&nbsp;</span>
-            </div>
+            <Title1>{"Utilisateur"}</Title1>
 
             {error && <Alert color="danger mt-4">{error}</Alert>}
 

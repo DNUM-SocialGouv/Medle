@@ -30,7 +30,6 @@ export const untransform = jsData => {
    const dbData = {
       first_name: jsData.firstName,
       last_name: jsData.lastName,
-      password: jsData.password || "defaultpassword",
       email: jsData.email,
       role: jsData.role,
       scope:
@@ -40,6 +39,8 @@ export const untransform = jsData => {
 
    // Pas d'id pour une création de user
    if (jsData.id) dbData.id = jsData.id
+   if (jsData.password) dbData.password = jsData.password
+
    return dbData
 }
 

@@ -87,12 +87,11 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                            <th>Role</th>
                            <th>Établissement</th>
                            <th></th>
-                           <th></th>
                         </tr>
                      </thead>
                      <tbody>
                         {paginatedData.elements.map(user => (
-                           <tr key={user.id}>
+                           <tr key={user.id} className="position-relative">
                               <td>
                                  <b>{`${user.firstName} ${user.lastName}`}</b>
                               </td>
@@ -101,21 +100,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                               <td>{user.hospital && user.hospital.name}</td>
                               <td>
                                  <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
-                                    <a>
-                                       Voir&nbsp;
-                                       <EditAttributesIcon />
-                                    </a>
-                                 </Link>
-                              </td>
-                              <td>
-                                 <Link
-                                    href="/administration/users/reset/[id]"
-                                    as={`/administration/users/reset/${user.id}`}
-                                 >
-                                    <a>
-                                       Réinitialiser&nbsp;
-                                       <DoubleArrowIcon />
-                                    </a>
+                                    <a className="stretched-link">Voir</a>
                                  </Link>
                               </td>
                            </tr>

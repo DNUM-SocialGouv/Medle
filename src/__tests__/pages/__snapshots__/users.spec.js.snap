@@ -594,7 +594,7 @@ exports[`renders UserDetail unchanged 1`] = `
             >
               <button
                 aria-label={null}
-                className="px-4 mt-5 mr-3 btn btn-outline-primary"
+                className="px-4 mt-3 mr-3 btn btn-outline-primary"
                 onClick={[Function]}
                 onMouseEnter={[Function]}
                 type="button"
@@ -603,7 +603,7 @@ exports[`renders UserDetail unchanged 1`] = `
               </button>
               <button
                 aria-label={null}
-                className="px-4 mt-5  btn btn-primary"
+                className="px-4 mt-3 btn btn-primary"
                 onClick={[Function]}
               >
                 Ajouter
