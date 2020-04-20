@@ -102,7 +102,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                               <td>
                                  <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
                                     <a>
-                                       Détails&nbsp;
+                                       Voir&nbsp;
                                        <EditAttributesIcon />
                                     </a>
                                  </Link>

@@ -107,7 +107,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                   {success}&nbsp;
                   <Link href="/administration/hospitals">
                      <Button className="" outline color="success">
-                        <a>Retour</a>
+                        <a>Retour à la liste</a>
                      </Button>
                   </Link>
                </Alert>

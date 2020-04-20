@@ -56,7 +56,7 @@ const UserReset = ({ currentUser }) => {
                   {success}&nbsp;
                   <Link href="/administration/users">
                      <Button className="" outline color="success">
-                        <a>Retour</a>
+                        <a>Retour à la liste</a>
                      </Button>
                   </Link>
                </Alert>
