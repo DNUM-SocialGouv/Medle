@@ -4,7 +4,6 @@ import Link from "next/link"
 import PropTypes from "prop-types"
 import { Alert, Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap"
 import { useForm } from "react-hook-form"
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 
 import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"

@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import Link from "next/link"
+import Router from "next/router"
 import PropTypes from "prop-types"
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
+import { Alert, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 
 import { SearchButton } from "../../components/form/SearchButton"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
@@ -75,20 +76,22 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                      </thead>
                      <tbody>
                         {paginatedData.elements.map(act => (
-                           <tr key={act.id} className="position-relative">
-                              <td>
-                                 <b>{act.internalNumber}</b>
-                              </td>
-                              <td>{act.pvNumber}</td>
-                              <td>{act.examinationDate && isoToFr(act.examinationDate)}</td>
-                              <td>{act.profile}</td>
-                              <td>{act.examinationTypes && <VerticalList content={act.examinationTypes} />}</td>
-                              <td>
-                                 <Link href="/acts/[id]" as={`/acts/${act.id}`}>
-                                    <a className="stretched-link text-decoration-none">Voir</a>
-                                 </Link>
-                              </td>
-                           </tr>
+                           <Link key={act.id} href="/acts/[id]" as={`/acts/${act.id}`}>
+                              <tr key={act.id}>
+                                 <td>
+                                    <b>{act.internalNumber}</b>
+                                 </td>
+                                 <td>{act.pvNumber}</td>
+                                 <td>{act.examinationDate && isoToFr(act.examinationDate)}</td>
+                                 <td>{act.profile}</td>
+                                 <td>{act.examinationTypes && <VerticalList content={act.examinationTypes} />}</td>
+                                 <td className="text-decoration">
+                                    <Link href="/acts/[id]" as={`/acts/${act.id}`}>
+                                       <a className="text-decoration-none">Voir</a>
+                                    </Link>
+                                 </td>
+                              </tr>
+                           </Link>
                         ))}
                      </tbody>
                   </Table>

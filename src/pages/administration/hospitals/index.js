@@ -92,22 +92,28 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                      </thead>
                      <tbody>
                         {hospitals.map(hospital => (
-                           <tr key={hospital.id} className="position-relative">
-                              <td>
-                                 <Link
-                                    href="/administration/hospitals/[id]"
-                                    as={`/administration/hospitals/${hospital.id}`}
-                                 >
-                                    <a className="stretched-link text-decoration-none text-body">
-                                       &nbsp;
-                                       <b>{`${hospital.name}`}</b>
-                                    </a>
-                                 </Link>
-                              </td>
-                              <td>{hospital.finesseNumber}</td>
-                              <td>{hospital.town}</td>
-                              <td>{hospital.postalCode}</td>
-                           </tr>
+                           <Link
+                              key={hospital.id}
+                              href="/administration/hospitals/[id]"
+                              as={`/administration/hospitals/${hospital.id}`}
+                           >
+                              <tr>
+                                 <td>
+                                    <b>{`${hospital.name}`}</b>
+                                 </td>
+                                 <td>{hospital.finesseNumber}</td>
+                                 <td>{hospital.town}</td>
+                                 <td>{hospital.postalCode}</td>
+                                 <td>
+                                    <Link
+                                       href="/administration/hospitals/[id]"
+                                       as={`/administration/hospitals/${hospital.id}`}
+                                    >
+                                       <a className="text-decoration-none">Voir</a>
+                                    </Link>
+                                 </td>
+                              </tr>
+                           </Link>
                         ))}
                      </tbody>
                   </Table>

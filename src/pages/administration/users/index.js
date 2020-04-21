@@ -91,19 +91,25 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                      </thead>
                      <tbody>
                         {paginatedData.elements.map(user => (
-                           <tr key={user.id} className="position-relative">
-                              <td>
-                                 <b>{`${user.firstName} ${user.lastName}`}</b>
-                              </td>
-                              <td>{user.email}</td>
-                              <td>{user.role && ROLES_DESCRIPTION[user.role]}</td>
-                              <td>{user.hospital && user.hospital.name}</td>
-                              <td>
-                                 <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
-                                    <a className="stretched-link">Voir</a>
-                                 </Link>
-                              </td>
-                           </tr>
+                           <Link
+                              key={user.id}
+                              href="/administration/users/[id]"
+                              as={`/administration/users/${user.id}`}
+                           >
+                              <tr>
+                                 <td>
+                                    <b>{`${user.firstName} ${user.lastName}`}</b>
+                                 </td>
+                                 <td>{user.email}</td>
+                                 <td>{user.role && ROLES_DESCRIPTION[user.role]}</td>
+                                 <td>{user.hospital && user.hospital.name}</td>
+                                 <td>
+                                    <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
+                                       <a className="text-decoration-none">Voir</a>
+                                    </Link>
+                                 </td>
+                              </tr>
+                           </Link>
                         ))}
                      </tbody>
                   </Table>
