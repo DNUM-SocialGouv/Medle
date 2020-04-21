@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transform should transform in a model entity 1`] = `
+Object {
+  "email": "john.mclane@proton.mail",
+  "firstName": "John",
+  "hospital": Object {
+    "id": 3,
+    "name": "",
+  },
+  "id": 2,
+  "lastName": "Mc Lane",
+  "role": "OPERATOR_ACT",
+  "scope": undefined,
+}
+`;
+
+exports[`untransform should untransform in a Knex entity even without id and password 1`] = `
+Object {
+  "email": "doc.brown@yahoo.com",
+  "first_name": "Doc",
+  "hospital_id": null,
+  "last_name": "Brown",
+  "role": "OPERATOR_ACT",
+  "scope": null,
+}
+`;
+
+exports[`untransform should untransform in a Knex entity even without id and wih a password 1`] = `
+Object {
+  "email": "doc.brown@yahoo.com",
+  "first_name": "Doc",
+  "hospital_id": null,
+  "id": 2,
+  "last_name": "Brown",
+  "password": "12345678",
+  "role": "OPERATOR_ACT",
+  "scope": null,
+}
+`;
+
+exports[`untransform should untransform in a Knex entity with an id and without a password 1`] = `
+Object {
+  "email": "marty.macfly@gmail.com",
+  "first_name": "Marty",
+  "hospital_id": null,
+  "id": 1,
+  "last_name": "Mac Fly",
+  "role": "REGIONAL_SUPERVISOR",
+  "scope": "[1,3,6]",
+}
+`;

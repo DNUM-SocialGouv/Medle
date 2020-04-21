@@ -3,45 +3,45 @@ import { logError } from "../utils/logger"
 import { APIError } from "../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../utils/http"
 
-// from DB entity to JS entity
-export const transform = dbData => {
-   return !dbData
+// from Knex entity to model (JS) entity
+export const transform = knexData => {
+   return !knexData
       ? null
       : {
-           id: dbData.id,
-           firstName: dbData.first_name,
-           lastName: dbData.last_name,
-           email: dbData.email,
-           role: dbData.role,
-           scope: dbData.scope,
-           hospital: !dbData.hospital_id
+           id: knexData.id,
+           firstName: knexData.first_name,
+           lastName: knexData.last_name,
+           email: knexData.email,
+           role: knexData.role,
+           scope: knexData.scope,
+           hospital: !knexData.hospital_id
               ? null
               : {
-                   id: dbData.hospital_id,
-                   name: dbData.hospital_name || "",
+                   id: knexData.hospital_id,
+                   name: knexData.hospital_name || "",
                 },
         }
 }
 
-export const transformAll = list => list.map(jsData => transform(jsData))
+export const transformAll = list => list.map(model => transform(model))
 
-// from JS entity to DB entity
-export const untransform = jsData => {
-   const dbData = {
-      first_name: jsData.firstName,
-      last_name: jsData.lastName,
-      email: jsData.email,
-      role: jsData.role,
+// from model (JS) entity to Knex entity
+export const untransform = model => {
+   const knexData = {
+      first_name: model.firstName,
+      last_name: model.lastName,
+      email: model.email,
+      role: model.role,
       scope:
-         !jsData.scope || !jsData.scope.length ? null : JSON.stringify(jsData.scope.map(curr => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
-      hospital_id: (jsData.hospital && jsData.hospital.id) || null,
+         !model.scope || !model.scope.length ? null : JSON.stringify(model.scope.map(curr => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
+      hospital_id: (model.hospital && model.hospital.id) || null,
    }
 
    // Pas d'id pour une création de user
-   if (jsData.id) dbData.id = jsData.id
-   if (jsData.password) dbData.password = jsData.password
+   if (model.id) knexData.id = model.id
+   if (model.password) knexData.password = model.password
 
-   return dbData
+   return knexData
 }
 
 const schema = yup.object().shape({
@@ -77,9 +77,9 @@ const configValidate = {
    abortEarly: false,
 }
 
-export const validate = async jsData => {
+export const validate = async model => {
    try {
-      const value = await schema.validate(jsData, configValidate)
+      const value = await schema.validate(model, configValidate)
       return value
    } catch (error) {
       logError(error)
@@ -91,4 +91,4 @@ export const validate = async jsData => {
    }
 }
 
-export const cast = async jsData => await schema.cast(jsData)
+export const cast = async model => await schema.cast(model)

@@ -3,28 +3,28 @@ import { logError } from "../utils/logger"
 import { APIError } from "../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../utils/http"
 
-// from DB entity to JS entity
-export const transform = dbData => {
-   return !dbData
+// from Knex entity to model (JS) entity
+export const transform = knexData => {
+   return !knexData
       ? null
       : {
-           ...dbData.extra_data, // add it first so regular fields can't be overriden by bad luck
-           id: dbData.id,
-           finesseNumber: dbData.finesse_number,
-           name: dbData.name,
-           addr1: dbData.addr1,
-           addr2: dbData.addr2,
-           town: dbData.town,
-           depCode: dbData.dep_code,
-           postalCode: dbData.postal_code,
+           ...knexData.extra_data, // add it first so regular fields can't be overriden by bad luck
+           id: knexData.id,
+           finesseNumber: knexData.finesse_number,
+           name: knexData.name,
+           addr1: knexData.addr1,
+           addr2: knexData.addr2,
+           town: knexData.town,
+           depCode: knexData.dep_code,
+           postalCode: knexData.postal_code,
         }
 }
 
-export const transformAll = list => list.map(jsData => transform(jsData))
+export const transformAll = list => list.map(model => transform(model))
 
-// from JS entity to DB entity
-export const untransform = jsData => {
-   const dbData = { extra_data: {} }
+// from model (JS) entity to Knex entity
+export const untransform = model => {
+   const knexData = { extra_data: {} }
 
    const predefinedKeys = {
       id: "id",
@@ -38,17 +38,17 @@ export const untransform = jsData => {
       postalCode: "postal_code",
    }
 
-   Object.keys(jsData).forEach(key => {
+   Object.keys(model).forEach(key => {
       if (predefinedKeys[key]) {
-         dbData[predefinedKeys[key]] = jsData[key]
+         knexData[predefinedKeys[key]] = model[key]
       } else {
-         dbData.extra_data[key] = jsData[key]
+         knexData.extra_data[key] = model[key]
       }
    })
 
    // Pas d'id pour une création de user
-   if (!jsData.id) delete dbData.id
-   return dbData
+   if (!model.id) delete knexData.id
+   return knexData
 }
 
 const schema = yup.object().shape({
@@ -72,9 +72,9 @@ const configValidate = {
    abortEarly: false,
 }
 
-export const validate = async jsData => {
+export const validate = async model => {
    try {
-      const value = await schema.validate(jsData, configValidate)
+      const value = await schema.validate(model, configValidate)
       return value
    } catch (error) {
       logError(error)
@@ -86,4 +86,4 @@ export const validate = async jsData => {
    }
 }
 
-export const cast = async jsData => await schema.cast(jsData)
+export const cast = async model => await schema.cast(model)

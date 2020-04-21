@@ -1,33 +1,33 @@
 import moment from "moment"
 import { ISO_DATE } from "../utils/date"
 
-// from DB entity to JS entity
-export const transform = dbData => {
-   return !dbData
+// from Knex entity to model (JS) entity
+export const transform = knexData => {
+   return !knexData
       ? null
       : {
-           id: dbData.id,
-           internalNumber: dbData.internal_number,
-           pvNumber: dbData.pv_number,
-           examinationDate: moment(dbData.examination_date).format(ISO_DATE),
-           profile: dbData.profile,
-           asker: { id: dbData.asker_id, name: dbData.asker_name },
+           id: knexData.id,
+           internalNumber: knexData.internal_number,
+           pvNumber: knexData.pv_number,
+           examinationDate: moment(knexData.examination_date).format(ISO_DATE),
+           profile: knexData.profile,
+           asker: { id: knexData.asker_id, name: knexData.asker_name },
            user: {
-              id: dbData.added_by,
-              firstName: dbData.user_first_name,
-              lastName: dbData.user_last_name,
-              email: dbData.user_email,
+              id: knexData.added_by,
+              firstName: knexData.user_first_name,
+              lastName: knexData.user_last_name,
+              email: knexData.user_email,
            },
-           hospital: { id: dbData.hospital_id, name: dbData.hospital_name },
-           ...dbData.extra_data,
+           hospital: { id: knexData.hospital_id, name: knexData.hospital_name },
+           ...knexData.extra_data,
         }
 }
 
-export const transformAll = list => list.map(jsData => transform(jsData))
+export const transformAll = list => list.map(model => transform(model))
 
-// from JS entity to DB entity
-export const untransform = jsData => {
-   const dbData = { extra_data: {} }
+// from model (JS) entity to Knex entity
+export const untransform = model => {
+   const knexData = { extra_data: {} }
 
    const mainKeys = {
       id: "id",
@@ -40,13 +40,13 @@ export const untransform = jsData => {
       hospitalId: "hospital_id",
    }
 
-   Object.keys(jsData).forEach(key => {
+   Object.keys(model).forEach(key => {
       if (mainKeys[key]) {
-         dbData[mainKeys[key]] = jsData[key]
+         knexData[mainKeys[key]] = model[key]
       } else {
-         dbData.extra_data[key] = jsData[key]
+         knexData.extra_data[key] = model[key]
       }
    })
 
-   return dbData
+   return knexData
 }
