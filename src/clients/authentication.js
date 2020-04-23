@@ -1,7 +1,8 @@
+import fetch from "isomorphic-unfetch"
+
 import { API_URL, LOGIN_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
 import { METHOD_POST } from "../utils/http"
-import fetch from "isomorphic-unfetch"
 
 export const authenticate = async (email, password) => {
    const response = await fetch(API_URL + LOGIN_ENDPOINT, {

@@ -8,33 +8,40 @@ import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
-import { ADMIN, ROLES_DESCRIPTION } from "../../../utils/roles"
-import { usePaginatedData } from "../../../utils/hooks"
-import Pagination from "../../../components/Pagination"
+import { ADMIN } from "../../../utils/roles"
 import { SearchButton } from "../../../components/form/SearchButton"
-import { searchUsersFuzzy } from "../../../clients/users"
+import { searchAskersFuzzy } from "../../../clients/askers"
 
-const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
+const AdminAskerPage = ({ askers: initialAskers, currentUser }) => {
+   const [askers, setAskers] = useState(initialAskers)
    const [search, setSearch] = useState("")
-   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchUsersFuzzy, initialPaginatedData)
+   const [error, setError] = useState("")
+   const [loading, setLoading] = useState(false)
 
    const onChange = e => {
       setSearch(e.target.value)
    }
 
-   const onSubmit = e => {
+   const onSubmit = async e => {
       e.preventDefault()
-      fetchPage(search)(0)
+      setLoading(true)
+      try {
+         setAskers(await searchAskersFuzzy({ search }))
+      } catch (error) {
+         setError("Erreur serveur.")
+      } finally {
+         setLoading(false)
+      }
    }
 
    return (
-      <Layout page="users" currentUser={currentUser} admin={true}>
+      <Layout page="askers" currentUser={currentUser} admin={true}>
          <Container
             style={{ maxWidth: 980, minWidth: 740 }}
             className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
          >
-            <Title1 className="">{"Administration des utilisateurs"}</Title1>
-            <Link href="/administration/users/[id]" as={`/administration/users/new`}>
+            <Title1 className="">{"Administration des demandeurs"}</Title1>
+            <Link href="/administration/askers/[id]" as={`/administration/askers/new`}>
                <a>
                   <SearchButton className="btn-outline-primary">
                      <AddIcon />
@@ -52,7 +59,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                         type="text"
                         name="es"
                         id="es"
-                        placeholder="Rechercher un utilisateur par nom, prénom, email.."
+                        placeholder="Rechercher un demandeur par son nom, etc."
                         value={search}
                         onChange={onChange}
                         autoComplete="off"
@@ -70,39 +77,31 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                   {error}
                </Alert>
             )}
-            {!error && !paginatedData.elements.length && (
-               <div className="text-center">{"Aucun utilisateur trouvé."}</div>
-            )}
+            {!error && !askers.length && <div className="text-center">{"Aucun demandeur trouvé."}</div>}
 
-            {!error && !!paginatedData.elements.length && (
+            {!error && !!askers.length && (
                <>
-                  <Pagination data={paginatedData} fn={fetchPage(search)} />
                   <Table responsive className="table-hover">
                      <thead>
                         <tr className="table-light">
                            <th>Nom</th>
-                           <th>Email</th>
-                           <th>Role</th>
-                           <th>Établissement</th>
-                           <th></th>
+                           <th>Département</th>
                         </tr>
                      </thead>
                      <tbody>
-                        {paginatedData.elements.map(user => (
+                        {askers.map(asker => (
                            <Link
-                              key={user.id}
-                              href="/administration/users/[id]"
-                              as={`/administration/users/${user.id}`}
+                              key={asker.id}
+                              href="/administration/askers/[id]"
+                              as={`/administration/askers/${asker.id}`}
                            >
                               <tr>
                                  <td>
-                                    <b>{`${user.firstName} ${user.lastName}`}</b>
+                                    <b>{`${asker.name}`}</b>
                                  </td>
-                                 <td>{user.email}</td>
-                                 <td>{user.role && ROLES_DESCRIPTION[user.role]}</td>
-                                 <td>{user.hospital && user.hospital.name}</td>
+                                 <td>{asker.depCode}</td>
                                  <td>
-                                    <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
+                                    <Link href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}>
                                        <a className="text-decoration-none">Voir</a>
                                     </Link>
                                  </td>
@@ -118,12 +117,12 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
    )
 }
 
-AdminUserPage.getInitialProps = async ctx => {
+AdminAskerPage.getInitialProps = async ctx => {
    const headers = buildAuthHeaders(ctx)
 
    try {
-      const paginatedData = await searchUsersFuzzy({ headers })
-      return { paginatedData }
+      const askers = await searchAskersFuzzy({ headers })
+      return { askers }
    } catch (error) {
       logError("APP error", error)
 
@@ -132,9 +131,9 @@ AdminUserPage.getInitialProps = async ctx => {
    return {}
 }
 
-AdminUserPage.propTypes = {
-   paginatedData: PropTypes.object,
+AdminAskerPage.propTypes = {
+   askers: PropTypes.array,
    currentUser: PropTypes.object.isRequired,
 }
 
-export default withAuthentication(AdminUserPage, ADMIN)
+export default withAuthentication(AdminAskerPage, ADMIN)

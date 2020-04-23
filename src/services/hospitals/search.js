@@ -11,5 +11,5 @@ export const search = async ({ fuzzy }) => {
       })
       .orderBy("postal_code")
 
-   return hospitals && hospitals.length ? transformAll(hospitals) : []
+   return hospitals?.length ? transformAll(hospitals) : []
 }

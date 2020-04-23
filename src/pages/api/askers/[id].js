@@ -1,15 +1,11 @@
 import Cors from "micro-cors"
 
-import knex from "../../../knex/knex"
-import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
-import { ACT_MANAGEMENT } from "../../../utils/roles"
-import {
-   sendAPIError,
-   sendBadRequestError,
-   sendMethodNotAllowedError,
-   sendNotFoundError,
-} from "../../../services/errorHelpers"
+import { STATUS_200_OK, METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_PUT } from "../../../utils/http"
+import { ADMIN, ACT_MANAGEMENT } from "../../../utils/roles"
+import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
+
+import { find, del, update } from "../../../services/askers"
 
 const handler = async (req, res) => {
    res.setHeader("Content-Type", "application/json")
@@ -19,17 +15,33 @@ const handler = async (req, res) => {
          case METHOD_GET: {
             checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-            const { id } = req.query
-            if (!id || isNaN(id)) {
-               return sendBadRequestError(res)
-            }
+            const asker = await find(req.query)
 
-            const [askers] = await knex("askers").where("id", id)
-
-            if (askers) return res.status(STATUS_200_OK).json(askers)
+            if (asker) return res.status(STATUS_200_OK).json(asker)
 
             return sendNotFoundError(res)
          }
+         case METHOD_DELETE: {
+            // TODO: need to be an SUPER_ADMIN
+            const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+            const deleted = await del(req.query, currentUser)
+
+            if (!deleted) return sendNotFoundError(res)
+
+            return res.status(STATUS_200_OK).json({ deleted })
+         }
+         case METHOD_PUT: {
+            // TODO: need to be an SUPER_ADMIN
+            checkValidUserWithPrivilege(ADMIN, req, res)
+
+            const updated = await update(req.query, req.body)
+
+            if (!updated) return sendNotFoundError(res)
+
+            return res.status(STATUS_200_OK).json({ updated })
+         }
+
          default:
             return sendMethodNotAllowedError(res)
       }

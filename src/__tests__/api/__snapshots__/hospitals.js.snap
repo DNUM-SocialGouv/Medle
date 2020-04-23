@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/hospitals should return CHU de Tours 1`] = `
+Array [
+  Object {
+    "addr1": "2 BD TONNELLE",
+    "addr2": "",
+    "canDoPostMortem": true,
+    "depCode": "37",
+    "finesseNumber": "370000481",
+    "id": 1,
+    "name": "CHRU de Tours",
+    "postalCode": "37044",
+    "town": "Tours",
+  },
+]
+`;

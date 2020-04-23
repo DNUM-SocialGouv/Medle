@@ -30,18 +30,9 @@ import { availableRolesForUser, rulesOfRoles, ADMIN, ADMIN_HOSPITAL, ROLES_DESCR
 import { logError, logDebug } from "../../../utils/logger"
 import { searchHospitalsFuzzy } from "../../../clients/hospitals"
 import { createUser, deleteUser, findUser, updateUser } from "../../../clients/users"
+import { mapForSelect, mapArrayForSelect } from "../../../utils/select"
 
 const MandatorySign = () => <span style={{ color: "red" }}>*</span>
-
-const mapForSelect = (data, fnValue, fnLabel) => {
-   if (!data) return null
-   return { value: fnValue(data), label: fnLabel(data) }
-}
-
-const mapArrayForSelect = (data, fnValue, fnLabel) => {
-   if (!data || !data.length) return null
-   return data.map(curr => ({ value: fnValue(curr), label: fnLabel(curr) }))
-}
 
 // React component : only available for ADMIN or ADMIN_HOSPITAL
 const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
@@ -62,14 +53,14 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
    // Special case due to react-select design : needs to store specifically the value of the select
    const [role, setRole] = useState(
       mapForSelect(
-         initialUser && initialUser.role,
+         initialUser?.role,
          elt => elt,
          elt => ROLES_DESCRIPTION[elt],
       ),
    )
 
    const initialUserHospitalSelect = mapForSelect(
-      initialUser && initialUser.hospital,
+      initialUser?.hospital,
       elt => elt.id,
       elt => elt.name,
    )
@@ -82,11 +73,11 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
 
    // Get the hospital of initialUser for updates, but the one of currentUser for creates
    const [hospital, setHospital] = useState(
-      initialUser && initialUser.hospital ? initialUserHospitalSelect : currentUserHospitalSelect,
+      initialUser?.hospital ? initialUserHospitalSelect : currentUserHospitalSelect,
    )
 
    const initialUserScopeSelect = mapArrayForSelect(
-      initialUser && initialUser.scope,
+      initialUser?.scope,
       elt => elt.id,
       elt => elt.name,
    )
@@ -124,7 +115,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
 
    const customRuleOwnRecord = currentUser.id === initialUser.id ? { roleDisabled: true } : {}
 
-   const rules = { ...rulesOfRoles(role && role.value), ...customRulesAdminHospital, ...customRuleOwnRecord }
+   const rules = { ...rulesOfRoles(role?.value), ...customRulesAdminHospital, ...customRuleOwnRecord }
 
    const onDeleteUser = () => {
       toggle()
@@ -154,7 +145,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       if (rules.hospitalRequired && !hospital) {
          localErrors = { ...localErrors, hospital: "L'établissement est obligatoire." }
       }
-      if (rules.scopeRequired && (!scope || !scope.length)) {
+      if (rules.scopeRequired && !scope?.length) {
          localErrors = { ...errors, scope: "Le périmètre est obligatoire." }
       }
 
@@ -185,26 +176,24 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       // eslint-disable-next-line no-unused-vars
       setErrors(({ role, ...errors }) => ({ errors }))
 
-      if (selectedOption && selectedOption.value) {
+      if (selectedOption?.value) {
          // Reset the hospital & scope whenever the role changes
          const rules = rulesOfRoles(selectedOption.value)
          if (rules.hospitalDisabled) {
             onHospitalChange(null)
          } else {
-            onHospitalChange(
-               initialUser && initialUser.hospital ? initialUserHospitalSelect : currentUserHospitalSelect,
-            )
+            onHospitalChange(initialUser?.hospital ? initialUserHospitalSelect : currentUserHospitalSelect)
          }
 
          if (rules.scopeDisabled) {
             onScopeChange(null)
          } else {
-            onScopeChange(initialUser && initialUser.scope ? initialUserScopeSelect : null)
+            onScopeChange(initialUser?.scope ?? null)
          }
       }
 
       // Needs transformation between format of react-select to expected format for API call
-      setValue("role", (selectedOption && selectedOption.value) || null)
+      setValue("role", selectedOption?.value ?? null)
 
       // Needs to sync specifically the value to the react-select as well
       setRole(selectedOption)
@@ -217,7 +206,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       // Needs transformation between format of react-select to expected format for API call
       setValue(
          "hospital",
-         selectedOption && selectedOption.value
+         selectedOption?.value
             ? {
                  id: selectedOption.value,
                  name: selectedOption.label,
@@ -235,9 +224,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       // Needs transformation between format of react-select to expected format for API call
       setValue(
          "scope",
-         !selectedOption || !selectedOption.length
-            ? null
-            : selectedOption.map(curr => ({ id: curr.value, name: curr.label })),
+         !selectedOption?.length ? null : selectedOption.map(curr => ({ id: curr.value, name: curr.label })),
       )
       // Needs to sync specifically the value to the react-select as well
       setScope(selectedOption)
@@ -260,10 +247,11 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
    const searchHospitals = async search => {
       const hospitals = await searchHospitalsFuzzy({ search })
 
-      return hospitals.map(hospital => ({
-         value: hospital.id,
-         label: hospital.name,
-      }))
+      return mapArrayForSelect(
+         hospitals,
+         elt => elt.id,
+         elt => elt.name,
+      )
    }
 
    return (

@@ -1,7 +1,8 @@
+import fetch from "isomorphic-unfetch"
+
 import { API_URL, ACTS_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
 import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../utils/http"
-import fetch from "isomorphic-unfetch"
 
 export const findAct = async ({ id, headers }) => {
    const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + id, { headers })

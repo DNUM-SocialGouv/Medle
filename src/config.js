@@ -12,7 +12,7 @@ export const timeout = {
 export const API_URL = publicRuntimeConfig ? publicRuntimeConfig.API_URL : "http://localhost:3000/api"
 
 export const isOpenFeature = feature => {
-   const flags = (publicRuntimeConfig && publicRuntimeConfig.FEATURE_FLAGS) || {}
+   const flags = publicRuntimeConfig?.FEATURE_FLAGS || {}
    return !!flags[feature]
 }
 
