@@ -4,20 +4,21 @@ import moize from "moize"
 import { API_URL, ASKERS_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
 import { METHOD_POST, METHOD_PUT, METHOD_DELETE } from "../utils/http"
-import { isEmpty } from "../utils/misc"
 
 const MAX_AGE = 1000 * 60 * 60 // 1 hour
 
-export const searchAskersFuzzy = async ({ search, all = false, headers }) => {
-   search = search ? [`fuzzy=${search}`] : []
-   all = all ? ["all=true"] : []
-
-   let bonus = [...search, ...all]
-   bonus = bonus.length ? `?${bonus.join("&")}` : ""
+export const searchAskersFuzzy = async ({ search, requestedPage, headers }) => {
+   const arr = []
+   if (search) {
+      arr.push(`fuzzy=${search}`)
+   }
+   if (requestedPage) {
+      arr.push(`requestedPage=${requestedPage}`)
+   }
+   const bonus = arr.length ? "?" + arr.join("&") : ""
 
    const response = await fetch(`${API_URL}${ASKERS_ENDPOINT}${bonus}`, { headers })
-   const json = await handleAPIResponse(response)
-   return isEmpty(json) ? [] : json
+   return handleAPIResponse(response)
 }
 
 export const findAsker = async ({ id, headers }) => {

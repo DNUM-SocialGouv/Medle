@@ -46,5 +46,5 @@ export const search = async ({ fuzzy, requestedPage, currentUser }) => {
          "users.scope",
       )
 
-   return { users: users && users.length ? transformAll(users) : [], totalCount, currentPage, maxPage, byPage: LIMIT }
+   return { users: users?.length ? transformAll(users) : [], totalCount, currentPage, maxPage, byPage: LIMIT }
 }

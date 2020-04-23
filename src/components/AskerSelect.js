@@ -16,7 +16,7 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
             mapForSelect(
                asker,
                elt => elt.id,
-               elt => elt.name,
+               elt => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
             ),
          )
       }
@@ -26,7 +26,7 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
                mapArrayForSelect(
                   arr,
                   elt => elt.id,
-                  elt => elt.name,
+                  elt => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
                ),
             )
          })
@@ -44,9 +44,9 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
       const askers = await memoizedSearchAskers({ search })
 
       return mapArrayForSelect(
-         askers,
+         askers?.elements,
          elt => elt.id,
-         elt => elt.name,
+         elt => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
       )
    }
 

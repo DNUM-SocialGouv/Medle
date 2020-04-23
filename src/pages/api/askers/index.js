@@ -12,11 +12,11 @@ const handler = async (req, res) => {
    try {
       switch (req.method) {
          case METHOD_GET: {
-            checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
+            const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-            const askers = await search(req.query)
+            const { askers, totalCount, currentPage, maxPage, byPage } = await search({ ...req.query, currentUser })
 
-            return res.status(STATUS_200_OK).json(askers)
+            return res.status(STATUS_200_OK).json({ totalCount, currentPage, maxPage, byPage, elements: askers })
          }
          case METHOD_POST: {
             checkValidUserWithPrivilege(ADMIN, req, res)

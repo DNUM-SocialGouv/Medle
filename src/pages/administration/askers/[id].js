@@ -42,7 +42,6 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
 
    // General error (alert)
    const [error, setError] = useState(initialError)
-   // Fields errors, for those not managed by useForm
    const [success, setsuccess] = useState("")
    const [modal, setModal] = useState(false)
 
@@ -145,7 +144,6 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
                <FormGroup row>
                   <Label for="depCode" sm={3}>
                      Département&nbsp;
-                     <MandatorySign />
                   </Label>
                   <Col sm={9}>
                      <Input
@@ -153,7 +151,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
                         name="depCode"
                         id="depCode"
                         innerRef={register({
-                           required: true,
+                           required: false,
                            pattern: {
                               value: /^[0-9]{2,3}$/i,
                            },

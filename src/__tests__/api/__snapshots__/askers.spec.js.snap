@@ -1,18 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`/askers should return all criminal courts in France 1`] = `
-Array [
-  Object {
-    "depCode": null,
-    "id": 3028,
-    "name": "Brigade de gendarmerie - Saint-Aignan",
-    "type": "gendarmerie",
-  },
-  Object {
-    "depCode": null,
-    "id": 2846,
-    "name": "Brigade de gendarmerie - Saint-Aignan-sur-Roë",
-    "type": "gendarmerie",
-  },
-]
+Object {
+  "byPage": 100,
+  "currentPage": 1,
+  "elements": Array [
+    Object {
+      "depCode": "",
+      "id": 3028,
+      "name": "Brigade de gendarmerie - Saint-Aignan",
+      "type": "gendarmerie",
+    },
+    Object {
+      "depCode": null,
+      "id": 2846,
+      "name": "Brigade de gendarmerie - Saint-Aignan-sur-Roë",
+      "type": "gendarmerie",
+    },
+  ],
+  "maxPage": 1,
+  "totalCount": 2,
+}
 `;

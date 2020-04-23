@@ -11,12 +11,12 @@ import { logError } from "../../../utils/logger"
 import { ADMIN } from "../../../utils/roles"
 import { SearchButton } from "../../../components/form/SearchButton"
 import { searchAskersFuzzy } from "../../../clients/askers"
+import { usePaginatedData } from "../../../utils/hooks"
+import Pagination from "../../../components/Pagination"
 
-const AdminAskerPage = ({ askers: initialAskers, currentUser }) => {
-   const [askers, setAskers] = useState(initialAskers)
+const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
    const [search, setSearch] = useState("")
-   const [error, setError] = useState("")
-   const [loading, setLoading] = useState(false)
+   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchAskersFuzzy, initialPaginatedData)
 
    const onChange = e => {
       setSearch(e.target.value)
@@ -24,14 +24,7 @@ const AdminAskerPage = ({ askers: initialAskers, currentUser }) => {
 
    const onSubmit = async e => {
       e.preventDefault()
-      setLoading(true)
-      try {
-         setAskers(await searchAskersFuzzy({ search }))
-      } catch (error) {
-         setError("Erreur serveur.")
-      } finally {
-         setLoading(false)
-      }
+      fetchPage(search)(0)
    }
 
    return (
@@ -77,10 +70,13 @@ const AdminAskerPage = ({ askers: initialAskers, currentUser }) => {
                   {error}
                </Alert>
             )}
-            {!error && !askers.length && <div className="text-center">{"Aucun demandeur trouvé."}</div>}
 
-            {!error && !!askers.length && (
+            {!error && !paginatedData.elements.length && <div className="text-center">{"Aucun demandeur trouvé."}</div>}
+
+            {!error && !!paginatedData.elements.length && (
                <>
+                  <Pagination data={paginatedData} fn={fetchPage(search)} />
+
                   <Table responsive className="table-hover">
                      <thead>
                         <tr className="table-light">
@@ -89,7 +85,7 @@ const AdminAskerPage = ({ askers: initialAskers, currentUser }) => {
                         </tr>
                      </thead>
                      <tbody>
-                        {askers.map(asker => (
+                        {paginatedData.elements.map(asker => (
                            <Link
                               key={asker.id}
                               href="/administration/askers/[id]"
@@ -121,8 +117,8 @@ AdminAskerPage.getInitialProps = async ctx => {
    const headers = buildAuthHeaders(ctx)
 
    try {
-      const askers = await searchAskersFuzzy({ headers })
-      return { askers }
+      const paginatedData = await searchAskersFuzzy({ headers })
+      return { paginatedData }
    } catch (error) {
       logError("APP error", error)
 
@@ -132,7 +128,7 @@ AdminAskerPage.getInitialProps = async ctx => {
 }
 
 AdminAskerPage.propTypes = {
-   askers: PropTypes.array,
+   paginatedData: PropTypes.object,
    currentUser: PropTypes.object.isRequired,
 }
 
