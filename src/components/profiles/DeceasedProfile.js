@@ -34,7 +34,7 @@ const DeceasedEdit = ({ dispatch, state, errors }) => {
          )}
          <ActBlock
             type="examinations"
-            title="Examens complémentaires"
+            title="Examens complémentaires demandés"
             values={["Biologie", "Imagerie", "Toxicologie", "Anapath", "Génétique", "Autres"]}
             mode="toggleMultiple"
             dispatch={dispatch}
@@ -86,7 +86,7 @@ const DeceasedRead = act => {
                <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Examens complémentaires"} content={act && act.examinations} />
+               <ColumnAct header={"Examens complémentaires demandés"} content={act && act.examinations} />
             </Col>
             <Col className="mr-3">
                {act.distance && <ColumnAct header={"Distance"} content={act && act.distance} />}

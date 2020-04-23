@@ -23,7 +23,7 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
          />
          <ActBlock
             type="examinations"
-            title="Examens complémentaires"
+            title="Examens complémentaires demandés"
             values={["Biologie", "Autres"]}
             mode="toggleMultiple"
             dispatch={dispatch}
@@ -87,7 +87,7 @@ const DrunkRead = act => {
                <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Examens complémentaires"} content={act && act.examinations} />
+               <ColumnAct header={"Examens complémentaires demandés"} content={act && act.examinations} />
             </Col>
             <Col className="mr-3">
                <ColumnAct header={"Lieu de l'examen"} content={act.location} />

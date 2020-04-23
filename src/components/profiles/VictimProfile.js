@@ -64,7 +64,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
          />
          <ActBlock
             type="examinations"
-            title="Examens complémentaires"
+            title="Examens complémentaires demandés"
             values={["Biologie", "Imagerie", "Toxicologie", "Génétique", "Autres"]}
             mode="toggleMultiple"
             dispatch={dispatch}
@@ -147,7 +147,7 @@ const VictimRead = act => {
 
          <Row>
             <Col className="mr-3">
-               <ColumnAct header={"Examens complémentaires"} content={act && act.examinations} />
+               <ColumnAct header={"Examens complémentaires demandés"} content={act && act.examinations} />
             </Col>
             <Col className="mr-3">
                <ColumnAct header={"Lieu de l'examen"} content={act.location} />

@@ -23,7 +23,7 @@ const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
          />
          <ActBlock
             type="examinations"
-            title="Examens complémentaires"
+            title="Examens complémentaires demandés"
             values={["Biologie", "Imagerie", "Autres"]}
             mode="toggleMultiple"
             dispatch={dispatch}
@@ -77,7 +77,7 @@ const AsylumSeekerRead = act => {
                <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
             </Col>
             <Col className="mr-3">
-               <ColumnAct header={"Examens complémentaires"} content={act && act.examinations} />
+               <ColumnAct header={"Examens complémentaires demandés"} content={act && act.examinations} />
             </Col>
             <Col className="mr-3"></Col>
          </Row>

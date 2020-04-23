@@ -291,7 +291,9 @@ const ActDeclaration = ({ act, currentUser }) => {
 
             <Row>
                <Col sm="6" md="4">
-                  <Label htmlFor="internalNumber">Numéro interne</Label>
+                  <Label htmlFor="internalNumber" className="mb-0">
+                     Numéro interne
+                  </Label>
                   <Input
                      id="internalNumber"
                      invalid={errors && !!errors.internalNumber}
@@ -304,8 +306,10 @@ const ActDeclaration = ({ act, currentUser }) => {
                   {warnings && warnings.internalNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
                   <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
                </Col>
-               <Col sm="6" md="4">
-                  <Label htmlFor="examinationDate">{"Date d'examen"}</Label>
+               <Col sm="6" md="4" className="mt-3 mt-sm-0">
+                  <Label htmlFor="examinationDate" className="mb-0">
+                     {"Date d'examen"}
+                  </Label>
                   <Input
                      id="examinationDate"
                      invalid={errors && !!errors.examinationDate}
@@ -317,7 +321,10 @@ const ActDeclaration = ({ act, currentUser }) => {
                   <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
                </Col>
                <Col className="mt-4 text-center mt-md-0" sm="12" md="4">
-                  <Label htmlFor="proofWithoutComplaint">Recueil de preuve sans plainte</Label>
+                  <Label htmlFor="proofWithoutComplaint" className="mb-0">
+                     Victime hors réquisition judiciaire
+                  </Label>
+                  <small>(recueil de preuve sans plainte)</small>
                   <br />
                   <Input
                      type="checkbox"
@@ -330,9 +337,11 @@ const ActDeclaration = ({ act, currentUser }) => {
                   ></Input>
                </Col>
             </Row>
-            <Row>
-               <Col md="4" className="mt-4 mt-md-0">
-                  <Label htmlFor="pvNumber">Numéro de PV</Label>
+            <Row className="mt-4 mt-md-3">
+               <Col md="4">
+                  <Label htmlFor="pvNumber" className="mb-0">
+                     Numéro de PV
+                  </Label>
                   <Input
                      id="pvNumber"
                      placeholder={state.proofWithoutComplaint ? "" : "Recommandé"}
@@ -344,8 +353,10 @@ const ActDeclaration = ({ act, currentUser }) => {
                   />
                   {warnings && warnings.pvNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
                </Col>
-               <Col md="8" className="mt-4 mt-md-0">
-                  <Label htmlFor="askerId">Demandeur</Label>
+               <Col md="8" className="mt-3 mt-md-0">
+                  <Label htmlFor="askerId" className="mb-0">
+                     Demandeur
+                  </Label>
                   <AskerSelect
                      dispatch={dispatch}
                      id="askerId"
