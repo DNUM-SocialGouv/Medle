@@ -124,7 +124,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                </FormGroup>
                <FormGroup row>
                   <Label for="finesseNumber" sm={3}>
-                     N° Finesse
+                     N° Finess
                   </Label>
                   <Col sm={9}>
                      <Input type="text" name="finesseNumber" id="finesseNumber" innerRef={register} />

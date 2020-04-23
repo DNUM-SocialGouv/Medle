@@ -85,7 +85,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                      <thead>
                         <tr className="table-light">
                            <th>Nom</th>
-                           <th>N° Finesse</th>
+                           <th>N° Finess</th>
                            <th>Ville</th>
                            <th>Code postal</th>
                         </tr>
