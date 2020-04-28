@@ -1,4 +1,5 @@
 import fetch from "isomorphic-unfetch"
+import { saveAs } from "file-saver"
 
 import { API_URL, ACTS_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
@@ -52,4 +53,8 @@ export const updateAct = async ({ act, headers }) => {
 export const deleteAct = async ({ id, headers }) => {
    const response = await fetch(`${API_URL}${ACTS_ENDPOINT}/${id}`, { method: METHOD_DELETE, headers })
    return handleAPIResponse(response)
+}
+
+export const fetchExport = async search => {
+   saveAs(`${API_URL}${ACTS_ENDPOINT}/export?fuzzy=${search}`)
 }

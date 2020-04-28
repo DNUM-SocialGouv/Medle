@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
 import { transformAll } from "../../models/askers"
 
-const LIMIT = 100
+const LIMIT = 50
 
 export const search = async ({ fuzzy, requestedPage }) => {
    requestedPage = requestedPage && !isNaN(requestedPage) && parseInt(requestedPage, 10)

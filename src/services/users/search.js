@@ -3,7 +3,7 @@ import { transformAll } from "../../models/users"
 import { makeWhereClause } from "./common"
 import { buildScope } from "../scope"
 
-const LIMIT = 100
+const LIMIT = 50
 
 export const search = async ({ fuzzy, requestedPage, currentUser }) => {
    const scope = buildScope(currentUser)

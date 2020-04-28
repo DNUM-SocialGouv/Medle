@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import Link from "next/link"
-import Router from "next/router"
 import PropTypes from "prop-types"
 import { Alert, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
+import ListAltIcon from "@material-ui/icons/ListAlt"
 
 import { SearchButton } from "../../components/form/SearchButton"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
@@ -14,7 +14,7 @@ import { isoToFr } from "../../utils/date"
 import { ACT_CONSULTATION } from "../../utils/roles"
 import { logError } from "../../utils/logger"
 import { usePaginatedData } from "../../utils/hooks"
-import { searchActsFuzzy } from "../../clients/acts"
+import { searchActsFuzzy, fetchExport } from "../../clients/acts"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
    const [search, setSearch] = useState("")
@@ -27,6 +27,10 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
    const onSubmit = e => {
       e.preventDefault()
       fetchPage(search)(0)
+   }
+
+   const onExport = () => {
+      fetchExport(search)
    }
 
    return (
@@ -62,7 +66,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
             {!error && !!paginatedData.elements.length && (
                <>
-                  <Pagination data={paginatedData} fn={fetchPage(search)} />
+                  <div className="d-flex justify-content-center my-4">
+                     <b>{paginatedData.totalCount}</b>&nbsp;résultat{paginatedData.totalCount > 1 && "s"}
+                  </div>
                   <Table responsive className="table-hover">
                      <thead>
                         <tr className="table-light">
@@ -95,6 +101,12 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                         ))}
                      </tbody>
                   </Table>
+                  <Pagination data={paginatedData} fn={fetchPage(search)} />
+                  <div className="d-flex justify-content-center mt-5">
+                     <SearchButton className="btn-outline-primary" disabled={loading} onClick={onExport}>
+                        <ListAltIcon /> Exporter les données
+                     </SearchButton>
+                  </div>
                </>
             )}
          </Container>

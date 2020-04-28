@@ -2,7 +2,7 @@
 
 exports[`/askers should return all criminal courts in France 1`] = `
 Object {
-  "byPage": 100,
+  "byPage": 50,
   "currentPage": 1,
   "elements": Array [
     Object {

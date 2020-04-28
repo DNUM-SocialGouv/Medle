@@ -22,8 +22,25 @@ export const transform = knexData => {
            ...knexData.extra_data,
         }
 }
+// from Knex entity to model (JS) entity for export needs
+export const transformForExport = knexData => {
+   return !knexData
+      ? null
+      : {
+           id: knexData.id,
+           internalNumber: knexData.internal_number,
+           pvNumber: knexData.pv_number,
+           examinationDate: moment(knexData.examination_date).format(ISO_DATE),
+           profile: knexData.profile,
+           asker: knexData.asker_name,
+           user: knexData.user_email,
+           hospital: knexData.hospital_name,
+           ...knexData.extra_data,
+        }
+}
 
-export const transformAll = list => list.map(model => transform(model))
+export const transformAll = list => list.map(knexData => transform(knexData))
+export const transformAllForExport = list => list.map(knexData => transformForExport(knexData))
 
 // from model (JS) entity to Knex entity
 export const untransform = model => {
