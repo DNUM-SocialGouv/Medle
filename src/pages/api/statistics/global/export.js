@@ -1,13 +1,14 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
-import { STATS_GLOBAL } from "../../../utils/roles"
-import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
-import { checkValidUserWithPrivilege } from "../../../utils/auth"
-import { buildGlobalStatistics } from "../../../services/statistics/global"
+import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../../utils/http"
+import { STATS_GLOBAL } from "../../../../utils/roles"
+import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
+import { checkValidUserWithPrivilege } from "../../../../utils/auth"
+import { exportGlobalStatistics } from "../../../../services/statistics/global"
+import { logDebug } from "../../../../utils/logger"
 
 /**
- * API endpoint for global statistics.
+ * API endpoint for global statistics export.
  *
  * Si pas de currentUser.role == ["OPERATOR_ACT", etc..] -> le user est un user d'hôpital. Son scope local est son seul hôpital
  * Si currentUser.role == ["REGIONAL_SUPERVISOR", etc..] -> son scope local est l'ensemble des établissements composants la "région"
@@ -21,26 +22,19 @@ const handler = async (req, res) => {
 
   try {
     switch (req.method) {
-      case METHOD_POST: {
+      case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-        const {
-          inputs,
-          globalCount,
-          averageCount,
-          profilesDistribution,
-          actsWithSamePV,
-          averageWithSamePV,
-        } = await buildGlobalStatistics(req.body, currentUser)
+        const workbook = await exportGlobalStatistics(req.query, currentUser)
 
-        return res.status(STATUS_200_OK).json({
-          inputs,
-          globalCount,
-          averageCount,
-          profilesDistribution,
-          actsWithSamePV,
-          averageWithSamePV,
-        })
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx")
+
+        await workbook.xlsx.write(res)
+
+        logDebug("Export fichier XLSX")
+
+        return res.status(STATUS_200_OK).end()
       }
       default:
         if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
@@ -51,7 +45,7 @@ const handler = async (req, res) => {
 }
 
 const cors = Cors({
-  allowMethods: [METHOD_POST, METHOD_OPTIONS],
+  allowMethods: [METHOD_GET, METHOD_OPTIONS],
 })
 
 export default cors(handler)

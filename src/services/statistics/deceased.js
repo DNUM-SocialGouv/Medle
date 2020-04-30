@@ -1,5 +1,7 @@
+import Excel from "exceljs"
+
 import knex from "../../knex/knex"
-import { ISO_DATE } from "../../utils/date"
+import { ISO_DATE, now } from "../../utils/date"
 import { normalizeInputs, averageOf } from "./common"
 import { buildScope } from "../scope"
 
@@ -19,7 +21,7 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
   const fetchGlobalCount = knex("acts")
     .select(knex.raw("count(1)::integer"))
     .whereNull("deleted_at")
-    .where(builder => {
+    .where((builder) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
       }
@@ -30,7 +32,7 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 
   const fetchAverageCount = knex
     .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
-    .where(builder => {
+    .where((builder) => {
       if (scopeFilter.length) {
         builder.whereIn("id", scopeFilter)
       }
@@ -47,7 +49,43 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
       },
       globalCount: globalCount.count || 0,
       averageCount:
-        averageCount && averageCount.length ? averageOf(averageCount.map(elt => parseFloat(elt.avg, 10))) : 0,
+        averageCount && averageCount.length ? averageOf(averageCount.map((elt) => parseFloat(elt.avg, 10))) : 0,
     }
   })
+}
+
+export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
+  scopeFilter = scopeFilter && JSON.parse(scopeFilter)
+
+  const { inputs, globalCount, averageCount } = await buildDeceasedStatistics(
+    { startDate, endDate, scopeFilter },
+    currentUser,
+  )
+
+  const workbook = new Excel.Workbook()
+
+  workbook.created = now()
+  workbook.modified = now()
+
+  const actsWorksheet = workbook.addWorksheet("Statistiques thanato")
+
+  actsWorksheet.columns = [
+    { header: "Statistique", key: "name", width: 40 },
+    { header: "Valeur", key: "value", width: 20 },
+  ]
+
+  actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
+  actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
+
+  const inputsWorksheet = workbook.addWorksheet("Paramètres de l'export")
+  inputsWorksheet.columns = [
+    { header: "Filtre", key: "name", width: 40 },
+    { header: "Valeur", key: "value", width: 20 },
+  ]
+
+  inputsWorksheet.addRow({ name: "Date de début", value: inputs?.startDate })
+  inputsWorksheet.addRow({ name: "Date de fin", value: inputs?.endDate })
+  inputsWorksheet.addRow({ name: "Périmètre", value: inputs?.scopeFilter || "National" })
+
+  return workbook
 }

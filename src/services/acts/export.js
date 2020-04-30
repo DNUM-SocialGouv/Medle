@@ -8,12 +8,12 @@ export const exportActs = async ({ fuzzy, internalNumber, pvNumber, requestedPag
     currentUser,
   )
 
-  var workbook = new Excel.Workbook()
+  const workbook = new Excel.Workbook()
 
   workbook.created = now()
   workbook.modified = now()
 
-  var worksheet = workbook.addWorksheet("Onglet 1")
+  const worksheet = workbook.addWorksheet("Onglet 1")
 
   worksheet.columns = [
     { header: "Id", key: "id", width: 10 },

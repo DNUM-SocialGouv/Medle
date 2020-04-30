@@ -67,7 +67,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
         {!error && !!paginatedData.elements.length && (
           <>
-            <div className="d-flex justify-content-center my-4">
+            <div className="my-4 d-flex justify-content-center">
               <b>{paginatedData.totalCount}</b>&nbsp;résultat{paginatedData.totalCount > 1 && "s"}
             </div>
             <Table responsive className="table-hover">
@@ -104,7 +104,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
             </Table>
             <Pagination data={paginatedData} fn={fetchPage(search)} />
             {isOpenFeature("export") && (
-              <div className="d-flex justify-content-center mt-5">
+              <div className="mt-5 d-flex justify-content-center">
                 <SearchButton className="btn-outline-primary" disabled={loading} onClick={onExport}>
                   <ListAltIcon /> Exporter les données
                 </SearchButton>

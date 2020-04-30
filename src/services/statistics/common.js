@@ -1,10 +1,11 @@
 import moment from "moment"
 import { now, ISO_DATE } from "../../utils/date"
+import { instanceOf } from "prop-types"
 
 const defaultEndDate = () => now().format(ISO_DATE)
 
 // end date must be not null, well formatted and not in the future
-export const isValidEndDate = endDate =>
+export const isValidEndDate = (endDate) =>
   endDate && moment(endDate, ISO_DATE, true).isValid() && moment(endDate, ISO_DATE).isSameOrBefore(now())
 
 export const isValidStartDate = (startDate, endDate) =>
@@ -35,7 +36,7 @@ export const normalizeInputs = ({ startDate, endDate, scopeFilter = [] }, reacha
   }
 }
 
-export const averageOf = arr => {
+export const averageOf = (arr) => {
   if (!arr || !arr.length) return 0
   const sum = arr.reduce((acc, curr) => acc + curr)
   return parseFloat((sum / arr.length).toFixed(2), 10)

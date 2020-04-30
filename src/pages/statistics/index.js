@@ -1,19 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { PropTypes } from "prop-types"
-
 import { Alert, Col, Container, Form, FormGroup, Input, Row } from "reactstrap"
-import fetch from "isomorphic-unfetch"
-import moize from "moize"
 import Switch from "react-switch"
+import ListAltIcon from "@material-ui/icons/ListAlt"
 
-import {
-  API_URL,
-  GLOBAL_STATISTICS_ENDPOINT,
-  LIVING_STATISTICS_ENDPOINT,
-  DEACEASED_STATISTICS_ENDPOINT,
-} from "../../config"
-import { handleAPIResponse } from "../../utils/errors"
-import { METHOD_POST } from "../../utils/http"
+import { isOpenFeature } from "../../config"
 import Layout from "../../components/Layout"
 import TabButton from "../../components/TabButton"
 import { Label, Title1 } from "../../components/StyledComponents"
@@ -21,59 +12,13 @@ import { STATS_GLOBAL } from "../../utils/roles"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { logError, logDebug } from "../../utils/logger"
 import { isEmpty, pluralize } from "../../utils/misc"
-
 import { StatBlockNumbers, StatBlockPieChart } from "../../components/StatBlock"
 import { isValidStartDate, isValidEndDate } from "../../services/statistics/common"
 import { buildScope } from "../../services/scope"
-import { now, ISO_DATE } from "../../utils/date"
+import { SearchButton } from "../../components/form/SearchButton"
+import { fetchExport, memoizedFetchStatistics } from "../../clients/statistics"
 
-// handy skeleton structure to avoid future "undefined" management
-const statisticsDefault = {
-  inputs: {},
-  globalCount: 0,
-  averageCount: 0,
-  profilesDistribution: {}, // nested object can't be merged in JS so empty object is enough
-  actsWithSamePV: 0,
-  averageWithSamePV: 0,
-  actsWithPv: {},
-  actTypes: {},
-  hours: {},
-  examinations: {},
-}
-
-const defaultStartDate = now()
-  .dayOfYear(1)
-  .format(ISO_DATE)
-
-const fetchStatistics = async ({
-  type = "Global",
-  scopeFilter = [],
-  startDate = defaultStartDate,
-  endDate = now(),
-  authHeaders,
-}) => {
-  const obj = {
-    Vivant: LIVING_STATISTICS_ENDPOINT,
-    Thanato: DEACEASED_STATISTICS_ENDPOINT,
-  }
-
-  const endpoint = obj[type] || GLOBAL_STATISTICS_ENDPOINT
-
-  const response = await fetch(API_URL + endpoint, {
-    method: METHOD_POST,
-    body: JSON.stringify({ startDate, endDate, scopeFilter }),
-    headers: { "Content-Type": "application/json", ...authHeaders },
-  })
-
-  const statistics = await handleAPIResponse(response)
-  return { ...statisticsDefault, ...statistics }
-}
-
-const MAX_AGE = 1000 * 60 * 5 // five minutes;
-
-const memoizedFetchStatistics = moize({ maxAge: MAX_AGE, isDeepEqual: true })(fetchStatistics)
-
-const livingDeceaseddData = statistics => [
+const livingDeceaseddData = (statistics) => [
   {
     name: "Vivant",
     value: statistics?.profilesDistribution?.["Vivant"] || 0,
@@ -84,7 +29,7 @@ const livingDeceaseddData = statistics => [
   },
 ]
 
-const actsWithPvData = statistics => [
+const actsWithPvData = (statistics) => [
   {
     name: "Avec",
     value: statistics?.actsWithPv?.["Avec réquisition"] || 0,
@@ -99,7 +44,7 @@ const actsWithPvData = statistics => [
   },
 ]
 
-const actTypesData = statistics => [
+const actTypesData = (statistics) => [
   {
     name: "Somatique",
     value: statistics?.actTypes?.["Somatique"] || 0,
@@ -110,7 +55,7 @@ const actTypesData = statistics => [
   },
 ]
 
-const hoursData = statistics => [
+const hoursData = (statistics) => [
   {
     name: "Journée",
     value: statistics?.hours?.["Journée"] || 0,
@@ -125,7 +70,7 @@ const hoursData = statistics => [
   },
 ]
 
-const examinationsData = statistics => [
+const examinationsData = (statistics) => [
   {
     name: "Biologie",
     value: statistics?.examinations?.["Biologie"] || 0,
@@ -181,7 +126,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
     syncUI()
   }, [formState.endDate, formState.startDate, scopeFilter.scope, type])
 
-  const onChange = e => {
+  const onChange = (e) => {
     setErrors({})
     if (e.target.id === "startDate") {
       if (!isValidStartDate(e.target.value, formState.endDate))
@@ -196,8 +141,17 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
     setFormState({ ...formState, [e.target.id]: e.target.value })
   }
 
-  const toggleScopeFilter = async checked => {
+  const toggleScopeFilter = async (checked) => {
     setScopeFilter({ isNational: checked, scope: checked ? [] : buildScope(currentUser) })
+  }
+
+  const onExport = async () => {
+    await fetchExport({
+      type,
+      startDate: formState.startDate,
+      endDate: formState.endDate,
+      scopeFilter: scopeFilter.scope,
+    })
   }
 
   return (
@@ -347,6 +301,13 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
             />
           </div>
         )}
+        {isOpenFeature("export") && (
+          <div className="mt-5 d-flex justify-content-center">
+            <SearchButton className="btn-outline-primary" onClick={onExport}>
+              <ListAltIcon /> Exporter les données
+            </SearchButton>
+          </div>
+        )}
       </Container>
       <style jsx>{`
         .tab {
@@ -361,7 +322,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   )
 }
 
-StatisticsPage.getInitialProps = async ctx => {
+StatisticsPage.getInitialProps = async (ctx) => {
   const authHeaders = buildAuthHeaders(ctx)
 
   try {

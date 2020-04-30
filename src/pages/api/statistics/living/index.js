@@ -1,10 +1,10 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../utils/http"
-import { STATS_GLOBAL } from "../../../utils/roles"
-import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
-import { checkValidUserWithPrivilege } from "../../../utils/auth"
-import { buildLivingStatistics } from "../../../services/statistics/living"
+import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../../utils/http"
+import { STATS_GLOBAL } from "../../../../utils/roles"
+import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
+import { checkValidUserWithPrivilege } from "../../../../utils/auth"
+import { buildLivingStatistics } from "../../../../services/statistics/living"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
