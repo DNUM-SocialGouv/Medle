@@ -52,7 +52,6 @@ exports[`renders UserDetail unchanged 1`] = `
                 aria-hidden="true"
                 className="MuiSvgIcon-root text-black-50"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
                 width={30}
               >
@@ -143,7 +142,6 @@ exports[`renders UserDetail unchanged 1`] = `
             aria-hidden="true"
             className="MuiSvgIcon-root text-black-50"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
             width={30}
           >
@@ -166,7 +164,6 @@ exports[`renders UserDetail unchanged 1`] = `
             aria-hidden="true"
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
             width={30}
           >
@@ -190,7 +187,6 @@ exports[`renders UserDetail unchanged 1`] = `
             aria-hidden="true"
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
             width={30}
           >
@@ -214,7 +210,6 @@ exports[`renders UserDetail unchanged 1`] = `
             aria-hidden="true"
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
             width={30}
           >
@@ -238,7 +233,6 @@ exports[`renders UserDetail unchanged 1`] = `
             aria-hidden="true"
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
             width={30}
           >
@@ -262,7 +256,6 @@ exports[`renders UserDetail unchanged 1`] = `
             aria-hidden="true"
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
             width={30}
           >
@@ -286,7 +279,6 @@ exports[`renders UserDetail unchanged 1`] = `
             aria-hidden="true"
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
             width={30}
           >
@@ -329,7 +321,6 @@ exports[`renders UserDetail unchanged 1`] = `
                 aria-hidden="true"
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 style={
                   Object {
                     "width": 15,
@@ -494,7 +485,7 @@ exports[`renders UserDetail unchanged 1`] = `
                     onTouchEnd={[Function]}
                   >
                     <div
-                      className=" css-1hwfws3"
+                      className=" css-g1d714-ValueContainer"
                     >
                       <div
                         className=" css-1wa3eu0-placeholder"
