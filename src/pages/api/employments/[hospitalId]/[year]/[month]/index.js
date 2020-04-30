@@ -27,10 +27,9 @@ const handler = async (req, res) => {
             return result ? res.status(STATUS_200_OK).json(result) : sendNotFoundError(res)
          }
          default:
-            return sendMethodNotAllowedError(res)
+            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
       }
    } catch (error) {
-      console.error("ici", error)
       sendAPIError(error, res)
    }
 }

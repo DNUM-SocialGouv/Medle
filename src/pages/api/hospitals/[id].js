@@ -40,7 +40,7 @@ const handler = async (req, res) => {
          }
 
          default:
-            return sendMethodNotAllowedError(res)
+            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
       }
    } catch (error) {
       sendAPIError(error, res)

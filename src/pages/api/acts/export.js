@@ -1,6 +1,6 @@
 import Cors from "micro-cors"
 
-import { METHOD_GET, METHOD_OPTIONS, METHOD_POST } from "../../../utils/http"
+import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
 import { ACT_CONSULTATION } from "../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
@@ -23,13 +23,12 @@ const handler = async (req, res) => {
 
             await workbook.xlsx.write(res)
 
-            res.end()
             logDebug("Export fichier XLSX")
 
-            break
+            return res.status(STATUS_200_OK).end()
          }
          default:
-            return sendMethodNotAllowedError(res)
+            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
       }
    } catch (error) {
       sendAPIError(error, res)

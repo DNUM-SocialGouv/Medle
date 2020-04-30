@@ -40,7 +40,7 @@ const handler = async (req, res) => {
             return res.status(STATUS_200_OK).json({ updated })
          }
          default:
-            return sendMethodNotAllowedError(res)
+            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
       }
    } catch (error) {
       return sendAPIError(error, res)
