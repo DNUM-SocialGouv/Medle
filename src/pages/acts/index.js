@@ -15,6 +15,7 @@ import { ACT_CONSULTATION } from "../../utils/roles"
 import { logError } from "../../utils/logger"
 import { usePaginatedData } from "../../utils/hooks"
 import { searchActsFuzzy, fetchExport } from "../../clients/acts"
+import { isOpenFeature } from "../../config"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
    const [search, setSearch] = useState("")
@@ -102,11 +103,13 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                      </tbody>
                   </Table>
                   <Pagination data={paginatedData} fn={fetchPage(search)} />
-                  <div className="d-flex justify-content-center mt-5">
-                     <SearchButton className="btn-outline-primary" disabled={loading} onClick={onExport}>
-                        <ListAltIcon /> Exporter les données
-                     </SearchButton>
-                  </div>
+                  {isOpenFeature("export") && (
+                     <div className="d-flex justify-content-center mt-5">
+                        <SearchButton className="btn-outline-primary" disabled={loading} onClick={onExport}>
+                           <ListAltIcon /> Exporter les données
+                        </SearchButton>
+                     </div>
+                  )}
                </>
             )}
          </Container>
