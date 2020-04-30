@@ -76,79 +76,79 @@ const memoizedFetchStatistics = moize({ maxAge: MAX_AGE, isDeepEqual: true })(fe
 const livingDeceaseddData = statistics => [
   {
     name: "Vivant",
-    value: statistics.profilesDistribution["Vivant"] || 0,
+    value: statistics?.profilesDistribution?.["Vivant"] || 0,
   },
   {
     name: "Thanato",
-    value: statistics.profilesDistribution["Personne décédée"] || 0,
+    value: statistics?.profilesDistribution?.["Personne décédée"] || 0,
   },
 ]
 
 const actsWithPvData = statistics => [
   {
     name: "Avec",
-    value: statistics.actsWithPv["Avec réquisition"] || 0,
+    value: statistics?.actsWithPv?.["Avec réquisition"] || 0,
   },
   {
     name: "Sans (non renseigné)",
-    value: statistics.actsWithPv["Sans réquisition"] || 0,
+    value: statistics?.actsWithPv?.["Sans réquisition"] || 0,
   },
   {
     name: "Recueil de preuves sans plainte",
-    value: statistics.actsWithPv["Recueil de preuve sans plainte"] || 0,
+    value: statistics?.actsWithPv?.["Recueil de preuve sans plainte"] || 0,
   },
 ]
 
 const actTypesData = statistics => [
   {
     name: "Somatique",
-    value: statistics.actTypes["Somatique"] || 0,
+    value: statistics?.actTypes?.["Somatique"] || 0,
   },
   {
     name: "Psychiatrique",
-    value: statistics.actTypes["Psychiatrique"] || 0,
+    value: statistics?.actTypes?.["Psychiatrique"] || 0,
   },
 ]
 
 const hoursData = statistics => [
   {
     name: "Journée",
-    value: statistics.hours["Journée"] || 0,
+    value: statistics?.hours?.["Journée"] || 0,
   },
   {
     name: "Soirée",
-    value: statistics.hours["Soirée"] || 0,
+    value: statistics?.hours?.["Soirée"] || 0,
   },
   {
     name: "Nuit profonde",
-    value: statistics.hours["Nuit profonde"] || 0,
+    value: statistics?.hours?.["Nuit profonde"] || 0,
   },
 ]
 
 const examinationsData = statistics => [
   {
     name: "Biologie",
-    value: statistics.examinations["Biologie"] || 0,
+    value: statistics?.examinations?.["Biologie"] || 0,
   },
   {
     name: "Imagerie",
-    value: statistics.examinations["Imagerie"] || 0,
+    value: statistics?.examinations?.["Imagerie"] || 0,
   },
   {
     name: "Toxicologie",
-    value: statistics.examinations["Toxicologie"] || 0,
+    value: statistics?.examinations?.["Toxicologie"] || 0,
   },
   {
     name: "Anapath",
-    value: statistics.examinations["Anapath"] || 0,
+    value: statistics?.examinations?.["Anapath"] || 0,
   },
   {
     name: "Génétique",
-    value: statistics.examinations["Génétique"] || 0,
+    value: statistics?.examinations?.["Génétique"] || 0,
   },
   {
     name: "Autres",
-    value: statistics.examinations["Autres"] || 0,
+    value: statistics?.examinations?.["Autres"] || 0,
   },
 ]
 
@@ -157,8 +157,8 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   const [scopeFilter, setScopeFilter] = useState({ isNational: true, scope: [] })
   const [type, setType] = useState("Global")
   const [formState, setFormState] = useState({
-    startDate: statistics.inputs.startDate,
-    endDate: statistics.inputs.endDate,
+    startDate: statistics?.inputs?.startDate,
+    endDate: statistics?.inputs?.endDate,
   })
   const [errors, setErrors] = useState({})
 
@@ -237,7 +237,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               </FormGroup>
             </Col>
             <Col lg={{ size: 2 }} md="12" sm="12">
-              <div className="d-flex justify-content-lg-end justify-content-center align-items-center mr-4">
+              <div className="mr-4 d-flex justify-content-lg-end justify-content-center align-items-center">
                 <div className="d-flex align-items-center">
                   <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#307df6" }}>
                     Ma&nbsp;structure
@@ -285,10 +285,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           <div className="tab justify-content-sm-center justify-content-xl-start">
             <StatBlockNumbers
               title="Actes réalisés"
-              firstNumber={statistics.globalCount}
-              firstLabel={`Acte${pluralize(statistics.globalCount)} au total (tous confondus).`}
-              secondNumber={statistics.averageCount}
-              secondLabel={`Acte${pluralize(statistics.averageCount)} par jour en moyenne.`}
+              firstNumber={statistics?.globalCount}
+              firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
+              secondNumber={statistics?.averageCount}
+              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour en moyenne.`}
             />
             <StatBlockPieChart
               data={livingDeceaseddData(statistics)}
@@ -297,22 +297,22 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
             />
             <StatBlockNumbers
               title="Actes hors examens"
-              firstNumber={statistics.profilesDistribution["Autre activité/Reconstitution"]}
+              firstNumber={statistics?.profilesDistribution?.["Autre activité/Reconstitution"]}
               firstLabel={`Reconstitution${pluralize(
-                statistics.profilesDistribution["Autre activité/Reconstitution"],
+                statistics?.profilesDistribution?.["Autre activité/Reconstitution"],
               )}.`}
-              secondNumber={statistics.profilesDistribution["Autre activité/Assises"]}
+              secondNumber={statistics?.profilesDistribution?.["Autre activité/Assises"]}
               secondLabel={`Participation${pluralize(
-                statistics.profilesDistribution["Autre activité/Assises"],
+                statistics?.profilesDistribution?.["Autre activité/Assises"],
               )} aux assises.`}
             />
             <StatBlockNumbers
               title="Réquisitions"
-              firstNumber={statistics.actsWithSamePV}
-              firstLabel={`Acte${pluralize(statistics.actsWithSamePV)} avec le même numéro de réquisition.`}
-              secondNumber={statistics.averageWithSamePV}
+              firstNumber={statistics?.actsWithSamePV}
+              firstLabel={`Acte${pluralize(statistics?.actsWithSamePV)} avec le même numéro de réquisition.`}
+              secondNumber={statistics?.averageWithSamePV}
               secondLabel={`Acte${pluralize(
-                statistics.averageWithSamePV,
+                statistics?.averageWithSamePV,
               )} par numéro en moyenne sur ces numéros récurrents.`}
             />
           </div>
@@ -321,10 +321,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           <div className="tab justify-content-sm-center justify-content-xl-start">
             <StatBlockNumbers
               title="Actes réalisés"
-              firstNumber={statistics.globalCount}
-              firstLabel={`Acte${pluralize(statistics.globalCount)} au total (tous confondus).`}
-              secondNumber={statistics.averageCount}
-              secondLabel={`Acte${pluralize(statistics.averageCount)} par jour en moyenne.`}
+              firstNumber={statistics?.globalCount}
+              firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
+              secondNumber={statistics?.averageCount}
+              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour en moyenne.`}
             />
             <StatBlockPieChart data={actsWithPvData(statistics)} title="Numéro de réquisitions" />
             <StatBlockPieChart data={actTypesData(statistics)} title="Types d'actes" />
@@ -340,10 +340,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           <div className="tab justify-content-sm-center justify-content-xl-start">
             <StatBlockNumbers
               title="Actes réalisés"
-              firstNumber={statistics.globalCount}
-              firstLabel={`Acte${pluralize(statistics.globalCount)} au total (tous confondus).`}
-              secondNumber={statistics.averageCount}
-              secondLabel={`Acte${pluralize(statistics.averageCount)} par jour en moyenne.`}
+              firstNumber={statistics?.globalCount}
+              firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
+              secondNumber={statistics?.averageCount}
+              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour en moyenne.`}
             />
           </div>
         )}
