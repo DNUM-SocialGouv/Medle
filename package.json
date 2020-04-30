@@ -52,7 +52,7 @@
     "remark-emoji": "^2.1.0",
     "remark-images": "^2.0.0",
     "styled-components": "^5.1.0",
-    "yup": "^0.28.4"
+    "yup": "^0.28.5"
   },
   "devDependencies": {
     "@socialgouv/eslint-config-react": "^0.20.0",
