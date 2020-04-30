@@ -6,7 +6,7 @@ export const logInfo = (...message) => console.info(...message)
 export const logWarning = (...message) => console.warning(...message)
 
 export const logDebug = (...message) => {
-   if (publicRuntimeConfig && publicRuntimeConfig.DEBUG_MODE && publicRuntimeConfig.DEBUG_MODE === "true") {
-      console.info("debug:", ...message)
-   }
+  if (publicRuntimeConfig && publicRuntimeConfig.DEBUG_MODE && publicRuntimeConfig.DEBUG_MODE === "true") {
+    console.info("debug:", ...message)
+  }
 }

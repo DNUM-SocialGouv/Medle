@@ -5,25 +5,25 @@ import { untransform } from "../../models/acts"
 import { buildScope } from "../scope"
 
 export const update = async ({ id }, data, currentUser) => {
-   if (!id || isNaN(id) || !data || !data.hospitalId) {
-      throw new APIError({
-         status: STATUS_400_BAD_REQUEST,
-         message: "Bad request",
-      })
-   }
+  if (!id || isNaN(id) || !data || !data.hospitalId) {
+    throw new APIError({
+      status: STATUS_400_BAD_REQUEST,
+      message: "Bad request",
+    })
+  }
 
-   const reachableScope = buildScope(currentUser)
+  const reachableScope = buildScope(currentUser)
 
-   if (!reachableScope || !reachableScope.includes(data.hospitalId)) {
-      throw new APIError({
-         status: STATUS_401_UNAUTHORIZED,
-         message: "Not authorized",
-      })
-   }
+  if (!reachableScope || !reachableScope.includes(data.hospitalId)) {
+    throw new APIError({
+      status: STATUS_401_UNAUTHORIZED,
+      message: "Not authorized",
+    })
+  }
 
-   const number = await knex("acts")
-      .update(untransform(data))
-      .where("id", id)
+  const number = await knex("acts")
+    .update(untransform(data))
+    .where("id", id)
 
-   return number
+  return number
 }

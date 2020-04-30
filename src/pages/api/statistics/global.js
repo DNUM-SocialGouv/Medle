@@ -17,41 +17,41 @@ import { buildGlobalStatistics } from "../../../services/statistics/global"
  *
  */
 const handler = async (req, res) => {
-   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Content-Type", "application/json")
 
-   try {
-      switch (req.method) {
-         case METHOD_POST: {
-            const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
+  try {
+    switch (req.method) {
+      case METHOD_POST: {
+        const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-            const {
-               inputs,
-               globalCount,
-               averageCount,
-               profilesDistribution,
-               actsWithSamePV,
-               averageWithSamePV,
-            } = await buildGlobalStatistics(req.body, currentUser)
+        const {
+          inputs,
+          globalCount,
+          averageCount,
+          profilesDistribution,
+          actsWithSamePV,
+          averageWithSamePV,
+        } = await buildGlobalStatistics(req.body, currentUser)
 
-            return res.status(STATUS_200_OK).json({
-               inputs,
-               globalCount,
-               averageCount,
-               profilesDistribution,
-               actsWithSamePV,
-               averageWithSamePV,
-            })
-         }
-         default:
-            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+        return res.status(STATUS_200_OK).json({
+          inputs,
+          globalCount,
+          averageCount,
+          profilesDistribution,
+          actsWithSamePV,
+          averageWithSamePV,
+        })
       }
-   } catch (error) {
-      sendAPIError(error, res)
-   }
+      default:
+        if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+    }
+  } catch (error) {
+    sendAPIError(error, res)
+  }
 }
 
 const cors = Cors({
-   allowMethods: [METHOD_POST, METHOD_OPTIONS],
+  allowMethods: [METHOD_POST, METHOD_OPTIONS],
 })
 
 export default cors(handler)

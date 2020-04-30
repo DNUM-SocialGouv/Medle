@@ -4,14 +4,14 @@ import { APIError } from "../../utils/errors"
 import { transform } from "../../models/hospitals"
 
 export const find = async ({ id }) => {
-   if (!id || isNaN(id)) {
-      throw new APIError({
-         status: STATUS_400_BAD_REQUEST,
-         message: "Bad request",
-      })
-   }
+  if (!id || isNaN(id)) {
+    throw new APIError({
+      status: STATUS_400_BAD_REQUEST,
+      message: "Bad request",
+    })
+  }
 
-   const [hospital] = await knex("hospitals").where("id", id)
+  const [hospital] = await knex("hospitals").where("id", id)
 
-   return transform(hospital)
+  return transform(hospital)
 }

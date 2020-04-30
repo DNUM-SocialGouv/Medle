@@ -6,67 +6,67 @@ import { makeWhereClause } from "./common"
 import { buildScope } from "../scope"
 
 export const find = async ({ id, currentUser }) => {
-   if (!id || isNaN(id)) {
-      throw new APIError({
-         status: STATUS_400_BAD_REQUEST,
-         message: "Bad request",
-      })
-   }
+  if (!id || isNaN(id)) {
+    throw new APIError({
+      status: STATUS_400_BAD_REQUEST,
+      message: "Bad request",
+    })
+  }
 
-   const scope = buildScope(currentUser)
+  const scope = buildScope(currentUser)
 
-   let [user] = await knex("users")
-      .leftJoin("hospitals", "users.hospital_id", "hospitals.id")
-      .where("users.id", id)
-      .where(makeWhereClause({ scope }))
-      .select(
-         "users.id",
-         "users.first_name",
-         "users.last_name",
-         "users.email",
-         "users.password",
-         "users.role",
-         "users.hospital_id",
-         "hospitals.name as hospital_name",
-         "users.scope",
-      )
+  let [user] = await knex("users")
+    .leftJoin("hospitals", "users.hospital_id", "hospitals.id")
+    .where("users.id", id)
+    .where(makeWhereClause({ scope }))
+    .select(
+      "users.id",
+      "users.first_name",
+      "users.last_name",
+      "users.email",
+      "users.password",
+      "users.role",
+      "users.hospital_id",
+      "hospitals.name as hospital_name",
+      "users.scope",
+    )
 
-   user = transform(user)
+  user = transform(user)
 
-   if (user && user.scope && user.scope.length) {
-      const userScope = await knex("hospitals")
-         .whereNull("deleted_at")
-         .whereIn("id", user.scope)
-         .select("id", "name")
+  if (user && user.scope && user.scope.length) {
+    const userScope = await knex("hospitals")
+      .whereNull("deleted_at")
+      .whereIn("id", user.scope)
+      .select("id", "name")
 
-      user = { ...user, scope: userScope }
-   }
+    user = { ...user, scope: userScope }
+  }
 
-   return user
+  return user
 }
 
 export const findByEmail = async email => {
-   if (!email) {
-      throw new APIError({
-         status: STATUS_400_BAD_REQUEST,
-         message: "Bad request",
-      })
-   }
+  if (!email) {
+    throw new APIError({
+      status: STATUS_400_BAD_REQUEST,
+      message: "Bad request",
+    })
+  }
 
-   let [user] = await knex("users")
-      .where("users.email", email)
-      .select(
-         "users.id",
-         "users.first_name",
-         "users.last_name",
-         "users.email",
-         "users.password",
-         "users.role",
-         "users.hospital_id",
-         "users.scope",
-      )
+  let [user] = await knex("users")
+    .where("users.email", email)
+    .select(
+      "users.id",
+      "users.first_name",
+      "users.last_name",
+      "users.email",
+      "users.password",
+      "users.role",
+      "users.hospital_id",
+      "users.scope",
+    )
 
-   user = transform(user)
+  user = transform(user)
 
-   return user
+  return user
 }

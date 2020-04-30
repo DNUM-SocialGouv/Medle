@@ -7,35 +7,35 @@ import { checkValidUserWithPrivilege } from "../../../../../../utils/auth"
 import { find, update } from "../../../../../../services/employments"
 
 const handler = async (req, res) => {
-   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Content-Type", "application/json")
 
-   try {
-      switch (req.method) {
-         case METHOD_GET: {
-            checkValidUserWithPrivilege(EMPLOYMENT_CONSULTATION, req, res)
+  try {
+    switch (req.method) {
+      case METHOD_GET: {
+        checkValidUserWithPrivilege(EMPLOYMENT_CONSULTATION, req, res)
 
-            const dataMonth = await find(req.query)
+        const dataMonth = await find(req.query)
 
-            return res.status(STATUS_200_OK).json(dataMonth)
-         }
-         case METHOD_PUT: {
-            checkValidUserWithPrivilege(EMPLOYMENT_MANAGEMENT, req, res)
-
-            const data = await req.body
-            const result = await update({ ...req.query, data })
-
-            return result ? res.status(STATUS_200_OK).json(result) : sendNotFoundError(res)
-         }
-         default:
-            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+        return res.status(STATUS_200_OK).json(dataMonth)
       }
-   } catch (error) {
-      sendAPIError(error, res)
-   }
+      case METHOD_PUT: {
+        checkValidUserWithPrivilege(EMPLOYMENT_MANAGEMENT, req, res)
+
+        const data = await req.body
+        const result = await update({ ...req.query, data })
+
+        return result ? res.status(STATUS_200_OK).json(result) : sendNotFoundError(res)
+      }
+      default:
+        if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+    }
+  } catch (error) {
+    sendAPIError(error, res)
+  }
 }
 
 const cors = Cors({
-   allowMethods: [METHOD_GET, METHOD_PUT, METHOD_OPTIONS],
+  allowMethods: [METHOD_GET, METHOD_PUT, METHOD_OPTIONS],
 })
 
 export default cors(handler)

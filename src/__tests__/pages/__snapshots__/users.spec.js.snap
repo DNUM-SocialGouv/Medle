@@ -2,7 +2,7 @@
 
 exports[`renders UserDetail unchanged 1`] = `
 <div
-  className="jsx-1279015711 d-flex flex-column justifiy-content-between min-vh-100"
+  className="jsx-1821637326 d-flex flex-column justifiy-content-between min-vh-100"
 >
   <header
     className="border-bottom"
@@ -123,18 +123,18 @@ exports[`renders UserDetail unchanged 1`] = `
     </nav>
   </header>
   <div
-    className="jsx-1279015711 d-flex"
+    className="jsx-1821637326 d-flex"
     id="wrapper"
   >
     <div
-      className="jsx-1279015711 border-right"
+      className="jsx-1821637326 border-right"
       id="sidebar-wrapper"
     >
       <div
-        className="jsx-113465286 list-group list-group-flush text-center"
+        className="jsx-1576199254 list-group list-group-flush text-center"
       >
         <a
-          className="jsx-113465286 list-group-item list-group-item-action selected"
+          className="jsx-1576199254 list-group-item list-group-item-action selected"
           href="/administration/users"
           onClick={[Function]}
           onMouseEnter={[Function]}
@@ -152,12 +152,12 @@ exports[`renders UserDetail unchanged 1`] = `
             />
           </svg>
           <br
-            className="jsx-113465286"
+            className="jsx-1576199254"
           />
           Utilisateurs
         </a>
         <a
-          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          className="jsx-1576199254 list-group-item list-group-item-action unselected"
           href="/administration/hospitals"
           onClick={[Function]}
           onMouseEnter={[Function]}
@@ -176,12 +176,12 @@ exports[`renders UserDetail unchanged 1`] = `
           </svg>
            
           <br
-            className="jsx-113465286"
+            className="jsx-1576199254"
           />
           Établissements
         </a>
         <a
-          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          className="jsx-1576199254 list-group-item list-group-item-action unselected"
           href="/administration/askers"
           onClick={[Function]}
           onMouseEnter={[Function]}
@@ -200,12 +200,12 @@ exports[`renders UserDetail unchanged 1`] = `
           </svg>
            
           <br
-            className="jsx-113465286"
+            className="jsx-1576199254"
           />
           Demandeurs
         </a>
         <a
-          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          className="jsx-1576199254 list-group-item list-group-item-action unselected"
           href="/administration/attacks"
           onClick={[Function]}
           onMouseEnter={[Function]}
@@ -224,12 +224,12 @@ exports[`renders UserDetail unchanged 1`] = `
           </svg>
            
           <br
-            className="jsx-113465286"
+            className="jsx-1576199254"
           />
           Attentats
         </a>
         <a
-          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          className="jsx-1576199254 list-group-item list-group-item-action unselected"
           href="/administration/employments"
           onClick={[Function]}
           onMouseEnter={[Function]}
@@ -248,12 +248,12 @@ exports[`renders UserDetail unchanged 1`] = `
           </svg>
            
           <br
-            className="jsx-113465286"
+            className="jsx-1576199254"
           />
           Emplois
         </a>
         <a
-          className="jsx-113465286 list-group-item list-group-item-action unselected"
+          className="jsx-1576199254 list-group-item list-group-item-action unselected"
           href="/administration/acts"
           onClick={[Function]}
           onMouseEnter={[Function]}
@@ -272,12 +272,12 @@ exports[`renders UserDetail unchanged 1`] = `
           </svg>
            
           <br
-            className="jsx-113465286"
+            className="jsx-1576199254"
           />
           Actes
         </a>
         <a
-          className="jsx-113465286 list-group-item list-group-item-action"
+          className="jsx-1576199254 list-group-item list-group-item-action"
           href="/statistics"
           onClick={[Function]}
           onMouseEnter={[Function]}
@@ -296,18 +296,18 @@ exports[`renders UserDetail unchanged 1`] = `
           </svg>
            
           <br
-            className="jsx-113465286"
+            className="jsx-1576199254"
           />
           Retour
         </a>
       </div>
     </div>
     <div
-      className="jsx-1279015711"
+      className="jsx-1821637326"
       id="page-content-wrapper"
     >
       <main
-        className="jsx-1279015711 pb-5"
+        className="jsx-1821637326 pb-5"
       >
         <div
           className="mt-5 mb-4 container"
@@ -616,7 +616,7 @@ exports[`renders UserDetail unchanged 1`] = `
     </div>
   </div>
   <footer
-    className="jsx-3984601019 pt-4 pb-5 m-0"
+    className="jsx-1982338225 pt-4 pb-5 m-0"
   >
     <div
       className="container"
@@ -628,14 +628,14 @@ exports[`renders UserDetail unchanged 1`] = `
           className="mr-5 col"
         >
           <h4
-            className="jsx-3984601019"
+            className="jsx-1982338225"
           >
             Medle.fabrique.social.gouv.fr
           </h4>
           Un service proposé par la
            
           <a
-            className="jsx-3984601019"
+            className="jsx-1982338225"
             href="https://solidarites-sante.gouv.fr/ministere/organisation/organisation-des-directions-et-services/article/organisation-de-la-direction-generale-de-l-offre-de-soins-dgos"
             rel="noreferrer noopener"
             target="_blank"
@@ -646,7 +646,7 @@ exports[`renders UserDetail unchanged 1`] = `
           (ministère de la santé) et
            
           <a
-            className="jsx-3984601019"
+            className="jsx-1982338225"
             href="https://incubateur.social.gouv.fr/"
             rel="noopener noreferrer"
             target="_blank"
@@ -660,13 +660,13 @@ exports[`renders UserDetail unchanged 1`] = `
           className="mt-4 mt-md-0 col"
         >
           <ul
-            className="jsx-3984601019 pl-0 list-unstyled"
+            className="jsx-1982338225 pl-0 list-unstyled"
           >
             <li
-              className="jsx-3984601019"
+              className="jsx-1982338225"
             >
               <a
-                className="jsx-3984601019"
+                className="jsx-1982338225"
                 href="/statistics"
                 onClick={[Function]}
                 onMouseEnter={[Function]}
@@ -675,20 +675,20 @@ exports[`renders UserDetail unchanged 1`] = `
               </a>
             </li>
             <li
-              className="jsx-3984601019"
+              className="jsx-1982338225"
             >
               <a
-                className="jsx-3984601019"
+                className="jsx-1982338225"
                 href="mailto:contact.medle@fabrique.social.gouv.fr"
               >
                 Contactez‑nous
               </a>
             </li>
             <li
-              className="jsx-3984601019"
+              className="jsx-1982338225"
             >
               <a
-                className="jsx-3984601019"
+                className="jsx-1982338225"
                 href="/faq"
                 onClick={[Function]}
                 onMouseEnter={[Function]}

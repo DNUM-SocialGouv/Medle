@@ -7,30 +7,30 @@ import { ACT_CONSULTATION } from "../../../utils/roles"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 
 const handler = async (req, res) => {
-   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Content-Type", "application/json")
 
-   try {
-      switch (req.method) {
-         case METHOD_GET: {
-            checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
+  try {
+    switch (req.method) {
+      case METHOD_GET: {
+        checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
-            const attacks = await knex("attacks")
-               .whereNull("deleted_at")
-               .orderBy("name")
-               .select("id", "name")
+        const attacks = await knex("attacks")
+          .whereNull("deleted_at")
+          .orderBy("name")
+          .select("id", "name")
 
-            return res.status(STATUS_200_OK).json(attacks)
-         }
-         default:
-            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+        return res.status(STATUS_200_OK).json(attacks)
       }
-   } catch (error) {
-      sendAPIError(error, res)
-   }
+      default:
+        if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+    }
+  } catch (error) {
+    sendAPIError(error, res)
+  }
 }
 
 const cors = Cors({
-   allowMethods: [METHOD_GET, METHOD_OPTIONS],
+  allowMethods: [METHOD_GET, METHOD_OPTIONS],
 })
 
 export default cors(handler)

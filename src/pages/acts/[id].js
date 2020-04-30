@@ -20,148 +20,143 @@ import { profiles } from "../../utils/actsConstants"
 import { deleteAct, findAct } from "../../clients/acts"
 
 const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
-   const router = useRouter()
-   const [isError, setIsError] = useState(error)
+  const router = useRouter()
+  const [isError, setIsError] = useState(error)
 
-   const [modal, setModal] = useState(false)
-   const toggle = () => setModal(!modal)
+  const [modal, setModal] = useState(false)
+  const toggle = () => setModal(!modal)
 
-   const getProfiledRender = ({ profile, act }) => {
-      return profiles[profile].read(act)
-   }
+  const getProfiledRender = ({ profile, act }) => {
+    return profiles[profile].read(act)
+  }
 
-   const onDeleteAct = () => {
-      toggle()
+  const onDeleteAct = () => {
+    toggle()
 
-      const del = async id => {
-         try {
-            const { deleted } = await deleteAct({ id })
-            logDebug(`Nb deleted rows: ${deleted}`)
+    const del = async id => {
+      try {
+        const { deleted } = await deleteAct({ id })
+        logDebug(`Nb deleted rows: ${deleted}`)
 
-            router.push("/acts")
-         } catch (error) {
-            logError(error)
-            setIsError(error)
-         }
+        router.push("/acts")
+      } catch (error) {
+        logError(error)
+        setIsError(error)
       }
+    }
 
-      del(id)
-   }
+    del(id)
+  }
 
-   const editAct = id => {
-      return router.push(`/acts/declaration?id=${id}`)
-   }
+  const editAct = id => {
+    return router.push(`/acts/declaration?id=${id}`)
+  }
 
-   return (
-      <Layout page="acts" currentUser={currentUser}>
-         <Container style={{ maxWidth: 780 }} className="mt-5 mb-4">
-            <div className="d-flex justify-content-between">
-               <Link href="/acts">
-                  <a>
-                     <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-                     Retour
-                  </a>
-               </Link>
-               <Title1>{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
-               <span>&nbsp;</span>
+  return (
+    <Layout page="acts" currentUser={currentUser}>
+      <Container style={{ maxWidth: 780 }} className="mt-5 mb-4">
+        <div className="d-flex justify-content-between">
+          <Link href="/acts">
+            <a>
+              <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+              Retour
+            </a>
+          </Link>
+          <Title1>{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
+          <span>&nbsp;</span>
+        </div>
+
+        {!isEmpty(isError) && (
+          <Alert color="danger" className="mt-5 mb-5">
+            {isError || "Erreur serveur"}
+          </Alert>
+        )}
+
+        {isEmpty(isError) && (
+          <>
+            <div className="px-2 py-2">
+              <Title2 className="mt-3 mb-4">{"Identification de l'acte"}</Title2>
+              <Row>
+                <Col className="mr-3">
+                  <ColumnAct header={"Numéro de PV"} content={act && act.pvNumber} />
+                </Col>
+                <Col className="mr-3">
+                  <ColumnAct header={"Demandeur"} content={act && act.asker && act.asker.name} />
+                </Col>
+                <Col className="mr-3">
+                  <ColumnAct header={"Date"} content={act && act.examinationDate && isoToFr(act.examinationDate)} />
+                </Col>
+                <Col className="mr-3">
+                  {act && act.periodOfDay && <ColumnAct header={"Créneau horaire"} content={act.periodOfDay} />}
+                </Col>
+              </Row>
+              {getProfiledRender({ profile: act.profile, act })}
             </div>
+            <br />
 
-            {!isEmpty(isError) && (
-               <Alert color="danger" className="mt-5 mb-5">
-                  {isError || "Erreur serveur"}
-               </Alert>
-            )}
-
-            {isEmpty(isError) && (
-               <>
-                  <div className="px-2 py-2">
-                     <Title2 className="mt-3 mb-4">{"Identification de l'acte"}</Title2>
-                     <Row>
-                        <Col className="mr-3">
-                           <ColumnAct header={"Numéro de PV"} content={act && act.pvNumber} />
-                        </Col>
-                        <Col className="mr-3">
-                           <ColumnAct header={"Demandeur"} content={act && act.asker && act.asker.name} />
-                        </Col>
-                        <Col className="mr-3">
-                           <ColumnAct
-                              header={"Date"}
-                              content={act && act.examinationDate && isoToFr(act.examinationDate)}
-                           />
-                        </Col>
-                        <Col className="mr-3">
-                           {act && act.periodOfDay && (
-                              <ColumnAct header={"Créneau horaire"} content={act.periodOfDay} />
-                           )}
-                        </Col>
-                     </Row>
-                     {getProfiledRender({ profile: act.profile, act })}
+            {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
+              <Row>
+                <Col>
+                  <Button block outline color="danger" onClick={toggle}>
+                    <DeleteForeverOutlinedIcon width={24} />
+                    {" Supprimer l'acte"}
+                  </Button>
+                </Col>
+                <Col>
+                  <Button block outline color="info" onClick={() => editAct(id)}>
+                    <EditOutlinedIcon width={24} />
+                    {" Modifier l'acte"}
+                  </Button>
+                  <div>
+                    <Modal isOpen={modal} toggle={toggle}>
+                      <ModalHeader toggle={toggle}>Voulez-vous vraiment supprimer cet acte?</ModalHeader>
+                      <ModalBody>
+                        Si vous supprimez cet acte, il ne serait plus visible ni modifiable dans la liste des actes.
+                        Merci de confirmer votre choix.
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button color="primary" onClick={onDeleteAct}>
+                          Supprimer
+                        </Button>{" "}
+                        <Button color="secondary" onClick={toggle}>
+                          Annuler
+                        </Button>
+                      </ModalFooter>
+                    </Modal>
                   </div>
-                  <br />
-
-                  {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
-                     <Row>
-                        <Col>
-                           <Button block outline color="danger" onClick={toggle}>
-                              <DeleteForeverOutlinedIcon width={24} />
-                              {" Supprimer l'acte"}
-                           </Button>
-                        </Col>
-                        <Col>
-                           <Button block outline color="info" onClick={() => editAct(id)}>
-                              <EditOutlinedIcon width={24} />
-                              {" Modifier l'acte"}
-                           </Button>
-                           <div>
-                              <Modal isOpen={modal} toggle={toggle}>
-                                 <ModalHeader toggle={toggle}>Voulez-vous vraiment supprimer cet acte?</ModalHeader>
-                                 <ModalBody>
-                                    Si vous supprimez cet acte, il ne serait plus visible ni modifiable dans la liste
-                                    des actes. Merci de confirmer votre choix.
-                                 </ModalBody>
-                                 <ModalFooter>
-                                    <Button color="primary" onClick={onDeleteAct}>
-                                       Supprimer
-                                    </Button>{" "}
-                                    <Button color="secondary" onClick={toggle}>
-                                       Annuler
-                                    </Button>
-                                 </ModalFooter>
-                              </Modal>
-                           </div>
-                        </Col>
-                     </Row>
-                  )}
-               </>
+                </Col>
+              </Row>
             )}
-         </Container>
-      </Layout>
-   )
+          </>
+        )}
+      </Container>
+    </Layout>
+  )
 }
 
 ActDetail.getInitialProps = async ctx => {
-   const headers = buildAuthHeaders(ctx)
-   const { id } = ctx.query
+  const headers = buildAuthHeaders(ctx)
+  const { id } = ctx.query
 
-   try {
-      const act = await findAct({ id, headers })
+  try {
+    const act = await findAct({ id, headers })
 
-      return { initialAct: act, id }
-   } catch (error) {
-      logError(error)
-      redirectIfUnauthorized(error, ctx)
+    return { initialAct: act, id }
+  } catch (error) {
+    logError(error)
+    redirectIfUnauthorized(error, ctx)
 
-      const message = error.status && error.status === 404 ? "L'acte n'a pu être trouvé." : "Erreur serveur."
+    const message = error.status && error.status === 404 ? "L'acte n'a pu être trouvé." : "Erreur serveur."
 
-      return { error: message }
-   }
+    return { error: message }
+  }
 }
 
 ActDetail.propTypes = {
-   initialAct: PropTypes.object,
-   id: PropTypes.string,
-   error: PropTypes.string,
-   currentUser: PropTypes.object.isRequired,
+  initialAct: PropTypes.object,
+  id: PropTypes.string,
+  error: PropTypes.string,
+  currentUser: PropTypes.object.isRequired,
 }
 
 export default withAuthentication(ActDetail, ACT_CONSULTATION)

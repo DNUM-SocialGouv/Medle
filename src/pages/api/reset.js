@@ -8,30 +8,30 @@ import { ADMIN } from "../../utils/roles"
 import { logDebug } from "../../utils/logger"
 
 const handler = async (req, res) => {
-   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Content-Type", "application/json")
 
-   try {
-      switch (req.method) {
-         case METHOD_PATCH: {
-            const { id, password } = req.body
+  try {
+    switch (req.method) {
+      case METHOD_PATCH: {
+        const { id, password } = req.body
 
-            const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+        const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
-            logDebug("Password reset by user ", currentUser)
+        logDebug("Password reset by user ", currentUser)
 
-            const modified = await reset(id, password)
+        const modified = await reset(id, password)
 
-            return res.status(STATUS_200_OK).json({ modified })
-         }
-         default:
-            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+        return res.status(STATUS_200_OK).json({ modified })
       }
-   } catch (error) {
-      return sendAPIError(error, res)
-   }
+      default:
+        if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+    }
+  } catch (error) {
+    return sendAPIError(error, res)
+  }
 }
 const cors = Cors({
-   allowMethods: [METHOD_OPTIONS, METHOD_PATCH],
+  allowMethods: [METHOD_OPTIONS, METHOD_PATCH],
 })
 
 export default cors(handler)

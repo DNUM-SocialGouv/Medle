@@ -21,157 +21,157 @@ import { APIError } from "./errors"
  */
 
 export const logout = async () => {
-   // Let API send a cookie with very close expiration date to reset the "token" cookie with HttpOnly
-   await fetch(API_URL + LOGOUT_ENDPOINT)
+  // Let API send a cookie with very close expiration date to reset the "token" cookie with HttpOnly
+  await fetch(API_URL + LOGOUT_ENDPOINT)
 
-   sessionStorage.removeItem("currentUser")
+  sessionStorage.removeItem("currentUser")
 
-   clearReferenceData()
+  clearReferenceData()
 
-   await Router.push("/index")
+  await Router.push("/index")
 }
 
 export const registerAndRedirectUser = user => {
-   fetchReferenceData()
-   sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
+  fetchReferenceData()
+  sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
 
-   Router.push(startPageForRole(user.role))
+  Router.push(startPageForRole(user.role))
 }
 
 export const getCurrentUser = ctx => {
-   if (ctx && ctx.req) {
-      // Server side navigation
-      logDebug("getCurrentUser from server side")
-      const res = getTokenFromCookie(ctx)
-      return res ? jwt.decode(res) : null
-   } else {
-      // Client side navigation
-      logDebug("getCurrentUser from client side")
-      return getCurrentUserFromSessionStorage()
-   }
+  if (ctx && ctx.req) {
+    // Server side navigation
+    logDebug("getCurrentUser from server side")
+    const res = getTokenFromCookie(ctx)
+    return res ? jwt.decode(res) : null
+  } else {
+    // Client side navigation
+    logDebug("getCurrentUser from client side")
+    return getCurrentUserFromSessionStorage()
+  }
 }
 export const getCurrentUserFromSessionStorage = () => {
-   const currentUser = sessionStorage.getItem("currentUser")
+  const currentUser = sessionStorage.getItem("currentUser")
 
-   return currentUser ? JSON.parse(currentUser) : null
+  return currentUser ? JSON.parse(currentUser) : null
 }
 
 const getTokenFromCookie = ctx => {
-   // Can't work on client side
-   if (!ctx || !ctx.req) return ""
+  // Can't work on client side
+  if (!ctx || !ctx.req) return ""
 
-   const cookieContent = ctx.req.headers.cookie
+  const cookieContent = ctx.req.headers.cookie
 
-   if (!cookieContent) return ""
+  if (!cookieContent) return ""
 
-   // Not useful to verify that token is valid Max-Age wise, since the API will verify it for us
-   const res = cookieContent
-      .split(";")
-      .map(elt => elt.trim())
-      .filter(elt => /token/.test(elt))
+  // Not useful to verify that token is valid Max-Age wise, since the API will verify it for us
+  const res = cookieContent
+    .split(";")
+    .map(elt => elt.trim())
+    .filter(elt => /token/.test(elt))
 
-   if (!res.length || res.length !== 1) {
-      logError("Erreur dans le cookie token")
-      return ""
-   } else {
-      return res[0].replace(/token=/, "")
-   }
+  if (!res.length || res.length !== 1) {
+    logError("Erreur dans le cookie token")
+    return ""
+  } else {
+    return res[0].replace(/token=/, "")
+  }
 }
 
 // On server side, fetch needs to carry the cookie which contains the JWT token, so here we prepare the options
 export const buildAuthHeaders = ctx => {
-   const token = getTokenFromCookie(ctx)
-   return token
-      ? {
-           cookie: `token=${token}`,
-        }
-      : {}
+  const token = getTokenFromCookie(ctx)
+  return token
+    ? {
+        cookie: `token=${token}`,
+      }
+    : {}
 }
 
 export const isomorphicRedirect = (ctx, url) => {
-   if (ctx && ctx.req) {
-      // Server side navigation
-      ctx.res.writeHead(302, { Location: url })
-      ctx.res.end()
-   } else {
-      // Client side navigation
-      Router.push(url)
-   }
+  if (ctx && ctx.req) {
+    // Server side navigation
+    ctx.res.writeHead(302, { Location: url })
+    ctx.res.end()
+  } else {
+    // Client side navigation
+    Router.push(url)
+  }
 }
 
 const sessionTooOld = currentUser => {
-   return currentUser.authentifiedAt && moment(currentUser.authentifiedAt).add(timeout.session) < moment()
+  return currentUser.authentifiedAt && moment(currentUser.authentifiedAt).add(timeout.session) < moment()
 }
 
 export const withAuthentication = (WrappedComponent, requiredPrivilege, { redirect = true } = {}) => {
-   const Wrapper = props => <WrappedComponent {...props} />
+  const Wrapper = props => <WrappedComponent {...props} />
 
-   Wrapper.getInitialProps = async ctx => {
-      const currentUser = getCurrentUser(ctx)
+  Wrapper.getInitialProps = async ctx => {
+    const currentUser = getCurrentUser(ctx)
 
-      logDebug("currentUser", currentUser)
+    logDebug("currentUser", currentUser)
 
-      if (redirect) {
-         if (!currentUser || sessionTooOld(currentUser)) {
-            logError("Pas de currentUser trouvé en cookie ou en SessionStorage. Redirection sur index")
-            isomorphicRedirect(ctx, "/index?sessionTimeout=1")
-         }
-
-         if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
-            logError("Rôle incorrect. Redirection sur page permissionError")
-            isomorphicRedirect(ctx, "/permissionError")
-         }
+    if (redirect) {
+      if (!currentUser || sessionTooOld(currentUser)) {
+        logError("Pas de currentUser trouvé en cookie ou en SessionStorage. Redirection sur index")
+        isomorphicRedirect(ctx, "/index?sessionTimeout=1")
       }
 
-      const componentProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx))
+      if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
+        logError("Rôle incorrect. Redirection sur page permissionError")
+        isomorphicRedirect(ctx, "/permissionError")
+      }
+    }
 
-      return { ...componentProps, currentUser }
-   }
+    const componentProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx))
 
-   return Wrapper
+    return { ...componentProps, currentUser }
+  }
+
+  return Wrapper
 }
 
 export const redirectIfUnauthorized = (error, ctx) => {
-   if (error && error.status === 401) {
-      isomorphicRedirect(ctx, "/index?sessionTimeout=1")
-   }
+  if (error && error.status === 401) {
+    isomorphicRedirect(ctx, "/index?sessionTimeout=1")
+  }
 }
 
 export const checkValidUserWithPrivilege = (privilege, req) => {
-   const { token } = req.cookies
+  const { token } = req.cookies
 
-   try {
-      if (!token) {
-         throw new APIError({
-            message: "Non authentified user",
-            status: STATUS_401_UNAUTHORIZED,
-         })
-      }
-
-      const currentUser = checkToken(token)
-
-      if (!isAllowed(currentUser.role, privilege)) {
-         throw new APIError({
-            message: `Not allowed role (${currentUser.email ? currentUser.email : "unknown user"})`,
-            status: STATUS_403_FORBIDDEN,
-         })
-      } else {
-         return currentUser
-      }
-   } catch (error) {
-      if (error instanceof APIError) throw error
-
-      let email
-      try {
-         // Let's try to get user informations even if the token is not valid
-         const currentUser = decodeToken(token)
-         email = currentUser.email
-      } catch (error) {
-         logError("Token couldn't been decoded")
-      }
+  try {
+    if (!token) {
       throw new APIError({
-         message: `Invalid token for user (${email ? email : "unknown user"})`,
-         status: STATUS_401_UNAUTHORIZED,
+        message: "Non authentified user",
+        status: STATUS_401_UNAUTHORIZED,
       })
-   }
+    }
+
+    const currentUser = checkToken(token)
+
+    if (!isAllowed(currentUser.role, privilege)) {
+      throw new APIError({
+        message: `Not allowed role (${currentUser.email ? currentUser.email : "unknown user"})`,
+        status: STATUS_403_FORBIDDEN,
+      })
+    } else {
+      return currentUser
+    }
+  } catch (error) {
+    if (error instanceof APIError) throw error
+
+    let email
+    try {
+      // Let's try to get user informations even if the token is not valid
+      const currentUser = decodeToken(token)
+      email = currentUser.email
+    } catch (error) {
+      logError("Token couldn't been decoded")
+    }
+    throw new APIError({
+      message: `Invalid token for user (${email ? email : "unknown user"})`,
+      status: STATUS_401_UNAUTHORIZED,
+    })
+  }
 }

@@ -7,48 +7,48 @@ import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { del, find, update } from "../../../services/hospitals"
 
 const handler = async (req, res) => {
-   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Content-Type", "application/json")
 
-   try {
-      switch (req.method) {
-         case METHOD_GET: {
-            checkValidUserWithPrivilege(NO_PRIVILEGE_REQUIRED, req, res)
+  try {
+    switch (req.method) {
+      case METHOD_GET: {
+        checkValidUserWithPrivilege(NO_PRIVILEGE_REQUIRED, req, res)
 
-            const hospital = await find(req.query)
+        const hospital = await find(req.query)
 
-            return hospital ? res.status(STATUS_200_OK).json(hospital) : sendNotFoundError(res)
-         }
-         case METHOD_DELETE: {
-            // TODO: need to be an SUPER_ADMIN
-            const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
-
-            const deleted = await del(req.query, currentUser)
-
-            if (!deleted) return sendNotFoundError(res)
-
-            return res.status(STATUS_200_OK).json({ deleted })
-         }
-         case METHOD_PUT: {
-            // TODO: need to be an SUPER_ADMIN
-            checkValidUserWithPrivilege(ADMIN, req, res)
-
-            const updated = await update(req.query, req.body)
-
-            if (!updated) return sendNotFoundError(res)
-
-            return res.status(STATUS_200_OK).json({ updated })
-         }
-
-         default:
-            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+        return hospital ? res.status(STATUS_200_OK).json(hospital) : sendNotFoundError(res)
       }
-   } catch (error) {
-      sendAPIError(error, res)
-   }
+      case METHOD_DELETE: {
+        // TODO: need to be an SUPER_ADMIN
+        const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+        const deleted = await del(req.query, currentUser)
+
+        if (!deleted) return sendNotFoundError(res)
+
+        return res.status(STATUS_200_OK).json({ deleted })
+      }
+      case METHOD_PUT: {
+        // TODO: need to be an SUPER_ADMIN
+        checkValidUserWithPrivilege(ADMIN, req, res)
+
+        const updated = await update(req.query, req.body)
+
+        if (!updated) return sendNotFoundError(res)
+
+        return res.status(STATUS_200_OK).json({ updated })
+      }
+
+      default:
+        if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+    }
+  } catch (error) {
+    sendAPIError(error, res)
+  }
 }
 
 const cors = Cors({
-   allowMethods: [METHOD_GET, METHOD_OPTIONS],
+  allowMethods: [METHOD_GET, METHOD_OPTIONS],
 })
 
 export default cors(handler)

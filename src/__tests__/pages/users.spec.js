@@ -5,14 +5,14 @@ import { SUPER_ADMIN } from "../../utils/roles"
 import * as nextRouter from "next/router"
 
 it("renders UserDetail unchanged", () => {
-   nextRouter.useRouter = jest.fn()
-   nextRouter.useRouter.mockImplementation(() => ({ query: { id: "3" } }))
+  nextRouter.useRouter = jest.fn()
+  nextRouter.useRouter.mockImplementation(() => ({ query: { id: "3" } }))
 
-   const currentUser = {
-      id: 3,
-      role: SUPER_ADMIN,
-      hospital: null,
-   }
-   const tree = renderer.create(<UserDetail initialUser={{}} currentUser={currentUser} />).toJSON()
-   expect(tree).toMatchSnapshot()
+  const currentUser = {
+    id: 3,
+    role: SUPER_ADMIN,
+    hospital: null,
+  }
+  const tree = renderer.create(<UserDetail initialUser={{}} currentUser={currentUser} />).toJSON()
+  expect(tree).toMatchSnapshot()
 })

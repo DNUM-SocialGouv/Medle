@@ -9,34 +9,34 @@ import { logDebug } from "../../../utils/logger"
 import { exportActs } from "../../../services/acts"
 
 const handler = async (req, res) => {
-   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Content-Type", "application/json")
 
-   try {
-      switch (req.method) {
-         case METHOD_GET: {
-            const currentUser = checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
+  try {
+    switch (req.method) {
+      case METHOD_GET: {
+        const currentUser = checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
-            const workbook = await exportActs(req.query, currentUser)
+        const workbook = await exportActs(req.query, currentUser)
 
-            res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx")
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx")
 
-            await workbook.xlsx.write(res)
+        await workbook.xlsx.write(res)
 
-            logDebug("Export fichier XLSX")
+        logDebug("Export fichier XLSX")
 
-            return res.status(STATUS_200_OK).end()
-         }
-         default:
-            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+        return res.status(STATUS_200_OK).end()
       }
-   } catch (error) {
-      sendAPIError(error, res)
-   }
+      default:
+        if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+    }
+  } catch (error) {
+    sendAPIError(error, res)
+  }
 }
 
 const cors = Cors({
-   allowMethods: [METHOD_GET, METHOD_OPTIONS, METHOD_POST],
+  allowMethods: [METHOD_GET, METHOD_OPTIONS, METHOD_POST],
 })
 
 export default cors(handler)

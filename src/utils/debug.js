@@ -22,19 +22,19 @@ import { logInfo } from "./logger"
 // }, [router.events])
 
 export const DebugRouter = () => {
-   const router = useRouter()
+  const router = useRouter()
 
-   router.events.on("routeChangeStart", url => {
-      logInfo("event routeChangeStart", url)
-   })
-   router.events.on("routeChangeComplete", url => {
-      logInfo("event routeChangeComplete", url)
-   })
-   router.events.on("routeChangeError", (err, url) => {
-      logInfo("event routeChangeError", url, err)
-   })
+  router.events.on("routeChangeStart", url => {
+    logInfo("event routeChangeStart", url)
+  })
+  router.events.on("routeChangeComplete", url => {
+    logInfo("event routeChangeComplete", url)
+  })
+  router.events.on("routeChangeError", (err, url) => {
+    logInfo("event routeChangeError", url, err)
+  })
 
-   return null
+  return null
 }
 // Usage
 // function MyComponent(props) {
@@ -42,23 +42,23 @@ export const DebugRouter = () => {
 //    return <div>{props.children}</div>
 // }
 export const useTraceUpdate = props => {
-   const prev = useRef(props)
-   useEffect(() => {
-      const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
-         if (prev.current[k] !== v) {
-            ps[k] = [prev.current[k], v]
-         }
-         return ps
-      }, {})
-      if (Object.keys(changedProps).length > 0) {
-         logInfo("Changed props:", changedProps)
+  const prev = useRef(props)
+  useEffect(() => {
+    const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
+      if (prev.current[k] !== v) {
+        ps[k] = [prev.current[k], v]
       }
-      prev.current = props
-   })
+      return ps
+    }, {})
+    if (Object.keys(changedProps).length > 0) {
+      logInfo("Changed props:", changedProps)
+    }
+    prev.current = props
+  })
 }
 
 // usage: <Logger label="Mon composant à loguer" />
 export const Logger = props => {
-   logInfo(`${props.label} rendered`)
-   return null // irrelevant
+  logInfo(`${props.label} rendered`)
+  return null // irrelevant
 }

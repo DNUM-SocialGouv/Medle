@@ -13,27 +13,27 @@ import { buildDeceasedStatistics } from "../../../services/statistics/deceased"
  * @param {*} res
  */
 const handler = async (req, res) => {
-   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Content-Type", "application/json")
 
-   try {
-      switch (req.method) {
-         case METHOD_POST: {
-            const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
+  try {
+    switch (req.method) {
+      case METHOD_POST: {
+        const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-            const { inputs, globalCount, averageCount } = await buildDeceasedStatistics(req.body, currentUser)
+        const { inputs, globalCount, averageCount } = await buildDeceasedStatistics(req.body, currentUser)
 
-            return res.status(STATUS_200_OK).json({ inputs, globalCount, averageCount })
-         }
-         default:
-            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+        return res.status(STATUS_200_OK).json({ inputs, globalCount, averageCount })
       }
-   } catch (error) {
-      sendAPIError(error, res)
-   }
+      default:
+        if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+    }
+  } catch (error) {
+    sendAPIError(error, res)
+  }
 }
 
 const cors = Cors({
-   allowMethods: [METHOD_POST, METHOD_OPTIONS],
+  allowMethods: [METHOD_POST, METHOD_OPTIONS],
 })
 
 export default cors(handler)

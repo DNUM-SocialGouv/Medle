@@ -13,23 +13,23 @@ const testCurrentDate = (publicRuntimeConfig && publicRuntimeConfig.TEST_CURRENT
 export const now = () => (testCurrentDate && moment(testCurrentDate, FORMAT_DATE)) || moment()
 
 export const frToIso = date => {
-   const parts = date.split("/")
+  const parts = date.split("/")
 
-   if (parts.length !== 3) {
-      logError("Problème de parsing de date")
-      return date
-   }
-   const [day, month, year] = parts
-   return `${year}-${month}-${day}`
+  if (parts.length !== 3) {
+    logError("Problème de parsing de date")
+    return date
+  }
+  const [day, month, year] = parts
+  return `${year}-${month}-${day}`
 }
 
 export const isoToFr = date => {
-   const parts = date.split("-")
+  const parts = date.split("-")
 
-   if (parts.length !== 3) {
-      logError("Problème de parsing de date")
-      return date
-   }
-   const [year, month, day] = parts
-   return `${day}/${month}/${year}`
+  if (parts.length !== 3) {
+    logError("Problème de parsing de date")
+    return date
+  }
+  const [year, month, day] = parts
+  return `${day}/${month}/${year}`
 }

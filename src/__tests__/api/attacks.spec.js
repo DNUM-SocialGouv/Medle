@@ -5,10 +5,10 @@ const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 //const headersActUserNantes = () => authenticate("acte@nantes.fr", "test")
 
 describe("/attacks", () => {
-   it("should return all attacks", async () => {
-      const { headers } = await headersActUserTours()
-      const attacks = await findAllAttacks({ headers })
+  it("should return all attacks", async () => {
+    const { headers } = await headersActUserTours()
+    const attacks = await findAllAttacks({ headers })
 
-      expect(attacks).toMatchSnapshot()
-   })
+    expect(attacks).toMatchSnapshot()
+  })
 })

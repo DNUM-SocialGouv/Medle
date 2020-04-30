@@ -1,7 +1,7 @@
 import React from "react"
 
 const ActsPage = () => {
-   return null
+  return null
 }
 
 export default ActsPage

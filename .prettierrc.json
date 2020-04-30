@@ -1,10 +1,6 @@
 {
-    "extends": [
-      "plugin:prettier/recommended"
-    ],
-    "printWidth": 120,
-    "parser": "typescript",
-    "semi": false,
-    "tabWidth": 3,
-    "trailingComma":  "all"
-  }
+  "extends": ["plugin:prettier/recommended"],
+  "printWidth": 120,
+  "semi": false,
+  "trailingComma": "all"
+}

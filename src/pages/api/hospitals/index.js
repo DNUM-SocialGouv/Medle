@@ -7,34 +7,34 @@ import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { create, search } from "../../../services/hospitals"
 
 const handler = async (req, res) => {
-   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Content-Type", "application/json")
 
-   try {
-      switch (req.method) {
-         case METHOD_GET: {
-            checkValidUserWithPrivilege(NO_PRIVILEGE_REQUIRED, req, res)
+  try {
+    switch (req.method) {
+      case METHOD_GET: {
+        checkValidUserWithPrivilege(NO_PRIVILEGE_REQUIRED, req, res)
 
-            const hospitals = await search(req.query)
+        const hospitals = await search(req.query)
 
-            return res.status(STATUS_200_OK).json(hospitals)
-         }
-         case METHOD_POST: {
-            checkValidUserWithPrivilege(ADMIN, req, res)
-
-            const id = await create(req.body)
-
-            return res.status(STATUS_200_OK).json({ id })
-         }
-         default:
-            if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+        return res.status(STATUS_200_OK).json(hospitals)
       }
-   } catch (error) {
-      sendAPIError(error, res)
-   }
+      case METHOD_POST: {
+        checkValidUserWithPrivilege(ADMIN, req, res)
+
+        const id = await create(req.body)
+
+        return res.status(STATUS_200_OK).json({ id })
+      }
+      default:
+        if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
+    }
+  } catch (error) {
+    sendAPIError(error, res)
+  }
 }
 
 const cors = Cors({
-   allowMethods: [METHOD_GET, METHOD_OPTIONS],
+  allowMethods: [METHOD_GET, METHOD_OPTIONS],
 })
 
 export default cors(handler)

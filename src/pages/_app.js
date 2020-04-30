@@ -12,9 +12,9 @@ import { logInfo } from "../utils/logger"
 import "@socialgouv/bootstrap.core/dist/socialgouv-bootstrap.min.css"
 
 const theme = {
-   colors: {
-      primary: "#0070f3",
-   },
+  colors: {
+    primary: "#0070f3",
+  },
 }
 
 logInfo("----------- MEDLE configuration --------")
@@ -35,23 +35,23 @@ logInfo("DATABASE_URL", process.env.DATABASE_URL)
 logInfo("-----------------------------------------")
 
 Sentry.init({
-   dsn: process.env.SENTRY_DSN,
+  dsn: process.env.SENTRY_DSN,
 })
 
 export default class MyApp extends App {
-   componentDidMount() {
-      initMatomo({
-         siteId: process.env.MATOMO_SITE_ID,
-         piwikUrl: process.env.MATOMO_URL,
-      })
-   }
+  componentDidMount() {
+    initMatomo({
+      siteId: process.env.MATOMO_SITE_ID,
+      piwikUrl: process.env.MATOMO_URL,
+    })
+  }
 
-   render() {
-      const { Component, pageProps } = this.props
-      return (
-         <ThemeProvider theme={theme}>
-            <Component {...pageProps} />
-         </ThemeProvider>
-      )
-   }
+  render() {
+    const { Component, pageProps } = this.props
+    return (
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    )
+  }
 }

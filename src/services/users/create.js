@@ -6,33 +6,33 @@ import { untransform, validate } from "../../models/users"
 import { findByEmail } from "./find"
 
 export const create = async (user, currentUser) => {
-   await validate(user)
+  await validate(user)
 
-   if (currentUser.role !== SUPER_ADMIN) {
-      if (!user.hospital || !user.hospital.id || !currentUser.hospital || !currentUser.hospital.id)
-         throw new APIError({
-            status: STATUS_401_UNAUTHORIZED,
-            message: "Not authorized",
-         })
-
-      if (user.hospital.id !== currentUser.hospital.id) {
-         throw new APIError({
-            status: STATUS_401_UNAUTHORIZED,
-            message: "Not authorized",
-         })
-      }
-   }
-
-   const otherUser = await findByEmail(user.email)
-
-   if (otherUser) {
+  if (currentUser.role !== SUPER_ADMIN) {
+    if (!user.hospital || !user.hospital.id || !currentUser.hospital || !currentUser.hospital.id)
       throw new APIError({
-         status: STATUS_406_NOT_ACCEPTABLE,
-         message: "Email already used",
+        status: STATUS_401_UNAUTHORIZED,
+        message: "Not authorized",
       })
-   }
 
-   const [newId] = await knex("users").insert(untransform(user), "id")
+    if (user.hospital.id !== currentUser.hospital.id) {
+      throw new APIError({
+        status: STATUS_401_UNAUTHORIZED,
+        message: "Not authorized",
+      })
+    }
+  }
 
-   return newId
+  const otherUser = await findByEmail(user.email)
+
+  if (otherUser) {
+    throw new APIError({
+      status: STATUS_406_NOT_ACCEPTABLE,
+      message: "Email already used",
+    })
+  }
+
+  const [newId] = await knex("users").insert(untransform(user), "id")
+
+  return newId
 }

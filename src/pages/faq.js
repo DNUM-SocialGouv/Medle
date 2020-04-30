@@ -10,29 +10,29 @@ import { MDXProvider } from "@mdx-js/react"
 import FAQ from "../faq/faq.mdx"
 
 const mdComponents = {
-   h1: function SectionWrapper(props) {
-      return <Section {...props} />
-   },
-   h2: function QuestionWrapper(props) {
-      return <Question {...props} />
-   },
+  h1: function SectionWrapper(props) {
+    return <Section {...props} />
+  },
+  h2: function QuestionWrapper(props) {
+    return <Question {...props} />
+  },
 }
 
 const FaqPage = ({ currentUser }) => {
-   return (
-      <MDXProvider components={mdComponents}>
-         <Layout currentUser={currentUser}>
-            <Container style={{ maxWidth: 720 }}>
-               <Title1 className="mt-5 mb-5">Foire aux questions</Title1>
-               <FAQ />
-            </Container>
-         </Layout>
-      </MDXProvider>
-   )
+  return (
+    <MDXProvider components={mdComponents}>
+      <Layout currentUser={currentUser}>
+        <Container style={{ maxWidth: 720 }}>
+          <Title1 className="mt-5 mb-5">Foire aux questions</Title1>
+          <FAQ />
+        </Container>
+      </Layout>
+    </MDXProvider>
+  )
 }
 
 FaqPage.propTypes = {
-   currentUser: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
 }
 
 export default withAuthentication(FaqPage, null, { redirect: false })

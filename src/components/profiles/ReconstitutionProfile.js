@@ -5,70 +5,70 @@ import { Col, Row } from "reactstrap"
 import ColumnAct from "../../components/ColumnAct"
 
 const ReconstitutionEdit = ({ dispatch, state, errors }) => {
-   return (
-      <>
-         <ActBlock
-            type="duration"
-            title="Durée de la mobilisation"
-            values={["- de 3 heures", "3 à 6 heures", "+ de 6 heures"]}
-            mode="toggle"
-            dispatch={dispatch}
-            state={state.duration || ""}
-            invalid={!!errors.duration}
-         />
+  return (
+    <>
+      <ActBlock
+        type="duration"
+        title="Durée de la mobilisation"
+        values={["- de 3 heures", "3 à 6 heures", "+ de 6 heures"]}
+        mode="toggle"
+        dispatch={dispatch}
+        state={state.duration || ""}
+        invalid={!!errors.duration}
+      />
 
-         <ActBlock
-            type="distance"
-            title="Distance"
-            values={["- de 50 km", "50 à 150 km", "+ de 150 km"]}
-            mode="toggle"
-            dispatch={dispatch}
-            state={state.distance || ""}
-            invalid={!!errors.distance}
-         />
-      </>
-   )
+      <ActBlock
+        type="distance"
+        title="Distance"
+        values={["- de 50 km", "50 à 150 km", "+ de 150 km"]}
+        mode="toggle"
+        dispatch={dispatch}
+        state={state.distance || ""}
+        invalid={!!errors.distance}
+      />
+    </>
+  )
 }
 
 const ReconstitutionRead = act => {
-   return (
-      <>
-         <Row>
-            <Col className="mr-3">
-               <ColumnAct header={"Statut"} content={act && act.profile} />
-            </Col>
-            <Col className="mr-3">
-               <ColumnAct header={"Durée de la mobilisation"} content={act && act.duration} />
-            </Col>
-            <Col className="mr-3">
-               <ColumnAct header={"Distance"} content={act.distance} />
-            </Col>
-            <Col className="mr-3"></Col>
-         </Row>
-      </>
-   )
+  return (
+    <>
+      <Row>
+        <Col className="mr-3">
+          <ColumnAct header={"Statut"} content={act && act.profile} />
+        </Col>
+        <Col className="mr-3">
+          <ColumnAct header={"Durée de la mobilisation"} content={act && act.duration} />
+        </Col>
+        <Col className="mr-3">
+          <ColumnAct header={"Distance"} content={act.distance} />
+        </Col>
+        <Col className="mr-3"></Col>
+      </Row>
+    </>
+  )
 }
 
 const hasErrors = state => {
-   const errors = {}
-   if (!state.duration) {
-      errors.duration = "Obligatoire"
-   }
-   if (!state.distance) {
-      errors.distance = "Obligatoire"
-   }
+  const errors = {}
+  if (!state.duration) {
+    errors.duration = "Obligatoire"
+  }
+  if (!state.distance) {
+    errors.distance = "Obligatoire"
+  }
 
-   return errors
+  return errors
 }
 
 ReconstitutionEdit.propTypes = {
-   dispatch: PropTypes.func.isRequired,
-   state: PropTypes.object.isRequired,
-   errors: PropTypes.object,
+  dispatch: PropTypes.func.isRequired,
+  state: PropTypes.object.isRequired,
+  errors: PropTypes.object,
 }
 
 export default {
-   edit: ReconstitutionEdit,
-   read: ReconstitutionRead,
-   hasErrors,
+  edit: ReconstitutionEdit,
+  read: ReconstitutionRead,
+  hasErrors,
 }
