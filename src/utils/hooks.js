@@ -25,7 +25,7 @@ export const usePaginatedData = (fetchData, initialPaginatedData) => {
    * @param {string} search
    * @param {number} requestedPage
    */
-  const fetchPage = search => async requestedPage => {
+  const fetchPage = (search) => async (requestedPage) => {
     setLoading(true)
     setError(false)
 

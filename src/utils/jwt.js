@@ -11,12 +11,12 @@ const jwtConfig = {
   },
 }
 
-export const checkToken = token => {
+export const checkToken = (token) => {
   return jwt.verify(token, jwtConfig.secret, jwtConfig.options)
 }
 
-export const decodeToken = token => {
+export const decodeToken = (token) => {
   return jwt.decode(token)
 }
 
-export const generateToken = user => jwt.sign(user, jwtConfig.secret, jwtConfig.options)
+export const generateToken = (user) => jwt.sign(user, jwtConfig.secret, jwtConfig.options)

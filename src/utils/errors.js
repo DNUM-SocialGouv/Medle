@@ -30,7 +30,7 @@ export class ValidationError extends MedleError {
   }
 }
 
-export const handleAPIResponse = async response => {
+export const handleAPIResponse = async (response) => {
   if (!response.ok) {
     const { name, message, status, detail } = await response.json()
     throw new APIError({ name, message, status, detail })
@@ -38,7 +38,7 @@ export const handleAPIResponse = async response => {
   return response.json()
 }
 
-export const stringifyError = error => {
+export const stringifyError = (error) => {
   // eslint-disable-next-line no-unused-vars
   const [stack, ...keys] = Object.getOwnPropertyNames(error)
   return JSON.stringify(error, keys, " ")

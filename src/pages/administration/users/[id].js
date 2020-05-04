@@ -54,32 +54,32 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const [role, setRole] = useState(
     mapForSelect(
       initialUser?.role,
-      elt => elt,
-      elt => ROLES_DESCRIPTION[elt],
-    ),
+      (elt) => elt,
+      (elt) => ROLES_DESCRIPTION[elt]
+    )
   )
 
   const initialUserHospitalSelect = mapForSelect(
     initialUser?.hospital,
-    elt => elt.id,
-    elt => elt.name,
+    (elt) => elt.id,
+    (elt) => elt.name
   )
 
   const currentUserHospitalSelect = mapForSelect(
     currentUser.hospital,
-    elt => elt.id,
-    elt => elt.name,
+    (elt) => elt.id,
+    (elt) => elt.name
   )
 
   // Get the hospital of initialUser for updates, but the one of currentUser for creates
   const [hospital, setHospital] = useState(
-    initialUser?.hospital ? initialUserHospitalSelect : currentUserHospitalSelect,
+    initialUser?.hospital ? initialUserHospitalSelect : currentUserHospitalSelect
   )
 
   const initialUserScopeSelect = mapArrayForSelect(
     initialUser?.scope,
-    elt => elt.id,
-    elt => elt.name,
+    (elt) => elt.id,
+    (elt) => elt.name
   )
 
   const [scope, setScope] = useState(initialUserScopeSelect)
@@ -94,7 +94,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const toggle = () => setModal(!modal)
 
   const availableRoles = availableRolesForUser(currentUser)
-  const roles = availableRoles.map(role => ({
+  const roles = availableRoles.map((role) => ({
     value: role,
     label: ROLES_DESCRIPTION[role],
   }))
@@ -105,8 +105,8 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
           hospitalDisabled: true,
           hospitalValue: mapForSelect(
             currentUser.hospital,
-            elt => elt.id,
-            elt => elt.name,
+            (elt) => elt.id,
+            (elt) => elt.name
           ),
 
           scopeDisabled: true,
@@ -120,7 +120,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const onDeleteUser = () => {
     toggle()
 
-    const del = async id => {
+    const del = async (id) => {
       try {
         const { deleted } = await deleteUser({ id })
         logDebug(`Nb deleted rows: ${deleted}`)
@@ -133,7 +133,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
     del(id)
   }
 
-  const onSubmit = async user => {
+  const onSubmit = async (user) => {
     setError("")
     setErrors({})
     setsuccess("")
@@ -172,7 +172,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
     }
   }
 
-  const onRoleChange = selectedOption => {
+  const onRoleChange = (selectedOption) => {
     // eslint-disable-next-line no-unused-vars
     setErrors(({ role, ...errors }) => ({ errors }))
 
@@ -199,7 +199,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
     setRole(selectedOption)
   }
 
-  const onHospitalChange = selectedOption => {
+  const onHospitalChange = (selectedOption) => {
     // eslint-disable-next-line no-unused-vars
     setErrors(({ hospital, ...errors }) => ({ errors }))
 
@@ -211,20 +211,20 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
             id: selectedOption.value,
             name: selectedOption.label,
           }
-        : null,
+        : null
     )
     // Needs to sync specifically the value to the react-select as well
     setHospital(selectedOption)
   }
 
-  const onScopeChange = selectedOption => {
+  const onScopeChange = (selectedOption) => {
     // eslint-disable-next-line no-unused-vars
     setErrors(({ scope, ...errors }) => ({ errors }))
 
     // Needs transformation between format of react-select to expected format for API call
     setValue(
       "scope",
-      !selectedOption?.length ? null : selectedOption.map(curr => ({ id: curr.value, name: curr.label })),
+      !selectedOption?.length ? null : selectedOption.map((curr) => ({ id: curr.value, name: curr.label }))
     )
     // Needs to sync specifically the value to the react-select as well
     setScope(selectedOption)
@@ -237,20 +237,20 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
     register({ name: "scope" })
   }, [register])
 
-  const customStyles = hasError => ({
-    control: styles => ({
+  const customStyles = (hasError) => ({
+    control: (styles) => ({
       ...styles,
       ...(hasError && { borderColor: "#d63626" }),
     }),
   })
 
-  const searchHospitals = async search => {
+  const searchHospitals = async (search) => {
     const hospitals = await searchHospitalsFuzzy({ search })
 
     return mapArrayForSelect(
       hospitals,
-      elt => elt.id,
-      elt => elt.name,
+      (elt) => elt.id,
+      (elt) => elt.name
     )
   }
 
@@ -454,7 +454,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   )
 }
 
-UserDetail.getInitialProps = async ctx => {
+UserDetail.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
 
   const { id } = ctx.query

@@ -30,7 +30,7 @@ const CriminalCourtEdit = ({ dispatch, state, errors }) => {
   )
 }
 
-const hasErrors = state => {
+const hasErrors = (state) => {
   const errors = {}
   if (!state.duration) {
     errors.duration = "Obligatoire"
@@ -48,7 +48,7 @@ CriminalCourtEdit.propTypes = {
   errors: PropTypes.object,
 }
 
-const CriminalCourtRead = act => {
+const CriminalCourtRead = (act) => {
   return (
     <>
       <Row>

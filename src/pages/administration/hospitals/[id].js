@@ -51,7 +51,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
   const onDeleteHospital = () => {
     toggle()
 
-    const del = async id => {
+    const del = async (id) => {
       try {
         const { deleted } = await deleteHospital({ id })
         logDebug(`Nb deleted rows: ${deleted}`)
@@ -64,7 +64,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
     del(id)
   }
 
-  const onSubmit = async hospital => {
+  const onSubmit = async (hospital) => {
     setError("")
     setsuccess("")
 
@@ -279,7 +279,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
   )
 }
 
-HospitalDetail.getInitialProps = async ctx => {
+HospitalDetail.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
 
   const { id } = ctx.query

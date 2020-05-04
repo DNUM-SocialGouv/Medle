@@ -49,13 +49,13 @@ const FillEmploymentsPage = ({
 
   const previousMonths = allMonths && allMonths.length ? allMonths.slice(1) : []
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     e.preventDefault()
 
     setDataMonth({ ...dataMonth, [e.target.name]: e.target.value.trim() })
   }
 
-  const update = async monthNumber => {
+  const update = async (monthNumber) => {
     setErrors({})
 
     const errors = hasErrors(dataMonth)
@@ -117,7 +117,7 @@ const FillEmploymentsPage = ({
                 invalid={errors && !!errors.doctors}
                 placeholder="Nombre d'ETP"
                 value={(dataMonth && dataMonth["doctors"]) || ""}
-                onChange={event => handleChange(event, currentMonth)}
+                onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.doctors}</FormFeedback>
@@ -129,7 +129,7 @@ const FillEmploymentsPage = ({
                 invalid={errors && !!errors.secretaries}
                 placeholder="Nombre d'ETP"
                 value={(dataMonth && dataMonth["secretaries"]) || ""}
-                onChange={event => handleChange(event, currentMonth)}
+                onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.secretaries}</FormFeedback>
@@ -141,7 +141,7 @@ const FillEmploymentsPage = ({
                 invalid={errors && !!errors.nursings}
                 placeholder="Nombre d'ETP"
                 value={(dataMonth && dataMonth["nursings"]) || ""}
-                onChange={event => handleChange(event, currentMonth)}
+                onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
               />
 
@@ -154,7 +154,7 @@ const FillEmploymentsPage = ({
                 invalid={errors && !!errors.executives}
                 placeholder="Nombre d'ETP"
                 value={(dataMonth && dataMonth["executives"]) || ""}
-                onChange={event => handleChange(event, currentMonth)}
+                onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.executives}</FormFeedback>
@@ -168,7 +168,7 @@ const FillEmploymentsPage = ({
                 invalid={errors && !!errors.ides}
                 placeholder="Nombre d'ETP"
                 value={(dataMonth && dataMonth["ides"]) || ""}
-                onChange={event => handleChange(event, currentMonth)}
+                onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.ides}</FormFeedback>
@@ -180,7 +180,7 @@ const FillEmploymentsPage = ({
                 invalid={errors && !!errors.auditoriumAgents}
                 placeholder="Nombre d'ETP"
                 value={(dataMonth && dataMonth["auditoriumAgents"]) || ""}
-                onChange={event => handleChange(event, currentMonth)}
+                onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
@@ -192,7 +192,7 @@ const FillEmploymentsPage = ({
                 invalid={errors && !!errors.psychologists}
                 placeholder="Nombre d'ETP"
                 value={(dataMonth && dataMonth["psychologists"]) || ""}
-                onChange={event => handleChange(event, currentMonth)}
+                onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.psychologists}</FormFeedback>
@@ -204,7 +204,7 @@ const FillEmploymentsPage = ({
                 invalid={errors && !!errors.others}
                 placeholder="Nombre d'ETP"
                 value={(dataMonth && dataMonth["others"]) || ""}
-                onChange={event => handleChange(event, currentMonth)}
+                onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.others}</FormFeedback>
@@ -225,7 +225,7 @@ const FillEmploymentsPage = ({
               month={month}
               year={year}
               hospitalId={hospital.id}
-              onChange={event => handleChange(event, month)}
+              onChange={(event) => handleChange(event, month)}
               update={update}
               currentUser={currentUser}
             />
@@ -245,7 +245,7 @@ const buildDates = () => {
     .fill(0)
     .map((_, index) => (index + 1).toString().padStart(2, "0"))
     .reverse()
-    .map(elt => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, month: elt }))
+    .map((elt) => ({ monthName: NAME_MONTHS[elt] + " " + currentYear, month: elt }))
 
   return {
     currentYear,
@@ -256,7 +256,7 @@ const buildDates = () => {
 
 const buildErrorText = (error, conf, defaultValue) => (error && error.status && conf[error.status]) || defaultValue
 
-FillEmploymentsPage.getInitialProps = async ctx => {
+FillEmploymentsPage.getInitialProps = async (ctx) => {
   const { currentYear, currentMonth, allMonths } = buildDates()
 
   try {
@@ -294,7 +294,7 @@ FillEmploymentsPage.getInitialProps = async ctx => {
         [STATUS_401_UNAUTHORIZED]: "Non autorisé",
         [STATUS_403_FORBIDDEN]: "Non autorisé",
       },
-      "Erreur interne",
+      "Erreur interne"
     )
 
     return {

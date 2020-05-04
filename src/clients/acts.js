@@ -55,6 +55,6 @@ export const deleteAct = async ({ id, headers }) => {
   return handleAPIResponse(response)
 }
 
-export const fetchExport = async search => {
+export const fetchExport = async (search) => {
   saveAs(`${API_URL}${ACTS_ENDPOINT}/export?fuzzy=${search}`)
 }

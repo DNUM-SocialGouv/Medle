@@ -17,7 +17,7 @@ const handler = async (req, res) => {
 
         const { totalCount, currentPage: requestedPage, maxPage, byPage: LIMIT, elements: acts } = await search(
           req.query,
-          currentUser,
+          currentUser
         )
 
         return res

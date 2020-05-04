@@ -15,7 +15,7 @@ const LoginPage = ({ message }) => {
   }
   let isMounted = false
 
-  const authentication = userData => {
+  const authentication = (userData) => {
     isMounted = true
     return new Promise((resolve, reject) => {
       if (isMounted) setError("")
@@ -62,7 +62,7 @@ LoginPage.propTypes = {
   message: PropTypes.string,
 }
 
-LoginPage.getInitialProps = async ctx => {
+LoginPage.getInitialProps = async (ctx) => {
   const {
     query: { sessionTimeout },
   } = ctx

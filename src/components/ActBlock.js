@@ -4,14 +4,14 @@ import { ButtonDropdown, Col, DropdownItem, DropdownMenu, Row } from "reactstrap
 
 import { Button, DropdownToggle, Title2 } from "./StyledComponents"
 
-const normalizeValues = values => {
-  values.forEach(v => {
+const normalizeValues = (values) => {
+  values.forEach((v) => {
     if (typeof v !== "string" && typeof v !== "object") {
       throw new Error("Incompatible types for values")
     }
   })
 
-  return values.map(v => {
+  return values.map((v) => {
     if (typeof v === "string") {
       return { title: v, subTitle: "", subValues: [] }
     } else {
@@ -27,7 +27,7 @@ const normalizeValues = values => {
   })
 }
 
-const makeColOptions = values => {
+const makeColOptions = (values) => {
   if (values.length) {
     if (values.length === 1) {
       return {
@@ -52,7 +52,7 @@ const isSelected = (stateType, val) => {
 
 const selectedSubvalueInState = (prefix, stateTypes) => {
   if (stateTypes instanceof Array) {
-    const res = stateTypes.filter(elt => elt.startsWith(prefix))
+    const res = stateTypes.filter((elt) => elt.startsWith(prefix))
     return res.length ? res[0] : false
   } else if (typeof stateTypes === "string") {
     return stateTypes.startsWith(prefix) ? stateTypes : false

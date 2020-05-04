@@ -4,7 +4,7 @@ import { transformAll } from "../../models/hospitals"
 export const search = async ({ fuzzy }) => {
   const hospitals = await knex("hospitals")
     .whereNull("deleted_at")
-    .where(builder => {
+    .where((builder) => {
       if (fuzzy) {
         builder.where("name", "ilike", `%${fuzzy}%`)
       }

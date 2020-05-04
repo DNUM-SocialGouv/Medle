@@ -1,6 +1,5 @@
 import moment from "moment"
 import { now, ISO_DATE } from "../../utils/date"
-import { instanceOf } from "prop-types"
 
 const defaultEndDate = () => now().format(ISO_DATE)
 

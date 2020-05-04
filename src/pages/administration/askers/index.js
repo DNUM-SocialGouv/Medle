@@ -18,11 +18,11 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
   const [search, setSearch] = useState("")
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchAskersFuzzy, initialPaginatedData)
 
-  const onChange = e => {
+  const onChange = (e) => {
     setSearch(e.target.value)
   }
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     fetchPage(search)(0)
   }
@@ -85,7 +85,7 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
                 </tr>
               </thead>
               <tbody>
-                {paginatedData.elements.map(asker => (
+                {paginatedData.elements.map((asker) => (
                   <Link key={asker.id} href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}>
                     <tr>
                       <td>
@@ -109,7 +109,7 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
   )
 }
 
-AdminAskerPage.getInitialProps = async ctx => {
+AdminAskerPage.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
 
   try {

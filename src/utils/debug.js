@@ -24,10 +24,10 @@ import { logInfo } from "./logger"
 export const DebugRouter = () => {
   const router = useRouter()
 
-  router.events.on("routeChangeStart", url => {
+  router.events.on("routeChangeStart", (url) => {
     logInfo("event routeChangeStart", url)
   })
-  router.events.on("routeChangeComplete", url => {
+  router.events.on("routeChangeComplete", (url) => {
     logInfo("event routeChangeComplete", url)
   })
   router.events.on("routeChangeError", (err, url) => {
@@ -41,7 +41,7 @@ export const DebugRouter = () => {
 //    useTraceUpdate(props)
 //    return <div>{props.children}</div>
 // }
-export const useTraceUpdate = props => {
+export const useTraceUpdate = (props) => {
   const prev = useRef(props)
   useEffect(() => {
     const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
@@ -58,7 +58,7 @@ export const useTraceUpdate = props => {
 }
 
 // usage: <Logger label="Mon composant à loguer" />
-export const Logger = props => {
+export const Logger = (props) => {
   logInfo(`${props.label} rendered`)
   return null // irrelevant
 }

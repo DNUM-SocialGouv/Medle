@@ -59,7 +59,7 @@ export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter
 
   const { inputs, globalCount, averageCount } = await buildDeceasedStatistics(
     { startDate, endDate, scopeFilter },
-    currentUser,
+    currentUser
   )
 
   const workbook = new Excel.Workbook()

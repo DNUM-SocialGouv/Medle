@@ -50,7 +50,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
   const onDeleteAsker = () => {
     toggle()
 
-    const del = async id => {
+    const del = async (id) => {
       try {
         const { deleted } = await deleteAsker({ id })
         logDebug(`Nb deleteAsker rows: ${deleted}`)
@@ -63,7 +63,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
     del(id)
   }
 
-  const onSubmit = async asker => {
+  const onSubmit = async (asker) => {
     setError("")
     setsuccess("")
 
@@ -84,7 +84,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
       setError(
         error.message === "Asker already present"
           ? "Ce demandeur existe déjà avec le même nom pour le même département."
-          : "Erreur serveur.",
+          : "Erreur serveur."
       )
     }
   }
@@ -206,7 +206,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
   )
 }
 
-AskerDetail.getInitialProps = async ctx => {
+AskerDetail.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
 
   const { id } = ctx.query

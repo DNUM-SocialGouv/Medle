@@ -30,7 +30,7 @@ const ReconstitutionEdit = ({ dispatch, state, errors }) => {
   )
 }
 
-const ReconstitutionRead = act => {
+const ReconstitutionRead = (act) => {
   return (
     <>
       <Row>
@@ -49,7 +49,7 @@ const ReconstitutionRead = act => {
   )
 }
 
-const hasErrors = state => {
+const hasErrors = (state) => {
   const errors = {}
   if (!state.duration) {
     errors.duration = "Obligatoire"

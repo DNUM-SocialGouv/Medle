@@ -1,6 +1,5 @@
 {
   "extends": ["plugin:prettier/recommended"],
   "printWidth": 120,
-  "semi": false,
-  "trailingComma": "all"
+  "semi": false
 }

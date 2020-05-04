@@ -10,9 +10,7 @@ export const search = async ({ fuzzy, requestedPage, currentUser }) => {
 
   requestedPage = requestedPage && !isNaN(requestedPage) && parseInt(requestedPage, 10)
 
-  const [usersCount] = await knex("users")
-    .where(makeWhereClause({ scope, fuzzy }))
-    .count()
+  const [usersCount] = await knex("users").where(makeWhereClause({ scope, fuzzy })).count()
 
   const totalCount = parseInt(usersCount.count)
   const maxPage = Math.ceil(totalCount / LIMIT)
@@ -39,7 +37,7 @@ export const search = async ({ fuzzy, requestedPage, currentUser }) => {
       "users.role",
       "users.hospital_id",
       "hospitals.name as hospital_name",
-      "users.scope",
+      "users.scope"
     )
 
   return { users: users?.length ? transformAll(users) : [], totalCount, currentPage, maxPage, byPage: LIMIT }

@@ -31,14 +31,14 @@ export const logout = async () => {
   await Router.push("/index")
 }
 
-export const registerAndRedirectUser = user => {
+export const registerAndRedirectUser = (user) => {
   fetchReferenceData()
   sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
 
   Router.push(startPageForRole(user.role))
 }
 
-export const getCurrentUser = ctx => {
+export const getCurrentUser = (ctx) => {
   if (ctx && ctx.req) {
     // Server side navigation
     logDebug("getCurrentUser from server side")
@@ -56,7 +56,7 @@ export const getCurrentUserFromSessionStorage = () => {
   return currentUser ? JSON.parse(currentUser) : null
 }
 
-const getTokenFromCookie = ctx => {
+const getTokenFromCookie = (ctx) => {
   // Can't work on client side
   if (!ctx || !ctx.req) return ""
 
@@ -67,8 +67,8 @@ const getTokenFromCookie = ctx => {
   // Not useful to verify that token is valid Max-Age wise, since the API will verify it for us
   const res = cookieContent
     .split(";")
-    .map(elt => elt.trim())
-    .filter(elt => /token/.test(elt))
+    .map((elt) => elt.trim())
+    .filter((elt) => /token/.test(elt))
 
   if (!res.length || res.length !== 1) {
     logError("Erreur dans le cookie token")
@@ -79,7 +79,7 @@ const getTokenFromCookie = ctx => {
 }
 
 // On server side, fetch needs to carry the cookie which contains the JWT token, so here we prepare the options
-export const buildAuthHeaders = ctx => {
+export const buildAuthHeaders = (ctx) => {
   const token = getTokenFromCookie(ctx)
   return token
     ? {
@@ -99,14 +99,14 @@ export const isomorphicRedirect = (ctx, url) => {
   }
 }
 
-const sessionTooOld = currentUser => {
+const sessionTooOld = (currentUser) => {
   return currentUser.authentifiedAt && moment(currentUser.authentifiedAt).add(timeout.session) < moment()
 }
 
 export const withAuthentication = (WrappedComponent, requiredPrivilege, { redirect = true } = {}) => {
-  const Wrapper = props => <WrappedComponent {...props} />
+  const Wrapper = (props) => <WrappedComponent {...props} />
 
-  Wrapper.getInitialProps = async ctx => {
+  Wrapper.getInitialProps = async (ctx) => {
     const currentUser = getCurrentUser(ctx)
 
     logDebug("currentUser", currentUser)

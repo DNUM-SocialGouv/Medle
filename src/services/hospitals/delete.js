@@ -10,10 +10,7 @@ export const del = async ({ id }) => {
     })
   }
 
-  const number = await knex("hospitals")
-    .where("id", id)
-    .whereNull("deleted_at")
-    .update({ deleted_at: knex.fn.now() })
+  const number = await knex("hospitals").where("id", id).whereNull("deleted_at").update({ deleted_at: knex.fn.now() })
 
   return number
 }

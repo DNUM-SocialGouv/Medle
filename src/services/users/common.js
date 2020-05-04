@@ -1,13 +1,13 @@
 import knex from "../../knex/knex"
 
-export const makeWhereClause = ({ scope, fuzzy }) => builder => {
+export const makeWhereClause = ({ scope, fuzzy }) => (builder) => {
   builder.whereNull("users.deleted_at")
   if (scope && scope.length) {
     builder.where(knex.raw("hospital_id in (" + scope.map(() => "?").join(",") + ")", [...scope]))
   }
 
   if (fuzzy) {
-    builder.where(function() {
+    builder.where(() => {
       this.where("last_name", "ilike", `%${fuzzy}%`)
         .orWhere("first_name", "ilike", `%${fuzzy}%`)
         .orWhere("email", "ilike", `%${fuzzy}%`)

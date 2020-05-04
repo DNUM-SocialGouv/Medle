@@ -28,16 +28,13 @@ export const find = async ({ id, currentUser }) => {
       "users.role",
       "users.hospital_id",
       "hospitals.name as hospital_name",
-      "users.scope",
+      "users.scope"
     )
 
   user = transform(user)
 
   if (user && user.scope && user.scope.length) {
-    const userScope = await knex("hospitals")
-      .whereNull("deleted_at")
-      .whereIn("id", user.scope)
-      .select("id", "name")
+    const userScope = await knex("hospitals").whereNull("deleted_at").whereIn("id", user.scope).select("id", "name")
 
     user = { ...user, scope: userScope }
   }
@@ -45,7 +42,7 @@ export const find = async ({ id, currentUser }) => {
   return user
 }
 
-export const findByEmail = async email => {
+export const findByEmail = async (email) => {
   if (!email) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
@@ -63,7 +60,7 @@ export const findByEmail = async email => {
       "users.password",
       "users.role",
       "users.hospital_id",
-      "users.scope",
+      "users.scope"
     )
 
   user = transform(user)

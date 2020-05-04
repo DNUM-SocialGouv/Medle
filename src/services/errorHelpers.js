@@ -18,29 +18,29 @@ export const sendAPIError = (error, res) => {
   return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json(stringifyError(new InternalError({ detail: error.message })))
 }
 
-export const sendMethodNotAllowedError = res =>
+export const sendMethodNotAllowedError = (res) =>
   sendAPIError(
     new APIError({
       status: STATUS_405_METHOD_NOT_ALLOWED,
       message: "Method not allowed",
     }),
-    res,
+    res
   )
 
-export const sendNotFoundError = res =>
+export const sendNotFoundError = (res) =>
   sendAPIError(
     new APIError({
       status: STATUS_404_NOT_FOUND,
       message: "Resource not found",
     }),
-    res,
+    res
   )
 
-export const sendBadRequestError = res =>
+export const sendBadRequestError = (res) =>
   sendAPIError(
     new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
     }),
-    res,
+    res
   )

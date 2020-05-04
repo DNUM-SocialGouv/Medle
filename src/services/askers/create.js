@@ -3,7 +3,7 @@ import { untransform, validate } from "../../models/askers"
 import { STATUS_403_FORBIDDEN } from "../../utils/http"
 import { APIError } from "../../utils/errors"
 
-export const create = async asker => {
+export const create = async (asker) => {
   await validate(asker)
 
   const [otherAsker] = await knex("askers")

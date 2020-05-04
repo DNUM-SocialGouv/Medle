@@ -20,7 +20,7 @@ const UserReset = ({ currentUser }) => {
   const router = useRouter()
   const { id } = router.query
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     setError("")
 
     try {
@@ -86,7 +86,7 @@ const UserReset = ({ currentUser }) => {
                 id="confirmedValue"
                 innerRef={register({
                   required: true,
-                  validate: value => {
+                  validate: (value) => {
                     return value === watch("firstValue")
                   },
                 })}

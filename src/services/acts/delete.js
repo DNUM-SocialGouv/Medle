@@ -14,10 +14,7 @@ export const del = async ({ id }, currentUser) => {
 
   const reachableScope = buildScope(currentUser)
 
-  const [act] = await knex("acts")
-    .where("id", id)
-    .where(makeWhereClause(reachableScope))
-    .whereNull("deleted_at")
+  const [act] = await knex("acts").where("id", id).where(makeWhereClause(reachableScope)).whereNull("deleted_at")
 
   if (!act) {
     throw new APIError({
@@ -26,10 +23,7 @@ export const del = async ({ id }, currentUser) => {
     })
   }
 
-  const number = await knex("acts")
-    .where("id", id)
-    .whereNull("deleted_at")
-    .update({ deleted_at: knex.fn.now() })
+  const number = await knex("acts").where("id", id).whereNull("deleted_at").update({ deleted_at: knex.fn.now() })
 
   return number
 }

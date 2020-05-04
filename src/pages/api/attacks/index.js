@@ -14,10 +14,7 @@ const handler = async (req, res) => {
       case METHOD_GET: {
         checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
-        const attacks = await knex("attacks")
-          .whereNull("deleted_at")
-          .orderBy("name")
-          .select("id", "name")
+        const attacks = await knex("attacks").whereNull("deleted_at").orderBy("name").select("id", "name")
 
         return res.status(STATUS_200_OK).json(attacks)
       }

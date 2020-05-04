@@ -21,9 +21,7 @@ export const update = async ({ id }, data, currentUser) => {
     })
   }
 
-  const number = await knex("acts")
-    .update(untransform(data))
-    .where("id", id)
+  const number = await knex("acts").update(untransform(data)).where("id", id)
 
   return number
 }

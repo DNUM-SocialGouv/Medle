@@ -21,11 +21,11 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   const [search, setSearch] = useState("")
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActsFuzzy, initialPaginatedData)
 
-  const onChange = e => {
+  const onChange = (e) => {
     setSearch(e.target.value)
   }
 
-  const onSubmit = e => {
+  const onSubmit = (e) => {
     e.preventDefault()
     fetchPage(search)(0)
   }
@@ -82,7 +82,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedData.elements.map(act => (
+                {paginatedData.elements.map((act) => (
                   <Link key={act.id} href="/acts/[id]" as={`/acts/${act.id}`}>
                     <tr key={act.id}>
                       <td>
@@ -117,7 +117,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   )
 }
 
-ActsListPage.getInitialProps = async ctx => {
+ActsListPage.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
   try {
     const paginatedData = await searchActsFuzzy({ headers })

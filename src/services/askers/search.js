@@ -8,7 +8,7 @@ export const search = async ({ fuzzy, requestedPage }) => {
 
   const [askersCount] = await knex("askers")
     .whereNull("deleted_at")
-    .where(builder => {
+    .where((builder) => {
       if (fuzzy) {
         builder.where("name", "ilike", `%${fuzzy}%`)
         // TODO: add this better query when all askers would have got a depCode
@@ -28,7 +28,7 @@ export const search = async ({ fuzzy, requestedPage }) => {
 
   const askers = await knex("askers")
     .whereNull("deleted_at")
-    .where(builder => {
+    .where((builder) => {
       if (fuzzy) {
         builder.where("name", "ilike", `%${fuzzy}%`)
         // builder.where("name", "ilike", `%${fuzzy}%`).orWhere("dep_code", "like", `%${fuzzy}%`)

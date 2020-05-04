@@ -8,7 +8,7 @@ import ColumnAct from "../../components/ColumnAct"
 
 const DrunkEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
-  const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
+  const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
   return (
     <>
@@ -76,7 +76,7 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
   )
 }
 
-const DrunkRead = act => {
+const DrunkRead = (act) => {
   return (
     <>
       <Row>
@@ -110,7 +110,7 @@ const DrunkRead = act => {
   )
 }
 
-const hasErrors = state => {
+const hasErrors = (state) => {
   const errors = {}
   if (!state.examinationTypes || !state.examinationTypes.length) {
     errors.examinationTypes = "Obligatoire"

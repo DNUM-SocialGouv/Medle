@@ -13,12 +13,9 @@ export const reset = async (id, password) => {
 
   password = await hashPassword(password)
 
-  const modified = await knex("users")
-    .where("id", id)
-    .whereNull("users.deleted_at")
-    .update({
-      password,
-    })
+  const modified = await knex("users").where("id", id).whereNull("users.deleted_at").update({
+    password,
+  })
 
   return modified
 }

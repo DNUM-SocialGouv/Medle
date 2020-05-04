@@ -8,7 +8,7 @@ import ColumnAct from "../../components/ColumnAct"
 
 const RestrainedEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
-  const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
+  const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
   return (
     <>
@@ -75,7 +75,7 @@ const RestrainedEdit = ({ dispatch, state, errors }) => {
   )
 }
 
-const RestrainedRead = act => {
+const RestrainedRead = (act) => {
   return (
     <>
       <Row>
@@ -114,7 +114,7 @@ const RestrainedRead = act => {
   )
 }
 
-const hasErrors = state => {
+const hasErrors = (state) => {
   const errors = {}
   if (!state.examinationTypes || !state.examinationTypes.length) {
     errors.examinationTypes = "Obligatoire"

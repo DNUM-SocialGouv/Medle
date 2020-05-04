@@ -253,11 +253,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               title="Actes hors examens"
               firstNumber={statistics?.profilesDistribution?.["Autre activité/Reconstitution"]}
               firstLabel={`Reconstitution${pluralize(
-                statistics?.profilesDistribution?.["Autre activité/Reconstitution"],
+                statistics?.profilesDistribution?.["Autre activité/Reconstitution"]
               )}.`}
               secondNumber={statistics?.profilesDistribution?.["Autre activité/Assises"]}
               secondLabel={`Participation${pluralize(
-                statistics?.profilesDistribution?.["Autre activité/Assises"],
+                statistics?.profilesDistribution?.["Autre activité/Assises"]
               )} aux assises.`}
             />
             <StatBlockNumbers
@@ -266,7 +266,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               firstLabel={`Acte${pluralize(statistics?.actsWithSamePV)} avec le même numéro de réquisition.`}
               secondNumber={statistics?.averageWithSamePV}
               secondLabel={`Acte${pluralize(
-                statistics?.averageWithSamePV,
+                statistics?.averageWithSamePV
               )} par numéro en moyenne sur ces numéros récurrents.`}
             />
           </div>

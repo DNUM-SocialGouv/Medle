@@ -55,7 +55,7 @@ const resetState = ({
   hospitalId,
 })
 
-const hasErrors = state => {
+const hasErrors = (state) => {
   let errors = {}
 
   if (!state.profile) {
@@ -106,7 +106,7 @@ const reduceByMode = (state, action) => {
         let prefix = ""
         if (chunks.length >= 2) {
           prefix = chunks[0]
-          newStateType = newStateType.filter(e => !e.startsWith(prefix))
+          newStateType = newStateType.filter((e) => !e.startsWith(prefix))
         }
 
         newState[action.type] = [...newStateType, action.payload.val]
@@ -186,7 +186,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       pvNumber,
       userId,
       hospitalId,
-    }),
+    })
   )
 
   const getProfiledRender = ({ profile }) => {
@@ -238,7 +238,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       }
     } catch (error) {
       logError(error)
-      setErrors(errors => ({
+      setErrors((errors) => ({
         ...errors,
         general: error && error.message ? error.message : "Erreur serveur",
       }))
@@ -254,7 +254,7 @@ const ActDeclaration = ({ act, currentUser }) => {
     return false
   }
 
-  const onBlurNumberInputs = name => async () => {
+  const onBlurNumberInputs = (name) => async () => {
     if (state[name]) {
       try {
         const elements = await searchActsByKey({ key: name, value: state[name] })
@@ -299,7 +299,7 @@ const ActDeclaration = ({ act, currentUser }) => {
               invalid={errors && !!errors.internalNumber}
               placeholder="Ex: 2019-23091"
               value={state.internalNumber}
-              onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
+              onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
               autoComplete="off"
               onBlur={onBlurNumberInputs("internalNumber")}
             />
@@ -316,7 +316,7 @@ const ActDeclaration = ({ act, currentUser }) => {
               type="date"
               value={state.examinationDate || moment(now()).format(ISO_DATE)}
               // value={state.examinationDate}
-              onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
+              onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
             />
             <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
           </Col>
@@ -333,7 +333,7 @@ const ActDeclaration = ({ act, currentUser }) => {
               value={state.proofWithoutComplaint || false}
               checked={state.proofWithoutComplaint || false}
               style={{ margin: "auto" }}
-              onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.checked } })}
+              onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.checked } })}
             ></Input>
           </Col>
         </Row>
@@ -347,7 +347,7 @@ const ActDeclaration = ({ act, currentUser }) => {
               placeholder={state.proofWithoutComplaint ? "" : "Recommandé"}
               value={state.pvNumber}
               disabled={!!state.proofWithoutComplaint}
-              onChange={e => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
+              onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
               autoComplete="off"
               onBlur={onBlurNumberInputs("pvNumber")}
             />
@@ -418,7 +418,7 @@ ActDeclaration.propTypes = {
   currentUser: PropTypes.object.isRequired,
 }
 
-const transformDBActForState = act => {
+const transformDBActForState = (act) => {
   const newAct = {
     ...act,
     askerId: act.asker && act.asker.id ? act.asker.id : null,
@@ -431,7 +431,7 @@ const transformDBActForState = act => {
   return newAct
 }
 
-ActDeclaration.getInitialProps = async ctx => {
+ActDeclaration.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
   const { query } = ctx
 

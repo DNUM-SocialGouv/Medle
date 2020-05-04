@@ -33,7 +33,7 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
   const onDeleteAct = () => {
     toggle()
 
-    const del = async id => {
+    const del = async (id) => {
       try {
         const { deleted } = await deleteAct({ id })
         logDebug(`Nb deleted rows: ${deleted}`)
@@ -48,7 +48,7 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
     del(id)
   }
 
-  const editAct = id => {
+  const editAct = (id) => {
     return router.push(`/acts/declaration?id=${id}`)
   }
 
@@ -134,7 +134,7 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
   )
 }
 
-ActDetail.getInitialProps = async ctx => {
+ActDetail.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
   const { id } = ctx.query
 

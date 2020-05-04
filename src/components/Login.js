@@ -11,7 +11,7 @@ const Login = ({ authentication, error }) => {
   const emailRef = useRef(null)
   const passwordRef = useRef(null)
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault()
 
     setHidden(true)
@@ -25,7 +25,7 @@ const Login = ({ authentication, error }) => {
   }
 
   const handleClick = () => {
-    setHidden(state => !state)
+    setHidden((state) => !state)
   }
 
   return (

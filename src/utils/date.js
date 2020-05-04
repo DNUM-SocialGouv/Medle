@@ -12,7 +12,7 @@ const testCurrentDate = (publicRuntimeConfig && publicRuntimeConfig.TEST_CURRENT
 
 export const now = () => (testCurrentDate && moment(testCurrentDate, FORMAT_DATE)) || moment()
 
-export const frToIso = date => {
+export const frToIso = (date) => {
   const parts = date.split("/")
 
   if (parts.length !== 3) {
@@ -23,7 +23,7 @@ export const frToIso = date => {
   return `${year}-${month}-${day}`
 }
 
-export const isoToFr = date => {
+export const isoToFr = (date) => {
   const parts = date.split("-")
 
   if (parts.length !== 3) {

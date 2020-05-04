@@ -14,7 +14,7 @@ import { handleAPIResponse } from "../utils/errors"
 import { isAllowed, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 import { logError } from "../utils/logger"
 
-export const hasErrors = dataMonth => {
+export const hasErrors = (dataMonth) => {
   const errors = {}
 
   if (dataMonth.doctors && isNaN(dataMonth.doctors)) {
@@ -84,13 +84,13 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
     fetchData()
   }, [hospitalId, month, open, year])
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     event.preventDefault()
 
     setDataMonth({ ...dataMonth, [event.target.name]: event.target.value })
   }
 
-  const toggleReadOnly = () => setReadOnlyState(state => !state)
+  const toggleReadOnly = () => setReadOnlyState((state) => !state)
 
   const handleUpdate = async () => {
     setErrors({})
@@ -138,7 +138,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 invalid={errors && !!errors.doctors}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["doctors"] || ""}
-                onChange={event => handleChange(event)}
+                onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />
@@ -151,7 +151,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 invalid={errors && !!errors.secretaries}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["secretaries"] || ""}
-                onChange={event => handleChange(event)}
+                onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />
@@ -164,7 +164,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 invalid={errors && !!errors.nursings}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["nursings"] || ""}
-                onChange={event => handleChange(event)}
+                onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />
@@ -177,7 +177,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 invalid={errors && !!errors.executives}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["executives"] || ""}
-                onChange={event => handleChange(event)}
+                onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />
@@ -192,7 +192,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 invalid={errors && !!errors.idesNumber}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["idesNumber"] || ""}
-                onChange={event => handleChange(event)}
+                onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />
@@ -205,7 +205,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 invalid={errors && !!errors.auditoriumAgents}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["auditoriumAgents"] || ""}
-                onChange={event => handleChange(event)}
+                onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />
@@ -218,7 +218,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 invalid={errors && !!errors.psychologists}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["psychologists"] || ""}
-                onChange={event => handleChange(event)}
+                onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />
@@ -231,7 +231,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 invalid={errors && !!errors.others}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["others"] || ""}
-                onChange={event => handleChange(event)}
+                onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />

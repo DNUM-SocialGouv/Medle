@@ -6,7 +6,7 @@ const TabButton = ({ labels, callback, colorScheme }) => {
 
   if (colorScheme !== "violet") colorScheme = "blue"
 
-  const onClick = label => {
+  const onClick = (label) => {
     setSelectedLabel(label)
     callback(label)
   }

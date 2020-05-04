@@ -10,24 +10,24 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
   const [previousValues, setPreviousValues] = useState([])
 
   useEffect(() => {
-    const fetchAskerValue = async id => {
+    const fetchAskerValue = async (id) => {
       const asker = id ? await memoizedFindAsker({ id }) : null
       setExistingValue(
         mapForSelect(
           asker,
-          elt => elt.id,
-          elt => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
-        ),
+          (elt) => elt.id,
+          (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : "")
+        )
       )
     }
     const fetchPreviousValues = async () => {
-      Promise.all(memoizedFindAsker.values()).then(arr => {
+      Promise.all(memoizedFindAsker.values()).then((arr) => {
         setPreviousValues(
           mapArrayForSelect(
             arr,
-            elt => elt.id,
-            elt => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
-          ),
+            (elt) => elt.id,
+            (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : "")
+          )
         )
       })
     }
@@ -36,17 +36,17 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
     fetchPreviousValues()
   }, [askerId])
 
-  const onChange = e => {
+  const onChange = (e) => {
     dispatch({ type: "askerId", payload: { val: (e && e.value) || null } })
   }
 
-  const loadAskers = async search => {
+  const loadAskers = async (search) => {
     const askers = await memoizedSearchAskers({ search })
 
     return mapArrayForSelect(
       askers?.elements,
-      elt => elt.id,
-      elt => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
+      (elt) => elt.id,
+      (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : "")
     )
   }
 
@@ -54,7 +54,7 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
     <>
       <AsyncSelect
         defaultOptions={previousValues}
-        loadOptions={search => loadAskers(search)}
+        loadOptions={(search) => loadAskers(search)}
         isClearable={true}
         placeholder="Tapez le nom du demandeur"
         noOptionsMessage={() => "Aucun résultat"}

@@ -18,11 +18,11 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
   const [search, setSearch] = useState("")
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchUsersFuzzy, initialPaginatedData)
 
-  const onChange = e => {
+  const onChange = (e) => {
     setSearch(e.target.value)
   }
 
-  const onSubmit = e => {
+  const onSubmit = (e) => {
     e.preventDefault()
     fetchPage(search)(0)
   }
@@ -86,7 +86,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                 </tr>
               </thead>
               <tbody>
-                {paginatedData.elements.map(user => (
+                {paginatedData.elements.map((user) => (
                   <Link key={user.id} href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
                     <tr>
                       <td>
@@ -112,7 +112,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
   )
 }
 
-AdminUserPage.getInitialProps = async ctx => {
+AdminUserPage.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
 
   try {

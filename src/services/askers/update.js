@@ -25,9 +25,7 @@ export const update = async ({ id }, asker) => {
       message: "Asker already present",
     })
 
-  const number = await knex("askers")
-    .update(untransform(asker))
-    .where("id", id)
+  const number = await knex("askers").update(untransform(asker)).where("id", id)
 
   return number
 }

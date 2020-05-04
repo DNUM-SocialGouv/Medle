@@ -8,7 +8,7 @@ import ColumnAct from "../ColumnAct"
 
 const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
-  const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
+  const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
   return (
     <>
@@ -66,7 +66,7 @@ const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
   )
 }
 
-const AsylumSeekerRead = act => {
+const AsylumSeekerRead = (act) => {
   return (
     <>
       <Row>
@@ -98,7 +98,7 @@ const AsylumSeekerRead = act => {
   )
 }
 
-const hasErrors = state => {
+const hasErrors = (state) => {
   const errors = {}
   if (!state.examinationTypes || !state.examinationTypes.length) {
     errors.examinationTypes = "Obligatoire"

@@ -23,11 +23,11 @@ const Counter = ({ children, dispatch, state, type }) => {
           onClick={substract}
           className="mr-3"
           tabIndex="0"
-          onKeyPress={e => keyPress(e, substract)}
+          onKeyPress={(e) => keyPress(e, substract)}
           width={24}
         />
         {state}
-        <AddCircleOutline onClick={add} className="ml-3" tabIndex="0" onKeyPress={e => keyPress(e, add)} width={24} />
+        <AddCircleOutline onClick={add} className="ml-3" tabIndex="0" onKeyPress={(e) => keyPress(e, add)} width={24} />
       </div>
       <style jsx>{`
         .title {

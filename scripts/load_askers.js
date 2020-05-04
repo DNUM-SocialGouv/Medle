@@ -18,137 +18,133 @@ const USER_LOGIN = "medle@tours.fr"
 const USER_PASSWORD = "test"
 
 const primaryAskers = [
-   "OFPRA (Office Français de Protection des Réfugiés et Apatrides)",
-   "Ministère de l'intérieur",
-   "Police aux frontières",
-   "Brigade financière",
-   "Parquet national antiterroriste",
-   "Douane judiciaire",
-   "CRS autoroutière",
-   "Juge d'instruction",
+  "OFPRA (Office Français de Protection des Réfugiés et Apatrides)",
+  "Ministère de l'intérieur",
+  "Police aux frontières",
+  "Brigade financière",
+  "Parquet national antiterroriste",
+  "Douane judiciaire",
+  "CRS autoroutière",
+  "Juge d'instruction",
 ]
 
 const buildAuthHeaders = async () => {
-   const response = await fetch(API_URL + ACT_LOGIN, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: USER_LOGIN, password: USER_PASSWORD }),
-   })
-   const token = response.headers.get("set-cookie")
+  const response = await fetch(API_URL + ACT_LOGIN, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: USER_LOGIN, password: USER_PASSWORD }),
+  })
+  const token = response.headers.get("set-cookie")
 
-   if (!token) {
-      throw new Error("Authentication failed")
-   }
+  if (!token) {
+    throw new Error("Authentication failed")
+  }
 
-   return {
-      headers: {
-         cookie: token,
-      },
-   }
+  return {
+    headers: {
+      cookie: token,
+    },
+  }
 }
 
-const fetchAskersThirdParty = async options => {
-   const fetchData = async type => {
-      const response = await fetch(`http://etablissements-publics.api.gouv.fr/v3/organismes/${type}`, options)
-      const json = await response.json()
-      if (!json || !json.features || !json.features.length) return false
-      return json.features[0]
-         .map(elt => (elt && elt.properties && elt.properties.nom ? elt.properties.nom.trim() : false))
-         .filter(x => !!x)
-   }
+const fetchAskersThirdParty = async (options) => {
+  const fetchData = async (type) => {
+    const response = await fetch(`http://etablissements-publics.api.gouv.fr/v3/organismes/${type}`, options)
+    const json = await response.json()
+    if (!json || !json.features || !json.features.length) return false
+    return json.features[0]
+      .map((elt) => (elt && elt.properties && elt.properties.nom ? elt.properties.nom.trim() : false))
+      .filter((x) => !!x)
+  }
 
-   const getMap = ({ data, type }) => {
-      return data.reduce((acc, curr) => {
-         acc[curr.toUpperCase()] = { type, name: curr }
-         return acc
-      }, {})
-   }
-
-   const tgis = await fetchData("tgi")
-   const commissariats = await fetchData("commissariat_police")
-   const gendarmeries = await fetchData("gendarmerie")
-
-   return {
-      ...getMap({ data: tgis, type: "tgi" }),
-      ...getMap({ data: commissariats, type: "commissariat_police" }),
-      ...getMap({ data: gendarmeries, type: "gendarmerie" }),
-      ...getMap({ data: primaryAskers, type: "primary" }),
-   }
-}
-
-const fetchExistingAskers = async options => {
-   const response = await fetch(`${API_URL}${ACTS_ENDPOINT}?all=true`, options)
-   const json = await response.json()
-
-   if (!json) return {}
-
-   console.log("fetch existing askers", json)
-
-   return json.reduce((acc, curr) => {
-      acc[curr.name.trim().toUpperCase()] = curr.name
+  const getMap = ({ data, type }) => {
+    return data.reduce((acc, curr) => {
+      acc[curr.toUpperCase()] = { type, name: curr }
       return acc
-   }, {})
+    }, {})
+  }
+
+  const tgis = await fetchData("tgi")
+  const commissariats = await fetchData("commissariat_police")
+  const gendarmeries = await fetchData("gendarmerie")
+
+  return {
+    ...getMap({ data: tgis, type: "tgi" }),
+    ...getMap({ data: commissariats, type: "commissariat_police" }),
+    ...getMap({ data: gendarmeries, type: "gendarmerie" }),
+    ...getMap({ data: primaryAskers, type: "primary" }),
+  }
+}
+
+const fetchExistingAskers = async (options) => {
+  const response = await fetch(`${API_URL}${ACTS_ENDPOINT}?all=true`, options)
+  const json = await response.json()
+
+  if (!json) return {}
+
+  console.log("fetch existing askers", json)
+
+  return json.reduce((acc, curr) => {
+    acc[curr.name.trim().toUpperCase()] = curr.name
+    return acc
+  }, {})
 }
 
 const getAskersToAdd = (newAskers, existingAskers) => {
-   const askersToAdd = []
-   const askersNotToAdd = []
+  const askersToAdd = []
+  const askersNotToAdd = []
 
-   Object.keys(newAskers).forEach(key => {
-      const candidate = existingAskers[key]
-      if (!candidate) askersToAdd.push(newAskers[key])
-      else {
-         console.log("XXXX candidate '", candidate, "'", "key '", key, "'")
-         askersNotToAdd.push(newAskers[key])
-      }
-   })
+  Object.keys(newAskers).forEach((key) => {
+    const candidate = existingAskers[key]
+    if (!candidate) askersToAdd.push(newAskers[key])
+    else {
+      console.log("XXXX candidate '", candidate, "'", "key '", key, "'")
+      askersNotToAdd.push(newAskers[key])
+    }
+  })
 
-   return { askersToAdd, askersNotToAdd }
+  return { askersToAdd, askersNotToAdd }
 }
 
 buildAuthHeaders()
-   .then(options =>
-      Promise.all([fetchAskersThirdParty(options), fetchExistingAskers(options)]).then(
-         ([newAskers, existingAskers]) => {
-            console.log("newAskers")
-            Object.keys(newAskers)
-               .slice(0, 10)
-               .map(key => console.log(newAskers[key]))
+  .then((options) =>
+    Promise.all([fetchAskersThirdParty(options), fetchExistingAskers(options)]).then(([newAskers, existingAskers]) => {
+      console.log("newAskers")
+      Object.keys(newAskers)
+        .slice(0, 10)
+        .map((key) => console.log(newAskers[key]))
 
-            console.log("existingAskers")
+      console.log("existingAskers")
 
-            Object.keys(existingAskers)
-               .slice(0, 10)
-               .map(key => console.log(existingAskers[key]))
+      Object.keys(existingAskers)
+        .slice(0, 10)
+        .map((key) => console.log(existingAskers[key]))
 
-            const { askersToAdd, askersNotToAdd } = getAskersToAdd(newAskers, existingAskers)
+      const { askersToAdd, askersNotToAdd } = getAskersToAdd(newAskers, existingAskers)
 
-            console.log("Tours newAskers", newAskers["Tribunal de grande instance de Tours".toUpperCase()])
-            console.log("Tours existingAskers", existingAskers["Tribunal de grande instance de Tours".toUpperCase()])
+      console.log("Tours newAskers", newAskers["Tribunal de grande instance de Tours".toUpperCase()])
+      console.log("Tours existingAskers", existingAskers["Tribunal de grande instance de Tours".toUpperCase()])
 
-            const formatResult = data => "name,type\n" + data.map(elt => elt.name + "," + elt.type).join("\n")
+      const formatResult = (data) => "name,type\n" + data.map((elt) => elt.name + "," + elt.type).join("\n")
 
-            fs.writeFile(
-               `./data/${moment().format("YYYYMMDD-HHmmss")}-askersToAdd.csv`,
-               formatResult(askersToAdd),
-               function(err) {
-                  if (err) {
-                     return console.log(err)
-                  }
-                  console.log("The file askersToAdd.csv was saved!")
-               },
-            )
-            fs.writeFile(
-               `./data/${moment().format("YYYYMMDD-HHmmss")}-askersNotToAdd.csv`,
-               formatResult(askersNotToAdd),
-               function(err) {
-                  if (err) {
-                     return console.log(err)
-                  }
-                  console.log("The file askersNotToAdd was saved!")
-               },
-            )
-         },
-      ),
-   )
-   .catch(console.log)
+      fs.writeFile(`./data/${moment().format("YYYYMMDD-HHmmss")}-askersToAdd.csv`, formatResult(askersToAdd), function (
+        err
+      ) {
+        if (err) {
+          return console.log(err)
+        }
+        console.log("The file askersToAdd.csv was saved!")
+      })
+      fs.writeFile(
+        `./data/${moment().format("YYYYMMDD-HHmmss")}-askersNotToAdd.csv`,
+        formatResult(askersNotToAdd),
+        function (err) {
+          if (err) {
+            return console.log(err)
+          }
+          console.log("The file askersNotToAdd was saved!")
+        }
+      )
+    })
+  )
+  .catch(console.log)

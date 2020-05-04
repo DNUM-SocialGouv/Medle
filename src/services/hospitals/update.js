@@ -13,9 +13,7 @@ export const update = async ({ id }, hospital) => {
 
   hospital = await validate(hospital)
 
-  const number = await knex("hospitals")
-    .update(untransform(hospital))
-    .where("id", id)
+  const number = await knex("hospitals").update(untransform(hospital)).where("id", id)
 
   return number
 }

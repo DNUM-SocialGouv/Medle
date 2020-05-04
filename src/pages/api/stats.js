@@ -12,9 +12,7 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_GET: {
-        const [globalCount] = await knex("acts")
-          .whereNull("deleted_at")
-          .count()
+        const [globalCount] = await knex("acts").whereNull("deleted_at").count()
 
         const stats = await knex("acts")
           .joinRaw("inner join hospitals h on acts.hospital_id = h.id")
@@ -42,7 +40,7 @@ const handler = async (req, res) => {
           return acc
         }, {})
 
-        stats7days.forEach(elt => {
+        stats7days.forEach((elt) => {
           result.acts[elt.id].last7days = parseInt(elt.count, 10)
         })
 

@@ -3,7 +3,7 @@ import { STATUS_400_BAD_REQUEST, STATUS_404_NOT_FOUND } from "../../utils/http"
 import { APIError } from "../../utils/errors"
 import { ADMIN_HOSPITAL } from "../../utils/roles"
 
-const makeWhereClause = currentUser => builder => {
+const makeWhereClause = (currentUser) => (builder) => {
   // ADMIN_HOSPITAL can only delete user of his own hospital
   if (currentUser.role === ADMIN_HOSPITAL) {
     builder.where("hospital_id", currentUser.hospitalId)
@@ -18,10 +18,7 @@ export const del = async ({ id, currentUser }) => {
     })
   }
 
-  const [user] = await knex("users")
-    .where("id", id)
-    .where(makeWhereClause(currentUser))
-    .whereNull("deleted_at")
+  const [user] = await knex("users").where("id", id).where(makeWhereClause(currentUser)).whereNull("deleted_at")
 
   if (!user) {
     throw new APIError({
@@ -30,10 +27,7 @@ export const del = async ({ id, currentUser }) => {
     })
   }
 
-  const number = await knex("users")
-    .where("id", id)
-    .whereNull("deleted_at")
-    .update({ deleted_at: knex.fn.now() })
+  const number = await knex("users").where("id", id).whereNull("deleted_at").update({ deleted_at: knex.fn.now() })
 
   return number
 }

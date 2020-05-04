@@ -8,7 +8,7 @@ import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 
 const CustodyEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
-  const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
+  const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
   return (
     <>
@@ -75,7 +75,7 @@ const CustodyEdit = ({ dispatch, state, errors }) => {
   )
 }
 
-const CustodyRead = act => {
+const CustodyRead = (act) => {
   return (
     <>
       <Row>
@@ -113,7 +113,7 @@ const CustodyRead = act => {
   )
 }
 
-const hasErrors = state => {
+const hasErrors = (state) => {
   const errors = {}
   if (!state.examinationTypes || !state.examinationTypes.length) {
     errors.examinationTypes = "Obligatoire"

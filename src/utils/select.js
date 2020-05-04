@@ -5,5 +5,5 @@ export const mapForSelect = (data, fnValue, fnLabel) => {
 
 export const mapArrayForSelect = (data, fnValue, fnLabel) => {
   if (!data || !data.length) return null
-  return data.map(curr => ({ value: fnValue(curr), label: fnLabel(curr) }))
+  return data.map((curr) => ({ value: fnValue(curr), label: fnLabel(curr) }))
 }

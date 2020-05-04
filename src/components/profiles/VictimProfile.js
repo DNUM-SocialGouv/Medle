@@ -8,14 +8,14 @@ import ColumnAct from "../../components/ColumnAct"
 
 const getAttacks = () => {
   if (typeof sessionStorage !== "undefined") {
-    return sessionStorage.getItem("attacks") ? JSON.parse(sessionStorage.getItem("attacks")).map(elt => elt.name) : []
+    return sessionStorage.getItem("attacks") ? JSON.parse(sessionStorage.getItem("attacks")).map((elt) => elt.name) : []
   }
   return []
 }
 
 const VictimEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
-  const periods = periodOfDayValues[situationDate].period.map(elt => ({ title: elt.title, subTitle: elt.subTitle }))
+  const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
   return (
     <>
@@ -125,7 +125,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
   )
 }
 
-const VictimRead = act => {
+const VictimRead = (act) => {
   return (
     <>
       <Row>
@@ -164,7 +164,7 @@ const VictimRead = act => {
   )
 }
 
-const hasErrors = state => {
+const hasErrors = (state) => {
   const errors = {}
   if (!state.examinationTypes || !state.examinationTypes.length) {
     errors.examinationTypes = "Obligatoire"

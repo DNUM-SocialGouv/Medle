@@ -3,10 +3,7 @@ import { now } from "../../utils/date"
 import { searchForExport } from "./search"
 
 export const exportActs = async ({ fuzzy, internalNumber, pvNumber, requestedPage }, currentUser) => {
-  const { totalCount, elements } = await searchForExport(
-    { fuzzy, internalNumber, pvNumber, requestedPage },
-    currentUser,
-  )
+  const { elements } = await searchForExport({ fuzzy, internalNumber, pvNumber, requestedPage }, currentUser)
 
   const workbook = new Excel.Workbook()
 
@@ -36,7 +33,7 @@ export const exportActs = async ({ fuzzy, internalNumber, pvNumber, requestedPag
     { header: "Distance", key: "distance", width: 20 },
   ]
 
-  if (elements?.length) elements.forEach(element => worksheet.addRow(element))
+  if (elements?.length) elements.forEach((element) => worksheet.addRow(element))
 
   return workbook
 }

@@ -71,15 +71,13 @@ export const ROLES_DESCRIPTION = {
 
 const START_PAGES = {
   ADMIN_HOSPITAL: "/acts",
+  OPERATOR_ACT: "/acts",
   OPERATOR_EMPLOYMENT: "/fillEmployments",
-  PUBLIC_SUPERVISOR: "/statistics",
-  REGIONAL_SUPERVISOR: "/statistics",
-  SUPER_ADMIN: "/statistics",
 }
 
-export const startPageForRole = role => START_PAGES[role] || "/statistics"
+export const startPageForRole = (role) => START_PAGES[role] || "/statistics"
 
-export const availableRolesForUser = user => {
+export const availableRolesForUser = (user) => {
   switch (user && user.role) {
     case "SUPER_ADMIN":
       return [
@@ -98,7 +96,7 @@ export const availableRolesForUser = user => {
       throw Error("This case is not expected to happen.")
   }
 }
-export const rulesOfRoles = role => {
+export const rulesOfRoles = (role) => {
   const genericProfile = {
     hospitalDisabled: false,
     hospitalRequired: true,

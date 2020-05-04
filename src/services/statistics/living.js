@@ -29,7 +29,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
     .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
     .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
     .whereRaw(
-      `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`,
+      `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`
     )
 
   const fetchAverageCount = knex
@@ -49,8 +49,8 @@ export const buildLivingStatistics = async (filters, currentUser) => {
           "when asker_id is null then 'Recueil de preuve sans plainte' " +
           "else 'Sans réquisition' " +
           "end as type," +
-          "count(*)::integer",
-      ),
+          "count(*)::integer"
+      )
     )
     .where((builder) => {
       if (scopeFilter.length) {
@@ -70,7 +70,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
     })
     .whereRaw(
       `(extra_data->'examinationTypes' @> '["Psychiatrique"]' or ` +
-        `extra_data->'examinationTypes' @> '["Somatique"]')`,
+        `extra_data->'examinationTypes' @> '["Somatique"]')`
     )
     .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
     .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
@@ -81,8 +81,8 @@ export const buildLivingStatistics = async (filters, currentUser) => {
       knex.raw(
         `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
           `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
-          `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`,
-      ),
+          `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`
+      )
     )
     .where((builder) => {
       if (scopeFilter.length) {
@@ -100,8 +100,8 @@ export const buildLivingStatistics = async (filters, currentUser) => {
           `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as "Toxicologie",` +
           `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
           `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as "Génétique",` +
-          `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`,
-      ),
+          `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`
+      )
     )
     .where((builder) => {
       if (scopeFilter.length) {
@@ -137,7 +137,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
           "Avec réquisition": 0,
           "Sans réquisition": 0,
           "Recueil de preuve sans plainte": 0,
-        },
+        }
       ),
       actTypes: actTypes.reduce(
         (acc, current) => {
@@ -148,7 +148,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         {
           Somatique: 0,
           Psychiatrique: 0,
-        },
+        }
       ),
       hours,
       examinations,
@@ -161,7 +161,7 @@ export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter }
 
   const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } = await buildLivingStatistics(
     { startDate, endDate, scopeFilter },
-    currentUser,
+    currentUser
   )
 
   const workbook = new Excel.Workbook()

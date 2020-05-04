@@ -6,7 +6,7 @@ import { APIError } from "../../utils/errors"
 const LIMIT = 50
 const LIMIT_EXPORT = 10000
 
-export const makeWhereClause = ({ scope, internalNumber, pvNumber, fuzzy }) => builder => {
+export const makeWhereClause = ({ scope, internalNumber, pvNumber, fuzzy }) => (builder) => {
   builder.whereNull("acts.deleted_at")
   if (scope && scope.length) {
     builder.where(knex.raw("acts.hospital_id in (" + scope.map(() => "?").join(",") + ")", [...scope]))
@@ -21,7 +21,7 @@ export const makeWhereClause = ({ scope, internalNumber, pvNumber, fuzzy }) => b
   }
 
   if (fuzzy) {
-    builder.where(function() {
+    builder.where(() => {
       this.where("internal_number", "ilike", `%${fuzzy}%`)
         .orWhere("pv_number", "ilike", `%${fuzzy}%`)
         .orWhere("profile", "ilike", `%${fuzzy}%`)
@@ -35,9 +35,7 @@ export const search = async ({ fuzzy, internalNumber, pvNumber, requestedPage },
 
   requestedPage = requestedPage && !isNaN(requestedPage) && parseInt(requestedPage)
 
-  const [actsCount] = await knex("acts")
-    .where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy }))
-    .count()
+  const [actsCount] = await knex("acts").where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy })).count()
 
   const totalCount = parseInt(actsCount.count)
   const maxPage = Math.ceil(totalCount / LIMIT)
@@ -52,7 +50,7 @@ export const search = async ({ fuzzy, internalNumber, pvNumber, requestedPage },
   const acts = await knex("acts")
     .where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy }))
     .orderByRaw(
-      "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc",
+      "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc"
     )
     .limit(LIMIT)
     .offset(offset)
@@ -65,9 +63,7 @@ export const searchForExport = async ({ fuzzy, internalNumber, pvNumber }, curre
   let scope = currentUser.scope || []
   if (currentUser.hospital && currentUser.hospital.id) scope = [...scope, currentUser.hospital.id]
 
-  const [actsCount] = await knex("acts")
-    .where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy }))
-    .count()
+  const [actsCount] = await knex("acts").where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy })).count()
 
   // Limit the export capability to preserv the API
   if (actsCount && actsCount > LIMIT_EXPORT)
@@ -83,7 +79,7 @@ export const searchForExport = async ({ fuzzy, internalNumber, pvNumber }, curre
     .join("users", "acts.added_by", "users.id")
     .where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy }))
     .orderByRaw(
-      "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc",
+      "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc"
     )
     .select([
       "acts.*",

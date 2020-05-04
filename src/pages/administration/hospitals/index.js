@@ -18,11 +18,11 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const onChange = e => {
+  const onChange = (e) => {
     setSearch(e.target.value)
   }
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     try {
@@ -91,7 +91,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                 </tr>
               </thead>
               <tbody>
-                {hospitals.map(hospital => (
+                {hospitals.map((hospital) => (
                   <Link
                     key={hospital.id}
                     href="/administration/hospitals/[id]"
@@ -121,7 +121,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
   )
 }
 
-AdminHospitalPage.getInitialProps = async ctx => {
+AdminHospitalPage.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
 
   try {

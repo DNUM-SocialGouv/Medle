@@ -12,7 +12,7 @@ export const DropdownToggle = styled(RSDropdownToggle)`
   background: white;
   color: #6c757d;
 
-  ${props =>
+  ${(props) =>
     props.invert &&
     css`
       background: #6c757d;
@@ -49,14 +49,14 @@ export const Button = styled(RSButton)`
     background: #7f8991;
   }
 
-  ${props =>
+  ${(props) =>
     props.invert &&
     css`
       background: #6c757d;
       color: white;
     `}
 
-  ${props =>
+  ${(props) =>
     props.primary &&
     css`
       border-color: #007bff;
