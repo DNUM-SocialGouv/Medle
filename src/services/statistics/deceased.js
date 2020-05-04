@@ -4,6 +4,7 @@ import knex from "../../knex/knex"
 import { ISO_DATE, now } from "../../utils/date"
 import { normalizeInputs, averageOf } from "./common"
 import { buildScope } from "../scope"
+import { findList as findListHospitals } from "../hospitals"
 
 /**
  * Request and format the deceased statistics.
@@ -62,6 +63,8 @@ export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter
     currentUser
   )
 
+  const hospitals = await findListHospitals(scopeFilter)
+
   const workbook = new Excel.Workbook()
 
   workbook.created = now()
@@ -79,13 +82,16 @@ export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter
 
   const inputsWorksheet = workbook.addWorksheet("Paramètres de l'export")
   inputsWorksheet.columns = [
-    { header: "Filtre", key: "name", width: 40 },
-    { header: "Valeur", key: "value", width: 20 },
+    { header: "Paramètre", key: "name", width: 40 },
+    { header: "Valeur", key: "value", width: 80 },
   ]
 
   inputsWorksheet.addRow({ name: "Date de début", value: inputs?.startDate })
   inputsWorksheet.addRow({ name: "Date de fin", value: inputs?.endDate })
-  inputsWorksheet.addRow({ name: "Périmètre", value: inputs?.scopeFilter || "National" })
+  inputsWorksheet.addRow({
+    name: "Périmètre",
+    value: inputs?.scopeFilter ? hospitals.map((elt) => elt?.name) : "National",
+  })
 
   return workbook
 }

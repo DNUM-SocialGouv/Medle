@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 import { APIError } from "../../utils/errors"
-import { transform } from "../../models/hospitals"
+import { transform, transformAll } from "../../models/hospitals"
 
 export const find = async ({ id }) => {
   if (!id || isNaN(id)) {
@@ -14,4 +14,14 @@ export const find = async ({ id }) => {
   const [hospital] = await knex("hospitals").where("id", id)
 
   return transform(hospital)
+}
+
+export const findList = async (arr) => {
+  if (!arr?.length) {
+    return []
+  }
+
+  const hospitals = await knex("hospitals").whereIn("id", arr)
+
+  return transformAll(hospitals)
 }

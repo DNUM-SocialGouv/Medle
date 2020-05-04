@@ -4,6 +4,7 @@ import knex from "../../knex/knex"
 import { ISO_DATE, now } from "../../utils/date"
 import { normalizeInputs, averageOf } from "./common"
 import { buildScope } from "../../services/scope"
+import { findList as findListHospitals } from "../hospitals"
 
 /**
  * Request and format the global statistics.
@@ -116,7 +117,10 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 }
 
 export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
+  // export is called by GET method and GET method doesn't have Content-type = "application/json" by design,
+  // so in this case we have to explicitly parse the params
   scopeFilter = scopeFilter && JSON.parse(scopeFilter)
+
   const {
     inputs,
     globalCount,
@@ -125,6 +129,8 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
     actsWithSamePV,
     averageWithSamePV,
   } = await buildGlobalStatistics({ startDate, endDate, scopeFilter }, currentUser)
+
+  const hospitals = await findListHospitals(scopeFilter)
 
   const workbook = new Excel.Workbook()
 
@@ -138,10 +144,10 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
     { header: "Valeur", key: "value", width: 20 },
   ]
 
-  actsWorksheet.addRow({ name: "Actes au total", value: globalCount })
-  actsWorksheet.addRow({ name: "Actes par jour en moyenne", value: averageCount })
-  actsWorksheet.addRow({ name: "Actes avec le même n° de réquisition", value: actsWithSamePV })
-  actsWorksheet.addRow({ name: "Moyenne des actes avec le même n° de réquisition", value: averageWithSamePV })
+  actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
+  actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
+  actsWorksheet.addRow({ name: "Nb actes portant le même n° de réquisition", value: actsWithSamePV })
+  actsWorksheet.addRow({ name: "Moyenne des actes portant le même n° de réquisition", value: averageWithSamePV })
 
   actsWorksheet.addRow({})
   actsWorksheet.addRow({ name: "Nb actes vivants", value: profilesDistribution?.["Vivant"] })
@@ -154,13 +160,16 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
 
   const inputsWorksheet = workbook.addWorksheet("Paramètres de l'export")
   inputsWorksheet.columns = [
-    { header: "Filtre", key: "name", width: 40 },
-    { header: "Valeur", key: "value", width: 20 },
+    { header: "Paramètre", key: "name", width: 40 },
+    { header: "Valeur", key: "value", width: 80 },
   ]
 
   inputsWorksheet.addRow({ name: "Date de début", value: inputs?.startDate })
   inputsWorksheet.addRow({ name: "Date de fin", value: inputs?.endDate })
-  inputsWorksheet.addRow({ name: "Périmètre", value: inputs?.scopeFilter || "National" })
+  inputsWorksheet.addRow({
+    name: "Périmètre",
+    value: inputs?.scopeFilter ? hospitals.map((elt) => elt?.name) : "National",
+  })
 
   return workbook
 }
