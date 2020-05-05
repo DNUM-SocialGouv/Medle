@@ -31,7 +31,7 @@ const nextConfig = {
       administration: true,
       directory: false,
       resources: false,
-      export: true,
+      export: false,
     },
   },
   serverRuntimeConfig: {
@@ -47,7 +47,7 @@ const nextConfig = {
       new webpack.DefinePlugin({
         // looks like it doesnt work for some reason
         "process.env.SENTRY_RELEASE": JSON.stringify(buildId),
-      }),
+      })
     )
 
     if (!isServer) {
@@ -68,5 +68,5 @@ module.exports = withPlugins(
       },
     ],
   ],
-  nextConfig,
+  nextConfig
 )

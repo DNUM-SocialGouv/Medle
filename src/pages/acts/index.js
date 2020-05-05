@@ -99,66 +99,68 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                 </SearchButton>
               </Col>
             </Row>
-            <Row className="mt-3">
-              <Col>
-                <Button color="secondary" outline={!isOpenedFilters} onClick={toggleFilters}>
-                  Filtrer <ArrowDropDownIcon />
-                </Button>
-              </Col>
-            </Row>
-            {isOpenedFilters && (
-              <div className="p-3 mt-3 border rounded shadow-xl border-light bg-light">
-                <Row>
-                  <Col sm="3">
-                    <Label htmlFor="startDate" className="text-dark">
-                      Date de début
-                    </Label>
-                    <Input
-                      type="date"
-                      name="startDate"
-                      id="startDate"
-                      placeholder="Date de début"
-                      innerRef={register}
-                    />
-                  </Col>
-                  <Col sm="3">
-                    <Label htmlFor="startDate" className="text-dark">
-                      Date de fin
-                    </Label>
-                    <Input type="date" name="endDate" id="endDate" placeholder="Date de fin" innerRef={register} />
-                  </Col>
-                </Row>
+            {isOpenFeature("export") && isOpenedFilters && (
+              <>
                 <Row className="mt-3">
                   <Col>
-                    <Label className="text-dark">Établissements</Label>
-                    <Select
-                      options={existingHospitals}
-                      value={hospitals}
-                      isMulti
-                      onChange={onHospitalsChange}
-                      noOptionsMessage={() => "Aucun résultat"}
-                      placeholder="Choisissez un établissement"
-                      isClearable={true}
-                      isSearchable={true}
-                    />
+                    <Button color="secondary" outline={!isOpenedFilters} onClick={toggleFilters}>
+                      Filtrer <ArrowDropDownIcon />
+                    </Button>
                   </Col>
                 </Row>
-                <Row className="mt-3">
-                  <Col>
-                    <Label className="text-dark">Profils et actes hors examens</Label>
-                    <Select
-                      options={existingProfiles}
-                      value={profiles}
-                      isMulti
-                      onChange={onProfilesChange}
-                      noOptionsMessage={() => "Aucun résultat"}
-                      placeholder="Choisissez un profil/acte"
-                      isClearable={true}
-                      isSearchable={true}
-                    />
-                  </Col>
-                </Row>
-              </div>
+                <div className="p-3 mt-3 border rounded shadow-xl border-light bg-light">
+                  <Row>
+                    <Col sm="3">
+                      <Label htmlFor="startDate" className="text-dark">
+                        Date de début
+                      </Label>
+                      <Input
+                        type="date"
+                        name="startDate"
+                        id="startDate"
+                        placeholder="Date de début"
+                        innerRef={register}
+                      />
+                    </Col>
+                    <Col sm="3">
+                      <Label htmlFor="startDate" className="text-dark">
+                        Date de fin
+                      </Label>
+                      <Input type="date" name="endDate" id="endDate" placeholder="Date de fin" innerRef={register} />
+                    </Col>
+                  </Row>
+                  <Row className="mt-3">
+                    <Col>
+                      <Label className="text-dark">Établissements</Label>
+                      <Select
+                        options={existingHospitals}
+                        value={hospitals}
+                        isMulti
+                        onChange={onHospitalsChange}
+                        noOptionsMessage={() => "Aucun résultat"}
+                        placeholder="Choisissez un établissement"
+                        isClearable={true}
+                        isSearchable={true}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mt-3">
+                    <Col>
+                      <Label className="text-dark">Profils et actes hors examens</Label>
+                      <Select
+                        options={existingProfiles}
+                        value={profiles}
+                        isMulti
+                        onChange={onProfilesChange}
+                        noOptionsMessage={() => "Aucun résultat"}
+                        placeholder="Choisissez un profil/acte"
+                        isClearable={true}
+                        isSearchable={true}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              </>
             )}
           </FormGroup>
         </Form>
