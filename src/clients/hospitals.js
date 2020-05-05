@@ -18,6 +18,11 @@ export const findHospital = async ({ id, headers }) => {
   return handleAPIResponse(response)
 }
 
+export const findAllHospitals = async () => {
+  const response = await fetch(`${API_URL}${HOSPITALS_ENDPOINT}`)
+  return handleAPIResponse(response)
+}
+
 export const createHospital = async ({ hospital, headers }) => {
   const response = await fetch(`${API_URL}${HOSPITALS_ENDPOINT}`, {
     method: METHOD_POST,

@@ -21,7 +21,7 @@ export const makeWhereClause = ({ scope, internalNumber, pvNumber, fuzzy }) => (
   }
 
   if (fuzzy) {
-    builder.where(() => {
+    builder.where(function () {
       this.where("internal_number", "ilike", `%${fuzzy}%`)
         .orWhere("pv_number", "ilike", `%${fuzzy}%`)
         .orWhere("profile", "ilike", `%${fuzzy}%`)

@@ -5,13 +5,7 @@ import { Title2 } from "../StyledComponents"
 import { Col, Row } from "reactstrap"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
-
-const getAttacks = () => {
-  if (typeof sessionStorage !== "undefined") {
-    return sessionStorage.getItem("attacks") ? JSON.parse(sessionStorage.getItem("attacks")).map((elt) => elt.name) : []
-  }
-  return []
-}
+import { getReferenceData } from "../../utils/init"
 
 const VictimEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
@@ -28,7 +22,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
         state={state.examinationTypes || []}
         invalid={!!errors.examinationTypes}
       />
-      <Title2 className="mb-4 mt-5">{"Type(s) de violence"}</Title2>
+      <Title2 className="mt-5 mb-4">{"Type(s) de violence"}</Title2>
 
       <ActBlock
         type="violenceNatures"
@@ -39,7 +33,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
           "Sexuelle",
           "Maltraitance",
           { title: "Accident", subValues: ["Collectif", "Non collectif"] },
-          { title: "Attentat", subValues: getAttacks() },
+          { title: "Attentat", subValues: getReferenceData("attacks").map((elt) => elt.name) },
         ]}
         mode="toggleMultiple"
         dispatch={dispatch}
@@ -99,7 +93,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
         invalid={!!errors.periodOfDay}
       />
 
-      <Title2 className="mb-2 mt-5">{"Profil de la personne examinée"}</Title2>
+      <Title2 className="mt-5 mb-2">{"Profil de la personne examinée"}</Title2>
 
       <ActBlock
         type="personGender"

@@ -1,8 +1,11 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
-import { Alert, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
+import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Spinner, Table } from "reactstrap"
 import ListAltIcon from "@material-ui/icons/ListAlt"
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
+import { useForm } from "react-hook-form"
+import Select from "react-select"
 
 import { SearchButton } from "../../components/form/SearchButton"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
@@ -16,46 +19,147 @@ import { logError } from "../../utils/logger"
 import { usePaginatedData } from "../../utils/hooks"
 import { searchActsFuzzy, fetchExport } from "../../clients/acts"
 import { isOpenFeature } from "../../config"
+import { mapArrayForSelect } from "../../utils/select"
+import { getReferenceData } from "../../utils/init"
+import { profiles as profilesConstants } from "../../utils/actsConstants"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
-  const [search, setSearch] = useState("")
+  const { handleSubmit, register, errors: formErrors, setValue, getValues } = useForm({})
+
+  const [hospitals, setHospitals] = useState()
+  const [profiles, setProfiles] = useState([])
+
+  const existingHospitals = mapArrayForSelect(
+    getReferenceData("hospitals"),
+    (elt) => elt.id,
+    (elt) => elt.name
+  )
+
+  const existingProfiles = mapArrayForSelect(
+    Object.keys(profilesConstants) || [],
+    (elt) => elt,
+    (elt) => elt
+  )
+
+  const [isOpenedFilters, setOpenedFilters] = useState(false)
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActsFuzzy, initialPaginatedData)
 
-  const onChange = (e) => {
-    setSearch(e.target.value)
-  }
+  const onSubmit = (formData) => {
+    console.log("data", formData)
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    fetchPage(search)(0)
+    fetchPage(getValues("search"))(0)
   }
 
   const onExport = () => {
-    fetchExport(search)
+    fetchExport(getValues("search"))
+  }
+
+  const toggleFilters = () => {
+    setOpenedFilters((state) => !state)
+  }
+
+  const onHospitalsChange = (selectedOption) => {
+    // Needs transformation between format of react-select to expected format for API call
+    setValue(
+      "hospitals",
+      !selectedOption?.length ? null : selectedOption.map((curr) => ({ id: curr.value, name: curr.label }))
+    )
+    // Needs to sync specifically the value to the react-select as well
+    setHospitals(selectedOption)
+  }
+
+  const onProfilesChange = (selectedOption) => {
+    // Needs transformation between format of react-select to expected format for API call
+    setValue("profiles", !selectedOption?.length ? null : selectedOption)
+
+    // Needs to sync specifically the value to the react-select as well
+    setProfiles(selectedOption)
   }
 
   return (
     <Layout page="acts" currentUser={currentUser}>
       <Title1 className="mt-5 mb-4">{"Tous les actes"}</Title1>
       <Container style={{ maxWidth: 980 }}>
-        <Form onSubmit={onSubmit}>
-          <FormGroup row inline className="mb-4 justify-content-center">
-            <Col className="flex-grow-1">
-              <Input
-                type="text"
-                name="es"
-                id="es"
-                placeholder="Rechercher un dossier par numéro, type de profil examiné, ..."
-                value={search}
-                onChange={onChange}
-                autoComplete="off"
-              />
-            </Col>
-            <Col className="flex-grow-0">
-              <SearchButton className="btn-primary" disabled={loading} onClick={onSubmit}>
-                {loading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
-              </SearchButton>
-            </Col>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <FormGroup inline className="mb-4 justify-content-center">
+            <Row>
+              <Col className="flex-grow-1">
+                <Input
+                  type="text"
+                  name="search"
+                  id="search"
+                  placeholder="Rechercher un dossier par numéro, type de profil examiné, ..."
+                  autoComplete="off"
+                  innerRef={register}
+                />
+              </Col>
+              <Col className="flex-grow-0">
+                <SearchButton className="btn-primary" disabled={loading} onClick={onSubmit}>
+                  {loading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
+                </SearchButton>
+              </Col>
+            </Row>
+            <Row className="mt-3">
+              <Col>
+                <Button color="secondary" outline={!isOpenedFilters} onClick={toggleFilters}>
+                  Filtrer <ArrowDropDownIcon />
+                </Button>
+              </Col>
+            </Row>
+            {isOpenedFilters && (
+              <div className="p-3 mt-3 border rounded shadow-xl border-light bg-light">
+                <Row>
+                  <Col sm="3">
+                    <Label htmlFor="startDate" className="text-dark">
+                      Date de début
+                    </Label>
+                    <Input
+                      type="date"
+                      name="startDate"
+                      id="startDate"
+                      placeholder="Date de début"
+                      innerRef={register}
+                    />
+                  </Col>
+                  <Col sm="3">
+                    <Label htmlFor="startDate" className="text-dark">
+                      Date de fin
+                    </Label>
+                    <Input type="date" name="endDate" id="endDate" placeholder="Date de fin" innerRef={register} />
+                  </Col>
+                </Row>
+                <Row className="mt-3">
+                  <Col>
+                    <Label className="text-dark">Établissements</Label>
+                    <Select
+                      options={existingHospitals}
+                      value={hospitals}
+                      isMulti
+                      onChange={onHospitalsChange}
+                      noOptionsMessage={() => "Aucun résultat"}
+                      placeholder="Choisissez un établissement"
+                      isClearable={true}
+                      isSearchable={true}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mt-3">
+                  <Col>
+                    <Label className="text-dark">Profils et actes hors examens</Label>
+                    <Select
+                      options={existingProfiles}
+                      value={profiles}
+                      isMulti
+                      onChange={onProfilesChange}
+                      noOptionsMessage={() => "Aucun résultat"}
+                      placeholder="Choisissez un profil/acte"
+                      isClearable={true}
+                      isSearchable={true}
+                    />
+                  </Col>
+                </Row>
+              </div>
+            )}
           </FormGroup>
         </Form>
         {error && (
@@ -102,7 +206,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                 ))}
               </tbody>
             </Table>
-            <Pagination data={paginatedData} fn={fetchPage(search)} />
+            <Pagination data={paginatedData} fn={fetchPage(getValues("search"))} />
             {isOpenFeature("export") && (
               <div className="mt-5 d-flex justify-content-center">
                 <SearchButton className="btn-outline-primary" disabled={loading} onClick={onExport}>
