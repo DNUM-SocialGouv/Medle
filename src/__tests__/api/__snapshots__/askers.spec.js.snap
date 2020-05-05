@@ -6,16 +6,16 @@ Object {
   "currentPage": 1,
   "elements": Array [
     Object {
-      "depCode": "",
-      "id": 3028,
-      "name": "Brigade de gendarmerie - Saint-Aignan",
-      "type": "gendarmerie",
+      "depCode": null,
+      "id": 174,
+      "name": "Commissariat de police de Montargis",
+      "type": "commissariat_police",
     },
     Object {
       "depCode": null,
-      "id": 2846,
-      "name": "Brigade de gendarmerie - Saint-Aignan-sur-Roë",
-      "type": "gendarmerie",
+      "id": 1,
+      "name": "Tribunal de grande instance de Montargis",
+      "type": "tgi",
     },
   ],
   "maxPage": 1,

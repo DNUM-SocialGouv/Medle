@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/acts should return all acts with Personne décédée 1`] = `
+Object {
+  "byPage": 50,
+  "currentPage": 1,
+  "elements": Array [
+    Object {
+      "asker": Object {
+        "id": 200,
+      },
+      "examinationDate": "2020-05-04",
+      "examinationTypes": Array [
+        "Examen externe",
+      ],
+      "examinations": Array [
+        "Imagerie",
+      ],
+      "hospital": Object {
+        "id": 1,
+      },
+      "id": 8352,
+      "internalNumber": "20/278",
+      "periodOfDay": "Journée",
+      "personAgeTag": "+ de 18 ans",
+      "personGender": "Féminin",
+      "profile": "Personne décédée",
+      "pvNumber": "2020/20063",
+      "user": Object {
+        "id": 2,
+      },
+    },
+    Object {
+      "asker": Object {
+        "id": 200,
+      },
+      "examinationDate": "2020-05-04",
+      "examinationTypes": Array [
+        "Examen externe",
+      ],
+      "examinations": Array [
+        "Imagerie",
+      ],
+      "hospital": Object {
+        "id": 1,
+      },
+      "id": 8351,
+      "internalNumber": "20/277",
+      "periodOfDay": "Journée",
+      "personAgeTag": "+ de 18 ans",
+      "personGender": "Masculin",
+      "profile": "Personne décédée",
+      "pvNumber": "2020/20019",
+      "user": Object {
+        "id": 2,
+      },
+    },
+    Object {
+      "asker": Object {
+        "id": 3860,
+      },
+      "examinationDate": "2020-05-04",
+      "examinationTypes": Array [
+        "Autopsie",
+      ],
+      "examinations": Array [
+        "Imagerie",
+        "Toxicologie",
+      ],
+      "hospital": Object {
+        "id": 1,
+      },
+      "id": 8350,
+      "internalNumber": "20/276",
+      "periodOfDay": "Journée",
+      "personAgeTag": "+ de 18 ans",
+      "personGender": "Masculin",
+      "profile": "Personne décédée",
+      "pvNumber": "70677/1539/2020",
+      "user": Object {
+        "id": 2,
+      },
+    },
+    Object {
+      "asker": Object {
+        "id": 200,
+      },
+      "examinationDate": "2020-05-04",
+      "examinationTypes": Array [
+        "Autopsie",
+      ],
+      "examinations": Array [
+        "Imagerie",
+        "Toxicologie",
+        "Anapath",
+      ],
+      "hospital": Object {
+        "id": 1,
+      },
+      "id": 8349,
+      "internalNumber": "20/275",
+      "periodOfDay": "Journée",
+      "personAgeTag": "+ de 18 ans",
+      "personGender": "Masculin",
+      "profile": "Personne décédée",
+      "pvNumber": "2020/19887",
+      "user": Object {
+        "id": 2,
+      },
+    },
+  ],
+  "maxPage": 1,
+  "totalCount": 4,
+}
+`;
+
+exports[`/acts should return all acts with a particular internal number 1`] = `
+Object {
+  "byPage": 50,
+  "currentPage": 1,
+  "elements": Array [],
+  "maxPage": 0,
+  "totalCount": 0,
+}
+`;

@@ -7,7 +7,7 @@ describe("/askers", () => {
   it("should return all criminal courts in France", async () => {
     const { headers } = await headersActUserTours()
 
-    const askers = await searchAskersFuzzy({ search: "Saint-Aignan", headers })
+    const askers = await searchAskersFuzzy({ search: "Montargis", headers })
 
     expect(askers).toMatchSnapshot()
   })

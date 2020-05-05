@@ -12,6 +12,7 @@ exports.seed = function (knex) {
           town: "Tours",
           postal_code: "37044",
           dep_code: "37",
+          extra_data: { canDoPostMortem: true },
         },
         {
           id: 2,
