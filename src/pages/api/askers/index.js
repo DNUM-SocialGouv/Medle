@@ -1,7 +1,7 @@
 import Cors from "micro-cors"
 
 import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS, METHOD_POST } from "../../../utils/http"
-import { ADMIN, ACT_MANAGEMENT } from "../../../utils/roles"
+import { ADMIN, ACT_CONSULTATION } from "../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { create, search } from "../../../services/askers"
@@ -12,7 +12,7 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_GET: {
-        const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
+        const currentUser = checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
         const { askers, totalCount, currentPage, maxPage, byPage } = await search({ ...req.query, currentUser })
 

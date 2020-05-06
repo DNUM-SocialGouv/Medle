@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Spinner, Table } from "reactstrap"
@@ -6,6 +6,7 @@ import ListAltIcon from "@material-ui/icons/ListAlt"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import { useForm } from "react-hook-form"
 import Select from "react-select"
+import AsyncSelect from "react-select/async"
 
 import { SearchButton } from "../../components/form/SearchButton"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
@@ -22,12 +23,15 @@ import { isOpenFeature } from "../../config"
 import { mapArrayForSelect } from "../../utils/select"
 import { getReferenceData } from "../../utils/init"
 import { profiles as profilesConstants } from "../../utils/actsConstants"
+import { memoizedSearchAskers } from "../../clients/askers"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
-  const { handleSubmit, register, setValue, getValues } = useForm({})
-
-  const [hospitals, setHospitals] = useState()
+  const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActsFuzzy, initialPaginatedData)
+  const [isOpenedFilters, setOpenedFilters] = useState(false)
+  const { register, handleSubmit, setValue, getValues } = useForm({})
+  const [hospitals, setHospitals] = useState([])
   const [profiles, setProfiles] = useState([])
+  const [asker, setAsker] = useState({})
 
   const existingHospitals = mapArrayForSelect(
     getReferenceData("hospitals"),
@@ -41,18 +45,12 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     (elt) => elt
   )
 
-  const [isOpenedFilters, setOpenedFilters] = useState(false)
-  const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActsFuzzy, initialPaginatedData)
-
-  const onSubmit = (formData) => {
-    console.log("data", formData)
-
-    fetchPage(getValues("search"))(0)
-  }
-
-  const onExport = () => {
-    fetchExport(getValues("search"))
-  }
+  useEffect(() => {
+    // Extra field in form to store the value of selects
+    register({ name: "hospitals" })
+    register({ name: "profiles" })
+    register({ name: "asker" })
+  }, [register])
 
   const toggleFilters = () => {
     setOpenedFilters((state) => !state)
@@ -60,10 +58,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
   const onHospitalsChange = (selectedOption) => {
     // Needs transformation between format of react-select to expected format for API call
-    setValue(
-      "hospitals",
-      !selectedOption?.length ? null : selectedOption.map((curr) => ({ id: curr.value, name: curr.label }))
-    )
+    setValue("hospitals", !selectedOption?.length ? null : selectedOption)
     // Needs to sync specifically the value to the react-select as well
     setHospitals(selectedOption)
   }
@@ -74,6 +69,33 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
     // Needs to sync specifically the value to the react-select as well
     setProfiles(selectedOption)
+  }
+
+  const onAskerChange = (selectedOption) => {
+    // Needs transformation between format of react-select to expected format for API call
+    setValue("asker", selectedOption)
+
+    // Needs to sync specifically the value to the react-select as well
+    setAsker(selectedOption)
+  }
+
+  const loadAskers = async (search) => {
+    const askers = await memoizedSearchAskers({ search })
+
+    return mapArrayForSelect(
+      askers?.elements,
+      (elt) => elt.id,
+      (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : "")
+    )
+  }
+
+  const onSubmit = (formData) => {
+    console.log("form", formData)
+    fetchPage(formData.search)(0)
+  }
+
+  const onExport = () => {
+    fetchExport(getValues("search"))
   }
 
   return (
@@ -93,13 +115,8 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                   innerRef={register}
                 />
               </Col>
-              <Col className="flex-grow-0">
-                <SearchButton className="btn-primary" disabled={loading} onClick={onSubmit}>
-                  {loading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
-                </SearchButton>
-              </Col>
             </Row>
-            {isOpenFeature("export") && isOpenedFilters && (
+            {isOpenFeature("export") && (
               <>
                 <Row className="mt-3">
                   <Col>
@@ -107,59 +124,83 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                       Filtrer <ArrowDropDownIcon />
                     </Button>
                   </Col>
-                </Row>
-                <div className="p-3 mt-3 border rounded shadow-xl border-light bg-light">
-                  <Row>
-                    <Col sm="3">
-                      <Label htmlFor="startDate" className="text-dark">
-                        Date de début
-                      </Label>
-                      <Input
-                        type="date"
-                        name="startDate"
-                        id="startDate"
-                        placeholder="Date de début"
-                        innerRef={register}
-                      />
-                    </Col>
-                    <Col sm="3">
-                      <Label htmlFor="startDate" className="text-dark">
-                        Date de fin
-                      </Label>
-                      <Input type="date" name="endDate" id="endDate" placeholder="Date de fin" innerRef={register} />
-                    </Col>
-                  </Row>
-                  <Row className="mt-3">
-                    <Col>
-                      <Label className="text-dark">Établissements</Label>
-                      <Select
-                        options={existingHospitals}
-                        value={hospitals}
-                        isMulti
-                        onChange={onHospitalsChange}
-                        noOptionsMessage={() => "Aucun résultat"}
-                        placeholder="Choisissez un établissement"
-                        isClearable={true}
-                        isSearchable={true}
-                      />
-                    </Col>
-                  </Row>
-                  <Row className="mt-3">
-                    <Col>
-                      <Label className="text-dark">Profils et actes hors examens</Label>
-                      <Select
-                        options={existingProfiles}
-                        value={profiles}
-                        isMulti
-                        onChange={onProfilesChange}
-                        noOptionsMessage={() => "Aucun résultat"}
-                        placeholder="Choisissez un profil/acte"
-                        isClearable={true}
-                        isSearchable={true}
-                      />
-                    </Col>
-                  </Row>
-                </div>
+                </Row>{" "}
+                {isOpenFeature("export") && isOpenedFilters && (
+                  <div className="p-3 mt-3 border rounded shadow-xl border-light bg-light">
+                    <Row>
+                      <Col sm="3">
+                        <Label htmlFor="startDate" className="text-dark">
+                          Date de début
+                        </Label>
+                        <Input
+                          type="date"
+                          name="startDate"
+                          id="startDate"
+                          placeholder="Date de début"
+                          innerRef={register}
+                        />
+                      </Col>
+                      <Col sm="3">
+                        <Label htmlFor="startDate" className="text-dark">
+                          Date de fin
+                        </Label>
+                        <Input type="date" name="endDate" id="endDate" placeholder="Date de fin" innerRef={register} />
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col>
+                        <Label className="text-dark">Établissements</Label>
+                        <Select
+                          options={existingHospitals}
+                          value={hospitals}
+                          isMulti
+                          onChange={onHospitalsChange}
+                          noOptionsMessage={() => "Aucun résultat"}
+                          placeholder="Choisissez un établissement"
+                          isClearable={true}
+                          isSearchable={true}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col>
+                        <Label className="text-dark">Profils et actes hors examens</Label>
+                        <Select
+                          options={existingProfiles}
+                          value={profiles}
+                          isMulti
+                          onChange={onProfilesChange}
+                          noOptionsMessage={() => "Aucun résultat"}
+                          placeholder="Choisissez un profil/acte"
+                          isClearable={true}
+                          isSearchable={true}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col>
+                        <Label className="text-dark">Demandeurs</Label>
+                        <AsyncSelect
+                          loadOptions={(search) => loadAskers(search)}
+                          placeholder="Tapez le nom du demandeur"
+                          noOptionsMessage={() => "Aucun résultat"}
+                          loadingMessage={() => "Chargement..."}
+                          onChange={onAskerChange}
+                          isClearable={true}
+                          isSearchable={true}
+                          value={asker}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col className="flex-grow-0">
+                        <SearchButton className="btn-primary" disabled={loading} onClick={handleSubmit(onSubmit)}>
+                          {loading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
+                        </SearchButton>
+                      </Col>
+                    </Row>
+                  </div>
+                )}
               </>
             )}
           </FormGroup>
