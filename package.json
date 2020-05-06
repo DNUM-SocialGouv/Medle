@@ -8,7 +8,7 @@
     "debug": "NODE_OPTIONS='--inspect' node -r dotenv/config node_modules/next/dist/bin/next dev",
     "start": "node -r dotenv/config node_modules/next/dist/bin/next start",
     "test": "node -r dotenv/config node_modules/jest-cli/bin/jest",
-    "lint": "eslint .",
+    "lint": "eslint ./src",
     "migrate:make": "node -r dotenv/config ./node_modules/knex/bin/cli migrate:make name_migration",
     "migrate:latest": "node -r dotenv/config ./node_modules/knex/bin/cli migrate:latest",
     "migrate:rollback": "node -r dotenv/config ./node_modules/knex/bin/cli migrate:rollback",

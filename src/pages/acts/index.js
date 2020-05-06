@@ -24,7 +24,7 @@ import { getReferenceData } from "../../utils/init"
 import { profiles as profilesConstants } from "../../utils/actsConstants"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
-  const { handleSubmit, register, errors: formErrors, setValue, getValues } = useForm({})
+  const { handleSubmit, register, setValue, getValues } = useForm({})
 
   const [hospitals, setHospitals] = useState()
   const [profiles, setProfiles] = useState([])

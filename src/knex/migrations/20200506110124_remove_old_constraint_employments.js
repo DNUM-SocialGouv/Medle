@@ -4,6 +4,6 @@ exports.up = function (knex) {
   })
 }
 
-exports.down = function (knex) {
+exports.down = function () {
   // Nothing to do. The old unique constraint on ["hospital_id", "year"] is incorrect in any context.
 }
