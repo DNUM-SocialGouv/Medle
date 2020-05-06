@@ -4,6 +4,9 @@ exports.up = function (knex) {
   })
 }
 
-exports.down = function () {
-  // Nothing to do. The old unique constraint on ["hospital_id", "year"] is incorrect in any context.
+exports.down = function (knex) {
+  // Added only for reproductibility of migrate/rollback operations. In theory, you should never go back to the ["hospital_id", "year"] constraint.
+  return knex.schema.table("employments", function (table) {
+    table.unique(["hospital_id", "year"])
+  })
 }
