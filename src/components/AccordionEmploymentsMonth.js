@@ -35,9 +35,6 @@ export const hasErrors = (dataMonth) => {
   if (dataMonth.auditoriumAgents && isNaN(dataMonth.auditoriumAgents)) {
     errors.auditoriumAgents = "Nombre requis"
   }
-  if (dataMonth.psychologists && isNaN(dataMonth.psychologists)) {
-    errors.psychologists = "Nombre requis"
-  }
   if (dataMonth.others && isNaN(dataMonth.others)) {
     errors.others = "Nombre requis"
   }
@@ -111,14 +108,14 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
 
   return (
     <>
-      <Button outline color="secondary" block className="text-left pl-4 pt-2 pb-2" onClick={() => setOpen(!open)}>
+      <Button outline color="secondary" block className="pt-2 pb-2 pl-4 text-left" onClick={() => setOpen(!open)}>
         {monthName}
         {!open && <ArrowForwardIosIcon className="float-right" width={24} />}
         {open && <ExpandMoreIcon className="float-right" width={24} />}
       </Button>
       {open && (
         <div className="px-2">
-          <div className="text-right pr-2 pt-3 pb-2">
+          <div className="pt-3 pb-2 pr-2 text-right">
             {!isAllowed(currentUser.role, EMPLOYMENT_MANAGEMENT) ? null : readOnlyState ? (
               <Button outline onClick={toggleReadOnly} className="border-0">
                 <EditOutlinedIcon width={24} />
@@ -212,19 +209,6 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
             </Col>
             <Col className="mr-3">
-              <Label htmlFor="psychologists">Psychologue</Label>
-              <Input
-                name="psychologists"
-                invalid={errors && !!errors.psychologists}
-                placeholder="Nombre d'ETP"
-                value={dataMonth["psychologists"] || ""}
-                onChange={(event) => handleChange(event)}
-                disabled={readOnlyState}
-                autoComplete="off"
-              />
-              <FormFeedback>{errors && errors.psychologists}</FormFeedback>
-            </Col>
-            <Col className="mr-3">
               <Label htmlFor="others">Autres</Label>
               <Input
                 name="others"
@@ -237,6 +221,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               />
               <FormFeedback>{errors && errors.others}</FormFeedback>
             </Col>
+            <Col className="mr-3"></Col>
           </Row>
         </div>
       )}

@@ -94,10 +94,10 @@ const FillEmploymentsPage = ({
       <Container style={{ maxWidth: 720 }}>
         <Title2 className="mb-4 text-capitalize">{currentMonthName}</Title2>
 
-        <p className="font-italic text-center mb-0">
+        <p className="mb-0 text-center font-italic">
           {"Veuillez indiquer le nombre d'ETP pour les différents profils de votre UMJ/IML."}
         </p>
-        <p className="text-center mb-5">
+        <p className="mb-5 text-center">
           <small>
             Les prochains mois, ces données seront pré-remplies et modifiables. Leur exactitude reste sous votre
             responsabilité.
@@ -186,18 +186,6 @@ const FillEmploymentsPage = ({
               <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
             </Col>
             <Col className="mr-3">
-              <Label htmlFor="psychologists">Psychologue</Label>
-              <Input
-                name="psychologists"
-                invalid={errors && !!errors.psychologists}
-                placeholder="Nombre d'ETP"
-                value={(dataMonth && dataMonth["psychologists"]) || ""}
-                onChange={(event) => handleChange(event, currentMonth)}
-                autoComplete="off"
-              />
-              <FormFeedback>{errors && errors.psychologists}</FormFeedback>
-            </Col>
-            <Col className="mr-3">
               <Label htmlFor="others">Autres</Label>
               <Input
                 name="others"
@@ -209,9 +197,10 @@ const FillEmploymentsPage = ({
               />
               <FormFeedback>{errors && errors.others}</FormFeedback>
             </Col>
+            <Col className="mr-3"></Col>
           </Row>
           {isAllowed(currentUser.role, EMPLOYMENT_MANAGEMENT) && (
-            <div className="text-center mt-5">
+            <div className="mt-5 text-center">
               <ValidationButton color="primary" size="lg" className="center" onClick={() => update(currentMonth)}>
                 Valider
               </ValidationButton>
