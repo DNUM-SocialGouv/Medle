@@ -17,7 +17,7 @@ export const search = async ({ fuzzy, requestedPage }) => {
     })
     .count()
 
-  const totalCount = parseInt(askersCount.count)
+  const totalCount = parseInt(askersCount.count, 10)
   const maxPage = Math.ceil(totalCount / LIMIT)
 
   // set default to 1 if not correct or too little, set default to maxPage if too big

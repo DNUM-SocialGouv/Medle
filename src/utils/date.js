@@ -12,6 +12,8 @@ const testCurrentDate = (publicRuntimeConfig && publicRuntimeConfig.TEST_CURRENT
 
 export const now = () => (testCurrentDate && moment(testCurrentDate, FORMAT_DATE)) || moment()
 
+export const isValidIsoDate = (date) => date && moment(date, ISO_DATE, true).isValid()
+
 export const frToIso = (date) => {
   const parts = date.split("/")
 

@@ -230,7 +230,7 @@ const buildDates = () => {
   const currentMonth = moment.format("MM")
   const currentYear = moment.format("YYYY")
 
-  const allMonths = new Array(parseInt(currentMonth))
+  const allMonths = new Array(parseInt(currentMonth, 10))
     .fill(0)
     .map((_, index) => (index + 1).toString().padStart(2, "0"))
     .reverse()

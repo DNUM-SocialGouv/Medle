@@ -2,16 +2,64 @@ import knex from "../../knex/knex"
 import { transformAll, transformAllForExport } from "../../models/acts"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 import { APIError } from "../../utils/errors"
+import { ISO_DATE, isValidIsoDate } from "../../utils/date"
 
 const LIMIT = 50
 const LIMIT_EXPORT = 10000
 
-export const makeWhereClause = ({ scope, internalNumber, pvNumber, fuzzy }) => (builder) => {
+export const normalizeInputs = ({
+  startDate,
+  endDate,
+  hospitals,
+  profiles,
+  asker,
+  internalNumber,
+  pvNumber,
+  fuzzy,
+  requestedPage,
+  currentUser,
+}) => {
+  let scope = currentUser?.scope || []
+  if (currentUser?.hospital?.id) scope = [...scope, currentUser.hospital.id]
+
+  startDate = isValidIsoDate(startDate) ? startDate : null
+
+  endDate = isValidIsoDate(endDate) ? endDate : null
+
+  hospitals = (hospitals?.split(",") || []).filter((elt) => !isNaN(elt)).map(Number)
+
+  profiles = profiles?.split(",") || []
+
+  asker = isNaN(asker) ? parseInt(asker, 10) : null
+
+  requestedPage = requestedPage && !isNaN(requestedPage) && parseInt(requestedPage, 10)
+
+  return {
+    scope,
+    startDate,
+    endDate,
+    hospitals,
+    profiles,
+    asker,
+    internalNumber,
+    pvNumber,
+    fuzzy,
+    requestedPage,
+  }
+}
+
+export const makeWhereClause = ({ scope, startDate, endDate, internalNumber, pvNumber, fuzzy }) => (builder) => {
   builder.whereNull("acts.deleted_at")
   if (scope?.length) {
     builder.where(knex.raw("acts.hospital_id in (" + scope.map(() => "?").join(",") + ")", [...scope]))
   }
 
+  if (startDate) {
+    builder.whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
+  }
+  if (endDate) {
+    builder.whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+  }
   if (internalNumber) {
     builder.where("internal_number", internalNumber)
   }
@@ -29,16 +77,16 @@ export const makeWhereClause = ({ scope, internalNumber, pvNumber, fuzzy }) => (
   }
 }
 
-export const search = async ({ fuzzy, internalNumber, pvNumber, requestedPage }, currentUser) => {
-  let scope = currentUser.scope || []
-  if (currentUser.hospital && currentUser.hospital.id) scope = [...scope, currentUser.hospital.id]
+export const search = async (props, currentUser) => {
+  console.log("props", normalizeInputs({ ...props, currentUser }))
+  const newInputs = normalizeInputs({ ...props, currentUser })
 
-  requestedPage = requestedPage && !isNaN(requestedPage) && parseInt(requestedPage)
+  const [actsCount] = await knex("acts").where(makeWhereClause(newInputs)).count()
 
-  const [actsCount] = await knex("acts").where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy })).count()
-
-  const totalCount = parseInt(actsCount.count)
+  const totalCount = parseInt(actsCount.count, 10)
   const maxPage = Math.ceil(totalCount / LIMIT)
+
+  let { requestedPage } = newInputs
 
   // set default to 1 if not correct or too little, set default to maxPage if too big
   requestedPage =
@@ -48,7 +96,7 @@ export const search = async ({ fuzzy, internalNumber, pvNumber, requestedPage },
 
   // SQL query
   const acts = await knex("acts")
-    .where(makeWhereClause({ scope, internalNumber, pvNumber, fuzzy }))
+    .where(makeWhereClause(newInputs))
     .orderByRaw(
       "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc"
     )

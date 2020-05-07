@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should normalizeInputs 1`] = `
+Object {
+  "asker": null,
+  "endDate": "2020-05-08",
+  "fuzzy": undefined,
+  "hospitals": Array [
+    3,
+    2,
+  ],
+  "internalNumber": undefined,
+  "profiles": Array [
+    "Personne décédée",
+    "Personne pour âge osseux (hors GAV)",
+  ],
+  "pvNumber": undefined,
+  "requestedPage": 3,
+  "scope": Array [],
+  "startDate": "2020-05-12",
+}
+`;
+
+exports[`should normalizeInputs with incorrect values 1`] = `
+Object {
+  "asker": null,
+  "endDate": "2020-05-08",
+  "fuzzy": "Vict",
+  "hospitals": Array [
+    3,
+    2,
+  ],
+  "internalNumber": "123456",
+  "profiles": Array [
+    "Personne décédée",
+    "Personne pour âge osseux (hors GAV)",
+  ],
+  "pvNumber": undefined,
+  "requestedPage": -1,
+  "scope": Array [
+    1,
+    3,
+  ],
+  "startDate": null,
+}
+`;

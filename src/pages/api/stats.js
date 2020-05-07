@@ -32,7 +32,7 @@ const handler = async (req, res) => {
 
         const result = {
           currentDate: moment(date.now).format(FORMAT_DATE),
-          globalCount: parseInt(globalCount.count),
+          globalCount: parseInt(globalCount.count, 10),
         }
 
         result.acts = stats.reduce((acc, curr) => {

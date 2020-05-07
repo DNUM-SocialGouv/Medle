@@ -12,7 +12,7 @@ export const search = async ({ fuzzy, requestedPage, currentUser }) => {
 
   const [usersCount] = await knex("users").where(makeWhereClause({ scope, fuzzy })).count()
 
-  const totalCount = parseInt(usersCount.count)
+  const totalCount = parseInt(usersCount.count, 10)
   const maxPage = Math.ceil(totalCount / LIMIT)
 
   // set default to 1 if not correct or too little, set default to maxPage if too big

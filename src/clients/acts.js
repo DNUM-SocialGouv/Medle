@@ -18,10 +18,34 @@ export const searchActsByKey = async ({ key, value, headers }) => {
   return elements
 }
 
-export const searchActsFuzzy = async ({ search, requestedPage, headers }) => {
+export const searchActsFuzzy = async ({
+  search,
+  startDate,
+  endDate,
+  hospitals,
+  profiles,
+  asker,
+  requestedPage,
+  headers,
+}) => {
   const arr = []
   if (search) {
     arr.push(`fuzzy=${search}`)
+  }
+  if (startDate) {
+    arr.push(`startDate=${startDate}`)
+  }
+  if (endDate) {
+    arr.push(`endDate=${endDate}`)
+  }
+  if (hospitals?.length) {
+    arr.push(`hospitals=${hospitals.map((elt) => elt.value).join(",")}`)
+  }
+  if (profiles?.length) {
+    arr.push(`profiles=${profiles.map((elt) => elt.value).join(",")}`)
+  }
+  if (asker?.value) {
+    arr.push(`asker=${asker?.value}`)
   }
   if (requestedPage) {
     arr.push(`requestedPage=${requestedPage}`)
