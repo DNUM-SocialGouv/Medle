@@ -24,7 +24,7 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    fetchPage(search)(0)
+    fetchPage({ search })(0)
   }
 
   return (
