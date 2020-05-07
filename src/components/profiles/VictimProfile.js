@@ -160,13 +160,13 @@ const VictimRead = (act) => {
 
 const hasErrors = (state) => {
   const errors = {}
-  if (!state.examinationTypes || !state.examinationTypes.length) {
+  if (!state.examinationTypes?.length) {
     errors.examinationTypes = "Obligatoire"
   }
-  if (!state.violenceNatures || !state.violenceNatures.length) {
+  if (!state.violenceNatures?.length) {
     errors.violenceNatures = "Obligatoire"
   }
-  if (!state.violenceContexts || !state.violenceContexts.length) {
+  if (!state.violenceContexts?.length) {
     errors.violenceContexts = "Obligatoire"
   }
   if (!state.periodOfDay) {

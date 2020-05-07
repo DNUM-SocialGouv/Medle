@@ -5,7 +5,7 @@ import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../utils/http"
 import { APIError } from "../utils/errors"
 import { transform } from "../models/users"
 
-const validPassword = (password) => password.length
+const validPassword = (password) => !!password?.length
 
 export const authenticate = async (email, password) => {
   // request verification

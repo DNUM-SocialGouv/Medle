@@ -47,7 +47,7 @@ const FillEmploymentsPage = ({
 
   const { hospital } = currentUser
 
-  const previousMonths = allMonths && allMonths.length ? allMonths.slice(1) : []
+  const previousMonths = allMonths?.length ? allMonths.slice(1) : []
 
   const handleChange = (e) => {
     e.preventDefault()

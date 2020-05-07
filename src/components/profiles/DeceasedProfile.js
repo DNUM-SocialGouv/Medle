@@ -109,7 +109,7 @@ const DeceasedRead = (act) => {
 
 const hasErrors = (state) => {
   const errors = {}
-  if (!state.examinationTypes || !state.examinationTypes.length) {
+  if (!state.examinationTypes?.length) {
     errors.examinationTypes = "Obligatoire"
   }
   if (state.examinationTypes && state.examinationTypes.includes("Levée de corps") && !state.distance) {

@@ -9,10 +9,6 @@ export const deleteProperty = (obj, property) => {
   return res
 }
 
-export const capitalize = (str) => {
-  if (!str || !str.length) return ""
-
-  return str[0].toUpperCase() + str.slice(1)
-}
+export const capitalize = (str) => (!str?.length ? "" : str[0].toUpperCase() + str.slice(1))
 
 export const pluralize = (count) => (count && count > 1 ? "s" : "")

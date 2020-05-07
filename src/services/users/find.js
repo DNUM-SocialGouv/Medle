@@ -33,7 +33,7 @@ export const find = async ({ id, currentUser }) => {
 
   user = transform(user)
 
-  if (user && user.scope && user.scope.length) {
+  if (user?.scope?.length) {
     const userScope = await knex("hospitals").whereNull("deleted_at").whereIn("id", user.scope).select("id", "name")
 
     user = { ...user, scope: userScope }

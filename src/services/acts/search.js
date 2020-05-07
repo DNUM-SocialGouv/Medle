@@ -8,7 +8,7 @@ const LIMIT_EXPORT = 10000
 
 export const makeWhereClause = ({ scope, internalNumber, pvNumber, fuzzy }) => (builder) => {
   builder.whereNull("acts.deleted_at")
-  if (scope && scope.length) {
+  if (scope?.length) {
     builder.where(knex.raw("acts.hospital_id in (" + scope.map(() => "?").join(",") + ")", [...scope]))
   }
 

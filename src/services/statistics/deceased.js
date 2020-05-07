@@ -49,8 +49,7 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
         scopeFilter,
       },
       globalCount: globalCount.count || 0,
-      averageCount:
-        averageCount && averageCount.length ? averageOf(averageCount.map((elt) => parseFloat(elt.avg, 10))) : 0,
+      averageCount: averageCount?.length ? averageOf(averageCount.map((elt) => parseFloat(elt.avg, 10))) : 0,
     }
   })
 }

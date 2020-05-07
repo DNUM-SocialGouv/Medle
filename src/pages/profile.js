@@ -12,11 +12,11 @@ const ProfilePage = ({ currentUser }) => {
   return (
     <Layout currentUser={currentUser}>
       <Container style={{ maxWidth: 500 }}>
-        <div className="mt-5 pt-5 pb-4 pl-4 pr-4 rounded shadow border border-light">
+        <div className="pt-5 pb-4 pl-4 pr-4 mt-5 border rounded shadow border-light">
           <Row>
-            <div className="w-100 text-center">
+            <div className="text-center w-100">
               <AccountCircleIcon
-                className="account-icon ml-4"
+                className="ml-4 account-icon"
                 style={{ marginTop: -120, marginLeft: 25 }}
                 width={100}
               />
@@ -36,7 +36,7 @@ const ProfilePage = ({ currentUser }) => {
               <Row className="mt-3">
                 <Col>
                   <span
-                    className="rounded px-4 py-2"
+                    className="px-4 py-2 rounded"
                     style={{
                       backgroundColor: "#b2f5ea",
                       color: "#2c7a7b",
@@ -51,7 +51,7 @@ const ProfilePage = ({ currentUser }) => {
                   <Col>{hospital.name}</Col>
                 </Row>
               )}
-              {scope && scope.length && (
+              {scope?.length && (
                 <Row className="mt-3">
                   <Col>
                     <i>Périmètre</i>

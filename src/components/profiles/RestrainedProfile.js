@@ -49,7 +49,7 @@ const RestrainedEdit = ({ dispatch, state, errors }) => {
         invalid={!!errors.periodOfDay}
       />
 
-      <Title2 className="mb-2 mt-5">{"Profil de la personne retenue"}</Title2>
+      <Title2 className="mt-5 mb-2">{"Profil de la personne retenue"}</Title2>
 
       <ActBlock
         type="personGender"
@@ -116,7 +116,7 @@ const RestrainedRead = (act) => {
 
 const hasErrors = (state) => {
   const errors = {}
-  if (!state.examinationTypes || !state.examinationTypes.length) {
+  if (!state.examinationTypes?.length) {
     errors.examinationTypes = "Obligatoire"
   }
   if (!state.location) {

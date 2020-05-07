@@ -259,7 +259,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       try {
         const elements = await searchActsByKey({ key: name, value: state[name] })
 
-        if (elements && elements.length) {
+        if (elements?.length) {
           setWarnings({ ...warnings, [name]: "Déjà utilisé" })
         } else {
           setWarnings({ ...warnings, [name]: null })

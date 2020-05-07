@@ -91,7 +91,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
   const onSubmit = (formData) => {
     console.log("form", formData)
-    fetchPage(formData.search)(0)
+    fetchPage(formData)(0)
   }
 
   const onExport = () => {

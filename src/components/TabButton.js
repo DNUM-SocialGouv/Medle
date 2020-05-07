@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 
 const TabButton = ({ labels, callback, colorScheme }) => {
-  const [selectedLabel, setSelectedLabel] = useState(labels && labels.length ? labels[0] : "")
+  const [selectedLabel, setSelectedLabel] = useState(labels?.length ? labels[0] : "")
 
   if (colorScheme !== "violet") colorScheme = "blue"
 

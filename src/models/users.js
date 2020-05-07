@@ -32,8 +32,7 @@ export const untransform = (model) => {
     last_name: model.lastName,
     email: model.email,
     role: model.role,
-    scope:
-      !model.scope || !model.scope.length ? null : JSON.stringify(model.scope.map((curr) => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
+    scope: !model.scope?.length ? null : JSON.stringify(model.scope.map((curr) => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
     hospital_id: (model.hospital && model.hospital.id) || null,
   }
 

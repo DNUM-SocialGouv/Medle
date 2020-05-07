@@ -28,7 +28,7 @@ const normalizeValues = (values) => {
 }
 
 const makeColOptions = (values) => {
-  if (values.length) {
+  if (values?.length) {
     if (values.length === 1) {
       return {
         sm: 3,
@@ -106,7 +106,7 @@ BlockChildren.propTypes = {
 
 const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mode }) => {
   const colOptions = makeColOptions(values)
-  const rowClassNames = values.length && values.length === 1 ? "justify-content-center" : ""
+  const rowClassNames = values?.length && values.length === 1 ? "justify-content-center" : ""
   const colorOptions = invalid ? { color: "red" } : {}
 
   const newValues = normalizeValues(values)
@@ -114,7 +114,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
   return (
     <>
       {title && (
-        <Title2 className="mb-4 mt-5" style={colorOptions}>
+        <Title2 className="mt-5 mb-4" style={colorOptions}>
           {title}
         </Title2>
       )}
@@ -129,7 +129,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
 
       <Row className={rowClassNames}>
         {newValues.map((val, index) => {
-          if (val.subValues.length) {
+          if (val.subValues?.length) {
             return (
               <BlockChildren
                 key={index}

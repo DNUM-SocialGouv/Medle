@@ -22,15 +22,15 @@ export const usePaginatedData = (fetchData, initialPaginatedData) => {
    *
    * NB: the result of the API endpoint must have a predefined shape. See defaultPaginatedData.
    *
-   * @param {string} search
+   * @param {object} filters (object with at least search property)
    * @param {number} requestedPage
    */
-  const fetchPage = (search) => async (requestedPage) => {
+  const fetchPage = (filters) => async (requestedPage) => {
     setLoading(true)
     setError(false)
 
     try {
-      const paginatedData = await fetchData({ search, requestedPage })
+      const paginatedData = await fetchData({ ...filters, requestedPage })
       setPaginatedData(paginatedData)
     } catch (error) {
       logError("APP error", error)

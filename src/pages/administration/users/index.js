@@ -24,7 +24,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
 
   const onSubmit = (e) => {
     e.preventDefault()
-    fetchPage(search)(0)
+    fetchPage({ search })(0)
   }
 
   return (
