@@ -1,10 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`/acts should return all acts with Personne décédée 1`] = `
+exports[`clients for /acts  should return all acts with Personne décédée 1`] = `
 Object {
   "byPage": 50,
   "currentPage": 1,
   "elements": Array [
+    Object {
+      "asker": Object {
+        "id": 200,
+      },
+      "examinationDate": "2020-05-04",
+      "examinationTypes": Array [
+        "Examen externe",
+      ],
+      "examinations": Array [
+        "Imagerie",
+      ],
+      "hospital": Object {
+        "id": 3,
+      },
+      "id": 8353,
+      "internalNumber": "20/279",
+      "periodOfDay": "Journée",
+      "personAgeTag": "+ de 18 ans",
+      "personGender": "Masculin",
+      "profile": "Personne décédée",
+      "pvNumber": "2020/8966",
+      "user": Object {
+        "id": 4,
+      },
+    },
     Object {
       "asker": Object {
         "id": 200,
@@ -110,16 +135,46 @@ Object {
     },
   ],
   "maxPage": 1,
-  "totalCount": 4,
+  "totalCount": 5,
 }
 `;
 
-exports[`/acts should return all acts with a particular internal number 1`] = `
+exports[`clients for /acts  should return all acts with a particular internal number 1`] = `
 Object {
   "byPage": 50,
   "currentPage": 1,
-  "elements": Array [],
-  "maxPage": 0,
-  "totalCount": 0,
+  "elements": Array [
+    Object {
+      "asker": Object {
+        "id": 200,
+      },
+      "examinationDate": "2020-05-05",
+      "examinationTypes": Array [
+        "Psychiatrique",
+      ],
+      "hospital": Object {
+        "id": 3,
+      },
+      "id": 8354,
+      "internalNumber": "127414-vp",
+      "location": "UMJ",
+      "periodOfDay": "Journée",
+      "personAgeTag": "3-17 ans",
+      "personGender": "Féminin",
+      "profile": "Victime (vivante)",
+      "pvNumber": "2020/6432",
+      "user": Object {
+        "id": 4,
+      },
+      "violenceContexts": Array [
+        "Autre type/Scolaire",
+      ],
+      "violenceNatures": Array [
+        "Coups blessures",
+      ],
+    },
+  ],
+  "maxPage": 1,
+  "totalCount": 1,
 }
 `;

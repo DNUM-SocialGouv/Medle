@@ -1,5 +1,5 @@
-import { authenticate } from "../../clients/authentication"
-import { searchHospitalsFuzzy } from "../../clients/hospitals"
+import { authenticate } from "../../../clients/authentication"
+import { searchHospitalsFuzzy } from "../../../clients/hospitals"
 
 const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 

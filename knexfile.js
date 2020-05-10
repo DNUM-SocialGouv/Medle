@@ -1,7 +1,5 @@
 const { join } = require("path")
 
-console.info("process.env.DATABASE_URL", process.env.DATABASE_URL)
-
 if (process.env.POSTGRES_SSL && process.env.POSTGRES_SSL === "true") {
   const pg = require("pg")
   pg.defaults.ssl = true
@@ -14,8 +12,8 @@ const knexConfig = {
     pool: {
       min: 0,
       max: 15,
-      afterCreate: function(connection, callback) {
-        connection.query("SET timezone = 'Europe/Paris';", function(err) {
+      afterCreate: function (connection, callback) {
+        connection.query("SET timezone = 'Europe/Paris';", function (err) {
           callback(err, connection)
         })
       },
@@ -33,8 +31,8 @@ const knexConfig = {
     pool: {
       min: 0,
       max: 15,
-      afterCreate: function(connection, callback) {
-        connection.query("SET timezone = 'Europe/Paris';", function(err) {
+      afterCreate: function (connection, callback) {
+        connection.query("SET timezone = 'Europe/Paris';", function (err) {
           callback(err, connection)
         })
       },
@@ -52,8 +50,8 @@ const knexConfig = {
     pool: {
       min: 0,
       max: 15,
-      afterCreate: function(connection, callback) {
-        connection.query("SET timezone = 'Europe/Paris';", function(err) {
+      afterCreate: function (connection, callback) {
+        connection.query("SET timezone = 'Europe/Paris';", function (err) {
           callback(err, connection)
         })
       },

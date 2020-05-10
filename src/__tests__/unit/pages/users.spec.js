@@ -1,7 +1,7 @@
 import React from "react"
 import renderer from "react-test-renderer"
-import UserDetail from "../../pages/administration/users/[id]"
-import { SUPER_ADMIN } from "../../utils/roles"
+import UserDetail from "../../../pages/administration/users/[id]"
+import { SUPER_ADMIN } from "../../../utils/roles"
 import * as nextRouter from "next/router"
 
 it("renders UserDetail unchanged", () => {

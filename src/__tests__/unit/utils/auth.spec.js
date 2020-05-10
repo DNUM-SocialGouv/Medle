@@ -1,6 +1,6 @@
-import { checkValidUserWithPrivilege } from "../../utils/auth"
-import { generateToken } from "../../utils/jwt"
-import { ACT_MANAGEMENT, EMPLOYMENT_MANAGEMENT } from "../../utils/roles"
+import { checkValidUserWithPrivilege } from "../../../utils/auth"
+import { generateToken } from "../../../utils/jwt"
+import { ACT_MANAGEMENT, EMPLOYMENT_MANAGEMENT } from "../../../utils/roles"
 
 const req = {
   cookies: {

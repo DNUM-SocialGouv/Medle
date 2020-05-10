@@ -1,4 +1,4 @@
-import { transform, untransform } from "../../models/users"
+import { transform, untransform } from "../../../models/users"
 
 describe("transform", () => {
   it("should transform in a model entity", () => {

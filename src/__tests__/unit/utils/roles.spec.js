@@ -1,4 +1,4 @@
-import { availableRolesForUser, rulesOfRoles, isAllowed } from "../../utils/roles"
+import { availableRolesForUser, rulesOfRoles, isAllowed } from "../../../utils/roles"
 
 describe("isAllowed", () => {
   it("an OPERATOR_ACT should have ACT_MANAGEMENT capability", async () => {

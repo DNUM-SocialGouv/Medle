@@ -1,4 +1,4 @@
-import { transform, untransform } from "../../models/hospitals"
+import { transform, untransform } from "../../../models/hospitals"
 
 describe("transform", () => {
   it("should transform in a JS entity", () => {

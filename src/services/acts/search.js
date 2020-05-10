@@ -2,51 +2,10 @@ import knex from "../../knex/knex"
 import { transformAll, transformAllForExport } from "../../models/acts"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 import { APIError } from "../../utils/errors"
-import { ISO_DATE, isValidIsoDate } from "../../utils/date"
+import { ISO_DATE } from "../../utils/date"
 
 const LIMIT = 50
 const LIMIT_EXPORT = 10000
-
-export const normalizeInputs = ({
-  startDate,
-  endDate,
-  hospitals,
-  profiles,
-  asker,
-  internalNumber,
-  pvNumber,
-  fuzzy,
-  requestedPage,
-  currentUser,
-}) => {
-  let scope = currentUser?.scope || []
-  if (currentUser?.hospital?.id) scope = [...scope, currentUser.hospital.id]
-
-  startDate = isValidIsoDate(startDate) ? startDate : null
-
-  endDate = isValidIsoDate(endDate) ? endDate : null
-
-  hospitals = (hospitals?.split(",") || []).filter((elt) => !isNaN(elt)).map(Number)
-
-  profiles = profiles?.split(",") || []
-
-  asker = isNaN(asker) ? parseInt(asker, 10) : null
-
-  requestedPage = requestedPage && !isNaN(requestedPage) && parseInt(requestedPage, 10)
-
-  return {
-    scope,
-    startDate,
-    endDate,
-    hospitals,
-    profiles,
-    asker,
-    internalNumber,
-    pvNumber,
-    fuzzy,
-    requestedPage,
-  }
-}
 
 export const makeWhereClause = ({ scope, startDate, endDate, internalNumber, pvNumber, fuzzy }) => (builder) => {
   builder.whereNull("acts.deleted_at")
@@ -77,16 +36,13 @@ export const makeWhereClause = ({ scope, startDate, endDate, internalNumber, pvN
   }
 }
 
-export const search = async (props, currentUser) => {
-  console.log("props", normalizeInputs({ ...props, currentUser }))
-  const newInputs = normalizeInputs({ ...props, currentUser })
-
-  const [actsCount] = await knex("acts").where(makeWhereClause(newInputs)).count()
+export const search = async (params) => {
+  const [actsCount] = await knex("acts").where(makeWhereClause(params)).count()
 
   const totalCount = parseInt(actsCount.count, 10)
   const maxPage = Math.ceil(totalCount / LIMIT)
 
-  let { requestedPage } = newInputs
+  let { requestedPage } = params
 
   // set default to 1 if not correct or too little, set default to maxPage if too big
   requestedPage =
@@ -96,7 +52,7 @@ export const search = async (props, currentUser) => {
 
   // SQL query
   const acts = await knex("acts")
-    .where(makeWhereClause(newInputs))
+    .where(makeWhereClause(params))
     .orderByRaw(
       "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc"
     )

@@ -1,4 +1,4 @@
-import { buildScope } from "../../services/scope"
+import { buildScope } from "../../../services/scope"
 
 describe("tests on buildScope", () => {
   it("should return the union between the scope array and the hospital id", () => {
