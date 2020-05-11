@@ -29,7 +29,7 @@ logInfo("MATOMO_URL", process.env.MATOMO_URL)
 logInfo("API_URL", publicRuntimeConfig.API_URL)
 logInfo("TEST_CURRENT_DATE", publicRuntimeConfig.TEST_CURRENT_DATE)
 
-logInfo("POSTGRES_SSL", publicRuntimeConfig.POSTGRES_SSL)
+logInfo("POSTGRES_SSL", process.env.POSTGRES_SSL)
 logInfo("DATABASE_URL", process.env.DATABASE_URL)
 
 logInfo("-----------------------------------------")

@@ -23,6 +23,7 @@ services:
     restart: always
     build:
       context: .
+      dockerfile: Dockerfile.compose
       # build-time variables
       args:
         - SENTRY_DSN=https://75f34cada95a4c189d69bc05e8aa324f@sentry.fabrique.social.gouv.fr/29
