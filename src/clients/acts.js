@@ -18,16 +18,9 @@ export const searchActsByKey = async ({ key, value, headers }) => {
   return elements
 }
 
-export const searchActsFuzzy = async ({
-  search,
-  startDate,
-  endDate,
-  hospitals,
-  profiles,
-  asker,
-  requestedPage,
-  headers,
-}) => {
+const buildQueryParams = (params) => {
+  const { search, startDate, endDate, hospitals, profiles, asker, requestedPage } = params
+
   const arr = []
   if (search) {
     arr.push(`fuzzy=${search}`)
@@ -50,8 +43,15 @@ export const searchActsFuzzy = async ({
   if (requestedPage) {
     arr.push(`requestedPage=${requestedPage}`)
   }
-  const bonus = arr.length ? "?" + arr.join("&") : ""
-  const response = await fetch(`${API_URL}${ACTS_ENDPOINT}${bonus}`, { headers })
+  return arr.length ? "?" + arr.join("&") : ""
+}
+
+export const searchActs = async (params) => {
+  const { headers } = params
+
+  const queryParams = buildQueryParams(params)
+
+  const response = await fetch(`${API_URL}${ACTS_ENDPOINT}${queryParams}`, { headers })
 
   return handleAPIResponse(response)
 }
@@ -79,6 +79,10 @@ export const deleteAct = async ({ id, headers }) => {
   return handleAPIResponse(response)
 }
 
-export const fetchExport = async (search) => {
-  saveAs(`${API_URL}${ACTS_ENDPOINT}/export?fuzzy=${search}`)
+export const fetchExport = async (params) => {
+  const { headers } = params
+
+  const queryParams = buildQueryParams(params)
+
+  saveAs(`${API_URL}${ACTS_ENDPOINT}/export${queryParams}`, { headers })
 }

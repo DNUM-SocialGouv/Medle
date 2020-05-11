@@ -18,7 +18,7 @@ import { isoToFr } from "../../utils/date"
 import { ACT_CONSULTATION } from "../../utils/roles"
 import { logError } from "../../utils/logger"
 import { usePaginatedData } from "../../utils/hooks"
-import { searchActsFuzzy, fetchExport } from "../../clients/acts"
+import { searchActs, fetchExport } from "../../clients/acts"
 import { isOpenFeature } from "../../config"
 import { mapArrayForSelect } from "../../utils/select"
 import { getReferenceData } from "../../utils/init"
@@ -26,7 +26,7 @@ import { profiles as profilesConstants } from "../../utils/actsConstants"
 import { memoizedSearchAskers } from "../../clients/askers"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
-  const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActsFuzzy, initialPaginatedData)
+  const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActs, initialPaginatedData)
   const [isOpenedFilters, setOpenedFilters] = useState(false)
   const { register, handleSubmit, setValue, getValues } = useForm({})
   const [hospitals, setHospitals] = useState([])
@@ -90,12 +90,11 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   }
 
   const onSubmit = (formData) => {
-    console.log("form", formData)
     fetchPage(formData)(0)
   }
 
-  const onExport = () => {
-    fetchExport(getValues("search"))
+  const onExport = async () => {
+    await fetchExport(getValues())
   }
 
   return (
@@ -267,7 +266,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 ActsListPage.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
   try {
-    const paginatedData = await searchActsFuzzy({ headers })
+    const paginatedData = await searchActs({ headers })
     return { paginatedData }
   } catch (error) {
     logError("APP error", error)

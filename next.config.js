@@ -31,7 +31,7 @@ const nextConfig = {
       administration: true,
       directory: false,
       resources: false,
-      export: false,
+      export: true,
     },
   },
   serverRuntimeConfig: {
