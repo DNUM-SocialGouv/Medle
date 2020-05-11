@@ -39,9 +39,9 @@ describe("normalizeSearchInputs", () => {
       const props = {
         startDate: "2020-01-01",
         endDate: "2020-01-21",
-        hospitals: "[1, 2, 3]",
-        profiles: '["Victime", "Personne décédée"]',
-        asker: "OFPRA",
+        hospitals: [1, 2, 3],
+        profiles: ["Victime", "Personne décédée"],
+        asker: "3850",
       }
 
       await expect(normalizeSearchInputs(props)).resolves.toMatchSnapshot()

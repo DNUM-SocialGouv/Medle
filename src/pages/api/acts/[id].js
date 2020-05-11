@@ -11,7 +11,7 @@ import {
 import { ACT_CONSULTATION, ACT_MANAGEMENT } from "../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
-
+import { APIError } from "../../../utils/errors"
 import { del, find, update } from "../../../services/acts"
 
 const handler = async (req, res) => {
@@ -24,7 +24,14 @@ const handler = async (req, res) => {
 
         const act = await find(req.query, currentUser)
 
-        return act ? res.status(STATUS_200_OK).json(act) : res.status(STATUS_404_NOT_FOUND).end()
+        if (!act) {
+          throw new APIError({
+            status: STATUS_404_NOT_FOUND,
+            message: "Not found",
+          })
+        }
+
+        return res.status(STATUS_200_OK).json(act)
       }
       case METHOD_DELETE: {
         const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)

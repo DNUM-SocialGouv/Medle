@@ -2,7 +2,7 @@
 
 exports[`normalizeSearchInputs should accept correct values 1`] = `
 Object {
-  "asker": "3850",
+  "asker": 3850,
   "endDate": 2020-05-07T22:00:00.000Z,
   "hospitals": Array [
     3,
@@ -20,7 +20,7 @@ Object {
 
 exports[`normalizeSearchInputs should accept correct values next time 1`] = `
 Object {
-  "asker": "OFPRA",
+  "asker": 3850,
   "endDate": 2020-01-20T23:00:00.000Z,
   "hospitals": Array [
     1,

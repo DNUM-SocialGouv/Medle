@@ -4,7 +4,7 @@ import { APIError } from "../utils/errors"
 // Validation with YUP of given parameters given to API endpoints
 export const normalize = (yupSchema) => async (params) => {
   try {
-    const value = await yupSchema.validate(params, { strict: false })
+    const value = await yupSchema.validate(params, { strict: false, abortEarly: false })
     return value
   } catch (error) {
     throw new APIError({

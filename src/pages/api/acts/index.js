@@ -13,7 +13,7 @@ const searchSchema = yup.object().shape({
   endDate: yup.date(),
   hospitals: yup.array().of(yup.number().positive().integer()),
   profiles: yup.array(),
-  asker: yup.string(),
+  asker: yup.number().integer().positive(),
   internalNumber: yup.string(),
   pvNumber: yup.string(),
   fuzzy: yup.string(),
