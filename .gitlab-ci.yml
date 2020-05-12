@@ -36,6 +36,9 @@ Build:
 Tests e2e:
   stage: e2e
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  except:
+    refs:
+      - master
   variables:
     PGHOST: medledevserver.postgres.database.azure.com
     DATABASE_URL: postgres://user_${CI_COMMIT_SHORT_SHA}%40${PGHOST}:pass_${CI_COMMIT_SHORT_SHA}@${PGHOST}/db_${CI_COMMIT_SHORT_SHA}?ssl=true
