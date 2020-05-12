@@ -4,6 +4,7 @@ import PropTypes from "prop-types"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Spinner, Table } from "reactstrap"
 import ListAltIcon from "@material-ui/icons/ListAlt"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
+import ArrowRightIcon from "@material-ui/icons/ArrowRight"
 import { useForm } from "react-hook-form"
 import Select from "react-select"
 import AsyncSelect from "react-select/async"
@@ -31,7 +32,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   const { register, handleSubmit, setValue, getValues } = useForm({})
   const [hospitals, setHospitals] = useState([])
   const [profiles, setProfiles] = useState([])
-  const [asker, setAsker] = useState({})
+  const [asker, setAsker] = useState(null)
 
   const existingHospitals = mapArrayForSelect(
     getReferenceData("hospitals"),
@@ -109,7 +110,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                   type="text"
                   name="search"
                   id="search"
-                  placeholder="Rechercher un dossier par numéro, type de profil examiné, ..."
+                  placeholder="Rechercher un acte par n° interne ou n° de PV"
                   autoComplete="off"
                   innerRef={register}
                 />
@@ -120,7 +121,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                 <Row className="mt-3">
                   <Col>
                     <Button color="secondary" outline={!isOpenedFilters} onClick={toggleFilters}>
-                      Filtrer <ArrowDropDownIcon />
+                      Filtrer {isOpenedFilters ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
                     </Button>
                   </Col>
                 </Row>{" "}
@@ -155,7 +156,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           isMulti
                           onChange={onHospitalsChange}
                           noOptionsMessage={() => "Aucun résultat"}
-                          placeholder="Choisissez un établissement"
+                          placeholder="Choisissez un établissement de votre périmètre"
                           isClearable={true}
                           isSearchable={true}
                         />
@@ -178,7 +179,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                     </Row>
                     <Row className="mt-3">
                       <Col>
-                        <Label className="text-dark">Demandeurs</Label>
+                        <Label className="text-dark">Demandeur</Label>
                         <AsyncSelect
                           loadOptions={(search) => loadAskers(search)}
                           placeholder="Tapez le nom du demandeur"
