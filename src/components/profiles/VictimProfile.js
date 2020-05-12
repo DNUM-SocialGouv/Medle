@@ -16,12 +16,14 @@ const VictimEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="examinationTypes"
         title="Type(s) d'acte"
+        detail="Note : l'examen psychiatrique est réalisé sur réquisition judiciaire par un psychiatre. Ne sont pas concernées : expertise pénale, évaluation psychologique."
         values={["Somatique", "Psychiatrique"]}
         mode="toggleMultiple"
         dispatch={dispatch}
         state={state.examinationTypes || []}
         invalid={!!errors.examinationTypes}
       />
+
       <Title2 className="mt-5 mb-4">{"Type(s) de violence"}</Title2>
 
       <ActBlock

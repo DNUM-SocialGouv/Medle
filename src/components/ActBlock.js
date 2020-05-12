@@ -104,7 +104,7 @@ BlockChildren.propTypes = {
   colOptions: PropTypes.object,
 }
 
-const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mode }) => {
+const ActBlock = ({ title, subTitle, detail, type, values, dispatch, state, invalid, mode }) => {
   const colOptions = makeColOptions(values)
   const rowClassNames = values?.length && values.length === 1 ? "justify-content-center" : ""
   const colorOptions = invalid ? { color: "red" } : {}
@@ -123,6 +123,14 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
         <Row className="mt-3">
           <Col sm={4} className="mb-1" style={colorOptions}>
             {subTitle}
+          </Col>
+        </Row>
+      )}
+
+      {detail && (
+        <Row className="mt-3 mb-4">
+          <Col className="mb-1" style={{ color: "#9b9b9b" }}>
+            <i>{detail}</i>
           </Col>
         </Row>
       )}
@@ -178,6 +186,7 @@ const ActBlock = ({ title, subTitle, type, values, dispatch, state, invalid, mod
 ActBlock.propTypes = {
   title: PropTypes.string,
   subTitle: PropTypes.string,
+  detail: PropTypes.string,
   type: PropTypes.string.isRequired,
   values: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired,
