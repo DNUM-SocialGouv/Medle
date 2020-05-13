@@ -1,5 +1,5 @@
 import Excel from "exceljs"
-import { now } from "../../utils/date"
+import { now, ISO_DATE } from "../../utils/date"
 import { searchForExport } from "./search"
 
 export const exportActs = async (params, currentUser) => {
@@ -41,11 +41,17 @@ export const exportActs = async (params, currentUser) => {
     { header: "Valeur", key: "value", width: 80 },
   ]
 
+  inputsWorksheet.addRow({ name: "Date de l'export", value: now()?.format(ISO_DATE) })
+  inputsWorksheet.addRow({})
+  inputsWorksheet.addRow({ name: "Champ n°", value: params?.fuzzy })
   inputsWorksheet.addRow({ name: "Date de début", value: params?.startDate })
   inputsWorksheet.addRow({ name: "Date de fin", value: params?.endDate })
   inputsWorksheet.addRow({ name: "Établissements", value: params?.hospitals })
   inputsWorksheet.addRow({ name: "Profils", value: params?.profiles })
   inputsWorksheet.addRow({ name: "Demandeur", value: params?.asker })
+  inputsWorksheet.addRow({})
+  inputsWorksheet.addRow({ name: "Hôpital de l'utilisateur", value: (currentUser.hospital?.id || "").toString() })
+  inputsWorksheet.addRow({ name: "Périmètre de l'utilisateur", value: currentUser?.scope || [] })
 
   return workbook
 }

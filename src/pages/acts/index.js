@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Spinner, Table } from "reactstrap"
+import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Table } from "reactstrap"
 import ListAltIcon from "@material-ui/icons/ListAlt"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ArrowRightIcon from "@material-ui/icons/ArrowRight"
@@ -17,8 +17,9 @@ import Layout from "../../components/Layout"
 import { VerticalList } from "../../components/VerticalList"
 import { isoToFr } from "../../utils/date"
 import { ACT_CONSULTATION } from "../../utils/roles"
-import { logError } from "../../utils/logger"
-import { usePaginatedData } from "../../utils/hooks"
+import { logDebug, logError } from "../../utils/logger"
+import { usePaginatedData } from "../../hooks/usePaginatedData"
+import { useDebounce } from "../../hooks/useDebounce"
 import { searchActs, fetchExport } from "../../clients/acts"
 import { isOpenFeature } from "../../config"
 import { mapArrayForSelect } from "../../utils/select"
@@ -27,12 +28,24 @@ import { profiles as profilesConstants } from "../../utils/actsConstants"
 import { memoizedSearchAskers } from "../../clients/askers"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
+  const renderCount = React.useRef(0)
+  renderCount.current++
+
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActs, initialPaginatedData)
   const [isOpenedFilters, setOpenedFilters] = useState(false)
   const { register, handleSubmit, setValue, getValues } = useForm({})
   const [hospitals, setHospitals] = useState([])
   const [profiles, setProfiles] = useState([])
   const [asker, setAsker] = useState(null)
+  const [search, setSearch] = useState("")
+
+  useDebounce(
+    () => {
+      onChange()
+    },
+    500,
+    [search]
+  )
 
   const existingHospitals = mapArrayForSelect(
     getReferenceData("hospitals"),
@@ -51,6 +64,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     register({ name: "hospitals" })
     register({ name: "profiles" })
     register({ name: "asker" })
+    register({ name: "search" })
   }, [register])
 
   const toggleFilters = () => {
@@ -62,6 +76,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     setValue("hospitals", !selectedOption?.length ? null : selectedOption)
     // Needs to sync specifically the value to the react-select as well
     setHospitals(selectedOption)
+    onChange()
   }
 
   const onProfilesChange = (selectedOption) => {
@@ -70,6 +85,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
     // Needs to sync specifically the value to the react-select as well
     setProfiles(selectedOption)
+    onChange()
   }
 
   const onAskerChange = (selectedOption) => {
@@ -78,6 +94,13 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
     // Needs to sync specifically the value to the react-select as well
     setAsker(selectedOption)
+    onChange()
+  }
+
+  const onSearchChange = (e) => {
+    const text = e?.target?.value || ""
+    setSearch(text)
+    setValue("search", text)
   }
 
   const loadAskers = async (search) => {
@@ -91,11 +114,16 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   }
 
   const onSubmit = (formData) => {
+    logDebug("submit")
     fetchPage(formData)(0)
   }
 
   const onExport = async () => {
     await fetchExport(getValues())
+  }
+
+  const onChange = async () => {
+    onSubmit(getValues())
   }
 
   return (
@@ -112,7 +140,8 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                   id="search"
                   placeholder="Rechercher un acte par n° interne ou n° de PV"
                   autoComplete="off"
-                  innerRef={register}
+                  value={search}
+                  onChange={onSearchChange}
                 />
               </Col>
             </Row>
@@ -138,13 +167,21 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           id="startDate"
                           placeholder="Date de début"
                           innerRef={register}
+                          onChange={onChange}
                         />
                       </Col>
                       <Col sm="3">
                         <Label htmlFor="startDate" className="text-dark">
                           Date de fin
                         </Label>
-                        <Input type="date" name="endDate" id="endDate" placeholder="Date de fin" innerRef={register} />
+                        <Input
+                          type="date"
+                          name="endDate"
+                          id="endDate"
+                          placeholder="Date de fin"
+                          innerRef={register}
+                          onChange={onChange}
+                        />
                       </Col>
                     </Row>
                     <Row className="mt-3">
@@ -190,13 +227,6 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           isSearchable={true}
                           value={asker}
                         />
-                      </Col>
-                    </Row>
-                    <Row className="mt-3">
-                      <Col className="flex-grow-0">
-                        <SearchButton className="btn-primary" disabled={loading} onClick={handleSubmit(onSubmit)}>
-                          {loading ? <Spinner size="sm" color="light" data-testid="loading" /> : "Chercher"}
-                        </SearchButton>
                       </Col>
                     </Row>
                   </div>

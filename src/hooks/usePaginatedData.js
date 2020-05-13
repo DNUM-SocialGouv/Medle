@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { logError } from "./logger"
+import { logError } from "../utils/logger"
 
 const defaultPaginatedData = {
   totalCount: 0,

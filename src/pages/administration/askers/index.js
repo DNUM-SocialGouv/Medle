@@ -11,7 +11,7 @@ import { logError } from "../../../utils/logger"
 import { ADMIN } from "../../../utils/roles"
 import { SearchButton } from "../../../components/form/SearchButton"
 import { searchAskersFuzzy } from "../../../clients/askers"
-import { usePaginatedData } from "../../../utils/hooks"
+import { usePaginatedData } from "../../../hooks/usePaginatedData"
 import Pagination from "../../../components/Pagination"
 
 const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
