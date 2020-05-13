@@ -105,11 +105,18 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
         {success && (
           <Alert color="success" className="d-flex justify-content-between align-items-center mt-4">
             {success}&nbsp;
-            <Link href="/administration/hospitals">
-              <Button className="" outline color="success">
-                <a>Retour à la liste</a>
-              </Button>
-            </Link>
+            <div>
+              <Link href="/administration/hospitals">
+                <Button className="mr-3" outline color="success">
+                  <a>Retour à la liste</a>
+                </Button>
+              </Link>
+              <Link href="/administration/hospitals/[id]" as={`/administration/hospitals/new`}>
+                <Button outline color="success">
+                  <a>Ajouter</a>
+                </Button>
+              </Link>
+            </div>
           </Alert>
         )}
 
@@ -284,7 +291,7 @@ HospitalDetail.getInitialProps = async (ctx) => {
 
   const { id } = ctx.query
 
-  if (!id || isNaN(id)) return { hospital: {} }
+  if (!id || isNaN(id)) return { hospital: {}, key: Number(new Date()) }
 
   try {
     const hospital = await findHospital({ id, headers })

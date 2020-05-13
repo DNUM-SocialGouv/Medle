@@ -38,6 +38,7 @@ const MandatorySign = () => <span style={{ color: "red" }}>*</span>
 const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const router = useRouter()
   const { id } = router.query
+
   const { handleSubmit, register, errors: formErrors, setValue } = useForm({
     defaultValues: {
       id: initialUser.id,
@@ -273,11 +274,18 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
         {success && (
           <Alert color="success" className="d-flex justify-content-between align-items-center mt-4">
             {success}&nbsp;
-            <Link href="/administration/users">
-              <Button className="" outline color="success">
-                <a>Retour à la liste</a>
-              </Button>
-            </Link>
+            <div>
+              <Link href="/administration/users">
+                <Button className="mr-3" outline color="success">
+                  <a>Retour à la liste</a>
+                </Button>
+              </Link>
+              <Link href="/administration/users/[id]" as={`/administration/users/new`}>
+                <Button outline color="success">
+                  <a>Ajouter</a>
+                </Button>
+              </Link>
+            </div>
           </Alert>
         )}
 
@@ -459,7 +467,9 @@ UserDetail.getInitialProps = async (ctx) => {
 
   const { id } = ctx.query
 
-  if (!id || isNaN(id)) return { initialUser: {} }
+  // Initialise key prop with a fresh new value, to make possible to have a new blank page
+  // see https://kentcdodds.com/blog/understanding-reacts-key-prop
+  if (!id || isNaN(id)) return { initialUser: {}, key: Number(new Date()) }
 
   try {
     const user = await findUser({ id, headers })

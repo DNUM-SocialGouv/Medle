@@ -108,11 +108,18 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
         {success && (
           <Alert color="success" className="d-flex justify-content-between align-items-center mt-4">
             {success}&nbsp;
-            <Link href="/administration/askers">
-              <Button className="" outline color="success">
-                <a>Retour à la liste</a>
-              </Button>
-            </Link>
+            <div>
+              <Link href="/administration/askers">
+                <Button className="mr-3" outline color="success">
+                  <a>Retour à la liste</a>
+                </Button>
+              </Link>
+              <Link href="/administration/askers/[id]" as={`/administration/askers/new`}>
+                <Button outline color="success">
+                  <a>Ajouter</a>
+                </Button>
+              </Link>
+            </div>
           </Alert>
         )}
 
@@ -211,7 +218,7 @@ AskerDetail.getInitialProps = async (ctx) => {
 
   const { id } = ctx.query
 
-  if (!id || isNaN(id)) return { asker: {} }
+  if (!id || isNaN(id)) return { asker: {}, key: Number(new Date()) }
 
   try {
     const asker = await findAsker({ id, headers })
