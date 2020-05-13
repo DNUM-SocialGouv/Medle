@@ -39,7 +39,7 @@ export const registerAndRedirectUser = (user) => {
 }
 
 export const getCurrentUser = (ctx) => {
-  if (ctx && ctx.req) {
+  if (ctx?.req) {
     // Server side navigation
     logDebug("getCurrentUser from server side")
     const res = getTokenFromCookie(ctx)
@@ -89,7 +89,7 @@ export const buildAuthHeaders = (ctx) => {
 }
 
 export const isomorphicRedirect = (ctx, url) => {
-  if (ctx && ctx.req) {
+  if (ctx?.req) {
     // Server side navigation
     ctx.res.writeHead(302, { Location: url })
     ctx.res.end()
