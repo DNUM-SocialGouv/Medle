@@ -15,11 +15,22 @@ const BoneAgeEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="examinationTypes"
         title="Type(s) d'acte"
-        values={["Scanner", "Radiographie", "Panoramique dentaire"]}
+        detail="Note : l'examen psychiatrique est réalisé sur réquisition judiciaire par un psychiatre. Ne sont pas concernées : expertise pénale, évaluation psychologique."
+        values={["Somatique", "Psychiatrique"]}
         mode="toggleMultiple"
         dispatch={dispatch}
         state={state.examinationTypes || []}
         invalid={!!errors.examinationTypes}
+      />
+
+      <ActBlock
+        type="examinations"
+        title="Examens complémentaires demandés"
+        values={["Scanner", "Radiographie", "Panoramique dentaire"]}
+        mode="toggleMultiple"
+        dispatch={dispatch}
+        state={state.examinations || []}
+        invalid={!!errors.examinations}
       />
 
       <ActBlock
