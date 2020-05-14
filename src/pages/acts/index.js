@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo, useCallback } from "react"
 import Link from "next/link"
 import PropTypes from "prop-types"
 import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Table } from "reactstrap"
@@ -26,6 +26,7 @@ import { mapArrayForSelect } from "../../utils/select"
 import { getReferenceData } from "../../utils/init"
 import { profiles as profilesConstants } from "../../utils/actsConstants"
 import { memoizedSearchAskers } from "../../clients/askers"
+import { buildScope } from "../../services/scope"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   const renderCount = React.useRef(0)
@@ -47,16 +48,26 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     [search]
   )
 
-  const existingHospitals = mapArrayForSelect(
-    getReferenceData("hospitals"),
-    (elt) => elt.id,
-    (elt) => elt.name
+  const scope = useMemo(() => buildScope(currentUser), [currentUser])
+
+  const hospitalsChoices = useCallback(
+    mapArrayForSelect(
+      scope?.length === 0
+        ? getReferenceData("hospitals")
+        : getReferenceData("hospitals").filter((hospital) => scope.includes(hospital.id)),
+      (elt) => elt.id,
+      (elt) => elt.name
+    ),
+    [scope]
   )
 
-  const existingProfiles = mapArrayForSelect(
-    Object.keys(profilesConstants) || [],
-    (elt) => elt,
-    (elt) => elt
+  const existingProfiles = useCallback(
+    mapArrayForSelect(
+      Object.keys(profilesConstants) || [],
+      (elt) => elt,
+      (elt) => elt
+    ),
+    []
   )
 
   useEffect(() => {
@@ -138,7 +149,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                   type="text"
                   name="search"
                   id="search"
-                  placeholder="Rechercher un acte par n° interne ou n° de PV"
+                  placeholder="Rechercher un acte ou plusieurs, par n° interne ou n° de PV"
                   autoComplete="off"
                   value={search}
                   onChange={onSearchChange}
@@ -184,31 +195,33 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                         />
                       </Col>
                     </Row>
+                    {hospitalsChoices?.length > 1 && (
+                      <Row className="mt-3">
+                        <Col>
+                          <Label className="text-dark">Établissements</Label>
+                          <Select
+                            options={hospitalsChoices}
+                            value={hospitals}
+                            isMulti
+                            onChange={onHospitalsChange}
+                            noOptionsMessage={() => "Aucun résultat"}
+                            placeholder="Choisissez un établissement de votre périmètre"
+                            isClearable={true}
+                            isSearchable={true}
+                          />
+                        </Col>
+                      </Row>
+                    )}{" "}
                     <Row className="mt-3">
                       <Col>
-                        <Label className="text-dark">Établissements</Label>
-                        <Select
-                          options={existingHospitals}
-                          value={hospitals}
-                          isMulti
-                          onChange={onHospitalsChange}
-                          noOptionsMessage={() => "Aucun résultat"}
-                          placeholder="Choisissez un établissement de votre périmètre"
-                          isClearable={true}
-                          isSearchable={true}
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="mt-3">
-                      <Col>
-                        <Label className="text-dark">Profils et actes hors examens</Label>
+                        <Label className="text-dark">Profils et autres activités</Label>
                         <Select
                           options={existingProfiles}
                           value={profiles}
                           isMulti
                           onChange={onProfilesChange}
                           noOptionsMessage={() => "Aucun résultat"}
-                          placeholder="Choisissez un profil/acte"
+                          placeholder="Choisissez un profil ou activité"
                           isClearable={true}
                           isSearchable={true}
                         />
