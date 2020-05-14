@@ -29,8 +29,8 @@ import { memoizedSearchAskers } from "../../clients/askers"
 import { buildScope } from "../../services/scope"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
-  const renderCount = React.useRef(0)
-  renderCount.current++
+  // const renderCount = React.useRef(0)
+  // renderCount.current++
 
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActs, initialPaginatedData)
   const [isOpenedFilters, setOpenedFilters] = useState(false)
@@ -39,15 +39,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   const [profiles, setProfiles] = useState([])
   const [asker, setAsker] = useState(null)
   const [search, setSearch] = useState("")
-
-  useDebounce(
-    () => {
-      onChange()
-    },
-    500,
-    [search]
-  )
-
+  useDebounce(onChange, 500, [search])
   const scope = useMemo(() => buildScope(currentUser), [currentUser])
 
   const hospitalsChoices = useCallback(
@@ -78,11 +70,14 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     register({ name: "search" })
   }, [register])
 
-  const toggleFilters = () => {
+  const numFilters = Object.values(getValues()).filter((val) => !!val).length
+
+  function toggleFilters() {
     setOpenedFilters((state) => !state)
+    onChange()
   }
 
-  const onHospitalsChange = (selectedOption) => {
+  function onHospitalsChange(selectedOption) {
     // Needs transformation between format of react-select to expected format for API call
     setValue("hospitals", !selectedOption?.length ? null : selectedOption)
     // Needs to sync specifically the value to the react-select as well
@@ -90,7 +85,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     onChange()
   }
 
-  const onProfilesChange = (selectedOption) => {
+  function onProfilesChange(selectedOption) {
     // Needs transformation between format of react-select to expected format for API call
     setValue("profiles", !selectedOption?.length ? null : selectedOption)
 
@@ -99,7 +94,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     onChange()
   }
 
-  const onAskerChange = (selectedOption) => {
+  function onAskerChange(selectedOption) {
     // Needs transformation between format of react-select to expected format for API call
     setValue("asker", selectedOption)
 
@@ -108,13 +103,13 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     onChange()
   }
 
-  const onSearchChange = (e) => {
+  function onSearchChange(e) {
     const text = e?.target?.value || ""
     setSearch(text)
     setValue("search", text)
   }
 
-  const loadAskers = async (search) => {
+  async function loadAskers(search) {
     const askers = await memoizedSearchAskers({ search })
 
     return mapArrayForSelect(
@@ -124,17 +119,16 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     )
   }
 
-  const onSubmit = (formData) => {
-    logDebug("submit")
+  function onChange() {
+    onSubmit(getValues())
+  }
+
+  function onSubmit(formData) {
     fetchPage(formData)(0)
   }
 
-  const onExport = async () => {
+  async function onExport() {
     await fetchExport(getValues())
-  }
-
-  const onChange = async () => {
-    onSubmit(getValues())
   }
 
   return (
@@ -160,13 +154,21 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
               <>
                 <Row className="mt-3">
                   <Col>
-                    <Button color="secondary" outline={!isOpenedFilters} onClick={toggleFilters}>
-                      Filtrer {isOpenedFilters ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+                    <Button className="mr-3" color="secondary" outline={!isOpenedFilters} onClick={toggleFilters}>
+                      Plus de critères {isOpenedFilters ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
                     </Button>
+                    {numFilters > 0 && (
+                      <span style={{ color: "#6c757d" }}>
+                        {numFilters} critère{numFilters > 1 && "s"} actif{numFilters > 1 && "s"}
+                      </span>
+                    )}
                   </Col>
-                </Row>{" "}
-                {isOpenFeature("export") && isOpenedFilters && (
-                  <div className="p-3 mt-3 border rounded shadow-xl border-light bg-light">
+                </Row>
+                {isOpenFeature("export") && (
+                  <div
+                    className="p-3 mt-3 border rounded shadow-xl border-light bg-light"
+                    style={{ display: isOpenedFilters ? "block" : "none" }}
+                  >
                     <Row>
                       <Col sm="3">
                         <Label htmlFor="startDate" className="text-dark">
