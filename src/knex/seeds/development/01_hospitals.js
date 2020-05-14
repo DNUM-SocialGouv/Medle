@@ -46,4 +46,9 @@ exports.seed = function (knex) {
         },
       ])
     })
+  // .then(function () {
+  //   return knex.raw(
+  //     "select pg_catalog.setval(pg_get_serial_sequence('hospitals', 'id'), (select max(id) from hospitals) + 1);"
+  //   )
+  // })
 }
