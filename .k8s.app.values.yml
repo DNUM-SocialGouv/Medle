@@ -26,3 +26,14 @@ deployment:
 
 ingress:
   enabled: true
+  # NOTE(douglasduteil): explicitly use HOST during the migration
+  # Ensure that we do not override the existing prod
+  hosts:
+    - host: ${HOST}
+      paths:
+        - path: /
+          servicePort: "${PORT}"
+  tls:
+    - hosts:
+        - ${HOST}
+      secretName: ${CI_PROJECT_NAME}-crt
