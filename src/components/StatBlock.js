@@ -1,6 +1,6 @@
 import React from "react"
 import { PropTypes } from "prop-types"
-import { Pie, PieChart, Cell, Legend } from "recharts"
+import { Pie, PieChart, Cell, Legend, Tooltip } from "recharts"
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline"
 import { Title2 } from "./StyledComponents"
 
@@ -108,6 +108,8 @@ export const StatBlockPieChart = ({ data, hoverTitle, title }) => {
             <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
           ))}
         </Pie>
+        <Tooltip />
+
         <Legend wrapperStyle={{ color: "#9f9f9f" }} />
       </PieChart>
     </StatBlock>
