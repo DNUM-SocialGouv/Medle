@@ -4,7 +4,7 @@ import knex from "../../knex/knex"
 import { transformAll, transformAllForExport } from "../../models/acts"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 import { APIError } from "../../utils/errors"
-import { ISO_DATE } from "../../utils/date"
+import { ISO_DATE, isValidIsoDate } from "../../utils/date"
 import { normalize } from "../../services/normalize"
 
 const LIMIT = 50
@@ -72,8 +72,8 @@ export const makeWhereClause = ({
 }
 
 const searchSchema = yup.object().shape({
-  startDate: yup.date(),
-  endDate: yup.date(),
+  startDate: yup.string().transform((value, originalValue) => (isValidIsoDate(value) ? originalValue : null)),
+  endDate: yup.string().transform((value, originalValue) => (isValidIsoDate(value) ? originalValue : null)),
   hospitals: yup.array().of(yup.number().positive().integer()),
   profiles: yup.array(),
   asker: yup.number().integer().positive(),

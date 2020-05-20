@@ -26,7 +26,7 @@ describe("normalizeParams", () => {
     await expect(normalizeParams(props, currentUser)).resolves.toMatchInlineSnapshot(`
             Object {
               "asker": 3850,
-              "endDate": 2020-05-07T22:00:00.000Z,
+              "endDate": "2020-05-08",
               "hospitals": Array [
                 3,
                 2,
@@ -37,7 +37,7 @@ describe("normalizeParams", () => {
               ],
               "requestedPage": 3,
               "scope": Array [],
-              "startDate": 2020-05-11T22:00:00.000Z,
+              "startDate": "2020-05-12",
             }
           `)
   }),
@@ -60,6 +60,18 @@ describe("normalizeParams", () => {
 
       await expect(normalizeParams(props, currentUser)).rejects.toMatchInlineSnapshot(`[APIError: Bad request]`)
     }),
+    it("should return error for incorrect values on date", async () => {
+      const currentUser = {}
+
+      const props = {
+        scope: [],
+        startDate: "2020-151-121",
+        endDate: "2020-05-08",
+        currentUser: { scope: [1, 3] },
+      }
+
+      await expect(normalizeParams(props, currentUser)).rejects.toMatchInlineSnapshot(`[APIError: Bad request]`)
+    }),
     it("should accept another correct values", async () => {
       const currentUser = {}
 
@@ -74,7 +86,7 @@ describe("normalizeParams", () => {
       await expect(normalizeParams(props, currentUser)).resolves.toMatchInlineSnapshot(`
               Object {
                 "asker": 3850,
-                "endDate": 2020-01-20T23:00:00.000Z,
+                "endDate": "2020-01-21",
                 "hospitals": Array [
                   1,
                   2,
@@ -85,7 +97,7 @@ describe("normalizeParams", () => {
                   " Personne décédée",
                 ],
                 "scope": Array [],
-                "startDate": 2019-12-31T23:00:00.000Z,
+                "startDate": "2020-01-01",
               }
             `)
     })
