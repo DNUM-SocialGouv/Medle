@@ -294,7 +294,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                 ))}
               </tbody>
             </Table>
-            <Pagination data={paginatedData} fn={fetchPage(getValues("search"))} />
+            <Pagination data={paginatedData} fn={fetchPage(getValues())} />
             {isOpenFeature("export") && (
               <div className="mt-5 d-flex justify-content-center">
                 <SearchButton className="btn-outline-primary" disabled={loading} onClick={onExport}>
