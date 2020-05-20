@@ -69,7 +69,9 @@ const BoneAgeRead = (act) => {
         <Col className="mr-3">
           <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
         </Col>
-        <Col className="mr-3"></Col>
+        <Col className="mr-3">
+          <ColumnAct header={"Examens complémentaires demandés"} content={act && act.examinations} />
+        </Col>
         <Col className="mr-3"></Col>
       </Row>
 
