@@ -3864,4 +3864,10 @@ exports.seed = function(knex) {
          {"id":3860,"name":"Commissariat de police de Villejuif","type":"commissariat_police"}
       ])
    })
+   .then(function () {
+      return knex.raw(
+        "select pg_catalog.setval(pg_get_serial_sequence('askers', 'id'), (select max(id) from askers) + 1);"
+      )
+    })
+
 }

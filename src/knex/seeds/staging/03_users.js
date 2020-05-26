@@ -107,6 +107,11 @@ exports.seed = function (knex) {
         },
       ])
     })
+    .then(function () {
+      return knex.raw(
+        "select pg_catalog.setval(pg_get_serial_sequence('users', 'id'), (select max(id) from users) + 1);"
+      )
+    })
 }
 
 // table.increments("id")
