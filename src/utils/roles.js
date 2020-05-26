@@ -84,13 +84,14 @@ export const availableRolesForUser = (user) => {
         "ADMIN_HOSPITAL",
         "OPERATOR_ACT",
         "OPERATOR_EMPLOYMENT",
+        "OPERATOR_GENERIC",
         "GUEST_HOSPITAL",
         "PUBLIC_SUPERVISOR",
         "REGIONAL_SUPERVISOR",
         "SUPER_ADMIN",
       ]
     case "ADMIN_HOSPITAL":
-      return ["OPERATOR_ACT", "OPERATOR_EMPLOYMENT", "GUEST_HOSPITAL"]
+      return ["OPERATOR_ACT", "OPERATOR_EMPLOYMENT", "GUEST_HOSPITAL", "OPERATOR_GENERIC"]
 
     default:
       throw Error("This case is not expected to happen.")
@@ -110,6 +111,8 @@ export const rulesOfRoles = (role) => {
     case "OPERATOR_ACT":
       return genericProfile
     case "OPERATOR_EMPLOYMENT":
+      return genericProfile
+    case "OPERATOR_GENERIC":
       return genericProfile
     case "GUEST_HOSPITAL":
       return genericProfile
