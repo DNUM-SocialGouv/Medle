@@ -4,11 +4,31 @@ exports[`/attacks should return all attacks 1`] = `
 Array [
   Object {
     "id": 1,
-    "name": "Bataclan",
+    "name": "Bataclan 2015",
+  },
+  Object {
+    "id": 7,
+    "name": "Charlie Hebdo 2015",
+  },
+  Object {
+    "id": 6,
+    "name": "École Ozar Hatorah Toulouse 2012",
   },
   Object {
     "id": 2,
-    "name": "Hyper Cacher",
+    "name": "Hyper Cacher 2015",
+  },
+  Object {
+    "id": 3,
+    "name": "Les terrasses Paris 2015",
+  },
+  Object {
+    "id": 4,
+    "name": "Nice 2016",
+  },
+  Object {
+    "id": 5,
+    "name": "Villejuif 2020",
   },
 ]
 `;

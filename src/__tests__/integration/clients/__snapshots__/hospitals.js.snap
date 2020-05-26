@@ -5,7 +5,6 @@ Array [
   Object {
     "addr1": "2 BD TONNELLE",
     "addr2": "",
-    "canDoPostMortem": true,
     "depCode": "37",
     "finesseNumber": "370000481",
     "id": 1,
