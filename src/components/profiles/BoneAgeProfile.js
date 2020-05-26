@@ -25,7 +25,7 @@ const BoneAgeEdit = ({ dispatch, state, errors }) => {
 
       <ActBlock
         type="examinations"
-        title="Examens complémentaires demandés"
+        title="Prélèvements et examens complémentaires"
         values={["Scanner", "Radiographie", "Panoramique dentaire"]}
         mode="toggleMultiple"
         dispatch={dispatch}
@@ -70,7 +70,7 @@ const BoneAgeRead = (act) => {
           <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
         </Col>
         <Col className="mr-3">
-          <ColumnAct header={"Examens complémentaires demandés"} content={act && act.examinations} />
+          <ColumnAct header={"Prélèvements et examens complémentaires"} content={act && act.examinations} />
         </Col>
         <Col className="mr-3"></Col>
       </Row>
