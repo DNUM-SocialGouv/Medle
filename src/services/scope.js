@@ -5,6 +5,6 @@
  */
 export const buildScope = (currentUser = {}) => {
   const scope = currentUser.scope || []
-  const id = currentUser.hospital && currentUser.hospital.id ? [currentUser.hospital.id] : []
+  const id = currentUser.hospital?.id ? [currentUser.hospital.id] : []
   return [...scope, ...id]
 }

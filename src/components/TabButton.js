@@ -13,13 +13,14 @@ const TabButton = ({ labels, callback, colorScheme }) => {
 
   return (
     <>
-      <div className="pb-4 btn-group btn-group-toggle">
+      <div className="mt-3 pb-4 btn-group btn-group-toggle">
         {labels.map((label, index) => (
           <label
             key={index}
             className={`btn ${
               selectedLabel === label ? `active medle-btn-${colorScheme}` : `medle-btn-outline-${colorScheme}`
             }`}
+            style={{ "z-index": 0 }}
           >
             <input type="radio" name="radio" onClick={() => onClick(label)} />
             {label}

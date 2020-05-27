@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback, useMemo } from "react"
 import { PropTypes } from "prop-types"
 import { Alert, Col, Container, Form, FormGroup, Input, Row } from "reactstrap"
 import Switch from "react-switch"
 import ListAltIcon from "@material-ui/icons/ListAlt"
+import Select from "react-select"
 
 import { isOpenFeature } from "../../config"
 import Layout from "../../components/Layout"
 import TabButton from "../../components/TabButton"
 import { Label, Title1 } from "../../components/StyledComponents"
-import { STATS_GLOBAL } from "../../utils/roles"
+import { PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, SUPER_ADMIN, STATS_GLOBAL } from "../../utils/roles"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { logError, logDebug } from "../../utils/logger"
 import { isEmpty, pluralize } from "../../utils/misc"
@@ -17,6 +18,8 @@ import { isValidStartDate, isValidEndDate } from "../../services/statistics/comm
 import { buildScope } from "../../services/scope"
 import { SearchButton } from "../../components/form/SearchButton"
 import { fetchExport, memoizedFetchStatistics } from "../../clients/statistics"
+import { mapArrayForSelect } from "../../utils/select"
+import { getReferenceData } from "../../utils/init"
 
 const livingDeceaseddData = (statistics) => [
   {
@@ -97,6 +100,8 @@ const examinationsData = (statistics) => [
   },
 ]
 
+const supervisorRoles = [PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, SUPER_ADMIN]
+
 const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   const [statistics, setStatistics] = useState(_statistics)
   const [scopeFilter, setScopeFilter] = useState({ isNational: true, scope: [] })
@@ -119,12 +124,25 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
         type,
         startDate: formState.startDate,
         endDate: formState.endDate,
-        scopeFilter: scopeFilter.scope,
+        scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
       })
       setStatistics(statistics)
     }
     syncUI()
   }, [formState.endDate, formState.startDate, scopeFilter.scope, type])
+
+  const scope = useMemo(() => buildScope(currentUser), [currentUser])
+
+  const hospitalsChoices = useCallback(
+    mapArrayForSelect(
+      scope?.length === 0
+        ? getReferenceData("hospitals")
+        : getReferenceData("hospitals").filter((hospital) => scope.includes(hospital.id)),
+      (elt) => elt.id,
+      (elt) => elt.name
+    ),
+    [scope]
+  )
 
   const onChange = (e) => {
     setErrors({})
@@ -142,7 +160,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   }
 
   const toggleScopeFilter = async (checked) => {
-    setScopeFilter({ isNational: checked, scope: checked ? [] : buildScope(currentUser) })
+    setScopeFilter({ isNational: checked, scope: checked || scope?.length === 0 ? [] : hospitalsChoices })
   }
 
   const onExport = async () => {
@@ -150,16 +168,32 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       type,
       startDate: formState.startDate,
       endDate: formState.endDate,
-      scopeFilter: scopeFilter.scope,
+      scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
     })
+  }
+
+  const onScopeChange = (selectedOption) => {
+    // Needs to sync specifically the value to the react-select as well
+    setScopeFilter({ ...scopeFilter, scope: selectedOption || [] })
+  }
+
+  const customStyles = {
+    container: (styles) => ({
+      ...styles,
+      flexGrow: 1,
+    }),
+    menu: (styles) => ({
+      ...styles,
+      textAlign: "left",
+    }),
   }
 
   return (
     <Layout page="statistics" currentUser={currentUser}>
       <Title1 className="mt-5 mb-4">{"Statistiques"}</Title1>
-      <Container className="text-center">
-        <Form>
-          <Row className="mb-4 align-items-baseline">
+      <Container className="text-center" style={{ maxWidth: 1100 }}>
+        <Form onSubmit={(e) => e.preventDefault()}>
+          <Row className="align-items-baseline">
             <Col lg={{ size: 4, offset: 2 }} md="6" sm="12" className="text-right">
               <FormGroup row className="justify-content-md-end justify-content-center align-items-baseline">
                 <Label htmlFor="examinationDate" className="mr-2">
@@ -190,11 +224,12 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                 />
               </FormGroup>
             </Col>
+
             <Col lg={{ size: 2 }} md="12" sm="12">
-              <div className="mr-4 d-flex justify-content-lg-end justify-content-center align-items-center">
+              <div className="mr-4 d-flex justify-content-lg-end justify-content-center align-items-center mb-4">
                 <div className="d-flex align-items-center">
                   <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#307df6" }}>
-                    Ma&nbsp;structure
+                    {supervisorRoles.includes(currentUser?.role) ? "Personnalisé" : "Ma\xA0structure"}
                   </span>
                   <Switch
                     checked={scopeFilter && scopeFilter.isNational}
@@ -218,6 +253,23 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               </div>
             </Col>
           </Row>
+
+          {!scopeFilter.isNational && hospitalsChoices?.length > 1 && (
+            <div className="d-lg-flex align-items-baseline mx-auto" style={{ maxWidth: 800 }}>
+              <Label className="mr-3">Établissements</Label>
+              <Select
+                options={hospitalsChoices}
+                value={scopeFilter.scope}
+                isMulti
+                onChange={onScopeChange}
+                noOptionsMessage={() => "Aucun résultat"}
+                placeholder="Tapez les premières lettres d'un établissement"
+                isClearable={true}
+                isSearchable={true}
+                styles={customStyles}
+              />
+            </div>
+          )}
         </Form>
 
         {!isEmpty(errors) && (
@@ -233,10 +285,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           labels={["Global", "Vivant", "Thanato"]}
           colorScheme={scopeFilter && scopeFilter.isNational ? "violet" : "blue"}
           callback={setType}
-        ></TabButton>
+        />
 
         {type === "Global" && (
-          <div className="tab justify-content-sm-center justify-content-xl-start">
+          <div className="tab justify-content-center justify-content-xl-start">
             <StatBlockNumbers
               title="Actes réalisés"
               firstNumber={statistics?.globalCount}

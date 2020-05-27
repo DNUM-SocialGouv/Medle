@@ -21,11 +21,14 @@ export const normalizeDates = ({ startDate, endDate } = {}) => {
 }
 
 export const normalizeInputs = ({ startDate, endDate, scopeFilter = [] }, reachableScope) => {
-  // verification if all the scope filter is included in the reachable scope
-  for (let i = 0; i < scopeFilter.length; i++) {
-    if (!reachableScope.includes(scopeFilter[i])) {
-      scopeFilter = []
-      break
+  // reachableScope.length == 0 if super addmin or public supervisor, with rights to see all hospitals
+  if (reachableScope.length !== 0) {
+    // check if all the scope filter is included in the reachable scope
+    for (let i = 0; i < scopeFilter.length; i++) {
+      if (!reachableScope.includes(scopeFilter[i])) {
+        scopeFilter = []
+        break
+      }
     }
   }
 
