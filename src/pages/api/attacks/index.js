@@ -3,7 +3,7 @@ import Cors from "micro-cors"
 import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
-import { ACT_CONSULTATION } from "../../../utils/roles"
+import { STATS_GLOBAL } from "../../../utils/roles"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 
 const handler = async (req, res) => {
@@ -12,9 +12,9 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_GET: {
-        checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
+        checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-        const attacks = await knex("attacks").whereNull("deleted_at").orderBy("name").select("id", "name")
+        const attacks = await knex("attacks").whereNull("deleted_at").orderBy("name", "desc").select("id", "name")
 
         return res.status(STATUS_200_OK).json(attacks)
       }

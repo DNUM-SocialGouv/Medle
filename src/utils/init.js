@@ -4,11 +4,16 @@ import { logInfo } from "../utils/logger"
 
 export const fetchReferenceData = async () => {
   logInfo("Récupération des libellés des données de référence")
-  const attacks = await findAllAttacks()
-  const hospitals = await findAllHospitals()
+  try {
+    const attacks = await findAllAttacks()
+    const hospitals = await findAllHospitals()
 
-  sessionStorage.setItem("attacks", JSON.stringify(attacks))
-  sessionStorage.setItem("hospitals", JSON.stringify(hospitals))
+    sessionStorage.setItem("attacks", JSON.stringify(attacks))
+    sessionStorage.setItem("hospitals", JSON.stringify(hospitals))
+  } catch (error) {
+    console.error("Problème pour récupérer les données de référence")
+    console.error(error)
+  }
 }
 
 export const clearReferenceData = () => {

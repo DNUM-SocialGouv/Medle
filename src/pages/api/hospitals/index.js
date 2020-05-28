@@ -1,7 +1,7 @@
 import Cors from "micro-cors"
 
 import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS, METHOD_POST } from "../../../utils/http"
-import { ADMIN, NO_PRIVILEGE_REQUIRED } from "../../../utils/roles"
+import { ADMIN, STATS_GLOBAL } from "../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { create, search } from "../../../services/hospitals"
@@ -12,7 +12,7 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_GET: {
-        checkValidUserWithPrivilege(NO_PRIVILEGE_REQUIRED, req, res)
+        checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
         const hospitals = await search(req.query)
 
