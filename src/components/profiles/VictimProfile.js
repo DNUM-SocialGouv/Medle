@@ -34,6 +34,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
           "Coups blessures",
           "Sexuelle",
           "Maltraitance",
+          "Harcèlement moral",
           { title: "Accident", subValues: ["Collectif", "Non collectif"] },
           { title: "Attentat", subValues: getReferenceData("attacks").map((elt) => elt.name) },
         ]}
