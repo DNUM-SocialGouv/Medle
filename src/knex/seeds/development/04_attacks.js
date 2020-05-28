@@ -4,31 +4,31 @@ exports.seed = function (knex) {
       return knex("attacks").insert([
         {
           id: 1,
-          name: "Bataclan 2015",
+          name: "2015 Bataclan",
         },
         {
           id: 2,
-          name: "Hyper Cacher 2015",
+          name: "2015 Hyper Cacher",
         },
         {
           id: 3,
-          name: "Les terrasses Paris 2015",
+          name: "2015 Les terrasses Paris",
         },
         {
           id: 4,
-          name: "Nice 2016",
+          name: "2016 Nice",
         },
         {
           id: 5,
-          name: "Villejuif 2020",
+          name: "2020 Villejuif",
         },
         {
           id: 6,
-          name: "École Ozar Hatorah Toulouse 2012",
+          name: "2012 École Ozar Hatorah Toulouse",
         },
         {
           id: 7,
-          name: "Charlie Hebdo 2015",
+          name: "2015 Charlie Hebdo",
         },
       ])
     })
