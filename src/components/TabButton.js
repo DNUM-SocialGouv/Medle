@@ -20,7 +20,7 @@ const TabButton = ({ labels, callback, colorScheme }) => {
             className={`btn ${
               selectedLabel === label ? `active medle-btn-${colorScheme}` : `medle-btn-outline-${colorScheme}`
             }`}
-            style={{ "z-index": 0 }}
+            style={{ zIndex: 0 }}
           >
             <input type="radio" name="radio" onClick={() => onClick(label)} />
             {label}
