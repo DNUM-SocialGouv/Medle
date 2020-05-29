@@ -19,7 +19,7 @@ export const authenticate = async (email, password) => {
   // SQL query
   const [dbUser] = await knex("users")
     .leftJoin("hospitals", "users.hospital_id", "hospitals.id")
-    .where("email", email)
+    .where(knex.raw(`lower(email) = ?`, email?.toLowerCase()))
     .whereNull("users.deleted_at")
     .select(
       "users.id",
