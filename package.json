@@ -20,7 +20,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
-    "@mdx-js/loader": "^1.6.4",
+    "@mdx-js/loader": "^1.6.5",
     "@next/mdx": "^9.3.6",
     "@sentry/browser": "^5.15.5",
     "@sentry/integrations": "^5.15.5",
@@ -51,7 +51,7 @@
     "recharts": "^2.0.0-beta.6",
     "remark-emoji": "^2.1.0",
     "remark-images": "^2.0.0",
-    "styled-components": "^5.1.0",
+    "styled-components": "^5.1.1",
     "yup": "^0.28.5"
   },
   "devDependencies": {
