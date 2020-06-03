@@ -17,7 +17,7 @@ import { findList as findListHospitals } from "../hospitals"
 export const buildLivingStatistics = async (filters, currentUser) => {
   const reachableScope = buildScope(currentUser)
 
-  const { startDate, endDate, scopeFilter } = normalizeInputs(filters, reachableScope)
+  const { startDate, endDate, scopeFilter, profile } = normalizeInputs(filters, reachableScope)
 
   const fetchGlobalCount = knex("acts")
     .select(knex.raw("count(1)::integer"))
@@ -25,6 +25,9 @@ export const buildLivingStatistics = async (filters, currentUser) => {
     .where((builder) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
+      }
+      if (profile) {
+        builder.where("profile", profile)
       }
     })
     .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
@@ -57,6 +60,9 @@ export const buildLivingStatistics = async (filters, currentUser) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
       }
+      if (profile) {
+        builder.where("profile", profile)
+      }
     })
     .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
     .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
@@ -67,6 +73,9 @@ export const buildLivingStatistics = async (filters, currentUser) => {
     .where((builder) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
+      }
+      if (profile) {
+        builder.where("profile", profile)
       }
     })
     .whereRaw(
@@ -89,6 +98,9 @@ export const buildLivingStatistics = async (filters, currentUser) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
       }
+      if (profile) {
+        builder.where("profile", profile)
+      }
     })
     .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
     .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
@@ -108,6 +120,9 @@ export const buildLivingStatistics = async (filters, currentUser) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
       }
+      if (profile) {
+        builder.where("profile", profile)
+      }
     })
     .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
     .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
@@ -125,6 +140,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         startDate,
         endDate,
         scopeFilter,
+        profile,
       },
       globalCount: globalCount.count || 0,
       averageCount:
@@ -157,11 +173,11 @@ export const buildLivingStatistics = async (filters, currentUser) => {
   })
 }
 
-export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
+export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter, profile }, currentUser) => {
   scopeFilter = scopeFilter && JSON.parse(scopeFilter)
 
   const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } = await buildLivingStatistics(
-    { startDate, endDate, scopeFilter },
+    { startDate, endDate, scopeFilter, profile },
     currentUser
   )
 
@@ -218,6 +234,7 @@ export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter }
     name: "Périmètre",
     value: inputs?.scopeFilter ? hospitals.map((elt) => elt?.name) : "National",
   })
+  inputsWorksheet.addRow({ name: "Profil", value: inputs?.profile })
 
   return workbook
 }

@@ -1,5 +1,6 @@
 import moment from "moment"
 import { now, ISO_DATE } from "../../utils/date"
+import { livingProfiles } from "../../utils/actsConstants"
 
 const defaultEndDate = () => now().format(ISO_DATE)
 
@@ -20,7 +21,7 @@ export const normalizeDates = ({ startDate, endDate } = {}) => {
   return { startDate, endDate }
 }
 
-export const normalizeInputs = ({ startDate, endDate, scopeFilter = [] }, reachableScope) => {
+export const normalizeInputs = ({ startDate, endDate, scopeFilter = [], profile }, reachableScope) => {
   // reachableScope.length == 0 if super addmin or public supervisor, with rights to see all hospitals
   if (reachableScope.length !== 0) {
     // check if all the scope filter is included in the reachable scope
@@ -35,6 +36,7 @@ export const normalizeInputs = ({ startDate, endDate, scopeFilter = [] }, reacha
   return {
     ...normalizeDates({ startDate, endDate }),
     scopeFilter,
+    profile: livingProfiles.map((profile) => profile.value).includes(profile) ? profile : "",
   }
 }
 

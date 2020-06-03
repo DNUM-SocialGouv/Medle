@@ -37,6 +37,16 @@ export const profiles = {
   "Autre activité/Reconstitution": ReconstitutionProfile,
 }
 
+export const livingProfiles = [
+  { value: "Victime (vivante)", label: "Victime" },
+  { value: "Gardé.e à vue", label: "Gardé.e à vue" },
+  { value: "Personne pour âge osseux (hors GAV)", label: "Personne pour âge osseux" },
+  { value: "Examen pour OFPRA", label: "Examen pour OFPRA" },
+  { value: "Autre activité/Personne retenue", label: "Personne retenue" },
+  { value: "Autre activité/Examen lié à la route", label: "Examen lié à la route" },
+  { value: "Autre activité/IPM", label: "IPM" },
+]
+
 const periodOfDayValues = {
   week: {
     title: "lun.-ven.",

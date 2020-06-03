@@ -13,7 +13,7 @@ const TabButton = ({ labels, callback, colorScheme }) => {
 
   return (
     <>
-      <div className="mt-3 pb-4 btn-group btn-group-toggle">
+      <div className="mt-3 btn-group btn-group-toggle">
         {labels.map((label, index) => (
           <label
             key={index}

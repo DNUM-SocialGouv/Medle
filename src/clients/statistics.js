@@ -40,11 +40,12 @@ const fetchStatistics = async ({
   scopeFilter = [],
   startDate = defaultStartDate,
   endDate = now(),
+  profile,
   authHeaders,
 }) => {
   const response = await fetch(API_URL + endpoint(type), {
     method: METHOD_POST,
-    body: JSON.stringify({ startDate, endDate, scopeFilter }),
+    body: JSON.stringify({ startDate, endDate, scopeFilter, profile }),
     headers: { "Content-Type": "application/json", ...authHeaders },
   })
 
@@ -56,10 +57,10 @@ const MAX_AGE = 1000 * 60 * 5 // five minutes;
 
 export const memoizedFetchStatistics = moize({ maxAge: MAX_AGE, isDeepEqual: true })(fetchStatistics)
 
-export const fetchExport = async ({ type, startDate, endDate, scopeFilter = [] }) => {
+export const fetchExport = async ({ type, startDate, endDate, scopeFilter = [], profile }) => {
   saveAs(
     `${API_URL}${endpoint(type)}/export?startDate=${startDate}&endDate=${endDate}&scopeFilter=${JSON.stringify(
       scopeFilter
-    )}`
+    )}&profile=${profile}`
   )
 }

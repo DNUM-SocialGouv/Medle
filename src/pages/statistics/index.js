@@ -20,6 +20,7 @@ import { SearchButton } from "../../components/form/SearchButton"
 import { fetchExport, memoizedFetchStatistics } from "../../clients/statistics"
 import { mapArrayForSelect } from "../../utils/select"
 import { getReferenceData } from "../../utils/init"
+import { livingProfiles } from "../../utils/actsConstants"
 
 const livingDeceaseddData = (statistics) => [
   {
@@ -102,10 +103,13 @@ const examinationsData = (statistics) => [
 
 const supervisorRoles = [PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, SUPER_ADMIN]
 
+const profileChoices = [{ value: "", label: "Tous les profils" }, ...livingProfiles]
+
 const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   const [statistics, setStatistics] = useState(_statistics)
-  const [scopeFilter, setScopeFilter] = useState({ isNational: true, scope: [] })
   const [type, setType] = useState("Global")
+  const [scopeFilter, setScopeFilter] = useState({ isNational: true, scope: [] })
+  const [selectedProfile, setSelectedProfile] = useState({ value: "", label: "Tous les profils" })
   const [formState, setFormState] = useState({
     startDate: statistics?.inputs?.startDate,
     endDate: statistics?.inputs?.endDate,
@@ -125,11 +129,12 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
         startDate: formState.startDate,
         endDate: formState.endDate,
         scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
+        profile: selectedProfile?.value,
       })
       setStatistics(statistics)
     }
     syncUI()
-  }, [formState.endDate, formState.startDate, scopeFilter.scope, type])
+  }, [formState.endDate, formState.startDate, scopeFilter.scope, type, selectedProfile])
 
   const scope = useMemo(() => buildScope(currentUser), [currentUser])
 
@@ -143,8 +148,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
     ),
     [scope]
   )
+  const toggleScopeFilter = async (checked) => {
+    setScopeFilter({ isNational: checked, scope: checked || scope?.length === 0 ? [] : hospitalsChoices })
+  }
 
-  const onChange = (e) => {
+  const onDateChange = (e) => {
     setErrors({})
     if (e.target.id === "startDate") {
       if (!isValidStartDate(e.target.value, formState.endDate))
@@ -159,8 +167,12 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
     setFormState({ ...formState, [e.target.id]: e.target.value })
   }
 
-  const toggleScopeFilter = async (checked) => {
-    setScopeFilter({ isNational: checked, scope: checked || scope?.length === 0 ? [] : hospitalsChoices })
+  const onScopeChange = (selectedOption) => {
+    setScopeFilter({ ...scopeFilter, scope: selectedOption || [] })
+  }
+
+  const onProfileChange = (selectedOption) => {
+    setSelectedProfile(selectedOption)
   }
 
   const onExport = async () => {
@@ -169,18 +181,25 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       startDate: formState.startDate,
       endDate: formState.endDate,
       scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
+      profile: selectedProfile?.value,
     })
-  }
-
-  const onScopeChange = (selectedOption) => {
-    // Needs to sync specifically the value to the react-select as well
-    setScopeFilter({ ...scopeFilter, scope: selectedOption || [] })
   }
 
   const customStyles = {
     container: (styles) => ({
       ...styles,
       flexGrow: 1,
+    }),
+    menu: (styles) => ({
+      ...styles,
+      textAlign: "left",
+    }),
+  }
+  const customStylesProfiles = {
+    container: (styles) => ({
+      ...styles,
+      width: 300,
+      margin: "15px 20px",
     }),
     menu: (styles) => ({
       ...styles,
@@ -204,7 +223,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                   type="date"
                   invalid={errors && !!errors.startDate}
                   value={formState.startDate}
-                  onChange={onChange}
+                  onChange={onDateChange}
                   style={{ maxWidth: 160 }}
                 />
               </FormGroup>
@@ -219,7 +238,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                   type="date"
                   invalid={errors && !!errors.startDate}
                   value={formState.endDate}
-                  onChange={onChange}
+                  onChange={onDateChange}
                   style={{ maxWidth: 160 }}
                 />
               </FormGroup>
@@ -287,6 +306,21 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           callback={setType}
         />
 
+        <div
+          className={`d-flex w-100 justify-content-center justify-content-md-end mr-5 mt-2 mb-3 ${
+            type === "Vivant" ? "visible" : "invisible"
+          }`}
+        >
+          <Select
+            options={profileChoices}
+            value={selectedProfile}
+            onChange={onProfileChange}
+            noOptionsMessage={() => "Aucun résultat"}
+            isClearable={true}
+            isSearchable={true}
+            styles={customStylesProfiles}
+          />
+        </div>
         {type === "Global" && (
           <div className="tab justify-content-center justify-content-xl-start">
             <StatBlockNumbers
@@ -324,7 +358,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           </div>
         )}
         {type === "Vivant" && (
-          <div className="tab justify-content-sm-center justify-content-xl-start">
+          <div className="tab justify-content-center justify-content-xl-start">
             <StatBlockNumbers
               title="Actes réalisés"
               firstNumber={statistics?.globalCount}
@@ -343,7 +377,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           </div>
         )}
         {type === "Thanato" && (
-          <div className="tab justify-content-sm-center justify-content-xl-start">
+          <div className="tab justify-content-center justify-content-xl-start">
             <StatBlockNumbers
               title="Actes réalisés"
               firstNumber={statistics?.globalCount}
