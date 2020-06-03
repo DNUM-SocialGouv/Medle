@@ -17,7 +17,6 @@ exports.up = function (knex) {
       table.jsonb("numbers").alter()
       table.string("month", 2)
 
-      // table.dropUnique(["hospital_id", "year"])
       table.unique(["hospital_id", "year", "month"])
     })
 }
@@ -37,7 +36,6 @@ exports.down = function (knex) {
     .table("employments", function (table) {
       table.dropColumn("month")
 
-      table.dropUnique(["hospital_id", "year", "month"])
-      //table.unique(["hospital_id", "year"]) // Impossible, car cela introduirait des doublons sur hospital_id+year
+      knex.raw(`alter table employments drop constraint if exists employments_hospital_id_year_month_unique;`)
     })
 }

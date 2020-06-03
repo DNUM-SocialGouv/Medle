@@ -150,7 +150,7 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
   actsWorksheet.addRow({ name: "Moyenne des actes portant le même n° de réquisition", value: averageWithSamePV })
 
   actsWorksheet.addRow({})
-  actsWorksheet.addRow({ name: "Nb actes vivants", value: profilesDistribution?.["Vivant"] })
+  actsWorksheet.addRow({ name: "Nb actes vivants", value: profilesDistribution?.["Vivants (tous profils)"] })
   actsWorksheet.addRow({ name: "Nb actes personnes décédées", value: profilesDistribution?.["Personne décédée"] })
   actsWorksheet.addRow({ name: "Nb actes assises", value: profilesDistribution?.["Autre activité/Assises"] })
   actsWorksheet.addRow({

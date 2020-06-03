@@ -43,7 +43,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         builder.whereIn("id", scopeFilter)
       }
     })
-    .where("type", "=", "Vivant")
+    .where("type", "Vivants (tous profils)")
     .select(knex.raw("avg"))
 
   const fetchActsWithPv = knex("acts")

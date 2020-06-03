@@ -25,7 +25,7 @@ import { livingProfiles } from "../../utils/actsConstants"
 const livingDeceaseddData = (statistics) => [
   {
     name: "Vivant",
-    value: statistics?.profilesDistribution?.["Vivant"] || 0,
+    value: statistics?.profilesDistribution?.["Vivants (tous profils)"] || 0,
   },
   {
     name: "Thanato",
@@ -245,7 +245,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
             </Col>
 
             <Col lg={{ size: 2 }} md="12" sm="12">
-              <div className="mr-4 d-flex justify-content-lg-end justify-content-center align-items-center mb-4">
+              <div className="mb-4 mr-4 d-flex justify-content-lg-end justify-content-center align-items-center">
                 <div className="d-flex align-items-center">
                   <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#307df6" }}>
                     {supervisorRoles.includes(currentUser?.role) ? "Personnalisé" : "Ma\xA0structure"}
@@ -274,7 +274,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           </Row>
 
           {!scopeFilter.isNational && hospitalsChoices?.length > 1 && (
-            <div className="d-lg-flex align-items-baseline mx-auto" style={{ maxWidth: 800 }}>
+            <div className="mx-auto d-lg-flex align-items-baseline" style={{ maxWidth: 800 }}>
               <Label className="mr-3">Établissements</Label>
               <Select
                 options={hospitalsChoices}
