@@ -38,8 +38,8 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
         builder.whereIn("id", scopeFilter)
       }
     })
-    .where("type", "=", "Personne décédée")
-    .select(knex.raw("avg"))
+    .where("type", "Personne décédée")
+    .select("avg")
 
   return await Promise.all([fetchGlobalCount, fetchAverageCount]).then(([[globalCount], averageCount]) => {
     return {

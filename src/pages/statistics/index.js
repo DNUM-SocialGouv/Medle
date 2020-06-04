@@ -103,13 +103,14 @@ const examinationsData = (statistics) => [
 
 const supervisorRoles = [PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, SUPER_ADMIN]
 
-const profileChoices = [{ value: "", label: "Tous les profils" }, ...livingProfiles]
+const defaultProfile = { value: "", label: "Tous les profils" }
+const profileChoices = [defaultProfile, ...livingProfiles]
 
 const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   const [statistics, setStatistics] = useState(_statistics)
   const [type, setType] = useState("Global")
   const [scopeFilter, setScopeFilter] = useState({ isNational: true, scope: [] })
-  const [selectedProfile, setSelectedProfile] = useState({ value: "", label: "Tous les profils" })
+  const [selectedProfile, setSelectedProfile] = useState(defaultProfile)
   const [formState, setFormState] = useState({
     startDate: statistics?.inputs?.startDate,
     endDate: statistics?.inputs?.endDate,
@@ -124,12 +125,14 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   useEffect(() => {
     logDebug("Update UI after state changes")
     const syncUI = async () => {
+      const profile = ["Global", "Thanato"].includes(type) ? "" : selectedProfile.value
+
       const statistics = await memoizedFetchStatistics({
         type,
         startDate: formState.startDate,
         endDate: formState.endDate,
         scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
-        profile: selectedProfile?.value,
+        profile,
       })
       setStatistics(statistics)
     }

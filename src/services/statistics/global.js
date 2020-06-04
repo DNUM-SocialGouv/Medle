@@ -36,7 +36,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
         builder.whereIn("id", scopeFilter)
       }
     })
-    .select(knex.raw("avg"))
+    .select("avg")
 
   const fetchProfilesDistribution = knex("acts_by_day")
     .select(knex.raw("type, sum(nb_acts)::integer as count"))

@@ -44,7 +44,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
       }
     })
     .where("type", "Vivants (tous profils)")
-    .select(knex.raw("avg"))
+    .select("avg")
 
   const fetchActsWithPv = knex("acts")
     .select(
