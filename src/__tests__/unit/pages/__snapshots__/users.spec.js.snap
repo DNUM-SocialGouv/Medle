@@ -638,14 +638,23 @@ exports[`renders UserDetail unchanged 1`] = `
            
           <a
             className="jsx-1982338225"
-            href="https://incubateur.social.gouv.fr/"
+            href="https://www.fabrique.social.gouv.fr/"
             rel="noopener noreferrer"
             target="_blank"
           >
-             l'incubateur des ministères sociaux
+            la fabrique numérique des ministères sociaux
           </a>
            
-          (DINUM)
+          (
+          <a
+            className="jsx-1982338225"
+            href="https://beta.gouv.fr/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            beta.gouv.fr
+          </a>
+          )
         </div>
         <div
           className="mt-4 mt-md-0 col"

@@ -8,6 +8,8 @@ import { transform } from "../models/users"
 const validPassword = (password) => !!password?.length
 
 export const authenticate = async (email, password) => {
+  // normalize email
+  email = email?.trim()
   // request verification
   if (!validPassword(password)) {
     throw new APIError({
