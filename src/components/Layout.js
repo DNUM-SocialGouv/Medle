@@ -115,10 +115,14 @@ export const Footer = () => (
             DGOS
           </a>{" "}
           (ministère de la santé) et{" "}
-          <a target="_blank" href="https://incubateur.social.gouv.fr/" rel="noopener noreferrer">
-            {" l'incubateur des ministères sociaux"}
+          <a target="_blank" href="https://www.fabrique.social.gouv.fr/" rel="noopener noreferrer">
+            {"la fabrique numérique des ministères sociaux"}
           </a>{" "}
-          (DINUM)
+          (
+          <a target="_blank" href="https://beta.gouv.fr/" rel="noopener noreferrer">
+            beta.gouv.fr
+          </a>
+          )
         </Col>
         <Col className="mt-4 mt-md-0">
           <ul className="pl-0 list-unstyled">
