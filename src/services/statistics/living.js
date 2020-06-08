@@ -28,13 +28,14 @@ export const buildLivingStatistics = async (filters, currentUser) => {
       }
       if (profile) {
         builder.where("profile", profile)
+      } else {
+        builder.whereRaw(
+          `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`
+        )
       }
     })
     .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
     .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-    .whereRaw(
-      `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`
-    )
 
   const fetchAverageCount = knex
     .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
@@ -43,7 +44,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         builder.whereIn("id", scopeFilter)
       }
     })
-    .where("type", "Vivants (tous profils)")
+    .where("type", profile || "Vivants (tous profils)")
     .select("avg")
 
   const fetchActsWithPv = knex("acts")
