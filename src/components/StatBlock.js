@@ -122,7 +122,7 @@ StatBlockPieChart.propTypes = {
   title: PropTypes.string,
 }
 
-const colors = ["#307df6", "#ed6b67", "#eaa844", "#7ce0c3", "#ad33d8"]
+const colors = ["#307df6", "#ed6b67", "#eaa844", "#7ce0c3", "#ad33d8", "#f687b3", "#2f855a", "#c05621"]
 
 const RADIAN = Math.PI / 180
 
