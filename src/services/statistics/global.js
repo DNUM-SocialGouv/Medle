@@ -97,8 +97,6 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
     fetchActsWithSamePV,
     fetchAverageWithSamePV,
   ]).then(([[countHospitals], [globalCount], profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
-    console.log("buildGlobalStatistics -> profilesDistribution", profilesDistribution)
-
     countHospitals = parseInt(countHospitals?.count, 10) || 0
     globalCount = parseInt(globalCount?.count, 10) || 0
 
