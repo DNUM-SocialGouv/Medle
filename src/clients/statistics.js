@@ -39,7 +39,7 @@ const fetchStatistics = async ({
   type = "Global",
   scopeFilter = [],
   startDate = defaultStartDate,
-  endDate = now(),
+  endDate = now().format(ISO_DATE),
   profile,
   authHeaders,
 }) => {

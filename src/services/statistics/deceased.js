@@ -2,7 +2,7 @@ import Excel from "exceljs"
 
 import knex from "../../knex/knex"
 import { ISO_DATE, now } from "../../utils/date"
-import { normalizeInputs, averageOf } from "./common"
+import { normalizeInputs, intervalDays } from "./common"
 import { buildScope } from "../scope"
 import { findList as findListHospitals } from "../hospitals"
 
@@ -19,37 +19,36 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 
   const { startDate, endDate, scopeFilter } = normalizeInputs(filters, reachableScope)
 
+  const fetchCountHospitals = knex("hospitals").whereNull("deleted_at").count()
+
   const fetchGlobalCount = knex("acts")
-    .select(knex.raw("count(1)::integer"))
     .whereNull("deleted_at")
     .where((builder) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
       }
     })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-    .whereRaw(`profile = 'Personne décédée'`)
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+    .where("profile", "Personne décédée")
+    .count()
 
-  const fetchAverageCount = knex
-    .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("id", scopeFilter)
-      }
-    })
-    .where("type", "Personne décédée")
-    .select("avg")
+  return await Promise.all([fetchCountHospitals, fetchGlobalCount]).then(([[countHospitals], [globalCount]]) => {
+    countHospitals = parseInt(countHospitals?.count, 10) || 0
+    globalCount = parseInt(globalCount?.count, 10) || 0
 
-  return await Promise.all([fetchGlobalCount, fetchAverageCount]).then(([[globalCount], averageCount]) => {
+    const scopeFilterLength = scopeFilter.length || countHospitals
+    const periodInDays = intervalDays({ startDate, endDate })
+
     return {
       inputs: {
-        startDate,
-        endDate,
+        startDate: startDate.format(ISO_DATE),
+        endDate: endDate.format(ISO_DATE),
         scopeFilter,
       },
-      globalCount: globalCount.count || 0,
-      averageCount: averageCount?.length ? averageOf(averageCount.map((elt) => parseFloat(elt.avg, 10))) : 0,
+      globalCount,
+      averageCount:
+        periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
     }
   })
 }

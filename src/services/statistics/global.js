@@ -2,7 +2,7 @@ import Excel from "exceljs"
 
 import knex from "../../knex/knex"
 import { ISO_DATE, now } from "../../utils/date"
-import { normalizeInputs, averageOf } from "./common"
+import { normalizeInputs, intervalDays } from "./common"
 import { buildScope } from "../../services/scope"
 import { findList as findListHospitals } from "../hospitals"
 
@@ -19,34 +19,36 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 
   const { startDate, endDate, scopeFilter } = normalizeInputs(filters, reachableScope)
 
-  const fetchGlobalCount = knex("acts_by_day")
-    .select(knex.raw("sum(nb_acts)::integer  as count"))
+  const fetchCountHospitals = knex("hospitals").whereNull("deleted_at").count()
+
+  const fetchGlobalCount = knex("acts")
+    .whereNull("deleted_at")
     .where((builder) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
       }
     })
-    .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-    .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+    .count()
 
-  const fetchAverageCount = knex
-    .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("id", scopeFilter)
-      }
-    })
-    .select("avg")
-
-  const fetchProfilesDistribution = knex("acts_by_day")
-    .select(knex.raw("type, sum(nb_acts)::integer as count"))
+  const fetchProfilesDistribution = knex("acts")
+    .select(
+      knex.raw(
+        "case when profile not in ('Personne décédée', 'Autre activité/Assises', 'Autre activité/Reconstitution') " +
+          "then 'Vivants (tous profils)' " +
+          "else profile end as type, " +
+          "count(*)::integer"
+      )
+    )
+    .whereNull("deleted_at")
     .where((builder) => {
       if (scopeFilter.length) {
         builder.whereIn("hospital_id", scopeFilter)
       }
     })
-    .whereRaw(`day >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-    .whereRaw(`day <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
     .groupBy("type")
 
   const fetchActsWithSamePV = knex
@@ -60,8 +62,8 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
             builder.whereIn("hospital_id", scopeFilter)
           }
         })
-        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
         .whereRaw("pv_number is not null and pv_number <> ''")
         .groupBy("pv_number")
         .havingRaw("count(1) > 1")
@@ -80,8 +82,8 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
             builder.whereIn("hospital_id", scopeFilter)
           }
         })
-        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
         .whereRaw("pv_number is not null and pv_number <> ''")
         .groupBy("pv_number")
     })
@@ -89,21 +91,30 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
     .from("acts_with_same_pv")
 
   return await Promise.all([
+    fetchCountHospitals,
     fetchGlobalCount,
-    fetchAverageCount,
     fetchProfilesDistribution,
     fetchActsWithSamePV,
     fetchAverageWithSamePV,
-  ]).then(([[globalCount], averageCount, profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
+  ]).then(([[countHospitals], [globalCount], profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
+    console.log("buildGlobalStatistics -> profilesDistribution", profilesDistribution)
+
+    countHospitals = parseInt(countHospitals?.count, 10) || 0
+    globalCount = parseInt(globalCount?.count, 10) || 0
+
+    const scopeFilterLength = scopeFilter.length || countHospitals
+    const periodInDays = intervalDays({ startDate, endDate })
+
     return {
       inputs: {
-        startDate,
-        endDate,
+        startDate: startDate.format(ISO_DATE),
+        endDate: endDate.format(ISO_DATE),
         scopeFilter,
       },
-      globalCount: globalCount.count || 0,
+      globalCount,
       averageCount:
-        averageCount && averageCount.length ? averageOf(averageCount.map((elt) => parseFloat(elt.avg, 10))) : 0,
+        periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
+
       profilesDistribution: profilesDistribution.reduce((acc, current) => ({ ...acc, [current.type]: current.count }), {
         "Personne décédée": 0,
         "Autre activité/Assises": 0,

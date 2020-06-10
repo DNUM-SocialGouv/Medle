@@ -2,7 +2,7 @@ import Excel from "exceljs"
 
 import knex from "../../knex/knex"
 import { ISO_DATE, now } from "../../utils/date"
-import { normalizeInputs, averageOf } from "./common"
+import { normalizeInputs, intervalDays } from "./common"
 import { buildScope } from "../scope"
 import { findList as findListHospitals } from "../hospitals"
 
@@ -19,8 +19,9 @@ export const buildLivingStatistics = async (filters, currentUser) => {
 
   const { startDate, endDate, scopeFilter, profile } = normalizeInputs(filters, reachableScope)
 
+  const fetchCountHospitals = knex("hospitals").whereNull("deleted_at").count()
+
   const fetchGlobalCount = knex("acts")
-    .select(knex.raw("count(1)::integer"))
     .whereNull("deleted_at")
     .where((builder) => {
       if (scopeFilter.length) {
@@ -34,20 +35,12 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         )
       }
     })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
-
-  const fetchAverageCount = knex
-    .from(knex.raw(`avg_acts('${startDate}', '${endDate}')`))
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("id", scopeFilter)
-      }
-    })
-    .where("type", profile || "Vivants (tous profils)")
-    .select("avg")
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+    .count()
 
   const fetchActsWithPv = knex("acts")
+    .whereNull("deleted_at")
     .select(
       knex.raw(
         "case when pv_number is not null and pv_number <> '' then 'Avec réquisition' " +
@@ -65,11 +58,12 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         builder.where("profile", profile)
       }
     })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
     .groupBy("type")
 
   const fetchActTypes = knex("acts")
+    .whereNull("deleted_at")
     .select(knex.raw("count(*)::integer, extra_data->'examinationTypes' as name"))
     .where((builder) => {
       if (scopeFilter.length) {
@@ -83,11 +77,12 @@ export const buildLivingStatistics = async (filters, currentUser) => {
       `(extra_data->'examinationTypes' @> '["Psychiatrique"]' or ` +
         `extra_data->'examinationTypes' @> '["Somatique"]')`
     )
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
     .groupByRaw(`extra_data->'examinationTypes'`)
 
   const fetchHours = knex("acts")
+    .whereNull("deleted_at")
     .select(
       knex.raw(
         `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
@@ -103,10 +98,11 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         builder.where("profile", profile)
       }
     })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
 
   const fetchExaminations = knex("acts")
+    .whereNull("deleted_at")
     .select(
       knex.raw(
         `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as "Biologie",` +
@@ -125,27 +121,36 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         builder.where("profile", profile)
       }
     })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate)
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
 
   return await Promise.all([
+    fetchCountHospitals,
     fetchGlobalCount,
-    fetchAverageCount,
+    // fetchAverageCount,
     fetchActsWithPv,
     fetchActTypes,
     fetchHours,
     fetchExaminations,
-  ]).then(([[globalCount], averageCount, actsWithPv, actTypes, [hours], [examinations]]) => {
+  ]).then(([[countHospitals], [globalCount], actsWithPv, actTypes, [hours], [examinations]]) => {
+    countHospitals = parseInt(countHospitals?.count, 10) || 0
+    globalCount = parseInt(globalCount?.count, 10) || 0
+
+    const scopeFilterLength = scopeFilter.length || countHospitals
+    const periodInDays = intervalDays({ startDate, endDate })
+
     return {
       inputs: {
-        startDate,
-        endDate,
+        startDate: startDate.format(ISO_DATE),
+        endDate: endDate.format(ISO_DATE),
         scopeFilter,
         profile,
       },
-      globalCount: globalCount.count || 0,
+      globalCount,
       averageCount:
-        averageCount && averageCount.length ? averageOf(averageCount.map((elt) => parseFloat(elt.avg, 10))) : 0,
+        periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
+
+      //averageCount && averageCount.length ? averageOf(averageCount.map((elt) => parseFloat(elt.avg, 10))) : 0,
       actsWithPv: actsWithPv.reduce(
         (acc, current) => ({
           ...acc,

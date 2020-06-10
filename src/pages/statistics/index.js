@@ -331,7 +331,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               firstNumber={statistics?.globalCount}
               firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
               secondNumber={statistics?.averageCount}
-              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour en moyenne.`}
+              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
             <StatBlockPieChart
               data={livingDeceaseddData(statistics)}
@@ -367,7 +367,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               firstNumber={statistics?.globalCount}
               firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
               secondNumber={statistics?.averageCount}
-              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour en moyenne.`}
+              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
             <StatBlockPieChart data={actsWithPvData(statistics)} title="Numéro de réquisitions" />
             <StatBlockPieChart data={actTypesData(statistics)} title="Types d'actes" />
@@ -386,7 +386,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               firstNumber={statistics?.globalCount}
               firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
               secondNumber={statistics?.averageCount}
-              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour en moyenne.`}
+              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
           </div>
         )}

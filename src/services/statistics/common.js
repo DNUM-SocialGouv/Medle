@@ -1,18 +1,26 @@
 import moment from "moment"
 import { now, ISO_DATE } from "../../utils/date"
 import { livingProfiles } from "../../utils/actsConstants"
+import { logError } from "../../utils/logger"
 
-const defaultEndDate = () => now().format(ISO_DATE)
+const defaultEndDate = () => now()
 
-// end date must be not null, well formatted and not in the future
-export const isValidEndDate = (endDate) =>
-  endDate && moment(endDate, ISO_DATE, true).isValid() && moment(endDate, ISO_DATE).isSameOrBefore(now())
+// warning: function used by statistics page as well
+export const isValidEndDate = (endDate) => {
+  endDate = moment(endDate, ISO_DATE, true)
+  return endDate.isValid() && endDate.isSameOrBefore(now())
+}
 
-export const isValidStartDate = (startDate, endDate) =>
-  startDate && moment(startDate, ISO_DATE, true).isValid() && moment(startDate, ISO_DATE).isSameOrBefore(endDate)
-
+// warning: function used by statistics page as well
+export const isValidStartDate = (startDate, endDate) => {
+  startDate = moment(startDate, ISO_DATE, true)
+  return startDate.isValid() && startDate.isSameOrBefore(endDate)
+}
 export const normalizeDates = ({ startDate, endDate } = {}) => {
-  // get now if end date is null or not well formatted
+  endDate = moment(endDate, ISO_DATE, true).endOf("day")
+  startDate = moment(startDate, ISO_DATE, true).startOf("day")
+
+  // end date must be not null, well formatted and not in the future
   endDate = isValidEndDate(endDate) ? endDate : defaultEndDate()
 
   // get start date thrown if well formated and before end date, get 1st january of the year of end date if not
@@ -44,4 +52,12 @@ export const averageOf = (arr) => {
   if (!arr?.length) return 0
   const sum = arr.reduce((acc, curr) => acc + curr)
   return parseFloat((sum / arr.length).toFixed(2), 10)
+}
+
+export const intervalDays = ({ startDate = now(), endDate = now() }) => {
+  if (!moment.isMoment(endDate) || !moment.isMoment(startDate)) {
+    logError("The dates are not in moment format")
+    return 0
+  }
+  return endDate.diff(startDate, "days") + 1
 }
