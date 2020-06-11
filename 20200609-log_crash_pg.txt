@@ -1,0 +1,67 @@
+Idées:
+- https://aws.amazon.com/fr/premiumsupport/knowledge-center/diskfull-error-rds-postgresql/ => contient des requêtes pour voir les fichiers temp
+- https://stackoverflow.com/questions/21542550/why-does-postgresql-prompt-error-perhaps-out-of-disk-space-while-there-is-enou => montre la cmd SHOW data_directory
+
+Des fichiers temporaires sont créés pour opérations, telles que les order by.
+Des tables temporaires sont créées pour les transactions.
+Dans le fichier de conf de PG, on peut définir la taille des fichiers temporaires.
+Le plus simple est de simplifier, si possible, les query.
+
+
+{ error: select "avg" from avg_acts('0002-06-02', '2020-06-09') where not "type" = $1 - could not write block 948318 of temporary file: No space left on device
+    at Connection.parseE (/Users/pom/workspace/medle/node_modules/pg/lib/connection.js:581:48)
+    at Connection.parseMessage (/Users/pom/workspace/medle/node_modules/pg/lib/connection.js:380:19)
+    at Socket.<anonymous> (/Users/pom/workspace/medle/node_modules/pg/lib/connection.js:116:22)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at addChunk (_stream_readable.js:288:12)
+    at readableAddChunk (_stream_readable.js:269:11)
+    at Socket.Readable.push (_stream_readable.js:224:10)
+    at TCP.onStreamRead [as onread] (internal/stream_base_commons.js:94:17)
+  name: 'error',
+  length: 167,
+  severity: 'ERROR',
+  code: '53100',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: 'SQL function "avg_acts" statement 1',
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'logtape.c',
+  line: '231',
+  routine: 'ltsWriteBlock' }
+
+  { error: select "avg" from avg_acts('0020-06-02', '2020-06-09') where not "type" = $1 - could not write block 947631 of temporary file: No space left on device
+    at Connection.parseE (/Users/pom/workspace/medle/node_modules/pg/lib/connection.js:581:48)
+    at Connection.parseMessage (/Users/pom/workspace/medle/node_modules/pg/lib/connection.js:380:19)
+    at Socket.<anonymous> (/Users/pom/workspace/medle/node_modules/pg/lib/connection.js:116:22)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at addChunk (_stream_readable.js:288:12)
+    at readableAddChunk (_stream_readable.js:269:11)
+    at Socket.Readable.push (_stream_readable.js:224:10)
+    at TCP.onStreamRead [as onread] (internal/stream_base_commons.js:94:17)
+  name: 'error',
+  length: 167,
+  severity: 'ERROR',
+  code: '53100',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: 'SQL function "avg_acts" statement 1',
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'logtape.c',
+  line: '231',
+  routine: 'ltsWriteBlock' }

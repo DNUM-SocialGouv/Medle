@@ -1,0 +1,19 @@
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+    "email": "admin@medle.fr",
+    "password": "test"
+}
+
+###
+
+POST http://localhost:3000/api/statistics/living
+Content-Type: application/json
+
+{
+    "startDate": "2020-05-04",
+    "endDate": "2020-05-06",
+    "scopeFilter": [3],
+    "profile": "Gardé.e à vue"
+}
