@@ -10,7 +10,7 @@ const CriminalCourtEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="duration"
         title="Durée de la mobilisation"
-        values={["- de 3 heures", "3 à 6 heures", "+ de 6 heures"]}
+        values={["- de 4 heures", "4 à 8 heures", "+ de 8 heures"]}
         mode="toggle"
         dispatch={dispatch}
         state={state.duration || ""}
