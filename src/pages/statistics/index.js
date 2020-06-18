@@ -136,7 +136,19 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       })
       setStatistics(statistics)
     }
-    syncUI()
+
+    const errors = {}
+
+    if (!isValidStartDate(formState.startDate, formState.endDate))
+      errors.startDate = "La date de début doit être avant la date de fin."
+    if (!isValidEndDate(formState.endDate)) errors.endDate = "La date de fin ne doit pas être future."
+
+    if (isEmpty(errors)) {
+      setErrors({})
+      syncUI()
+    } else {
+      setErrors(errors)
+    }
   }, [formState.endDate, formState.startDate, scopeFilter.scope, type, selectedProfile])
 
   const scope = useMemo(() => buildScope(currentUser), [currentUser])
@@ -156,18 +168,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   }
 
   const onDateChange = (e) => {
-    setErrors({})
-    if (e.target.id === "startDate") {
-      if (!isValidStartDate(e.target.value, formState.endDate))
-        setErrors({ startDate: "La date de début doit être avant la date de fin." })
+    // value is empty when the date is not correct, for example when the user is in the process of typing
+    if (e.target.value) {
+      setFormState({ ...formState, [e.target.id]: e.target.value })
     }
-    if (e.target.id === "endDate") {
-      if (!isValidEndDate(e.target.value))
-        setErrors({
-          endDate: "La date de fin ne doit pas être future.",
-        })
-    }
-    setFormState({ ...formState, [e.target.id]: e.target.value })
   }
 
   const onScopeChange = (selectedOption) => {

@@ -115,12 +115,13 @@ const Login = ({ authentication, error }) => {
         }
 
         img[alt="logo"] {
-          width: 300px;
+          max-width: 300px;
+          object-fit: contain;
         }
 
         @media screen and (max-width: 768px) {
           img[alt="logo"] {
-            width: 200px;
+            width: 100%;
           }
         }
       `}</style>

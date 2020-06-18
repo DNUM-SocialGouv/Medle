@@ -144,12 +144,20 @@ const ActDeclaration = ({ act, currentUser }) => {
 
     switch (action.type) {
       case "examinationDate": {
-        const newState = reduceByMode(state, action)
-        return reduceByMode(newState, { type: "periodOfDay", payload: { val: "" } })
+        if (action?.payload?.val) {
+          // when date is incorrect (if the user is currently typing the date), the val is "", so ignore it to not reset wrongly the date in state
+          let newState = reduceByMode(state, action)
+          // reset periodOfDay when examination date is updated
+          newState = reduceByMode(newState, { type: "periodOfDay", payload: { val: "" } })
+          return newState
+        }
+
+        return state
       }
       case "proofWithoutComplaint": {
         let newState = reduceByMode(state, action)
         setErrors(deleteProperty(errors, "askerId"))
+        // reset askerId and pvNumber when proofWithoutComplaint is chosen
         newState = reduceByMode(newState, { type: "askerId", payload: { val: null } })
         newState = reduceByMode(newState, { type: "pvNumber", payload: { val: "" } })
         return newState

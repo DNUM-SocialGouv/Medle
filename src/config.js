@@ -31,3 +31,5 @@ export const LIVING_STATISTICS_ENDPOINT = "/statistics/living"
 export const DEACEASED_STATISTICS_ENDPOINT = "/statistics/deceased"
 
 export const ADMIN_USERS_ENDPOINT = "/administration/users"
+
+export const MESSAGES_ENDPOINT = "/messages"

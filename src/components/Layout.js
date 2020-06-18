@@ -32,6 +32,7 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance"
 import BusinessCenterIcon from "@material-ui/icons/BusinessCenter"
 import WhatshotIcon from "@material-ui/icons/Whatshot"
 import ReceiptIcon from "@material-ui/icons/Receipt"
+import AnnouncementIcon from "@material-ui/icons/Announcement"
 
 import { logout } from "../utils/auth"
 import { colors } from "../theme"
@@ -318,6 +319,14 @@ const SidebarAdmin = ({ page, currentUser }) => {
             <a className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}>
               <ReceiptIcon width={30} /> <br />
               {"Actes"}
+            </a>
+          </Link>
+        )}
+        {currentUser.role == "SUPER_ADMIN" && (
+          <Link href="/administration/messages">
+            <a className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}>
+              <AnnouncementIcon width={30} /> <br />
+              {"Messages"}
             </a>
           </Link>
         )}

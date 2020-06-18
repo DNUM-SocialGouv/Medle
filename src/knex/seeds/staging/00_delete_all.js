@@ -7,4 +7,5 @@ exports.seed = function (knex) {
     .then(() => knex("hospitals").del())
     .then(() => knex("askers").del())
     .then(() => knex("attacks").del())
+    .then(() => knex("messages").del())
 }
