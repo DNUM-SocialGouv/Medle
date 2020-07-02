@@ -201,7 +201,7 @@ const ActDeclaration = ({ act, currentUser }) => {
   )
 
   const getProfiledRender = ({ profile }) => {
-    return profiles[profile].edit({ dispatch, state, errors })
+    return profiles[profile].edit({ dispatch, state, errors, hospital })
   }
 
   const validAndSubmitAct = async () => {

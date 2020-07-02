@@ -32,6 +32,7 @@ export const authenticate = async (email, password) => {
       "users.role",
       "users.hospital_id",
       "hospitals.name as hospital_name",
+      "hospitals.extra_data as hospital_extra_data",
       "users.scope"
     )
 

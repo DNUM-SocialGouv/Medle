@@ -4,11 +4,27 @@ import { APIError } from "../../utils/errors"
 
 import { untransform } from "../../models/acts"
 
+const examinationsOnlyIML = ["Autopsie", "Anthropologie", "Odontologie"]
+
 export const create = async (data, currentUser) => {
+  console.log("create -> currentUser", currentUser)
+  console.log("create -> data", data)
   if (!data || !data.hospitalId) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
+    })
+  }
+
+  // examinations are limited for UMJ structures for deceased profile
+  if (data?.profile === "Personne décédée" && !currentUser?.hospital?.canDoPostMortem) {
+    data?.examinationTypes.forEach((elt) => {
+      if (examinationsOnlyIML.includes(elt)) {
+        throw new APIError({
+          status: STATUS_400_BAD_REQUEST,
+          message: "Bad request",
+        })
+      }
     })
   }
 

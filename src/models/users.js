@@ -19,6 +19,7 @@ export const transform = (knexData) => {
           : {
               id: knexData.hospital_id,
               name: knexData.hospital_name || "",
+              ...knexData.hospital_extra_data,
             },
       }
 }

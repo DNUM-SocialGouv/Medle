@@ -6,7 +6,10 @@ import { Col, Row } from "reactstrap"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 
-const DeceasedEdit = ({ dispatch, state, errors }) => {
+const examinationsUMJ = ["Examen externe", "Levée de corps"]
+const examinationsIML = [...examinationsUMJ, "Autopsie", "Anthropologie", "Odontologie"]
+
+const DeceasedEdit = ({ dispatch, state, errors, hospital }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -15,7 +18,7 @@ const DeceasedEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="examinationTypes"
         title="Type(s) d'acte"
-        values={["Examen externe", "Levée de corps", "Autopsie", "Anthropologie", "Odontologie"]}
+        values={hospital?.canDoPostMortem ? examinationsIML : examinationsUMJ}
         mode="toggleMultiple"
         dispatch={dispatch}
         state={state.examinationTypes || []}
@@ -132,6 +135,7 @@ DeceasedEdit.propTypes = {
   dispatch: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
   errors: PropTypes.object,
+  hospital: PropTypes.object,
 }
 
 export default {

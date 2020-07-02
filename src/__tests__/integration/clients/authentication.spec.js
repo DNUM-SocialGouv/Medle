@@ -10,6 +10,7 @@ describe("", () => {
         "email": "acte@tours.fr",
         "firstName": "Utilisateur de Tours",
         "hospital": Object {
+          "canDoPostMortem": true,
           "id": 1,
           "name": "CHRU de Tours",
         },
@@ -29,6 +30,7 @@ describe("", () => {
         "email": "acte@tours.fr",
         "firstName": "Utilisateur de Tours",
         "hospital": Object {
+          "canDoPostMortem": true,
           "id": 1,
           "name": "CHRU de Tours",
         },

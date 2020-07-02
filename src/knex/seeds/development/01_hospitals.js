@@ -12,7 +12,7 @@ exports.seed = function (knex) {
           town: "Tours",
           dep_code: "37",
           postal_code: "37044",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 2,
@@ -23,7 +23,7 @@ exports.seed = function (knex) {
           town: "Orléans",
           dep_code: "45",
           postal_code: "45067",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 3,
@@ -34,7 +34,7 @@ exports.seed = function (knex) {
           town: "Nantes",
           dep_code: "44",
           postal_code: "44093",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 4,
@@ -45,7 +45,7 @@ exports.seed = function (knex) {
           town: "Angers",
           dep_code: "49",
           postal_code: "49933",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": false}',
         },
         {
           id: 5,
@@ -56,7 +56,7 @@ exports.seed = function (knex) {
           town: "Créteil",
           dep_code: "94",
           postal_code: "94010",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 6,
@@ -67,7 +67,7 @@ exports.seed = function (knex) {
           town: "Lille",
           dep_code: "59",
           postal_code: "59037",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 7,
@@ -78,7 +78,7 @@ exports.seed = function (knex) {
           town: "Paris",
           dep_code: "75",
           postal_code: "75181",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 8,
@@ -89,7 +89,7 @@ exports.seed = function (knex) {
           town: "Pointe-à-Pitre",
           dep_code: "970",
           postal_code: "97004",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 10,
@@ -100,7 +100,7 @@ exports.seed = function (knex) {
           town: "Fort-de-France",
           dep_code: "972",
           postal_code: "97261",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 13,
@@ -111,7 +111,7 @@ exports.seed = function (knex) {
           town: "Saint-Denis",
           dep_code: "974",
           postal_code: "97400",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 14,
@@ -122,7 +122,7 @@ exports.seed = function (knex) {
           town: "Rennes",
           dep_code: "35",
           postal_code: "35000",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 15,
@@ -133,7 +133,7 @@ exports.seed = function (knex) {
           town: "Montpellier",
           dep_code: "34",
           postal_code: "34090",
-          extra_data: null,
+          extra_data: '{"canDoPostMortem": true}',
         },
         {
           id: 11,
