@@ -6,6 +6,13 @@ import { untransform, validate } from "../../models/users"
 import { findByEmail } from "./find"
 
 export const create = async (user, currentUser) => {
+  if (!currentUser) {
+    throw new APIError({
+      status: STATUS_401_UNAUTHORIZED,
+      message: "Not authorized",
+    })
+  }
+
   await validate(user)
 
   if (currentUser.role !== SUPER_ADMIN) {

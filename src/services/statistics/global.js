@@ -2,9 +2,20 @@ import Excel from "exceljs"
 
 import knex from "../../knex/knex"
 import { ISO_DATE, now } from "../../utils/date"
-import { normalizeInputs, intervalDays } from "./common"
+import { addCellTitle, normalizeInputs, intervalDays } from "./common"
 import { buildScope } from "../../services/scope"
 import { findList as findListHospitals } from "../hospitals"
+
+const makeWhereClause = ({ startDate, endDate, scopeFilter = [] }) => (builder) => {
+  builder
+    .whereNull("deleted_at")
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+
+  if (scopeFilter.length) {
+    builder.whereIn("hospital_id", scopeFilter)
+  }
+}
 
 /**
  * Request and format the global statistics.
@@ -21,49 +32,25 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 
   const fetchCountHospitals = knex("hospitals").whereNull("deleted_at").count()
 
-  const fetchGlobalCount = knex("acts")
-    .whereNull("deleted_at")
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("hospital_id", scopeFilter)
-      }
-    })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
-    .count()
+  const fetchGlobalCount = knex("acts").count().where(makeWhereClause({ startDate, endDate, scopeFilter }))
 
   const fetchProfilesDistribution = knex("acts")
     .select(
       knex.raw(
-        "case when profile not in ('Personne décédée', 'Autre activité/Assises', 'Autre activité/Reconstitution') " +
-          "then 'Vivants (tous profils)' " +
-          "else profile end as type, " +
-          "count(*)::integer"
+        `count(1) filter (where profile not in ('Personne décédée', 'Autre activité/Assises', 'Autre activité/Reconstitution'))::integer as "Vivants",` +
+          `count(1) filter (where profile = 'Personne décédée')::integer as "Personne décédée",` +
+          `count(1) filter (where profile = 'Autre activité/Assises')::integer as "Autre activité/Assises",` +
+          `count(1) filter (where profile = 'Autre activité/Reconstitution')::integer as "Autre activité/Reconstitution"`
       )
     )
-    .whereNull("deleted_at")
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("hospital_id", scopeFilter)
-      }
-    })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
-    .groupBy("type")
+    .where(makeWhereClause({ startDate, endDate, scopeFilter }))
 
   const fetchActsWithSamePV = knex
     .with("acts_with_same_pv", (builder) => {
       builder
         .select(knex.raw("pv_number, count(1) as count"))
         .from("acts")
-        .whereNull("deleted_at")
-        .where((builder) => {
-          if (scopeFilter.length) {
-            builder.whereIn("hospital_id", scopeFilter)
-          }
-        })
-        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+        .where(makeWhereClause({ startDate, endDate, scopeFilter }))
         .whereRaw("pv_number is not null and pv_number <> ''")
         .groupBy("pv_number")
         .havingRaw("count(1) > 1")
@@ -76,14 +63,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
       builder
         .select(knex.raw("count(*) as count"))
         .from("acts")
-        .whereNull("deleted_at")
-        .where((builder) => {
-          if (scopeFilter.length) {
-            builder.whereIn("hospital_id", scopeFilter)
-          }
-        })
-        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+        .where(makeWhereClause({ startDate, endDate, scopeFilter }))
         .whereRaw("pv_number is not null and pv_number <> ''")
         .groupBy("pv_number")
     })
@@ -96,7 +76,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
     fetchProfilesDistribution,
     fetchActsWithSamePV,
     fetchAverageWithSamePV,
-  ]).then(([[countHospitals], [globalCount], profilesDistribution, [actsWithSamePV], [averageWithSamePV]]) => {
+  ]).then(([[countHospitals], [globalCount], [profilesDistribution], [actsWithSamePV], [averageWithSamePV]]) => {
     countHospitals = parseInt(countHospitals?.count, 10) || 0
     globalCount = parseInt(globalCount?.count, 10) || 0
 
@@ -113,12 +93,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
       averageCount:
         periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
 
-      profilesDistribution: profilesDistribution.reduce((acc, current) => ({ ...acc, [current.type]: current.count }), {
-        "Personne décédée": 0,
-        "Autre activité/Assises": 0,
-        "Autre activité/Reconstitution": 0,
-        Vivant: 0,
-      }),
+      profilesDistribution,
       actsWithSamePV: actsWithSamePV.sum || 0,
       averageWithSamePV: averageWithSamePV.avg || 0,
     }
@@ -150,22 +125,28 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
 
   actsWorksheet.columns = [
     { header: "Statistique", key: "name", width: 40 },
-    { header: "Valeur", key: "value", width: 20 },
+    { header: "Valeur", key: "value", width: 10 },
   ]
+
+  actsWorksheet.getColumn("B").alignment = { horizontal: "right" }
+
+  addCellTitle(actsWorksheet, "Actes réalisés")
 
   actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
   actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
   actsWorksheet.addRow({ name: "Nb actes portant le même n° de réquisition", value: actsWithSamePV })
   actsWorksheet.addRow({ name: "Moyenne des actes portant le même n° de réquisition", value: averageWithSamePV })
 
-  actsWorksheet.addRow({})
-  actsWorksheet.addRow({ name: "Nb actes vivants", value: profilesDistribution?.["Vivants (tous profils)"] })
+  addCellTitle(actsWorksheet, "Répartition Vivant/Thanato")
+  actsWorksheet.addRow({ name: "Nb actes vivants", value: profilesDistribution?.["Vivants"] })
   actsWorksheet.addRow({ name: "Nb actes personnes décédées", value: profilesDistribution?.["Personne décédée"] })
-  actsWorksheet.addRow({ name: "Nb actes assises", value: profilesDistribution?.["Autre activité/Assises"] })
+
+  addCellTitle(actsWorksheet, "Actes hors examens")
   actsWorksheet.addRow({
     name: "Nb actes reconstitutions",
     value: profilesDistribution?.["Autre activité/Reconstitution"],
   })
+  actsWorksheet.addRow({ name: "Nb actes assises", value: profilesDistribution?.["Autre activité/Assises"] })
 
   const inputsWorksheet = workbook.addWorksheet("Paramètres de l'export")
   inputsWorksheet.columns = [

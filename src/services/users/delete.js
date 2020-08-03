@@ -1,9 +1,16 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST, STATUS_404_NOT_FOUND } from "../../utils/http"
+import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, STATUS_404_NOT_FOUND } from "../../utils/http"
 import { APIError } from "../../utils/errors"
 import { ADMIN_HOSPITAL } from "../../utils/roles"
 
 const makeWhereClause = (currentUser) => (builder) => {
+  if (!currentUser) {
+    throw new APIError({
+      status: STATUS_401_UNAUTHORIZED,
+      message: "Not authorized",
+    })
+  }
+
   // ADMIN_HOSPITAL can only delete user of his own hospital
   if (currentUser.role === ADMIN_HOSPITAL) {
     builder.where("hospital_id", currentUser.hospitalId)

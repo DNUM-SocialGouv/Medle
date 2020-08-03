@@ -50,6 +50,7 @@ const fetchStatistics = async ({
   })
 
   const statistics = await handleAPIResponse(response)
+
   return { ...statisticsDefault, ...statistics }
 }
 

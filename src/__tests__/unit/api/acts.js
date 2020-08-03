@@ -17,12 +17,6 @@ describe("normalizeParams", () => {
       currentUser: undefined,
     }
 
-    // try {
-    //   await normalizeParams(props, currentUser)
-    // } catch (err) {
-    //   console.log("err", err)
-    // }
-
     await expect(normalizeParams(props, currentUser)).resolves.toMatchInlineSnapshot(`
             Object {
               "asker": 3850,

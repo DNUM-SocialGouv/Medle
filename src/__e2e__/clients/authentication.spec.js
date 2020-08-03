@@ -1,6 +1,12 @@
-import { authenticate } from "../../../clients/authentication"
+import { authenticate } from "../../clients/authentication"
 
-describe("", () => {
+import { redirectIfUnauthorized } from "../../utils/auth"
+jest.mock("../../utils/auth")
+
+import { logError } from "../../utils/logger"
+jest.mock("../../utils/logger")
+
+describe("check authentication API", () => {
   it("should accept a good authentication", async () => {
     const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 
@@ -41,9 +47,13 @@ describe("", () => {
       }
     `)
   })
+
   it("should not accept not correct email/password", async () => {
     const headersActUserTours = () => authenticate("acte@tours.fr", "test2")
 
-    await expect(headersActUserTours).rejects.toMatchInlineSnapshot(`[APIError: Erreur d'authentification]`)
+    await expect(headersActUserTours).rejects.toMatchInlineSnapshot(`[Error: Authentication failed]`)
+
+    expect(redirectIfUnauthorized).toHaveBeenCalledTimes(1)
+    expect(logError).toHaveBeenCalledTimes(1)
   })
 })

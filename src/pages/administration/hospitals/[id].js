@@ -272,11 +272,11 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               de confirmer votre choix.
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={onDeleteHospital}>
-                Supprimer
-              </Button>{" "}
-              <Button color="secondary" onClick={toggle}>
+              <Button color="primary" outline onClick={toggle}>
                 Annuler
+              </Button>
+              <Button color="danger" onClick={onDeleteHospital}>
+                Supprimer
               </Button>
             </ModalFooter>
           </Modal>

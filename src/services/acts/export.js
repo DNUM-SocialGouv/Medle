@@ -50,7 +50,7 @@ export const exportActs = async (params, currentUser) => {
   inputsWorksheet.addRow({ name: "Profils", value: params?.profiles })
   inputsWorksheet.addRow({ name: "Demandeur", value: params?.asker })
   inputsWorksheet.addRow({})
-  inputsWorksheet.addRow({ name: "Hôpital de l'utilisateur", value: (currentUser.hospital?.id || "").toString() })
+  inputsWorksheet.addRow({ name: "Hôpital de l'utilisateur", value: (currentUser?.hospital?.id || "").toString() })
   inputsWorksheet.addRow({ name: "Périmètre de l'utilisateur", value: currentUser?.scope || [] })
 
   return workbook

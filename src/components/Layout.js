@@ -190,7 +190,7 @@ const Sidebar = ({ page, currentUser }) => {
             </a>
           </Link>
         )}
-        {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
+        {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && currentUser.role !== SUPER_ADMIN && (
           <Link href="/fillEmployments">
             <a
               className={
@@ -276,7 +276,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
             </a>
           </Link>
         )}
-        {currentUser.role == "SUPER_ADMIN" && (
+        {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/hospitals">
             <a
               className={"list-group-item list-group-item-action " + (page === "hospitals" ? "selected" : "unselected")}
@@ -286,7 +286,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
             </a>
           </Link>
         )}
-        {currentUser.role == "SUPER_ADMIN" && (
+        {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/askers">
             <a className={"list-group-item list-group-item-action " + (page === "askers" ? "selected" : "unselected")}>
               <AccountBalanceIcon width={30} /> <br />
@@ -294,7 +294,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
             </a>
           </Link>
         )}
-        {currentUser.role == "SUPER_ADMIN" && (
+        {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/attacks">
             <a className={"list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")}>
               <WhatshotIcon width={30} /> <br />
@@ -302,7 +302,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
             </a>
           </Link>
         )}
-        {currentUser.role == "SUPER_ADMIN" && (
+        {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/employments">
             <a
               className={
@@ -310,11 +310,11 @@ const SidebarAdmin = ({ page, currentUser }) => {
               }
             >
               <BusinessCenterIcon width={30} /> <br />
-              {"Emplois"}
+              {"ETP"}
             </a>
           </Link>
         )}
-        {currentUser.role == "SUPER_ADMIN" && (
+        {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/acts">
             <a className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}>
               <ReceiptIcon width={30} /> <br />
@@ -322,7 +322,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
             </a>
           </Link>
         )}
-        {currentUser.role == "SUPER_ADMIN" && (
+        {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/messages">
             <a className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}>
               <AnnouncementIcon width={30} /> <br />

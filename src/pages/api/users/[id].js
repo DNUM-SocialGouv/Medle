@@ -1,11 +1,11 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_GET, METHOD_DELETE, METHOD_PUT, METHOD_OPTIONS } from "../../../../utils/http"
-import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../../services/errorHelpers"
-import { ADMIN } from "../../../../utils/roles"
-import { checkValidUserWithPrivilege } from "../../../../utils/auth"
+import { STATUS_200_OK, METHOD_GET, METHOD_DELETE, METHOD_PUT, METHOD_OPTIONS } from "../../../utils/http"
+import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../services/errorHelpers"
+import { ADMIN } from "../../../utils/roles"
+import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
 
-import { find, del, update } from "../../../../services/users"
+import { find, del, update } from "../../../services/users"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -14,6 +14,8 @@ const handler = async (req, res) => {
     switch (req.method) {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+        checkIsSuperAdmin(currentUser)
 
         const user = await find({ ...req.query, currentUser })
 
@@ -24,6 +26,8 @@ const handler = async (req, res) => {
       case METHOD_DELETE: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
+        checkIsSuperAdmin(currentUser)
+
         const deleted = await del({ ...req.query, currentUser })
 
         if (!deleted) return sendNotFoundError(res)
@@ -32,6 +36,8 @@ const handler = async (req, res) => {
       }
       case METHOD_PUT: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+        checkIsSuperAdmin(currentUser)
 
         const updated = await update(req.query, req.body, currentUser)
 

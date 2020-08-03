@@ -10,8 +10,8 @@ import Layout from "../../components/Layout"
 import TabButton from "../../components/TabButton"
 import { Label, Title1 } from "../../components/StyledComponents"
 import { PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, SUPER_ADMIN, STATS_GLOBAL } from "../../utils/roles"
-import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
-import { logError, logDebug } from "../../utils/logger"
+import { buildAuthHeaders, withAuthentication } from "../../utils/auth"
+import { logDebug } from "../../utils/logger"
 import { isEmpty, pluralize } from "../../utils/misc"
 import { StatBlockNumbers, StatBlockPieChart } from "../../components/StatBlock"
 import { isValidStartDate, isValidEndDate } from "../../services/statistics/common"
@@ -21,85 +21,6 @@ import { fetchExport, memoizedFetchStatistics } from "../../clients/statistics"
 import { mapArrayForSelect } from "../../utils/select"
 import { getReferenceData } from "../../utils/init"
 import { livingProfiles } from "../../utils/actsConstants"
-
-const livingDeceaseddData = (statistics) => [
-  {
-    name: "Vivant",
-    value: statistics?.profilesDistribution?.["Vivants (tous profils)"] || 0,
-  },
-  {
-    name: "Thanato",
-    value: statistics?.profilesDistribution?.["Personne décédée"] || 0,
-  },
-]
-
-const actsWithPvData = (statistics) => [
-  {
-    name: "Avec",
-    value: statistics?.actsWithPv?.["Avec réquisition"] || 0,
-  },
-  {
-    name: "Sans (non renseigné)",
-    value: statistics?.actsWithPv?.["Sans réquisition"] || 0,
-  },
-  {
-    name: "Recueil de preuves sans plainte",
-    value: statistics?.actsWithPv?.["Recueil de preuve sans plainte"] || 0,
-  },
-]
-
-const actTypesData = (statistics) => [
-  {
-    name: "Somatique",
-    value: statistics?.actTypes?.["Somatique"] || 0,
-  },
-  {
-    name: "Psychiatrique",
-    value: statistics?.actTypes?.["Psychiatrique"] || 0,
-  },
-]
-
-const hoursData = (statistics) => [
-  {
-    name: "Journée",
-    value: statistics?.hours?.["Journée"] || 0,
-  },
-  {
-    name: "Soirée",
-    value: statistics?.hours?.["Soirée"] || 0,
-  },
-  {
-    name: "Nuit profonde",
-    value: statistics?.hours?.["Nuit profonde"] || 0,
-  },
-]
-
-const examinationsData = (statistics) => [
-  {
-    name: "Biologie",
-    value: statistics?.examinations?.["Biologie"] || 0,
-  },
-  {
-    name: "Imagerie",
-    value: statistics?.examinations?.["Imagerie"] || 0,
-  },
-  {
-    name: "Toxicologie",
-    value: statistics?.examinations?.["Toxicologie"] || 0,
-  },
-  {
-    name: "Anapath",
-    value: statistics?.examinations?.["Anapath"] || 0,
-  },
-  {
-    name: "Génétique",
-    value: statistics?.examinations?.["Génétique"] || 0,
-  },
-  {
-    name: "Autres",
-    value: statistics?.examinations?.["Autres"] || 0,
-  },
-]
 
 const supervisorRoles = [PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, SUPER_ADMIN]
 
@@ -125,7 +46,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   useEffect(() => {
     logDebug("Update UI after state changes")
     const syncUI = async () => {
-      const profile = ["Global", "Thanato"].includes(type) ? "" : selectedProfile.value
+      const profile = ["Global", "Thanato"].includes(type) ? "" : selectedProfile?.value
 
       const statistics = await memoizedFetchStatistics({
         type,
@@ -323,7 +244,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
             value={selectedProfile}
             onChange={onProfileChange}
             noOptionsMessage={() => "Aucun résultat"}
-            isClearable={true}
+            isClearable={false}
             isSearchable={true}
             styles={customStylesProfiles}
           />
@@ -337,8 +258,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               secondNumber={statistics?.averageCount}
               secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
+
             <StatBlockPieChart
-              data={livingDeceaseddData(statistics)}
+              data={statistics?.profilesDistribution}
+              labels={["Vivants", "Personne décédée"]}
               hoverTitle="Hors assises et reconstitutions"
               title="Répartition Vivant/Thanato"
             />
@@ -373,14 +296,14 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               secondNumber={statistics?.averageCount}
               secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
-            <StatBlockPieChart data={actsWithPvData(statistics)} title="Numéro de réquisitions" />
-            <StatBlockPieChart data={actTypesData(statistics)} title="Types d'actes" />
+            <StatBlockPieChart data={statistics?.actsWithPv} title="Numéro de réquisitions" />
+            <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
             <StatBlockPieChart
-              data={hoursData(statistics)}
+              data={statistics?.hours}
               title="Horaires"
               hoverTitle="Journée (8h30-18h30) / Soirée (18h30-00h) / Nuit profonde (00h-8h30)"
             />
-            <StatBlockPieChart data={examinationsData(statistics)} title="Examens complémentaires" />
+            <StatBlockPieChart data={statistics?.examinations} title="Examens complémentaires" />
           </div>
         )}
         {type === "Thanato" && (
@@ -392,6 +315,14 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               secondNumber={statistics?.averageCount}
               secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
+            <StatBlockPieChart data={statistics?.actsWithPv} title="Numéro de réquisitions" />
+            <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
+            <StatBlockPieChart
+              data={statistics?.hours}
+              title="Horaires"
+              hoverTitle="Journée (8h30-18h30) / Soirée (18h30-00h) / Nuit profonde (00h-8h30)"
+            />
+            <StatBlockPieChart data={statistics?.examinations} title="Examens complémentaires" />
           </div>
         )}
         {isOpenFeature("export") && (
@@ -418,12 +349,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 StatisticsPage.getInitialProps = async (ctx) => {
   const authHeaders = buildAuthHeaders(ctx)
 
-  try {
-    return { statistics: await memoizedFetchStatistics({ authHeaders }) }
-  } catch (error) {
-    logError(error)
-    redirectIfUnauthorized(error, ctx)
-  }
+  return { statistics: await memoizedFetchStatistics({ authHeaders }) }
 }
 
 StatisticsPage.propTypes = {

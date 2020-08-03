@@ -61,8 +61,8 @@ export const ROLES = {
 export const ROLES_DESCRIPTION = {
   ADMIN_HOSPITAL: "Administrateur d'UMJ ou d'IML", // no scope, 1 hospital_id
   OPERATOR_ACT: "Gestionnaire d'actes", // no scope, 1 hospital_id
-  OPERATOR_EMPLOYMENT: "Gestionnaire d'emplois", // no scope, 1 hospital_id
-  OPERATOR_GENERIC: "Gestionnaire d'actes et ETP", // no scope, 1 hospital_id
+  OPERATOR_EMPLOYMENT: "Gestionnaire d'ETP", // no scope, 1 hospital_id
+  OPERATOR_GENERIC: "Gestionnaire d'actes et d'ETP", // no scope, 1 hospital_id
   GUEST_HOSPITAL: "Invité", // no scope, 1 hospital_id
   PUBLIC_SUPERVISOR: "Superviseur publique", // no scope, no hospital_id
   REGIONAL_SUPERVISOR: "Superviseur de plusieurs UMJ ou IML", // n hospitals in scope, no hospital_id

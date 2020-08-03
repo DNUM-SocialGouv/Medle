@@ -14,7 +14,7 @@ import { Title1, Title2 } from "../../components/StyledComponents"
 import { isEmpty } from "../../utils/misc"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { logDebug, logError } from "../../utils/logger"
-import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT } from "../../utils/roles"
+import { isAllowed, ACT_CONSULTATION, ACT_MANAGEMENT, SUPER_ADMIN } from "../../utils/roles"
 
 import { profiles } from "../../utils/actsConstants"
 import { deleteAct, findAct } from "../../clients/acts"
@@ -94,18 +94,12 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
             </div>
             <br />
 
-            {isAllowed(currentUser.role, ACT_MANAGEMENT) && (
+            {isAllowed(currentUser?.role, ACT_MANAGEMENT) && (
               <Row>
                 <Col>
                   <Button block outline color="danger" onClick={toggle}>
                     <DeleteForeverOutlinedIcon width={24} />
                     {" Supprimer l'acte"}
-                  </Button>
-                </Col>
-                <Col>
-                  <Button block outline color="info" onClick={() => editAct(id)}>
-                    <EditOutlinedIcon width={24} />
-                    {" Modifier l'acte"}
                   </Button>
                   <div>
                     <Modal isOpen={modal} toggle={toggle}>
@@ -115,16 +109,25 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
                         Merci de confirmer votre choix.
                       </ModalBody>
                       <ModalFooter>
-                        <Button color="primary" onClick={onDeleteAct}>
-                          Supprimer
-                        </Button>{" "}
-                        <Button color="secondary" onClick={toggle}>
+                        <Button color="primary" outline onClick={toggle}>
                           Annuler
+                        </Button>
+                        <Button color="danger" onClick={onDeleteAct}>
+                          Supprimer
                         </Button>
                       </ModalFooter>
                     </Modal>
                   </div>
                 </Col>
+
+                {currentUser?.role !== SUPER_ADMIN && (
+                  <Col>
+                    <Button block outline color="info" onClick={() => editAct(id)}>
+                      <EditOutlinedIcon width={24} />
+                      {" Modifier l'acte"}
+                    </Button>
+                  </Col>
+                )}
               </Row>
             )}
           </>

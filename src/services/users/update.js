@@ -6,6 +6,13 @@ import { untransform, validate } from "../../models/users"
 import { findByEmail } from "./find"
 
 export const update = async ({ id }, user, currentUser) => {
+  if (!currentUser) {
+    throw new APIError({
+      status: STATUS_401_UNAUTHORIZED,
+      message: "Not authorized",
+    })
+  }
+
   if (!id || isNaN(id) || !user || parseInt(id, 10) !== parseInt(user.id, 10)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,

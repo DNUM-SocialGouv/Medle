@@ -1,11 +1,11 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS, METHOD_POST } from "../../../../utils/http"
-import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
-import { checkValidUserWithPrivilege } from "../../../../utils/auth"
-import { ADMIN } from "../../../../utils/roles"
+import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS, METHOD_POST } from "../../../utils/http"
+import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
+import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
+import { ADMIN } from "../../../utils/roles"
 
-import { search, create } from "../../../../services/users"
+import { search, create } from "../../../services/users"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -15,12 +15,16 @@ const handler = async (req, res) => {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
+        checkIsSuperAdmin(currentUser)
+
         const { users, totalCount, currentPage, maxPage, byPage } = await search({ ...req.query, currentUser })
 
         return res.status(STATUS_200_OK).json({ totalCount, currentPage, maxPage, byPage, elements: users })
       }
       case METHOD_POST: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+        checkIsSuperAdmin(currentUser)
 
         const id = await create(req.body, currentUser)
 

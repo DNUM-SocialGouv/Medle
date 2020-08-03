@@ -199,11 +199,11 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
               Merci de confirmer votre choix.
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={onDeleteAsker}>
-                Supprimer
-              </Button>{" "}
-              <Button color="secondary" onClick={toggle}>
+              <Button color="primary" outline onClick={toggle}>
                 Annuler
+              </Button>
+              <Button color="danger" onClick={onDeleteAsker}>
+                Supprimer
               </Button>
             </ModalFooter>
           </Modal>

@@ -4,7 +4,7 @@
  * For the national user, he doesn't have neither the hostpitalId nor the scope set. It means then that he as access to everything.
  */
 export const buildScope = (currentUser = {}) => {
-  const scope = currentUser.scope || []
-  const id = currentUser.hospital?.id ? [currentUser.hospital.id] : []
+  const scope = currentUser?.scope || []
+  const id = currentUser?.hospital?.id ? [currentUser.hospital.id] : []
   return [...scope, ...id]
 }

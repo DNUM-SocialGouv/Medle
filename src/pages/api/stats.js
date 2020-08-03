@@ -32,16 +32,17 @@ const handler = async (req, res) => {
 
         const result = {
           currentDate: moment(date.now).format(FORMAT_DATE),
-          globalCount: parseInt(globalCount.count, 10),
+          nbActs: parseInt(globalCount?.count || 0, 10),
+          nbETP: stats?.length || 0,
         }
 
-        result.acts = stats.reduce((acc, curr) => {
+        result.details = stats.reduce((acc, curr) => {
           acc[curr.id] = { name: curr.name, total: parseInt(curr.count, 10), last7days: 0 }
           return acc
         }, {})
 
         stats7days.forEach((elt) => {
-          result.acts[elt.id].last7days = parseInt(elt.count, 10)
+          result.details[elt.id].last7days = parseInt(elt.count, 10)
         })
 
         return res.status(STATUS_200_OK).json(result)

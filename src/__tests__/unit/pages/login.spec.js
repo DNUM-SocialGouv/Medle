@@ -1,8 +1,8 @@
 import React from "react"
-import LoginPage from "../../../pages/index"
-jest.mock("../../../clients/messages")
 import { render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom/extend-expect"
+
+import LoginPage from "../../../pages/index"
 
 test("it should display alerts", async () => {
   render(<LoginPage message="Session terminée" welcomeMessage="Les ETP sont à remplir avant le mois de mars." />)

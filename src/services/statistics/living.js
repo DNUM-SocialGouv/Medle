@@ -2,9 +2,23 @@ import Excel from "exceljs"
 
 import knex from "../../knex/knex"
 import { ISO_DATE, now } from "../../utils/date"
-import { normalizeInputs, intervalDays } from "./common"
+import { addCellTitle, normalizeInputs, intervalDays } from "./common"
 import { buildScope } from "../scope"
 import { findList as findListHospitals } from "../hospitals"
+
+const makeWhereClause = ({ startDate, endDate, scopeFilter = [], profile }) => (builder) => {
+  builder
+    .whereNull("deleted_at")
+    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+
+  if (scopeFilter.length) {
+    builder.whereIn("hospital_id", scopeFilter)
+  }
+  if (profile) {
+    builder.where("profile", profile)
+  }
+}
 
 /**
  * Request and format the living statistics.
@@ -22,87 +36,34 @@ export const buildLivingStatistics = async (filters, currentUser) => {
   const fetchCountHospitals = knex("hospitals").whereNull("deleted_at").count()
 
   const fetchGlobalCount = knex("acts")
-    .whereNull("deleted_at")
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("hospital_id", scopeFilter)
-      }
-      if (profile) {
-        builder.where("profile", profile)
-      } else {
-        builder.whereRaw(
-          `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`
-        )
-      }
-    })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
     .count()
+    .where(makeWhereClause({ startDate, endDate, scopeFilter, profile }))
+    .where((builder) => {
+      builder.whereRaw(
+        `profile <> 'Personne décédée' and profile <> 'Autre activité/Assises' and profile <> 'Autre activité/Reconstitution'`
+      )
+    })
 
   const fetchActsWithPv = knex("acts")
-    .whereNull("deleted_at")
     .select(
       knex.raw(
-        "case when pv_number is not null and pv_number <> '' then 'Avec réquisition' " +
-          "when asker_id is null then 'Recueil de preuve sans plainte' " +
-          "else 'Sans réquisition' " +
-          "end as type," +
-          "count(*)::integer"
+        `count(1) filter (where pv_number is not null and pv_number <> '')::integer as "Avec réquisition",` +
+          `count(1) filter (where asker_id is null)::integer as "Recueil de preuve sans plainte",` +
+          `count(1) filter (where pv_number is null or pv_number = '' )::integer as "Sans réquisition"`
       )
     )
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("hospital_id", scopeFilter)
-      }
-      if (profile) {
-        builder.where("profile", profile)
-      }
-    })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
-    .groupBy("type")
+    .where(makeWhereClause({ startDate, endDate, scopeFilter, profile }))
 
   const fetchActTypes = knex("acts")
-    .whereNull("deleted_at")
-    .select(knex.raw("count(*)::integer, extra_data->'examinationTypes' as name"))
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("hospital_id", scopeFilter)
-      }
-      if (profile) {
-        builder.where("profile", profile)
-      }
-    })
-    .whereRaw(
-      `(extra_data->'examinationTypes' @> '["Psychiatrique"]' or ` +
-        `extra_data->'examinationTypes' @> '["Somatique"]')`
-    )
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
-    .groupByRaw(`extra_data->'examinationTypes'`)
-
-  const fetchHours = knex("acts")
-    .whereNull("deleted_at")
     .select(
       knex.raw(
-        `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
-          `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
-          `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`
+        `count(1) filter (where extra_data->'examinationTypes' @> '["Psychiatrique"]')::integer as "Psychiatrique",` +
+          `count(1) filter (where extra_data->'examinationTypes' @> '["Somatique"]')::integer as "Somatique"`
       )
     )
-    .where((builder) => {
-      if (scopeFilter.length) {
-        builder.whereIn("hospital_id", scopeFilter)
-      }
-      if (profile) {
-        builder.where("profile", profile)
-      }
-    })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+    .where(makeWhereClause({ startDate, endDate, scopeFilter, profile }))
 
   const fetchExaminations = knex("acts")
-    .whereNull("deleted_at")
     .select(
       knex.raw(
         `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as "Biologie",` +
@@ -121,8 +82,17 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         builder.where("profile", profile)
       }
     })
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+    .where(makeWhereClause({ startDate, endDate, scopeFilter, profile }))
+
+  const fetchHours = knex("acts")
+    .select(
+      knex.raw(
+        `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
+          `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
+          `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`
+      )
+    )
+    .where(makeWhereClause({ startDate, endDate, scopeFilter, profile }))
 
   return await Promise.all([
     fetchCountHospitals,
@@ -132,7 +102,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
     fetchActTypes,
     fetchHours,
     fetchExaminations,
-  ]).then(([[countHospitals], [globalCount], actsWithPv, actTypes, [hours], [examinations]]) => {
+  ]).then(([[countHospitals], [globalCount], [actsWithPv], [actTypes], [hours], [examinations]]) => {
     countHospitals = parseInt(countHospitals?.count, 10) || 0
     globalCount = parseInt(globalCount?.count, 10) || 0
 
@@ -151,28 +121,8 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
 
       //averageCount && averageCount.length ? averageOf(averageCount.map((elt) => parseFloat(elt.avg, 10))) : 0,
-      actsWithPv: actsWithPv.reduce(
-        (acc, current) => ({
-          ...acc,
-          [current.type]: current.count,
-        }),
-        {
-          "Avec réquisition": 0,
-          "Sans réquisition": 0,
-          "Recueil de preuve sans plainte": 0,
-        }
-      ),
-      actTypes: actTypes.reduce(
-        (acc, current) => {
-          const [name] = current.name
-          if (name === "Somatique") return { ...acc, Somatique: current.count }
-          else if (name === "Psychiatrique") return { ...acc, Psychiatrique: current.count }
-        },
-        {
-          Somatique: 0,
-          Psychiatrique: 0,
-        }
-      ),
+      actsWithPv,
+      actTypes,
       hours,
       examinations,
     }
@@ -198,13 +148,16 @@ export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter, 
 
   actsWorksheet.columns = [
     { header: "Statistique", key: "name", width: 40 },
-    { header: "Valeur", key: "value", width: 20 },
+    { header: "Valeur", key: "value", width: 10 },
   ]
 
+  actsWorksheet.getColumn("B").alignment = { horizontal: "right" }
+
+  addCellTitle(actsWorksheet, "Actes réalisés")
   actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
   actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
 
-  actsWorksheet.addRow({})
+  addCellTitle(actsWorksheet, "Numéro de réquisitions")
   actsWorksheet.addRow({ name: "Nb actes avec n° de réquisition", value: actsWithPv?.["Avec réquisition"] })
   actsWorksheet.addRow({ name: "Nb actes sans n° de réquisition", value: actsWithPv?.["Sans réquisition"] })
   actsWorksheet.addRow({
@@ -212,15 +165,16 @@ export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter, 
     value: actsWithPv?.["Recueil de preuve sans plainte"],
   })
 
-  actsWorksheet.addRow({})
+  addCellTitle(actsWorksheet, "Types d'actes")
   actsWorksheet.addRow({ name: "Nb actes avec examen somatique", value: actTypes?.["Somatique"] })
   actsWorksheet.addRow({ name: "Nb actes avec examen psychiatrique", value: actTypes?.["Psychiatrique"] })
-  actsWorksheet.addRow({})
+
+  addCellTitle(actsWorksheet, "Horaires")
   actsWorksheet.addRow({ name: "Nb actes en journées", value: hours?.["Journée"] })
   actsWorksheet.addRow({ name: "Nb actes en soirée", value: hours?.["Soirée"] })
   actsWorksheet.addRow({ name: "Nb actes en nuit profonde", value: hours?.["Nuit profonde"] })
 
-  actsWorksheet.addRow({})
+  addCellTitle(actsWorksheet, "Examens complémentaires")
   actsWorksheet.addRow({ name: "Nb actes mentionnant biologie", value: examinations?.["Biologie"] })
   actsWorksheet.addRow({ name: "Nb actes mentionnant imagerie", value: examinations?.["Imagerie"] })
   actsWorksheet.addRow({ name: "Nb actes mentionnant toxicologie", value: examinations?.["Toxicologie"] })

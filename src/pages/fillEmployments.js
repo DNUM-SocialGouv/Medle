@@ -199,7 +199,7 @@ const FillEmploymentsPage = ({
             </Col>
             <Col className="mr-3"></Col>
           </Row>
-          {isAllowed(currentUser.role, EMPLOYMENT_MANAGEMENT) && (
+          {isAllowed(currentUser?.role, EMPLOYMENT_MANAGEMENT) && (
             <div className="mt-5 text-center">
               <ValidationButton color="primary" size="lg" className="center" onClick={() => update(currentMonth)}>
                 Valider

@@ -27,7 +27,7 @@ Build:
   variables:
     # these variables are needed at build time because embedded in the front
     API_URL: "/api"
-    SENTRY_DSN: https://yyy@sentry.fabrique.social.gouv.fr/yyy
+    SENTRY_DSN: https://75f34cada95a4c189d69bc05e8aa324f@sentry.fabrique.social.gouv.fr/29
     SENTRY_TOKEN: token
     MATOMO_URL: https://matomo.io
     MATOMO_SITE_ID: 4242

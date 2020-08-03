@@ -1,5 +1,18 @@
-import { authenticate } from "../../../clients/authentication"
-import { searchActs } from "../../../clients/acts"
+import { authenticate } from "../../clients/authentication"
+import { searchActs } from "../../clients/acts"
+
+// const knexConfig = require("../knexfile")
+// const knex = require("knex")(knexConfig)
+
+// beforeAll(async () => {
+//   await knex.migrate.latest()
+//   await knex.seed.run()
+// })
+
+// afterAll(async () => {
+//   // Closing the DB connection allows Jest to exit successfully.
+//   await knex.destroy()
+// })
 
 const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 const headersActUserNantes = () => authenticate("acte@nantes.fr", "test")
@@ -32,6 +45,12 @@ describe("clients for /acts ", () => {
       Array [
         Object {
           "hospital": 1,
+          "id": 8364,
+          "profile": "Personne décédée",
+          "pvNumber": "",
+        },
+        Object {
+          "hospital": 1,
           "id": 8352,
           "profile": "Personne décédée",
           "pvNumber": "2020/20063",
@@ -56,5 +75,36 @@ describe("clients for /acts ", () => {
         },
       ]
     `)
+
+    /*
+    `
+      Array [
+        Object {
+          "hospital": 1,
+          "id": 8352,
+          "profile": "Personne décédée",
+          "pvNumber": "2020/20063",
+        },
+        Object {
+          "hospital": 1,
+          "id": 8351,
+          "profile": "Personne décédée",
+          "pvNumber": "2020/20019",
+        },
+        Object {
+          "hospital": 1,
+          "id": 8350,
+          "profile": "Personne décédée",
+          "pvNumber": "70677/1539/2020",
+        },
+        Object {
+          "hospital": 1,
+          "id": 8349,
+          "profile": "Personne décédée",
+          "pvNumber": "2020/19887",
+        },
+      ]
+    `
+    */
   })
 })

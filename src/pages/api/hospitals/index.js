@@ -3,7 +3,7 @@ import Cors from "micro-cors"
 import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS, METHOD_POST } from "../../../utils/http"
 import { ADMIN, STATS_GLOBAL } from "../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
-import { checkValidUserWithPrivilege } from "../../../utils/auth"
+import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
 import { create, search } from "../../../services/hospitals"
 
 const handler = async (req, res) => {
@@ -19,7 +19,9 @@ const handler = async (req, res) => {
         return res.status(STATUS_200_OK).json(hospitals)
       }
       case METHOD_POST: {
-        checkValidUserWithPrivilege(ADMIN, req, res)
+        const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+        checkIsSuperAdmin(currentUser)
 
         const id = await create(req.body)
 

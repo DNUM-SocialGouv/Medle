@@ -61,3 +61,9 @@ export const intervalDays = ({ startDate = now(), endDate = now() }) => {
   }
   return endDate.diff(startDate, "days") + 1
 }
+
+export const addCellTitle = (actsWorksheet, title) => {
+  actsWorksheet.addRow({})
+  const row = actsWorksheet.addRow({ name: title })
+  row.font = { bold: true }
+}

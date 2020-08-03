@@ -20,9 +20,19 @@ const handler = async (req, res) => {
       case METHOD_POST: {
         const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-        const { inputs, globalCount, averageCount } = await buildDeceasedStatistics(req.body, currentUser)
+        const {
+          inputs,
+          globalCount,
+          averageCount,
+          actsWithPv,
+          actTypes,
+          hours,
+          examinations,
+        } = await buildDeceasedStatistics(req.body, currentUser)
 
-        return res.status(STATUS_200_OK).json({ inputs, globalCount, averageCount })
+        return res
+          .status(STATUS_200_OK)
+          .json({ inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations })
       }
       default:
         if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)

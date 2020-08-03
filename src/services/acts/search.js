@@ -88,8 +88,8 @@ export const normalizeParams = async (params, currentUser) => {
   // Wrap supposed array fields with array litteral syntax for yup try to cast
   params.hospitals = params.hospitals ? params.hospitals.split(",").map(Number) : []
   params.profiles = params.profiles ? params.profiles.split(",") : []
-  params.scope = currentUser.scope || []
-  if (currentUser.hospital?.id) params.scope = [...params.scope, currentUser.hospital.id]
+  params.scope = currentUser?.scope || []
+  if (currentUser?.hospital?.id) params.scope = [...params.scope, currentUser.hospital.id]
 
   // For user having a scope (non super admin, non national user), then restrict potentially their hospital filter
   if (params.hospitals?.length && params.scope?.length) {

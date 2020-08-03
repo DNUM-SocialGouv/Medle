@@ -14,7 +14,7 @@ const EmploymentPage = ({ currentUser }) => {
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
-        <Title1 className="">{"Administration des emplois"}</Title1>
+        <Title1 className="">{"Administration des ETP"}</Title1>
       </Container>
     </Layout>
   )

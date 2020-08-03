@@ -3,7 +3,7 @@ import Cors from "micro-cors"
 import { STATUS_200_OK, METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_PUT } from "../../../utils/http"
 import { ADMIN, NO_PRIVILEGE_REQUIRED } from "../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../services/errorHelpers"
-import { checkValidUserWithPrivilege } from "../../../utils/auth"
+import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
 import { del, find, update } from "../../../services/hospitals"
 
 const handler = async (req, res) => {
@@ -19,8 +19,9 @@ const handler = async (req, res) => {
         return hospital ? res.status(STATUS_200_OK).json(hospital) : sendNotFoundError(res)
       }
       case METHOD_DELETE: {
-        // TODO: need to be an SUPER_ADMIN
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+        checkIsSuperAdmin(currentUser)
 
         const deleted = await del(req.query, currentUser)
 
@@ -29,8 +30,9 @@ const handler = async (req, res) => {
         return res.status(STATUS_200_OK).json({ deleted })
       }
       case METHOD_PUT: {
-        // TODO: need to be an SUPER_ADMIN
-        checkValidUserWithPrivilege(ADMIN, req, res)
+        const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+        checkIsSuperAdmin(currentUser)
 
         const updated = await update(req.query, req.body)
 

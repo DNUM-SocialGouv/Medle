@@ -68,10 +68,23 @@ StatBlockNumbers.propTypes = {
   title: PropTypes.string,
   firstNumber: PropTypes.number,
   firstLabel: PropTypes.string,
-  secondNumber: PropTypes.string,
+  secondNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   secondLabel: PropTypes.string,
 }
-export const StatBlockPieChart = ({ data, hoverTitle, title }) => {
+
+const objToArray = (obj, labels = []) => {
+  if (!obj) return []
+
+  if (labels?.length) {
+    return labels.map((curr) => ({ name: curr, value: obj[curr] || 0 }))
+  } else {
+    return Object.keys(obj).map((curr) => ({ name: curr, value: obj[curr] || 0 }))
+  }
+}
+
+export const StatBlockPieChart = ({ data, labels = [], hoverTitle, title }) => {
+  const values = objToArray(data, labels)
+
   return (
     <StatBlock>
       <div
@@ -95,7 +108,7 @@ export const StatBlockPieChart = ({ data, hoverTitle, title }) => {
       </div>
       <PieChart width={280} height={210}>
         <Pie
-          data={data}
+          data={values}
           dataKey="value"
           cx="50%"
           cy="50%"
@@ -104,7 +117,7 @@ export const StatBlockPieChart = ({ data, hoverTitle, title }) => {
           labelLine={false}
           label={RenderCustomizedLabel}
         >
-          {data.map((_, index) => (
+          {values.map((_, index) => (
             <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
           ))}
         </Pie>
@@ -117,7 +130,8 @@ export const StatBlockPieChart = ({ data, hoverTitle, title }) => {
 }
 
 StatBlockPieChart.propTypes = {
-  data: PropTypes.array,
+  data: PropTypes.object.isRequired,
+  labels: PropTypes.array,
   hoverTitle: PropTypes.string,
   title: PropTypes.string,
 }

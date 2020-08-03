@@ -116,7 +116,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
       {open && (
         <div className="px-2">
           <div className="pt-3 pb-2 pr-2 text-right">
-            {!isAllowed(currentUser.role, EMPLOYMENT_MANAGEMENT) ? null : readOnlyState ? (
+            {!isAllowed(currentUser?.role, EMPLOYMENT_MANAGEMENT) ? null : readOnlyState ? (
               <Button outline onClick={toggleReadOnly} className="border-0">
                 <EditOutlinedIcon width={24} />
               </Button>

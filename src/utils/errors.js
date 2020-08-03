@@ -1,4 +1,6 @@
 import { STATUS_500_INTERNAL_SERVER_ERROR } from "./http"
+import { logError } from "./logger"
+import { redirectIfUnauthorized } from "./auth"
 
 class MedleError extends Error {
   constructor({ message, detail }) {
@@ -32,8 +34,12 @@ export class ValidationError extends MedleError {
 
 export const handleAPIResponse = async (response) => {
   if (!response.ok) {
-    const { name, message, status, detail } = await response.json()
-    throw new APIError({ name, message, status, detail })
+    const json = await response.json()
+
+    const error = new APIError(json)
+    logError(error)
+    redirectIfUnauthorized(error)
+    return
   }
   return response.json()
 }
