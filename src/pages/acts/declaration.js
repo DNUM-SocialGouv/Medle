@@ -7,6 +7,7 @@ import moment from "moment"
 import AskerSelect from "../../components/AskerSelect"
 import { isEmpty, deleteProperty } from "../../utils/misc"
 import Layout from "../../components/Layout"
+import { InputError } from "../../components/InputError"
 import ActBlock from "../../components/ActBlock"
 import { Title1, Title2, Label, ValidationButton } from "../../components/StyledComponents"
 import { ACT_MANAGEMENT } from "../../utils/roles"
@@ -71,14 +72,20 @@ const hasErrors = (state) => {
     if (!date.isValid()) {
       errors = { ...errors, examinationDate: "Format incorrect" }
     } else {
+      const previousYear = now().year() - 1
+      const limitInPast = moment(`${previousYear}-01-01`)
+
       if (date > now()) {
         errors = { ...errors, examinationDate: "La date doit être passée" }
+      }
+      if (date < limitInPast) {
+        errors = { ...errors, examinationDate: `La date est trop ancienne` }
       }
     }
   }
 
   if (!state.askerId && !state.proofWithoutComplaint) {
-    errors = { ...errors, askerId: "Demandeur manquant ou invalide" }
+    errors = { ...errors, askerId: <InputError>{"Demandeur manquant ou invalide"}</InputError> }
   }
 
   return errors
@@ -141,6 +148,7 @@ const ActDeclaration = ({ act, currentUser }) => {
     logDebug("reducer", state, action)
 
     setErrors(deleteProperty(errors, action.type))
+    setWarnings(deleteProperty(warnings, action.type))
 
     switch (action.type) {
       case "examinationDate": {
@@ -315,7 +323,9 @@ const ActDeclaration = ({ act, currentUser }) => {
               onBlur={onBlurNumberInputs("internalNumber")}
             />
             {warnings && warnings.internalNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
-            <FormFeedback>{errors && errors.internalNumber}</FormFeedback>
+            <FormFeedback>
+              <InputError>{errors && errors.internalNumber}</InputError>
+            </FormFeedback>
           </Col>
           <Col sm="6" md="4" className="mt-3 mt-sm-0">
             <Label htmlFor="examinationDate" className="mb-0">
@@ -329,7 +339,9 @@ const ActDeclaration = ({ act, currentUser }) => {
               // value={state.examinationDate}
               onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
             />
-            <FormFeedback>{errors && errors.examinationDate}</FormFeedback>
+            <FormFeedback>
+              <InputError>{errors && errors.examinationDate}</InputError>
+            </FormFeedback>
           </Col>
           <Col className="mt-4 text-center mt-md-0" sm="12" md="4">
             <Label htmlFor="proofWithoutComplaint" className="mb-0">

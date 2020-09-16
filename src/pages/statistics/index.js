@@ -261,7 +261,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 
             <StatBlockPieChart
               data={statistics?.profilesDistribution}
-              labels={["Vivants", "Personne décédée"]}
+              labels={[{ Vivants: "Pers. vivantes" }, { "Personne décédée": "Pers. décédées" }]}
               hoverTitle="Hors assises et reconstitutions"
               title="Répartition Vivant/Thanato"
             />
@@ -281,9 +281,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               firstNumber={statistics?.actsWithSamePV}
               firstLabel={`Acte${pluralize(statistics?.actsWithSamePV)} avec le même numéro de réquisition.`}
               secondNumber={statistics?.averageWithSamePV}
-              secondLabel={`Acte${pluralize(
-                statistics?.averageWithSamePV
-              )} par numéro en moyenne sur ces numéros récurrents.`}
+              secondLabel={`Nombre moyen d'actes par numéro de réquisition.`}
             />
           </div>
         )}
@@ -296,7 +294,15 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               secondNumber={statistics?.averageCount}
               secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
-            <StatBlockPieChart data={statistics?.actsWithPv} title="Numéro de réquisitions" />
+            <StatBlockPieChart
+              data={statistics?.actsWithPv}
+              title="Numéro de réquisition"
+              labels={[
+                { "Avec réquisition": "Avec n° de réquisition" },
+                { "Sans réquisition": "Sans n° de réquisition" },
+                "Recueil de preuve sans plainte",
+              ]}
+            />
             <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
             <StatBlockPieChart
               data={statistics?.hours}
@@ -315,7 +321,14 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               secondNumber={statistics?.averageCount}
               secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
-            <StatBlockPieChart data={statistics?.actsWithPv} title="Numéro de réquisitions" />
+            <StatBlockPieChart
+              data={statistics?.actsWithPv}
+              title="Numéro de réquisition"
+              labels={[
+                { "Avec réquisition": "Avec n° de réquisition" },
+                { "Sans réquisition": "Sans n° de réquisition" },
+              ]}
+            />
             <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
             <StatBlockPieChart
               data={statistics?.hours}

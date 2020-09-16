@@ -3,6 +3,7 @@ import { PropTypes } from "prop-types"
 import { Pie, PieChart, Cell, Legend, Tooltip } from "recharts"
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline"
 import { Title2 } from "./StyledComponents"
+import { objToArray } from "../utils/object"
 
 const StatBlock = ({ children }) => {
   return (
@@ -70,16 +71,6 @@ StatBlockNumbers.propTypes = {
   firstLabel: PropTypes.string,
   secondNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   secondLabel: PropTypes.string,
-}
-
-const objToArray = (obj, labels = []) => {
-  if (!obj) return []
-
-  if (labels?.length) {
-    return labels.map((curr) => ({ name: curr, value: obj[curr] || 0 }))
-  } else {
-    return Object.keys(obj).map((curr) => ({ name: curr, value: obj[curr] || 0 }))
-  }
 }
 
 export const StatBlockPieChart = ({ data, labels = [], hoverTitle, title }) => {

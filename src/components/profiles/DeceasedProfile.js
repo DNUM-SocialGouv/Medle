@@ -118,6 +118,9 @@ const hasErrors = (state) => {
   if (state.examinationTypes && state.examinationTypes.includes("Levée de corps") && !state.distance) {
     errors.distance = "Obligatoire"
   }
+  if (!state.examinations?.length) {
+    errors.examinations = "Obligatoire"
+  }
   if (!state.periodOfDay) {
     errors.periodOfDay = "Obligatoire"
   }

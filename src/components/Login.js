@@ -18,8 +18,7 @@ const Login = ({ authentication, error }) => {
     setIsLoading(true)
     try {
       await authentication({ email: emailRef.current.value, password: passwordRef.current.value })
-      setIsLoading(false)
-    } catch (ignore) {
+    } finally {
       setIsLoading(false)
     }
   }

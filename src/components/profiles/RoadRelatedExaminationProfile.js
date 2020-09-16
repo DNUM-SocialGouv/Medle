@@ -36,7 +36,7 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
         values={["UMJ", "Lieu de contrôle", "Commissariat", "Gendarmerie"]}
         mode="toggle"
         dispatch={dispatch}
-        state={state.location || []}
+        state={state.location || ""}
         invalid={!!errors.location}
       />
       <ActBlock
@@ -118,6 +118,9 @@ const hasErrors = (state) => {
   const errors = {}
   if (!state.examinationTypes?.length) {
     errors.examinationTypes = "Obligatoire"
+  }
+  if (!state.examinations?.length) {
+    errors.examinations = "Obligatoire"
   }
   if (!state.location) {
     errors.location = "Obligatoire"

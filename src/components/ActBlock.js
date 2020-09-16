@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { ButtonDropdown, Col, DropdownItem, DropdownMenu, Row } from "reactstrap"
 
 import { Button, DropdownToggle, Title2 } from "./StyledComponents"
+import { InputError } from "./InputError"
 
 const normalizeValues = (values) => {
   values.forEach((v) => {
@@ -115,14 +116,16 @@ const ActBlock = ({ title, subTitle, detail, type, values, dispatch, state, inva
     <>
       {title && (
         <Title2 className="mt-5 mb-4" style={colorOptions}>
-          {title}
+          {title}&nbsp;
+          {invalid && <InputError />}
         </Title2>
       )}
 
       {subTitle && (
         <Row className="mt-3">
           <Col sm={4} className="mb-1" style={colorOptions}>
-            {subTitle}
+            {subTitle}&nbsp;
+            {invalid && <InputError />}
           </Col>
         </Row>
       )}

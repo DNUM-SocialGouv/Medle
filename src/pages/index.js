@@ -20,7 +20,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
 
   const authentication = (userData) => {
     isMounted = true
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (isMounted) setError("")
 
       setTimeout(async () => {
@@ -36,13 +36,9 @@ const LoginPage = ({ message, welcomeMessage }) => {
           resolve("OK")
         } catch (error) {
           logError(error)
-          if ((error.status && error.status === 401) || error instanceof ValidationError) {
-            setError("L'authentification est incorrecte")
-          } else {
-            setError("Problème serveur")
-          }
+          setError("L'authentification est incorrecte")
           trackEvent(CATEGORY.auth, ACTION.auth.error, (userData && userData.email) || "no email")
-          reject(error)
+          resolve("KO")
         }
       }, 1000)
     })

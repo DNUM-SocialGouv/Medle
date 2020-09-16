@@ -132,6 +132,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               <Label htmlFor="doctors">Médecin</Label>
               <Input
                 name="doctors"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.doctors}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["doctors"] || ""}
@@ -145,6 +148,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               <Label htmlFor="secretaries">Secrétaire</Label>
               <Input
                 name="secretaries"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.secretaries}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["secretaries"] || ""}
@@ -158,6 +164,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               <Label htmlFor="nursings">Aide soignant.e</Label>
               <Input
                 name="nursings"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.nursings}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["nursings"] || ""}
@@ -171,6 +180,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               <Label htmlFor="executives">Cadre de santé</Label>
               <Input
                 name="executives"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.executives}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["executives"] || ""}
@@ -186,6 +198,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               <Label htmlFor="idesNumber">IDE</Label>
               <Input
                 name="idesNumber"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.idesNumber}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["idesNumber"] || ""}
@@ -199,6 +214,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               <Label htmlFor="auditoriumAgents">{"Agent d'amphithéâtre"}</Label>
               <Input
                 name="auditoriumAgents"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.auditoriumAgents}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["auditoriumAgents"] || ""}
@@ -212,6 +230,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               <Label htmlFor="others">Autres</Label>
               <Input
                 name="others"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.others}
                 placeholder="Nombre d'ETP"
                 value={dataMonth["others"] || ""}

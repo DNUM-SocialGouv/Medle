@@ -55,7 +55,7 @@ export const ROLES = {
   GUEST_HOSPITAL: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
   SUPER_ADMIN: PRIVILEGES, // le super admin qui a tous les privilèges
   REGIONAL_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un ARS par exemple
-  PUBLIC_SUPERVISOR: [STATS_LOCAL, STATS_GLOBAL], // ex: un superviseur public, tel que ARS, Ministère de la justice
+  PUBLIC_SUPERVISOR: [ACT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // ex: un superviseur public, tel que ARS, Ministère de la justice
 }
 
 export const ROLES_DESCRIPTION = {
@@ -63,9 +63,9 @@ export const ROLES_DESCRIPTION = {
   OPERATOR_ACT: "Gestionnaire d'actes", // no scope, 1 hospital_id
   OPERATOR_EMPLOYMENT: "Gestionnaire d'ETP", // no scope, 1 hospital_id
   OPERATOR_GENERIC: "Gestionnaire d'actes et d'ETP", // no scope, 1 hospital_id
-  GUEST_HOSPITAL: "Invité", // no scope, 1 hospital_id
-  PUBLIC_SUPERVISOR: "Superviseur publique", // no scope, no hospital_id
-  REGIONAL_SUPERVISOR: "Superviseur de plusieurs UMJ ou IML", // n hospitals in scope, no hospital_id
+  GUEST_HOSPITAL: "Invité (ex: inspections générales, cour des comptes..)", // no scope, 1 hospital_id
+  PUBLIC_SUPERVISOR: "Ministères", // no scope, no hospital_id
+  REGIONAL_SUPERVISOR: "ARS / TGI / CA", // n hospitals in scope, no hospital_id
   SUPER_ADMIN: "Administrateur de Medlé", // no scope, no hospital_id
 }
 

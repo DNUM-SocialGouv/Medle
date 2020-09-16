@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
+import Link from "next/link"
+
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
 
 import { withAuthentication, getCurrentUser, buildAuthHeaders, redirectIfUnauthorized } from "../utils/auth"
@@ -99,8 +101,11 @@ const FillEmploymentsPage = ({
         </p>
         <p className="mb-5 text-center">
           <small>
-            Les prochains mois, ces données seront pré-remplies et modifiables. Leur exactitude reste sous votre
-            responsabilité.
+            Attention, un ETP est un Equivalent Temps Plein et non un poste.{" "}
+            <Link href={"/faq"}>
+              <a>{"+ d'infos dans la FAQ"}</a>
+            </Link>
+            .
           </small>
         </p>
 
@@ -114,8 +119,11 @@ const FillEmploymentsPage = ({
               <Label htmlFor="doctors">Médecin</Label>
               <Input
                 name="doctors"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.doctors}
-                placeholder="Nombre d'ETP"
+                placeholder="ex: 2,1"
                 value={(dataMonth && dataMonth["doctors"]) || ""}
                 onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
@@ -126,8 +134,11 @@ const FillEmploymentsPage = ({
               <Label htmlFor="secretaries">Secrétaire</Label>
               <Input
                 name="secretaries"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.secretaries}
-                placeholder="Nombre d'ETP"
+                placeholder="ex: 2,1"
                 value={(dataMonth && dataMonth["secretaries"]) || ""}
                 onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
@@ -138,8 +149,11 @@ const FillEmploymentsPage = ({
               <Label htmlFor="nursings">Aide soignant.e</Label>
               <Input
                 name="nursings"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.nursings}
-                placeholder="Nombre d'ETP"
+                placeholder="ex: 2,1"
                 value={(dataMonth && dataMonth["nursings"]) || ""}
                 onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
@@ -151,8 +165,11 @@ const FillEmploymentsPage = ({
               <Label htmlFor="executives">Cadre de santé</Label>
               <Input
                 name="executives"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.executives}
-                placeholder="Nombre d'ETP"
+                placeholder="ex: 2,1"
                 value={(dataMonth && dataMonth["executives"]) || ""}
                 onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
@@ -165,8 +182,11 @@ const FillEmploymentsPage = ({
               <Label htmlFor="ides">IDE</Label>
               <Input
                 name="ides"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.ides}
-                placeholder="Nombre d'ETP"
+                placeholder="ex: 2,1"
                 value={(dataMonth && dataMonth["ides"]) || ""}
                 onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
@@ -177,8 +197,11 @@ const FillEmploymentsPage = ({
               <Label htmlFor="auditoriumAgents">{"Agent d'amphithéâtre"}</Label>
               <Input
                 name="auditoriumAgents"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.auditoriumAgents}
-                placeholder="Nombre d'ETP"
+                placeholder="ex: 2,1"
                 value={(dataMonth && dataMonth["auditoriumAgents"]) || ""}
                 onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"
@@ -189,8 +212,11 @@ const FillEmploymentsPage = ({
               <Label htmlFor="others">Autres</Label>
               <Input
                 name="others"
+                type="number"
+                min={0}
+                step="0.05"
                 invalid={errors && !!errors.others}
-                placeholder="Nombre d'ETP"
+                placeholder="ex: 2,1"
                 value={(dataMonth && dataMonth["others"]) || ""}
                 onChange={(event) => handleChange(event, currentMonth)}
                 autoComplete="off"

@@ -83,7 +83,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
         ]}
         mode="toggle"
         dispatch={dispatch}
-        state={state.location || []}
+        state={state.location || ""}
         invalid={!!errors.location}
       />
       <ActBlock
@@ -171,6 +171,12 @@ const hasErrors = (state) => {
   }
   if (!state.violenceContexts?.length) {
     errors.violenceContexts = "Obligatoire"
+  }
+  if (!state.examinations?.length) {
+    errors.examinations = "Obligatoire"
+  }
+  if (!state.location) {
+    errors.location = "Obligatoire"
   }
   if (!state.periodOfDay) {
     errors.periodOfDay = "Obligatoire"
