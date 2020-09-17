@@ -172,9 +172,6 @@ const hasErrors = (state) => {
   if (!state.violenceContexts?.length) {
     errors.violenceContexts = "Obligatoire"
   }
-  if (!state.examinations?.length) {
-    errors.examinations = "Obligatoire"
-  }
   if (!state.location) {
     errors.location = "Obligatoire"
   }

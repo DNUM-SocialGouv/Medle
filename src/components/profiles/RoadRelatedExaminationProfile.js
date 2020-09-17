@@ -119,9 +119,6 @@ const hasErrors = (state) => {
   if (!state.examinationTypes?.length) {
     errors.examinationTypes = "Obligatoire"
   }
-  if (!state.examinations?.length) {
-    errors.examinations = "Obligatoire"
-  }
   if (!state.location) {
     errors.location = "Obligatoire"
   }

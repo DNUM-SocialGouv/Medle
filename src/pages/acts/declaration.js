@@ -79,7 +79,7 @@ const hasErrors = (state) => {
         errors = { ...errors, examinationDate: "La date doit être passée" }
       }
       if (date < limitInPast) {
-        errors = { ...errors, examinationDate: `La date est trop ancienne` }
+        errors = { ...errors, examinationDate: `Seuls les actes de l’année N-1 peuvent être ajoutés` }
       }
     }
   }
@@ -387,7 +387,9 @@ const ActDeclaration = ({ act, currentUser }) => {
               disabled={!!state.proofWithoutComplaint}
               error={errors && errors.askerId ? errors.askerId : null}
             />
-            <div style={{ color: "#d63626", fontSize: "80%" }}>{errors && errors.askerId}</div>
+            <div style={{ color: "#d63626", fontSize: "80%" }} className="d-flex align-items-center">
+              {errors && errors.askerId}
+            </div>
           </Col>
         </Row>
 

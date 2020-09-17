@@ -112,9 +112,6 @@ export const Title2 = styled.h2`
   letter-spacing: -0.41px;
   text-align: center;
   font-weight: 400;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 export const Label = styled.label`
