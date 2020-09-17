@@ -4,9 +4,10 @@ import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined"
 
 export const InputError = ({ children }) => {
   return (
-    <div className="d-flex align-items-center">
-      {children}&nbsp;
-      <ErrorOutlineOutlinedIcon fontSize="small" />
+    <div className="d-flex align-items-center mt-1">
+      <ErrorOutlineOutlinedIcon fontSize="small" className="mr-1" />
+      &nbsp;
+      {children}
     </div>
   )
 }

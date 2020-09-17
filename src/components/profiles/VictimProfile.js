@@ -6,6 +6,7 @@ import { Col, Row } from "reactstrap"
 import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
 import ColumnAct from "../../components/ColumnAct"
 import { getReferenceData } from "../../utils/init"
+import Link from "next/link"
 
 const VictimEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
@@ -29,6 +30,16 @@ const VictimEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="violenceNatures"
         title=""
+        detail={
+          <span>
+            Note : accident collectif = accident de grande ampleur, comme par exemple Lubrizol 2020, AZF 2001...Il est
+            donc à distinguer d&apos;un accident de la route, de la voie publique, etc. qui aurait entraîné plusieurs
+            victimes.&nbsp;
+            <Link href="/faq#collectif" scroll={false}>
+              <a target="_blank">Voir FAQ</a>
+            </Link>
+          </span>
+        }
         subTitle="Nature"
         values={[
           "Coups blessures",

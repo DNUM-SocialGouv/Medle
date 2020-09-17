@@ -79,7 +79,7 @@ const hasErrors = (state) => {
         errors = { ...errors, examinationDate: "La date doit être passée" }
       }
       if (date < limitInPast) {
-        errors = { ...errors, examinationDate: `Seuls les actes de l’année N-2 peuvent être ajoutés` }
+        errors = { ...errors, examinationDate: `L'ajout d'acte antérieur à ${previousYear} n'est pas possible` }
       }
     }
   }
