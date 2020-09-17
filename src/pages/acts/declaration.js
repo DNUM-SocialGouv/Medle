@@ -72,14 +72,14 @@ const hasErrors = (state) => {
     if (!date.isValid()) {
       errors = { ...errors, examinationDate: "Format incorrect" }
     } else {
-      const previousYear = now().year() - 1
+      const previousYear = now().year() - 2
       const limitInPast = moment(`${previousYear}-01-01`)
 
       if (date > now()) {
         errors = { ...errors, examinationDate: "La date doit être passée" }
       }
       if (date < limitInPast) {
-        errors = { ...errors, examinationDate: `Seuls les actes de l’année N-1 peuvent être ajoutés` }
+        errors = { ...errors, examinationDate: `Seuls les actes de l’année N-2 peuvent être ajoutés` }
       }
     }
   }
