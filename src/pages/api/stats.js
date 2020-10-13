@@ -1,4 +1,5 @@
 import Cors from "micro-cors"
+import { version } from "../../../package.json"
 
 import knex from "../../knex/knex"
 import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../utils/http"
@@ -31,6 +32,7 @@ const handler = async (req, res) => {
         const [date] = await knex.select(knex.raw("now()"))
 
         const result = {
+          buildVersion: version,
           currentDate: moment(date.now).format(FORMAT_DATE),
           nbActs: parseInt(globalCount?.count || 0, 10),
           nbETP: stats?.length || 0,
