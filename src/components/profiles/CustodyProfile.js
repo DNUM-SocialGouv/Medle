@@ -43,7 +43,7 @@ const CustodyEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="location"
         title="Lieu de l'examen"
-        values={["UMJ", "Commissariat", "Gendarmerie", "Tribunal"]}
+        values={["UMJ", "Commissariat", "Gendarmerie", "Tribunal", "Service hosp. public"]}
         mode="toggle"
         dispatch={dispatch}
         state={state.location || ""}
