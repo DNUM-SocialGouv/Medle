@@ -4,7 +4,7 @@ import Document, { Html, Head, Main, NextScript } from "next/document"
 class MyDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html lang="fr">
         <Head>
           <script src="/polyfill.js" />
           <script type="text/javascript" src="/tarteaucitron/tarteaucitron.js"></script>

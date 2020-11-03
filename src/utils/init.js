@@ -18,6 +18,7 @@ export const fetchReferenceData = async () => {
 
 export const clearReferenceData = () => {
   sessionStorage.removeItem("attacks")
+  sessionStorage.removeItem("hospitals")
 }
 
 export const getReferenceData = (key) => {

@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import PropTypes from "prop-types"
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers"
 import {
   Button,
   Col,
@@ -21,7 +23,7 @@ import { useForm } from "react-hook-form"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 
 import Layout from "../../../components/Layout"
-import { Title1 } from "../../../components/StyledComponents"
+import { Title1, Title2 } from "../../../components/StyledComponents"
 import { isEmpty } from "../../../utils/misc"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { ADMIN } from "../../../utils/roles"
@@ -30,14 +32,38 @@ import { createHospital, deleteHospital, findHospital, updateHospital } from "..
 
 const MandatorySign = () => <span style={{ color: "red" }}>*</span>
 
+const schema = yup.object({
+  finesseNumber: yup.string(),
+  name: yup.string().required("Le nom est obligatoire."),
+  addr1: yup.string(),
+  addr2: yup.string(),
+  town: yup.string().required("La ville est obligatoire."),
+  depCode: yup
+    .string()
+    .required("Le département est obligatoire.")
+    .matches(/^2A|2B|[0-9]{2,3}$/i, "Le département a un format incorrect."),
+  postalCode: yup.string().matches(/^[0-9]{5}$/i, "Le code postal a un format incorrect."),
+  etp: yup.object({
+    doctors: yup.number().typeError("Le nombre d'ETP est incorrect."),
+    secretaries: yup.number().typeError("Le nombre d'ETP est incorrect."),
+    nursings: yup.number().typeError("Le nombre d'ETP est incorrect."),
+    executives: yup.number().typeError("Le nombre d'ETP est incorrect."),
+    ides: yup.number().typeError("Le nombre d'ETP est incorrect."),
+    auditoriumAgents: yup.number().typeError("Le nombre d'ETP est incorrect."),
+    others: yup.number().typeError("Le nombre d'ETP est incorrect."),
+  }),
+})
+
 // TODO : vérifier que seul le super admin puisse accéder à cette page
 const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => {
   const router = useRouter()
-  const { id } = router.query
+  const { id } = hospital
+
   const { handleSubmit, register, errors: formErrors, setValue } = useForm({
     defaultValues: {
       ...hospital,
     },
+    resolver: yupResolver(schema),
   })
 
   // General error (alert)
@@ -47,6 +73,10 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
   const [modal, setModal] = useState(false)
 
   const toggle = () => setModal(!modal)
+
+  React.useEffect(() => {
+    if (formErrors) setsuccess("")
+  }, [formErrors, setsuccess])
 
   const onDeleteHospital = () => {
     toggle()
@@ -88,7 +118,10 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
 
   return (
     <Layout page="hospitals" currentUser={currentUser} admin={true}>
-      <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
+      <Container
+        style={{ maxWidth: 980, minWidth: 740 }}
+        className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
+      >
         <div className="d-flex justify-content-between">
           <Link href="/administration/hospitals">
             <a>
@@ -96,10 +129,21 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               Retour
             </a>
           </Link>
-          <Title1>{"Hôpital"}</Title1>
-          <span>&nbsp;</span>
         </div>
+        <Title1>Hôpital {hospital?.name}</Title1>
 
+        {id ? (
+          <Link href="/administration/hospitals/[hid]/employments" as={`/administration/hospitals/${id}/employments`}>
+            <Button outline color="primary">
+              <a>Gérer les ETP de référence</a>
+            </Button>
+          </Link>
+        ) : (
+          <span></span>
+        )}
+      </Container>
+
+      <Container style={{ maxWidth: 980, minWidth: 740 }}>
         {error && <Alert color="danger mt-4">{error}</Alert>}
 
         {success && (
@@ -111,7 +155,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                   <a>Retour à la liste</a>
                 </Button>
               </Link>
-              <Link href="/administration/hospitals/[id]" as={`/administration/hospitals/new`}>
+              <Link href="/administration/hospitals/[hid]/new" as={`/administration/hospitals/${id}/new`}>
                 <Button outline color="success">
                   <a>Ajouter</a>
                 </Button>
@@ -143,14 +187,8 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
-                type="text"
-                name="name"
-                id="name"
-                invalid={!!formErrors.name}
-                innerRef={register({ required: true })}
-              />
-              <FormFeedback>{formErrors.name && "Le nom est obligatoire."}</FormFeedback>
+              <Input type="text" name="name" id="name" invalid={!!formErrors.name} innerRef={register} />
+              <FormFeedback>{formErrors.name?.message}</FormFeedback>
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -175,14 +213,8 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
-                type="text"
-                name="town"
-                id="town"
-                invalid={!!formErrors.town}
-                innerRef={register({ required: true })}
-              />
-              <FormFeedback>{formErrors.town && "La ville est obligatoire."}</FormFeedback>
+              <Input type="text" name="town" id="town" invalid={!!formErrors.town} innerRef={register} />
+              <FormFeedback>{formErrors.town?.message}</FormFeedback>
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -195,15 +227,11 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                 type="text"
                 name="depCode"
                 id="depCode"
-                innerRef={register({
-                  required: true,
-                  pattern: {
-                    value: /^[0-9]{2,3}$/i,
-                  },
-                })}
+                innerRef={register}
                 invalid={!!formErrors.depCode}
+                placeholder="Ex: 44 ou 971"
               />
-              <FormFeedback>{formErrors.depCode && "Le département a un format incorrect."}</FormFeedback>
+              <FormFeedback>{formErrors.depCode?.message}</FormFeedback>
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -215,16 +243,15 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                 type="text"
                 name="postalCode"
                 id="postalCode"
-                innerRef={register({
-                  pattern: {
-                    value: /^[0-9]{5}$/i,
-                  },
-                })}
+                innerRef={register}
                 invalid={!!formErrors.postalCode}
+                placeholder="Ex: 94300"
               />
-              <FormFeedback>{formErrors.postalCode && "Le code postal a un format incorrect."}</FormFeedback>
+              <FormFeedback>{formErrors.postalCode?.message}</FormFeedback>
             </Col>
           </FormGroup>
+
+          <Title2 className="mt-4 mb-3">Paramètres actes</Title2>
           <FormGroup row>
             <Label for="canDoPostMortem" sm={3}>
               Autopsies autorisées&nbsp;?&nbsp;
@@ -289,12 +316,13 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
 HospitalDetail.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
 
-  const { id } = ctx.query
+  const { hid } = ctx.query
 
-  if (!id || isNaN(id)) return { hospital: {}, key: Number(new Date()) }
+  if (!hid || isNaN(hid)) return { hospital: {}, key: Number(new Date()) }
 
   try {
-    const hospital = await findHospital({ id, headers })
+    const hospital = await findHospital({ id: hid, headers })
+
     return { hospital }
   } catch (error) {
     logError(error)

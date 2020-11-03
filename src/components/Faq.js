@@ -28,11 +28,11 @@ export const Question = ({ children }) => (
 export const Answer = ({ children }) => <div dangerouslySetInnerHTML={{ __html: children }} />
 
 Section.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 }
 Question.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 }
 Answer.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 }

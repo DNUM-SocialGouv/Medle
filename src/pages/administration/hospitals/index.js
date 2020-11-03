@@ -94,7 +94,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                 {hospitals.map((hospital) => (
                   <Link
                     key={hospital.id}
-                    href="/administration/hospitals/[id]"
+                    href="/administration/hospitals/[hid]"
                     as={`/administration/hospitals/${hospital.id}`}
                   >
                     <tr>
@@ -105,7 +105,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                       <td>{hospital.town}</td>
                       <td>{hospital.postalCode}</td>
                       <td>
-                        <Link href="/administration/hospitals/[id]" as={`/administration/hospitals/${hospital.id}`}>
+                        <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hospital.id}`}>
                           <a className="text-decoration-none">Voir</a>
                         </Link>
                       </td>

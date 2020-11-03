@@ -34,7 +34,7 @@ const RestrainedEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="location"
         title="Lieu de l'examen"
-        values={["UMJ", "Locaux douaniers", "Centre de rétention", "Commissariat"]}
+        values={["UMJ", "Locaux douaniers", "Centre de rétention", "Commissariat", "Gendarmerie"]}
         mode="toggle"
         dispatch={dispatch}
         state={state.location || ""}

@@ -6,34 +6,23 @@ import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
 
 import { withAuthentication, getCurrentUser, buildAuthHeaders, redirectIfUnauthorized } from "../utils/auth"
 import { isAllowed, EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
+import Badge from "../components/Badge"
 import Layout from "../components/Layout"
-import AccordionEmploymentsMonth, {
-  hasErrors,
-  fetchDataMonth,
-  updateDataMonth,
-} from "../components/AccordionEmploymentsMonth"
+import AccordionEmploymentsMonth, { hasErrors } from "../components/AccordionEmploymentsMonth"
+
+import { findEmployment, updateEmployment } from "../clients/employments"
+
+import { searchReferenceForMonth } from "../clients/employments-references"
 import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
-import { isEmpty } from "../utils/misc"
-import { now } from "../utils/date"
+import { isEmpty, pluralize } from "../utils/misc"
+import { now, NAME_MONTHS } from "../utils/date"
 import { logError } from "../utils/logger"
 import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "../utils/http"
 
-const NAME_MONTHS = {
-  "01": "janvier",
-  "02": "février",
-  "03": "mars",
-  "04": "avril",
-  "05": "mai",
-  "06": "juin",
-  "07": "juillet",
-  "08": "août",
-  "09": "septembre",
-  "10": "octobre",
-  "11": "novembre",
-  "12": "décembre",
-}
+const makeLabel = (number) => (number ? `${number} ETP prévu${pluralize(number)}` : null)
 
 const FillEmploymentsPage = ({
+  etpBase,
   currentMonth,
   currentMonthName,
   error,
@@ -68,7 +57,7 @@ const FillEmploymentsPage = ({
     }
 
     try {
-      await updateDataMonth({ hospitalId: hospital.id, year, month: monthNumber, dataMonth })
+      await updateEmployment({ hospitalId: hospital.id, year, month: monthNumber, dataMonth })
 
       setSuccess("Vos informations ont bien été enregistrées.")
     } catch (error) {
@@ -129,6 +118,8 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.doctors}</FormFeedback>
+
+              <Badge value={makeLabel(etpBase?.doctors)}></Badge>
             </Col>
             <Col className="mr-3">
               <Label htmlFor="secretaries">Secrétaire</Label>
@@ -144,6 +135,7 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.secretaries}</FormFeedback>
+              <Badge value={makeLabel(etpBase?.secretaries)}></Badge>
             </Col>
             <Col className="mr-3">
               <Label htmlFor="nursings">Aide soignant.e</Label>
@@ -160,6 +152,7 @@ const FillEmploymentsPage = ({
               />
 
               <FormFeedback>{errors && errors.nursings}</FormFeedback>
+              <Badge value={makeLabel(etpBase?.nursings)}></Badge>
             </Col>
             <Col className="mr-3">
               <Label htmlFor="executives">Cadre de santé</Label>
@@ -175,9 +168,10 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.executives}</FormFeedback>
+              <Badge value={makeLabel(etpBase?.executives)}></Badge>
             </Col>
           </Row>
-          <Row className={"mt-2"}>
+          <Row className="mt-4">
             <Col className="mr-3">
               <Label htmlFor="ides">IDE</Label>
               <Input
@@ -192,9 +186,10 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.ides}</FormFeedback>
+              <Badge value={makeLabel(etpBase?.ides)}></Badge>
             </Col>
             <Col className="mr-3">
-              <Label htmlFor="auditoriumAgents">{"Agent d'amphithéâtre"}</Label>
+              <Label htmlFor="auditoriumAgents">{"Agent d'amphi."}</Label>
               <Input
                 name="auditoriumAgents"
                 type="number"
@@ -207,6 +202,7 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
+              <Badge value={makeLabel(etpBase?.auditoriumAgents)}></Badge>
             </Col>
             <Col className="mr-3">
               <Label htmlFor="others">Autres</Label>
@@ -222,6 +218,7 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.others}</FormFeedback>
+              <Badge value={makeLabel(etpBase?.others)}></Badge>
             </Col>
             <Col className="mr-3"></Col>
           </Row>
@@ -275,7 +272,7 @@ FillEmploymentsPage.getInitialProps = async (ctx) => {
   const { currentYear, currentMonth, allMonths } = buildDates()
 
   try {
-    const authHeaders = buildAuthHeaders(ctx)
+    const headers = buildAuthHeaders(ctx)
 
     const { hospital } = getCurrentUser(ctx)
 
@@ -283,14 +280,22 @@ FillEmploymentsPage.getInitialProps = async (ctx) => {
       throw new Error("Vous n'avez pas d'établissement de santé à gérer.")
     }
 
-    const json = await fetchDataMonth({
+    const json = await findEmployment({
       hospitalId: hospital.id,
       year: currentYear,
       month: currentMonth,
-      authHeaders,
+      headers,
+    })
+
+    const etpReference = await searchReferenceForMonth({
+      hospitalId: hospital.id,
+      year: currentYear,
+      month: currentMonth,
+      headers,
     })
 
     return {
+      etpBase: etpReference.reference,
       currentMonth,
       currentMonthName: NAME_MONTHS[currentMonth] + " " + currentYear,
       dataMonth: json,
@@ -323,6 +328,7 @@ FillEmploymentsPage.getInitialProps = async (ctx) => {
 }
 
 FillEmploymentsPage.propTypes = {
+  etpBase: PropTypes.object,
   year: PropTypes.string.isRequired,
   allMonths: PropTypes.array.isRequired,
   currentMonth: PropTypes.string.isRequired,

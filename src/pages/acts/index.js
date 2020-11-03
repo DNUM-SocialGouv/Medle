@@ -255,9 +255,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
             {error}
           </Alert>
         )}
-        {!error && !paginatedData.elements.length && <div className="text-center">{"Aucun acte trouvé."}</div>}
+        {!error && !paginatedData?.elements?.length && <div className="text-center">{"Aucun acte trouvé."}</div>}
 
-        {!error && !!paginatedData.elements.length && (
+        {!error && !!paginatedData?.elements?.length && (
           <>
             <div className="my-4 d-flex justify-content-center">
               <b>{paginatedData.totalCount}</b>&nbsp;résultat{paginatedData.totalCount > 1 && "s"}

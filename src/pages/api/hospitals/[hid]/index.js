@@ -1,10 +1,10 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_PUT } from "../../../utils/http"
-import { ADMIN, NO_PRIVILEGE_REQUIRED } from "../../../utils/roles"
-import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../services/errorHelpers"
-import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
-import { del, find, update } from "../../../services/hospitals"
+import { STATUS_200_OK, METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_PUT } from "../../../../utils/http"
+import { ADMIN, NO_PRIVILEGE_REQUIRED } from "../../../../utils/roles"
+import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../../services/errorHelpers"
+import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../../utils/auth"
+import { del, find, update } from "../../../../services/hospitals"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")

@@ -119,7 +119,8 @@ export const Label = styled.label`
   color: #212529;
   font-family: "Source Sans Pro";
   font-size: 14px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.5px;
   line-height: 15px;
   font-variant: small-caps;
+  margin-bottom: 0;
 `

@@ -12,3 +12,16 @@ export const deleteProperty = (obj, property) => {
 export const capitalize = (str) => (!str?.length ? "" : str[0].toUpperCase() + str.slice(1))
 
 export const pluralize = (count) => (count && count > 1 ? "s" : "")
+
+export const fromEntries = (array) =>
+  array.reduce((acc, curr) => {
+    acc[curr[0]] = curr[1]
+  }, {})
+
+export const revertObject = (obj) => {
+  return Object.keys(obj).reduce((acc, key) => {
+    const value = obj[key]
+    acc[value] = key
+    return acc
+  }, {})
+}

@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+
 import Link from "next/link"
 import PropTypes from "prop-types"
 import {
@@ -397,7 +398,7 @@ const Layout = ({ children, page, currentUser, admin = false }) => {
 }
 
 Layout.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   page: PropTypes.string,
   currentUser: PropTypes.object,
   admin: PropTypes.bool,

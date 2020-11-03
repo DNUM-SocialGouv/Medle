@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { ButtonDropdown, Col, DropdownItem, DropdownMenu, Row } from "reactstrap"
-import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined"
 
 import { Button, DropdownToggle, Title2 } from "./StyledComponents"
+import { InputError } from "./InputError"
 
 const normalizeValues = (values) => {
   values.forEach((v) => {
@@ -115,17 +115,17 @@ const ActBlock = ({ title, subTitle, detail, type, values, dispatch, state, inva
   return (
     <>
       {title && (
-        <Title2 className="mt-5 mb-4 d-flex justify-content-center align-items-center" style={colorOptions}>
+        <Title2 className="mt-5 mb-4" style={colorOptions}>
           {title}&nbsp;
-          {invalid && <ErrorOutlineOutlinedIcon fontSize="small" />}
+          {invalid && <InputError />}
         </Title2>
       )}
 
       {subTitle && (
         <Row className="mt-3">
-          <Col sm={4} className="mb-1 d-flex align-items-center" style={colorOptions}>
+          <Col sm={4} className="mb-1" style={colorOptions}>
             {subTitle}&nbsp;
-            {invalid && <ErrorOutlineOutlinedIcon fontSize="small" />}
+            {invalid && <InputError />}
           </Col>
         </Row>
       )}

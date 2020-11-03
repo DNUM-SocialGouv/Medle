@@ -4,6 +4,7 @@ import { APIError } from "../../utils/errors"
 import { untransform, validate } from "../../models/askers"
 
 export const update = async ({ id }, asker) => {
+  // Check if query and body are consistent
   if (!id || isNaN(id) || !asker || parseInt(id, 10) !== parseInt(asker.id, 10)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,

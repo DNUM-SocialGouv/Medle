@@ -135,7 +135,7 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege, { redire
 }
 
 export const redirectIfUnauthorized = (error, ctx) => {
-  if (error && error.status === 401) {
+  if (error?.status === 401) {
     isomorphicRedirect(ctx, "/?sessionTimeout=1")
   }
 }

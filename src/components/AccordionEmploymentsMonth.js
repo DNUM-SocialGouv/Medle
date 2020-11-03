@@ -4,15 +4,17 @@ import { Alert, Button, Col, Input, Row, FormFeedback } from "reactstrap"
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import EditOutlinedIcon from "@material-ui/icons/Edit"
-import fetch from "isomorphic-unfetch"
 
 import { Label, AnchorButton } from "../components/StyledComponents"
-import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
-import { isEmpty } from "../utils/misc"
-import { METHOD_PUT } from "../utils/http"
-import { handleAPIResponse } from "../utils/errors"
+import Badge from "../components/Badge"
+import { isEmpty, pluralize } from "../utils/misc"
 import { isAllowed, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
 import { logError } from "../utils/logger"
+
+import { findEmployment, updateEmployment } from "../clients/employments"
+import { searchReferenceForMonth } from "../clients/employments-references"
+
+const makeLabel = (number) => (number ? `${number} ETP prévu${pluralize(number)}` : null)
 
 export const hasErrors = (dataMonth) => {
   const errors = {}
@@ -42,39 +44,30 @@ export const hasErrors = (dataMonth) => {
   return errors
 }
 
-export const fetchDataMonth = async ({ hospitalId, year, month, authHeaders }) => {
-  const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
-    headers: authHeaders,
-  })
-  return handleAPIResponse(response)
-}
-
-export const updateDataMonth = async ({ hospitalId, year, month, dataMonth }) => {
-  const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
-    method: METHOD_PUT,
-    body: JSON.stringify(dataMonth),
-  })
-  await handleAPIResponse(response)
-}
-
 const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnly, currentUser }) => {
   const [open, setOpen] = useState(false)
   const [readOnlyState, setReadOnlyState] = useState(readOnly)
   const [errors, setErrors] = useState()
 
   const [dataMonth, setDataMonth] = useState({})
+  const [reference, setReference] = useState({})
 
   useEffect(() => {
     const fetchData = async () => {
-      let json
-
       try {
-        json = await fetchDataMonth({ hospitalId, year, month })
+        const json = await findEmployment({ hospitalId, year, month })
+
+        const etpReference = await searchReferenceForMonth({
+          hospitalId,
+          year,
+          month,
+        })
+
+        setDataMonth(json)
+        setReference(etpReference?.reference)
       } catch (error) {
         logError(error)
         return { error: "Erreur serveur" }
-      } finally {
-        setDataMonth(json || [])
       }
     }
 
@@ -98,7 +91,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
       return
     }
     try {
-      await updateDataMonth({ hospitalId, year, month, dataMonth })
+      await updateEmployment({ hospitalId, year, month, dataMonth })
       toggleReadOnly()
     } catch (error) {
       logError(error)
@@ -143,6 +136,8 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.doctors}</FormFeedback>
+
+              <Badge value={makeLabel(reference?.doctors)}></Badge>
             </Col>
             <Col className="mr-3">
               <Label htmlFor="secretaries">Secrétaire</Label>
@@ -159,6 +154,8 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.secretaries}</FormFeedback>
+
+              <Badge value={makeLabel(reference?.secretaries)}></Badge>
             </Col>
             <Col className="mr-3">
               <Label htmlFor="nursings">Aide soignant.e</Label>
@@ -175,6 +172,8 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.nursings}</FormFeedback>
+
+              <Badge value={makeLabel(reference?.nursings)}></Badge>
             </Col>
             <Col className="mr-3">
               <Label htmlFor="executives">Cadre de santé</Label>
@@ -191,27 +190,31 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.executives}</FormFeedback>
+
+              <Badge value={makeLabel(reference?.executives)}></Badge>
             </Col>
           </Row>
           <Row className="mt-2 mb-5">
             <Col className="mr-3">
-              <Label htmlFor="idesNumber">IDE</Label>
+              <Label htmlFor="ides">IDE</Label>
               <Input
-                name="idesNumber"
+                name="ides"
                 type="number"
                 min={0}
                 step="0.05"
-                invalid={errors && !!errors.idesNumber}
+                invalid={errors && !!errors.ides}
                 placeholder="Nombre d'ETP"
-                value={dataMonth["idesNumber"] || ""}
+                value={dataMonth["ides"] || ""}
                 onChange={(event) => handleChange(event)}
                 disabled={readOnlyState}
                 autoComplete="off"
               />
-              <FormFeedback>{errors && errors.idesNumber}</FormFeedback>
+              <FormFeedback>{errors && errors.ides}</FormFeedback>
+
+              <Badge value={makeLabel(reference?.ides)}></Badge>
             </Col>
             <Col className="mr-3">
-              <Label htmlFor="auditoriumAgents">{"Agent d'amphithéâtre"}</Label>
+              <Label htmlFor="auditoriumAgents">{"Agent d'amphi."}</Label>
               <Input
                 name="auditoriumAgents"
                 type="number"
@@ -225,6 +228,8 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
+
+              <Badge value={makeLabel(reference?.auditoriumAgents)}></Badge>
             </Col>
             <Col className="mr-3">
               <Label htmlFor="others">Autres</Label>
@@ -241,6 +246,8 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.others}</FormFeedback>
+
+              <Badge value={makeLabel(reference?.others)}></Badge>
             </Col>
             <Col className="mr-3"></Col>
           </Row>
