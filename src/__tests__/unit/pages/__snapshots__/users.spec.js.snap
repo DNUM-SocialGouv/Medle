@@ -359,7 +359,7 @@ exports[`should renders UserDetail unchanged 1`] = `
               Retour
             </a>
             <h1
-              className="StyledComponents__Title1-yzg90z-6 jPDDmF"
+              className="StyledComponents__Title1-yzg90z-6 kaiHmj"
             >
               Utilisateur
             </h1>

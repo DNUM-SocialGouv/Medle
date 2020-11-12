@@ -1,4 +1,4 @@
-export const mapForSelect = (data, fnValue, fnLabel) => (!data ? null : { value: fnValue(data), label: fnLabel(data) })
+export const mapForSelect = (data, fnValue, fnLabel) => (!data ? null : { label: fnLabel(data), value: fnValue(data) })
 
 export const mapArrayForSelect = (data, fnValue, fnLabel) =>
-  !data?.length ? null : data.map((curr) => ({ value: fnValue(curr), label: fnLabel(curr) }))
+  !data?.length ? [] : data.map((curr) => ({ label: fnLabel(curr), value: fnValue(curr) }))

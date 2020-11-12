@@ -1,32 +1,32 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react"
-import Link from "next/link"
-import PropTypes from "prop-types"
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Table } from "reactstrap"
-import ListAltIcon from "@material-ui/icons/ListAlt"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ArrowRightIcon from "@material-ui/icons/ArrowRight"
+import ListAltIcon from "@material-ui/icons/ListAlt"
+import Link from "next/link"
+import PropTypes from "prop-types"
+import React, { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import Select from "react-select"
 import AsyncSelect from "react-select/async"
+import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Table } from "reactstrap"
 
-import { SearchButton } from "../../components/form/SearchButton"
-import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
-import { Title1 } from "../../components/StyledComponents"
-import Pagination from "../../components/Pagination"
-import Layout from "../../components/Layout"
-import { VerticalList } from "../../components/VerticalList"
-import { isoToFr } from "../../utils/date"
-import { ACT_CONSULTATION } from "../../utils/roles"
-import { logError } from "../../utils/logger"
-import { usePaginatedData } from "../../hooks/usePaginatedData"
-import { useDebounce } from "../../hooks/useDebounce"
-import { searchActs, fetchExport } from "../../clients/acts"
-import { isOpenFeature } from "../../config"
-import { mapArrayForSelect } from "../../utils/select"
-import { getReferenceData } from "../../utils/init"
-import { profiles as profilesConstants } from "../../utils/actsConstants"
+import { fetchExport, searchActs } from "../../clients/acts"
 import { memoizedSearchAskers } from "../../clients/askers"
+import { SearchButton } from "../../components/form/SearchButton"
+import Layout from "../../components/Layout"
+import Pagination from "../../components/Pagination"
+import { Title1 } from "../../components/StyledComponents"
+import { VerticalList } from "../../components/VerticalList"
+import { isOpenFeature } from "../../config"
+import { useDebounce } from "../../hooks/useDebounce"
+import { usePaginatedData } from "../../hooks/usePaginatedData"
 import { buildScope } from "../../services/scope"
+import { profiles as profilesConstants } from "../../utils/actsConstants"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
+import { isoToFr } from "../../utils/date"
+import { getReferenceData } from "../../utils/init"
+import { logError } from "../../utils/logger"
+import { ACT_CONSULTATION } from "../../utils/roles"
+import { mapArrayForSelect } from "../../utils/select"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   // const renderCount = React.useRef(0)
@@ -34,7 +34,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActs, initialPaginatedData)
   const [isOpenedFilters, setOpenedFilters] = useState(false)
-  const { register, handleSubmit, setValue, getValues } = useForm({})
+  const { register, unregister, handleSubmit, setValue, getValues } = useForm({})
   const [hospitals, setHospitals] = useState([])
   const [profiles, setProfiles] = useState([])
   const [asker, setAsker] = useState(null)
@@ -42,23 +42,25 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   useDebounce(onChange, 500, [search])
   const scope = useMemo(() => buildScope(currentUser), [currentUser])
 
-  const hospitalsChoices = useCallback(
-    mapArrayForSelect(
-      scope?.length === 0
-        ? getReferenceData("hospitals")
-        : getReferenceData("hospitals").filter((hospital) => scope.includes(hospital.id)),
-      (elt) => elt.id,
-      (elt) => elt.name
-    ),
+  const hospitalsChoices = useMemo(
+    () =>
+      mapArrayForSelect(
+        scope?.length === 0
+          ? getReferenceData("hospitals")
+          : getReferenceData("hospitals").filter((hospital) => scope.includes(hospital.id)),
+        (elt) => elt.id,
+        (elt) => elt.name
+      ),
     [scope]
   )
 
-  const existingProfiles = useCallback(
-    mapArrayForSelect(
-      Object.keys(profilesConstants) || [],
-      (elt) => elt,
-      (elt) => elt
-    ),
+  const existingProfiles = useMemo(
+    () =>
+      mapArrayForSelect(
+        Object.keys(profilesConstants) || [],
+        (elt) => elt,
+        (elt) => elt
+      ),
     []
   )
 
@@ -68,7 +70,14 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     register({ name: "profiles" })
     register({ name: "asker" })
     register({ name: "search" })
-  }, [register])
+
+    return () => {
+      unregister({ name: "hospitals" })
+      unregister({ name: "profiles" })
+      unregister({ name: "asker" })
+      unregister({ name: "search" })
+    }
+  }, [register, unregister])
 
   const numFilters = Object.values(getValues()).filter((val) => !!val).length
 
@@ -270,7 +279,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                   <th>Date</th>
                   <th>Type de profil</th>
                   <th>{"Type d'acte"}</th>
-                  <th></th>
+                  <th />
                 </tr>
               </thead>
               <tbody>
@@ -323,8 +332,8 @@ ActsListPage.getInitialProps = async (ctx) => {
 }
 
 ActsListPage.propTypes = {
-  paginatedData: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
+  paginatedData: PropTypes.object.isRequired,
 }
 
 export default withAuthentication(ActsListPage, ACT_CONSULTATION)
