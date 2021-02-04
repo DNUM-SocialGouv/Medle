@@ -1,10 +1,11 @@
-import React from "react"
-import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
-import { Title2 } from "../StyledComponents"
+import React from "react"
 import { Col, Row } from "reactstrap"
+
 import ColumnAct from "../../components/ColumnAct"
-import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
+import { getSituationDate, periodOfDayValues } from "../../utils/actsConstants"
+import ActBlock from "../ActBlock"
+import { Title2 } from "../StyledComponents"
 
 const CustodyEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
@@ -138,8 +139,8 @@ const CustodyRead = (act) => {
           <Col className="mr-3">
             <ColumnAct header={"Lieu de l'examen"} content={act.location} />
           </Col>
-          <Col className="mr-3"></Col>
-          <Col className="mr-3"></Col>
+          <Col className="mr-3" />
+          <Col className="mr-3" />
         </Row>
 
         <Title2 className="pt-3">Profil</Title2>
@@ -151,8 +152,8 @@ const CustodyRead = (act) => {
           <Col className="mr-3">
             <ColumnAct header={"Âge"} content={act && act.personAgeTag} />
           </Col>
-          <Col className="mr-3"></Col>
-          <Col className="mr-3"></Col>
+          <Col className="mr-3" />
+          <Col className="mr-3" />
         </Row>
       </>
     )

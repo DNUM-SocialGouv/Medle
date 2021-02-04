@@ -1,10 +1,10 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../utils/http"
 import knex from "../../../knex/knex"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
-import { STATS_GLOBAL } from "../../../utils/roles"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
+import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../../utils/http"
+import { STATS_GLOBAL } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")

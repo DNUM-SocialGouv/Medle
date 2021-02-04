@@ -1,8 +1,9 @@
 import Cors from "micro-cors"
-import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../utils/http"
+
 import knex from "../../knex/knex"
 import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
 import { ISO_DATE, now } from "../../utils/date"
+import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../utils/http"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")

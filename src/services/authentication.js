@@ -1,9 +1,9 @@
 import knex from "../knex/knex"
-import { compareWithHash } from "../utils/bcrypt"
-import { generateToken } from "../utils/jwt"
-import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../utils/http"
-import { APIError } from "../utils/errors"
 import { transform } from "../models/users"
+import { compareWithHash } from "../utils/bcrypt"
+import { APIError } from "../utils/errors"
+import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../utils/http"
+import { generateToken } from "../utils/jwt"
 
 const validPassword = (password) => !!password?.length
 

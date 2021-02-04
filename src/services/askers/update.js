@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST, STATUS_403_FORBIDDEN } from "../../utils/http"
-import { APIError } from "../../utils/errors"
 import { untransform, validate } from "../../models/askers"
+import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST, STATUS_403_FORBIDDEN } from "../../utils/http"
 
 export const update = async ({ id }, asker) => {
   // Check if query and body are consistent

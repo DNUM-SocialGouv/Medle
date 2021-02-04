@@ -1,18 +1,18 @@
 import Cors from "micro-cors"
 
-import {
-  STATUS_200_OK,
-  STATUS_404_NOT_FOUND,
-  METHOD_GET,
-  METHOD_DELETE,
-  METHOD_OPTIONS,
-  METHOD_PUT,
-} from "../../../utils/http"
-import { ACT_CONSULTATION, ACT_MANAGEMENT } from "../../../utils/roles"
+import { del, find, update } from "../../../services/acts"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { APIError } from "../../../utils/errors"
-import { del, find, update } from "../../../services/acts"
+import {
+  METHOD_DELETE,
+  METHOD_GET,
+  METHOD_OPTIONS,
+  METHOD_PUT,
+  STATUS_200_OK,
+  STATUS_404_NOT_FOUND,
+} from "../../../utils/http"
+import { ACT_CONSULTATION, ACT_MANAGEMENT } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")

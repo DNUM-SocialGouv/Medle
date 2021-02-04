@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
-import { isValid } from "./common"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
+import { isValid } from "./common"
 
 export const find = async ({ year, month, hospitalId }) => {
   if (!isValid({ year, month, hospitalId }))

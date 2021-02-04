@@ -1,6 +1,6 @@
+import * as nextRouter from "next/router"
 import React from "react"
 import renderer from "react-test-renderer"
-import * as nextRouter from "next/router"
 
 import UserDetail from "../../../pages/administration/users/[id]"
 import { SUPER_ADMIN } from "../../../utils/roles"

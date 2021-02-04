@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react"
-import PropTypes from "prop-types"
-import { Alert, Button, Col, Input, Row, FormFeedback } from "reactstrap"
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import EditOutlinedIcon from "@material-ui/icons/Edit"
-
-import { Label, AnchorButton } from "../components/StyledComponents"
-import Badge from "../components/Badge"
-import { isEmpty, pluralize } from "../utils/misc"
-import { isAllowed, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
-import { logError } from "../utils/logger"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import PropTypes from "prop-types"
+import React, { useEffect, useState } from "react"
+import { Alert, Button, Col, FormFeedback, Input, Row } from "reactstrap"
 
 import { findEmployment, updateEmployment } from "../clients/employments"
 import { searchReferenceForMonth } from "../clients/employments-references"
+import Badge from "../components/Badge"
+import { AnchorButton, Label } from "../components/StyledComponents"
+import { logError } from "../utils/logger"
+import { isEmpty, pluralize } from "../utils/misc"
+import { EMPLOYMENT_MANAGEMENT, isAllowed } from "../utils/roles"
 
 const makeLabel = (number) => (number ? `${number} ETP prévu${pluralize(number)}` : null)
 
@@ -137,7 +136,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               />
               <FormFeedback>{errors && errors.doctors}</FormFeedback>
 
-              <Badge value={makeLabel(reference?.doctors)}></Badge>
+              <Badge value={makeLabel(reference?.doctors)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="secretaries">Secrétaire</Label>
@@ -155,7 +154,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               />
               <FormFeedback>{errors && errors.secretaries}</FormFeedback>
 
-              <Badge value={makeLabel(reference?.secretaries)}></Badge>
+              <Badge value={makeLabel(reference?.secretaries)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="nursings">Aide soignant.e</Label>
@@ -173,7 +172,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               />
               <FormFeedback>{errors && errors.nursings}</FormFeedback>
 
-              <Badge value={makeLabel(reference?.nursings)}></Badge>
+              <Badge value={makeLabel(reference?.nursings)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="executives">Cadre de santé</Label>
@@ -191,7 +190,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               />
               <FormFeedback>{errors && errors.executives}</FormFeedback>
 
-              <Badge value={makeLabel(reference?.executives)}></Badge>
+              <Badge value={makeLabel(reference?.executives)} />
             </Col>
           </Row>
           <Row className="mt-2 mb-5">
@@ -211,7 +210,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               />
               <FormFeedback>{errors && errors.ides}</FormFeedback>
 
-              <Badge value={makeLabel(reference?.ides)}></Badge>
+              <Badge value={makeLabel(reference?.ides)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="auditoriumAgents">{"Agent d'amphi."}</Label>
@@ -229,7 +228,7 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               />
               <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
 
-              <Badge value={makeLabel(reference?.auditoriumAgents)}></Badge>
+              <Badge value={makeLabel(reference?.auditoriumAgents)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="others">Autres</Label>
@@ -247,9 +246,9 @@ const AccordionEmploymentsMonth = ({ monthName, month, year, hospitalId, readOnl
               />
               <FormFeedback>{errors && errors.others}</FormFeedback>
 
-              <Badge value={makeLabel(reference?.others)}></Badge>
+              <Badge value={makeLabel(reference?.others)} />
             </Col>
-            <Col className="mr-3"></Col>
+            <Col className="mr-3" />
           </Row>
         </div>
       )}

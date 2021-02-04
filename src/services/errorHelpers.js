@@ -1,10 +1,10 @@
+import { APIError, InternalError, stringifyError } from "../utils/errors"
 import {
   STATUS_400_BAD_REQUEST,
   STATUS_404_NOT_FOUND,
   STATUS_405_METHOD_NOT_ALLOWED,
   STATUS_500_INTERNAL_SERVER_ERROR,
 } from "../utils/http"
-import { APIError, InternalError, stringifyError } from "../utils/errors"
 import { logError } from "../utils/logger"
 
 export const sendAPIError = (error, res) => {

@@ -1,6 +1,7 @@
 import moment from "moment"
-import { now, ISO_DATE } from "../../utils/date"
+
 import { livingProfiles } from "../../utils/actsConstants"
+import { ISO_DATE, now } from "../../utils/date"
 import { logError } from "../../utils/logger"
 
 const defaultEndDate = () => now()

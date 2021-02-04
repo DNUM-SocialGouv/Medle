@@ -1,5 +1,6 @@
-import * as common from "./common"
 import * as yup from "yup"
+
+import * as common from "./common"
 
 // Mapping keys from JS model to DB model
 const JStoDBKeys = {

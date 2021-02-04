@@ -1,5 +1,6 @@
-import React from "react"
 import PropTypes from "prop-types"
+import React from "react"
+
 import { VerticalList } from "./VerticalList"
 
 const ColumnAct = ({ header, content }) => {

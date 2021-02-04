@@ -1,7 +1,8 @@
 import * as yup from "yup"
-import { logError } from "../utils/logger"
+
 import { APIError } from "../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../utils/http"
+import { logError } from "../utils/logger"
 
 // from Knex entity to model (JS) entity
 export const transform = (knexData) => {

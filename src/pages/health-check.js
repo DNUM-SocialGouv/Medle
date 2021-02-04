@@ -1,5 +1,6 @@
 import React from "react"
 import { Alert, Container } from "reactstrap"
+
 import { Title1 } from "../components/StyledComponents"
 
 const HealthCheckPage = () => {

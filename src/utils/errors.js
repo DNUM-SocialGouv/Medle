@@ -1,6 +1,6 @@
+import { redirectIfUnauthorized } from "./auth"
 import { STATUS_500_INTERNAL_SERVER_ERROR } from "./http"
 import { logError } from "./logger"
-import { redirectIfUnauthorized } from "./auth"
 
 class MedleError extends Error {
   constructor({ message, detail }) {

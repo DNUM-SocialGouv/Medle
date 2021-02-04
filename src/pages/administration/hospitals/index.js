@@ -1,16 +1,16 @@
-import React, { useState } from "react"
+import AddIcon from "@material-ui/icons/Add"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
-import { Alert, Col, Form, FormGroup, Input, Spinner, Table, Container } from "reactstrap"
-import AddIcon from "@material-ui/icons/Add"
+import React, { useState } from "react"
+import { Alert, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 
+import { searchHospitalsFuzzy } from "../../../clients/hospitals"
+import { SearchButton } from "../../../components/form/SearchButton"
 import Layout from "../../../components/Layout"
 import { Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
 import { ADMIN } from "../../../utils/roles"
-import { SearchButton } from "../../../components/form/SearchButton"
-import { searchHospitalsFuzzy } from "../../../clients/hospitals"
 
 const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
   const [hospitals, setHospitals] = useState(initialHospitals)

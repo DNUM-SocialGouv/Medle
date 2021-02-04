@@ -1,5 +1,5 @@
-import styled, { css } from "styled-components"
 import { Button as RSButton, DropdownToggle as RSDropdownToggle } from "reactstrap"
+import styled, { css } from "styled-components"
 
 export const DropdownToggle = styled(RSDropdownToggle)`
   font-family: "Source Sans Pro";

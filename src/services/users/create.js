@@ -1,8 +1,8 @@
 import knex from "../../knex/knex"
+import { untransform, validate } from "../../models/users"
+import { APIError } from "../../utils/errors"
 import { STATUS_401_UNAUTHORIZED, STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 import { SUPER_ADMIN } from "../../utils/roles"
-import { APIError } from "../../utils/errors"
-import { untransform, validate } from "../../models/users"
 import { findByEmail } from "./find"
 
 export const create = async (user, currentUser) => {

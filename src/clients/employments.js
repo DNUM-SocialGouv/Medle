@@ -1,9 +1,8 @@
 import fetch from "isomorphic-unfetch"
-import { METHOD_PUT } from "../utils/http"
-
-import { handleAPIResponse2 } from "../utils/errors"
 
 import { API_URL, EMPLOYMENTS_ENDPOINT } from "../config"
+import { handleAPIResponse2 } from "../utils/errors"
+import { METHOD_PUT } from "../utils/http"
 
 export const findEmployment = async ({ hospitalId, year, month, headers }) => {
   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {

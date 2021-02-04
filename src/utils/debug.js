@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react"
 import { useRouter } from "next/router"
+import { useEffect, useRef } from "react"
+
 import { logInfo } from "./logger"
 
 // useEffect(() => {

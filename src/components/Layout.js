@@ -1,52 +1,51 @@
-import React, { useState } from "react"
-
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance"
+import AccountCircleIcon from "@material-ui/icons/AccountCircle"
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline"
+import AnnouncementIcon from "@material-ui/icons/Announcement"
+import ApartmentIcon from "@material-ui/icons/Apartment"
+import ArrowBackIcon from "@material-ui/icons/ArrowBack"
+import BusinessCenterIcon from "@material-ui/icons/BusinessCenter"
+import EqualizerIcon from "@material-ui/icons/Equalizer"
+import FaceIcon from "@material-ui/icons/Face"
+import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
+import GroupIcon from "@material-ui/icons/Group"
+import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
+import PhoneIcon from "@material-ui/icons/Phone"
+import ReceiptIcon from "@material-ui/icons/Receipt"
+import SettingsIcon from "@material-ui/icons/Settings"
+import WhatshotIcon from "@material-ui/icons/Whatshot"
 import Link from "next/link"
 import PropTypes from "prop-types"
+import React, { useState } from "react"
 import {
+  Col,
   Collapse,
   Container,
-  Col,
-  Row,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   Nav,
   Navbar,
   NavbarBrand,
   NavbarToggler,
   NavItem,
+  Row,
   UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
 } from "reactstrap"
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline"
-import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
-import EqualizerIcon from "@material-ui/icons/Equalizer"
-import PhoneIcon from "@material-ui/icons/Phone"
-import SettingsIcon from "@material-ui/icons/Settings"
-import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
-import AccountCircleIcon from "@material-ui/icons/AccountCircle"
-import GroupIcon from "@material-ui/icons/Group"
-import FaceIcon from "@material-ui/icons/Face"
-import ArrowBackIcon from "@material-ui/icons/ArrowBack"
-import ApartmentIcon from "@material-ui/icons/Apartment"
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance"
-import BusinessCenterIcon from "@material-ui/icons/BusinessCenter"
-import WhatshotIcon from "@material-ui/icons/Whatshot"
-import ReceiptIcon from "@material-ui/icons/Receipt"
-import AnnouncementIcon from "@material-ui/icons/Announcement"
 
-import { logout } from "../utils/auth"
+import { isOpenFeature } from "../config"
 import { colors } from "../theme"
+import { logout } from "../utils/auth"
 import {
-  isAllowed,
-  ACT_MANAGEMENT,
   ACT_CONSULTATION,
+  ACT_MANAGEMENT,
   ADMIN,
   EMPLOYMENT_CONSULTATION,
-  SUPER_ADMIN,
+  isAllowed,
   startPageForRole,
+  SUPER_ADMIN,
 } from "../utils/roles"
-import { isOpenFeature } from "../config"
 
 const Header = ({ currentUser }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -57,7 +56,7 @@ const Header = ({ currentUser }) => {
     <header className="border-bottom">
       <Navbar expand="md" light>
         <NavbarBrand>
-          <img src={"/images/logo.png"} alt="Logo" title="Logo" width="100"></img>
+          <img src={"/images/logo.png"} alt="Logo" title="Logo" width="100" />
         </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         {currentUser && (

@@ -1,7 +1,7 @@
-import fetch from "isomorphic-unfetch"
 import { saveAs } from "file-saver"
+import fetch from "isomorphic-unfetch"
 
-import { API_URL, ACTS_ENDPOINT } from "../config"
+import { ACTS_ENDPOINT, API_URL } from "../config"
 import { handleAPIResponse } from "../utils/errors"
 import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../utils/http"
 

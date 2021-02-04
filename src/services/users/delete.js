@@ -1,6 +1,6 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, STATUS_404_NOT_FOUND } from "../../utils/http"
 import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, STATUS_404_NOT_FOUND } from "../../utils/http"
 import { ADMIN_HOSPITAL } from "../../utils/roles"
 
 const makeWhereClause = (currentUser) => (builder) => {

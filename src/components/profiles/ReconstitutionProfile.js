@@ -1,8 +1,9 @@
-import React from "react"
-import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
+import React from "react"
 import { Col, Row } from "reactstrap"
+
 import ColumnAct from "../../components/ColumnAct"
+import ActBlock from "../ActBlock"
 
 const ReconstitutionEdit = ({ dispatch, state, errors }) => {
   return (
@@ -43,7 +44,7 @@ const ReconstitutionRead = (act) => {
         <Col className="mr-3">
           <ColumnAct header={"Distance"} content={act.distance} />
         </Col>
-        <Col className="mr-3"></Col>
+        <Col className="mr-3" />
       </Row>
     </>
   )

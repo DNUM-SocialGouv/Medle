@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react"
-import PropTypes from "prop-types"
-import Link from "next/link"
-import { Alert, Label, Button, Form, FormGroup, InputGroup, InputGroupAddon, InputGroupText, Spinner } from "reactstrap"
 import RemoveRedEyeIcon from "@material-ui/icons/RemoveRedEye"
+import Link from "next/link"
+import PropTypes from "prop-types"
+import React, { useRef, useState } from "react"
+import { Alert, Button, Form, FormGroup, InputGroup, InputGroupAddon, InputGroupText, Label, Spinner } from "reactstrap"
 
 const Login = ({ authentication, error }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -44,7 +44,7 @@ const Login = ({ authentication, error }) => {
                   placeholder="adresse@mail.com"
                   ref={emailRef}
                   className={"form-control"}
-                  autoComplete="username"
+                  autoComplete="email"
                 />
               </InputGroup>
             </FormGroup>

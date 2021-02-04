@@ -1,5 +1,5 @@
-import { authenticate } from "../../clients/authentication"
 import { createAct, searchActsByKey } from "../../clients/acts"
+import { authenticate } from "../../clients/authentication"
 
 const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 

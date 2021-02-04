@@ -1,8 +1,9 @@
-import knex from "../../knex/knex"
 import upsert from "knex-upsert"
-import { isValid } from "./common"
+
+import knex from "../../knex/knex"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
+import { isValid } from "./common"
 
 export const update = async ({ year, month, hospitalId, data }) => {
   if (!isValid({ year, month, hospitalId }) || !data)

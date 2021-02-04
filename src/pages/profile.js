@@ -1,11 +1,12 @@
-import React from "react"
-import { PropTypes } from "prop-types"
-import Layout from "../components/Layout"
-import { Container, Col, Row } from "reactstrap"
-import { withAuthentication } from "../utils/auth"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle"
-import { ROLES_DESCRIPTION } from "../utils/roles"
+import { PropTypes } from "prop-types"
+import React from "react"
+import { Col, Container, Row } from "reactstrap"
+
+import Layout from "../components/Layout"
+import { withAuthentication } from "../utils/auth"
 import { capitalize } from "../utils/misc"
+import { ROLES_DESCRIPTION } from "../utils/roles"
 
 const ProfilePage = ({ currentUser }) => {
   const { id, firstName, lastName, email, role, hospital, scope } = currentUser

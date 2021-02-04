@@ -1,18 +1,18 @@
-import React, { useState } from "react"
+import AddIcon from "@material-ui/icons/Add"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
-import { Alert, Col, Form, FormGroup, Input, Spinner, Table, Container } from "reactstrap"
-import AddIcon from "@material-ui/icons/Add"
+import React, { useState } from "react"
+import { Alert, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
 
+import { searchUsersFuzzy } from "../../../clients/users"
+import { SearchButton } from "../../../components/form/SearchButton"
 import Layout from "../../../components/Layout"
+import Pagination from "../../../components/Pagination"
 import { Title1 } from "../../../components/StyledComponents"
+import { usePaginatedData } from "../../../hooks/usePaginatedData"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
 import { ADMIN, ROLES_DESCRIPTION } from "../../../utils/roles"
-import { usePaginatedData } from "../../../hooks/usePaginatedData"
-import Pagination from "../../../components/Pagination"
-import { SearchButton } from "../../../components/form/SearchButton"
-import { searchUsersFuzzy } from "../../../clients/users"
 
 const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   const [search, setSearch] = useState("")
@@ -82,7 +82,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                   <th>Email</th>
                   <th>Role</th>
                   <th>Établissement</th>
-                  <th></th>
+                  <th />
                 </tr>
               </thead>
               <tbody>

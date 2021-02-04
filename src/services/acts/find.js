@@ -1,8 +1,8 @@
 import knex from "../../knex/knex"
-import { buildScope } from "../scope"
 import { transform } from "../../models/acts"
-import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST } from "../../utils/http"
+import { buildScope } from "../scope"
 import { makeWhereClause } from "./common"
 
 export const find = async ({ id }, currentUser) => {

@@ -1,11 +1,11 @@
-import React from "react"
 import { PropTypes } from "prop-types"
+import React from "react"
 import { Container } from "reactstrap"
 
-import { ADMIN } from "../../utils/roles"
 import Layout from "../../components/Layout"
 import { Title1 } from "../../components/StyledComponents"
 import { withAuthentication } from "../../utils/auth"
+import { ADMIN } from "../../utils/roles"
 
 const ActsPage = ({ currentUser }) => {
   return (

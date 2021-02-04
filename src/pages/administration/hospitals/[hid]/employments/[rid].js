@@ -1,15 +1,13 @@
-import React, { useState } from "react"
-import Link from "next/link"
-import PropTypes from "prop-types"
-import { Controller, useForm } from "react-hook-form"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
-
+import Link from "next/link"
 import { useRouter } from "next/router"
-
+import PropTypes from "prop-types"
+import React, { useState } from "react"
+import { Controller, useForm } from "react-hook-form"
 import {
+  Alert,
   Button,
   Col,
-  Alert,
   Container,
   Form,
   FormFeedback,
@@ -18,13 +16,9 @@ import {
   Label,
   Modal,
   ModalBody,
-  ModalHeader,
   ModalFooter,
+  ModalHeader,
 } from "reactstrap"
-
-import Layout from "../../../../../components/Layout"
-import MonthPicker from "../../../../../components/MonthPicker"
-import { NAME_MONTHS, now } from "../../../../../utils/date"
 
 import {
   createReferences,
@@ -32,13 +26,15 @@ import {
   findReference,
   updateReferences,
 } from "../../../../../clients/employments-references"
+import Layout from "../../../../../components/Layout"
+import MonthPicker from "../../../../../components/MonthPicker"
 import { Title1, Title2 } from "../../../../../components/StyledComponents"
-
-import { logDebug, logError } from "../../../../../utils/logger"
-import { getReferenceData } from "../../../../../utils/init"
-import { ADMIN } from "../../../../../utils/roles"
-import { isEmpty } from "../../../../../utils/misc"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../../../utils/auth"
+import { NAME_MONTHS, now } from "../../../../../utils/date"
+import { getReferenceData } from "../../../../../utils/init"
+import { logDebug, logError } from "../../../../../utils/logger"
+import { isEmpty } from "../../../../../utils/misc"
+import { ADMIN } from "../../../../../utils/roles"
 
 const genericError = (
   <div>
@@ -152,7 +148,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
         </div>
 
         <Title1>Hôpital {hospital?.name}</Title1>
-        <span></span>
+        <span />
       </Container>
 
       <Container style={{ maxWidth: 980, minWidth: 740 }}>

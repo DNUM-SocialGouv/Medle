@@ -1,6 +1,8 @@
 import * as jwt from "jsonwebtoken"
 import getConfig from "next/config"
+
 import { timeout } from "../config"
+
 const { serverRuntimeConfig } = getConfig() || {}
 
 const jwtConfig = {

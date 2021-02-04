@@ -1,6 +1,6 @@
-import React from "react"
 import Error from "next/error"
 import PropTypes from "prop-types"
+import React from "react"
 
 import sentry from "../utils/sentry"
 

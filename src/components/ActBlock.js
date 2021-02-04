@@ -1,9 +1,9 @@
-import React, { useState } from "react"
 import PropTypes from "prop-types"
+import React, { useState } from "react"
 import { ButtonDropdown, Col, DropdownItem, DropdownMenu, Row } from "reactstrap"
 
-import { Button, DropdownToggle, Title2 } from "./StyledComponents"
 import { InputError } from "./InputError"
+import { Button, DropdownToggle, Title2 } from "./StyledComponents"
 
 const normalizeValues = (values) => {
   values.forEach((v) => {

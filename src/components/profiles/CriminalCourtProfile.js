@@ -1,8 +1,9 @@
-import React from "react"
-import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
+import React from "react"
 import { Col, Row } from "reactstrap"
+
 import ColumnAct from "../../components/ColumnAct"
+import ActBlock from "../ActBlock"
 
 const CriminalCourtEdit = ({ dispatch, state, errors }) => {
   return (

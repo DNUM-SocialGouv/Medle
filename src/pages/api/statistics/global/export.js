@@ -1,11 +1,11 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../../../utils/http"
-import { STATS_GLOBAL } from "../../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
-import { checkValidUserWithPrivilege } from "../../../../utils/auth"
 import { exportGlobalStatistics } from "../../../../services/statistics/global"
+import { checkValidUserWithPrivilege } from "../../../../utils/auth"
+import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../../../utils/http"
 import { logDebug } from "../../../../utils/logger"
+import { STATS_GLOBAL } from "../../../../utils/roles"
 
 /**
  * API endpoint for global statistics export.

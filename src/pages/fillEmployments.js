@@ -1,23 +1,20 @@
-import React, { useState } from "react"
-import PropTypes from "prop-types"
 import Link from "next/link"
-
+import PropTypes from "prop-types"
+import React, { useState } from "react"
 import { Alert, Col, Container, FormFeedback, Input, Row } from "reactstrap"
 
-import { withAuthentication, getCurrentUser, buildAuthHeaders, redirectIfUnauthorized } from "../utils/auth"
-import { isAllowed, EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../utils/roles"
+import { findEmployment, updateEmployment } from "../clients/employments"
+import { searchReferenceForMonth } from "../clients/employments-references"
+import AccordionEmploymentsMonth, { hasErrors } from "../components/AccordionEmploymentsMonth"
 import Badge from "../components/Badge"
 import Layout from "../components/Layout"
-import AccordionEmploymentsMonth, { hasErrors } from "../components/AccordionEmploymentsMonth"
-
-import { findEmployment, updateEmployment } from "../clients/employments"
-
-import { searchReferenceForMonth } from "../clients/employments-references"
-import { Title1, Title2, Label, ValidationButton } from "../components/StyledComponents"
-import { isEmpty, pluralize } from "../utils/misc"
-import { now, NAME_MONTHS } from "../utils/date"
-import { logError } from "../utils/logger"
+import { Label, Title1, Title2, ValidationButton } from "../components/StyledComponents"
+import { buildAuthHeaders, getCurrentUser, redirectIfUnauthorized, withAuthentication } from "../utils/auth"
+import { NAME_MONTHS, now } from "../utils/date"
 import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "../utils/http"
+import { logError } from "../utils/logger"
+import { isEmpty, pluralize } from "../utils/misc"
+import { EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT, isAllowed } from "../utils/roles"
 
 const makeLabel = (number) => (number ? `${number} ETP prévu${pluralize(number)}` : null)
 
@@ -119,7 +116,7 @@ const FillEmploymentsPage = ({
               />
               <FormFeedback>{errors && errors.doctors}</FormFeedback>
 
-              <Badge value={makeLabel(etpBase?.doctors)}></Badge>
+              <Badge value={makeLabel(etpBase?.doctors)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="secretaries">Secrétaire</Label>
@@ -135,7 +132,7 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.secretaries}</FormFeedback>
-              <Badge value={makeLabel(etpBase?.secretaries)}></Badge>
+              <Badge value={makeLabel(etpBase?.secretaries)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="nursings">Aide soignant.e</Label>
@@ -152,7 +149,7 @@ const FillEmploymentsPage = ({
               />
 
               <FormFeedback>{errors && errors.nursings}</FormFeedback>
-              <Badge value={makeLabel(etpBase?.nursings)}></Badge>
+              <Badge value={makeLabel(etpBase?.nursings)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="executives">Cadre de santé</Label>
@@ -168,7 +165,7 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.executives}</FormFeedback>
-              <Badge value={makeLabel(etpBase?.executives)}></Badge>
+              <Badge value={makeLabel(etpBase?.executives)} />
             </Col>
           </Row>
           <Row className="mt-4">
@@ -186,7 +183,7 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.ides}</FormFeedback>
-              <Badge value={makeLabel(etpBase?.ides)}></Badge>
+              <Badge value={makeLabel(etpBase?.ides)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="auditoriumAgents">{"Agent d'amphi."}</Label>
@@ -202,7 +199,7 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.auditoriumAgents}</FormFeedback>
-              <Badge value={makeLabel(etpBase?.auditoriumAgents)}></Badge>
+              <Badge value={makeLabel(etpBase?.auditoriumAgents)} />
             </Col>
             <Col className="mr-3">
               <Label htmlFor="others">Autres</Label>
@@ -218,9 +215,9 @@ const FillEmploymentsPage = ({
                 autoComplete="off"
               />
               <FormFeedback>{errors && errors.others}</FormFeedback>
-              <Badge value={makeLabel(etpBase?.others)}></Badge>
+              <Badge value={makeLabel(etpBase?.others)} />
             </Col>
-            <Col className="mr-3"></Col>
+            <Col className="mr-3" />
           </Row>
           {isAllowed(currentUser?.role, EMPLOYMENT_MANAGEMENT) && (
             <div className="mt-5 text-center">

@@ -1,9 +1,9 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { APIError } from "../../utils/errors"
 import { transform } from "../../models/users"
-import { makeWhereClause } from "./common"
+import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 import { buildScope } from "../scope"
+import { makeWhereClause } from "./common"
 
 export const find = async ({ id, currentUser }) => {
   if (!id || isNaN(id)) {

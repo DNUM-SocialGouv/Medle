@@ -1,10 +1,11 @@
-import React from "react"
-import ActBlock from "../ActBlock"
 import PropTypes from "prop-types"
-import { Title2 } from "../StyledComponents"
+import React from "react"
 import { Col, Row } from "reactstrap"
-import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
+
 import ColumnAct from "../../components/ColumnAct"
+import { getSituationDate, periodOfDayValues } from "../../utils/actsConstants"
+import ActBlock from "../ActBlock"
+import { Title2 } from "../StyledComponents"
 
 const examinationsUMJ = ["Examen externe", "Levée de corps"]
 const examinationsIML = [...examinationsUMJ, "Autopsie", "Anthropologie", "Odontologie"]
@@ -103,8 +104,8 @@ const DeceasedRead = (act) => {
         <Col className="mr-3">
           <ColumnAct header={"Âge"} content={act && act.personAgeTag} />
         </Col>
-        <Col className="mr-3"></Col>
-        <Col className="mr-3"></Col>
+        <Col className="mr-3" />
+        <Col className="mr-3" />
       </Row>
     </>
   )

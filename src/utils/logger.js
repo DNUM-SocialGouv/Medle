@@ -1,7 +1,8 @@
-import getConfig from "next/config"
 import moment from "moment"
+import getConfig from "next/config"
 
 import { ISO_TIME } from "./date"
+
 const { publicRuntimeConfig } = getConfig() || {}
 
 export const logError = (...message) => console.error(moment().format(ISO_TIME), ...message)

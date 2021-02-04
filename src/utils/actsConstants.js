@@ -1,5 +1,6 @@
-import moment from "moment"
 import joursFeries from "@socialgouv/jours-feries"
+import moment from "moment"
+
 import AsylumSeekerProfile from "../components/profiles/AsylumSeekerProfile"
 import BoneAgeProfile from "../components/profiles/BoneAgeProfile"
 import CriminalCourtProfile from "../components/profiles/CriminalCourtProfile"
@@ -125,4 +126,4 @@ const getSituationDate = (dateStr) => {
   }
 }
 
-export { periodOfDayValues, getSituationDate }
+export { getSituationDate, periodOfDayValues }

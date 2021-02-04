@@ -1,17 +1,17 @@
-import React, { useState } from "react"
-import { useRouter } from "next/router"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import PropTypes from "prop-types"
-import { Alert, Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap"
+import React, { useState } from "react"
 import { useForm } from "react-hook-form"
+import { Alert, Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap"
 
+import { patchUser } from "../../../../clients/users"
 import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"
 import { withAuthentication } from "../../../../utils/auth"
-import { ADMIN } from "../../../../utils/roles"
-import { isEmpty } from "../../../../utils/misc"
 import { logDebug } from "../../../../utils/logger"
-import { patchUser } from "../../../../clients/users"
+import { isEmpty } from "../../../../utils/misc"
+import { ADMIN } from "../../../../utils/roles"
 
 const UserReset = ({ currentUser }) => {
   const { handleSubmit, register, errors: formErrors, watch } = useForm()

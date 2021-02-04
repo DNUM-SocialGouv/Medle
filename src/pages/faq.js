@@ -1,13 +1,13 @@
-import React from "react"
-import { PropTypes } from "prop-types"
-import Layout from "../components/Layout"
-import { Container } from "reactstrap"
-import { Title1 } from "../components/StyledComponents"
-import { withAuthentication } from "../utils/auth"
-import { Section, Question } from "../components/Faq"
 import { MDXProvider } from "@mdx-js/react"
+import { PropTypes } from "prop-types"
+import React from "react"
+import { Container } from "reactstrap"
 
+import { Question, Section } from "../components/Faq"
+import Layout from "../components/Layout"
+import { Title1 } from "../components/StyledComponents"
 import FAQ from "../faq/faq.mdx"
+import { withAuthentication } from "../utils/auth"
 
 const mdComponents = {
   h1: function SectionWrapper(props) {

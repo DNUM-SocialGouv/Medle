@@ -1,6 +1,6 @@
 import fetch from "isomorphic-unfetch"
 
-import { API_URL, USERS_ENDPOINT, RESET_PWD_ENDPOINT } from "../config"
+import { API_URL, RESET_PWD_ENDPOINT, USERS_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
 import { METHOD_DELETE, METHOD_PATCH, METHOD_POST, METHOD_PUT } from "../utils/http"
 

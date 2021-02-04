@@ -1,15 +1,15 @@
-import React from "react"
-import Router from "next/router"
 import * as jwt from "jsonwebtoken"
 import moment from "moment"
+import Router from "next/router"
+import React from "react"
 
 import { API_URL, LOGOUT_ENDPOINT, timeout } from "../config"
-import { SUPER_ADMIN, isAllowed, startPageForRole } from "./roles"
-import { fetchReferenceData, clearReferenceData } from "./init"
-import { logDebug, logError } from "./logger"
-import { STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "./http"
-import { checkToken, decodeToken } from "./jwt"
 import { APIError } from "./errors"
+import { STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "./http"
+import { clearReferenceData, fetchReferenceData } from "./init"
+import { checkToken, decodeToken } from "./jwt"
+import { logDebug, logError } from "./logger"
+import { isAllowed, startPageForRole, SUPER_ADMIN } from "./roles"
 
 /**
  * Remarks on cookie & session storage:

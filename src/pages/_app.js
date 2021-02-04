@@ -1,15 +1,15 @@
+import "@socialgouv/bootstrap.core/dist/socialgouv-bootstrap.min.css"
+
+import * as Sentry from "@sentry/node"
 import App from "next/app"
+import getConfig from "next/config"
 import React from "react"
 import { ThemeProvider } from "styled-components"
-import { initMatomo } from "../utils/matomo"
-import * as Sentry from "@sentry/node"
-import getConfig from "next/config"
-
-const { publicRuntimeConfig } = getConfig()
 
 import { logInfo } from "../utils/logger"
+import { initMatomo } from "../utils/matomo"
 
-import "@socialgouv/bootstrap.core/dist/socialgouv-bootstrap.min.css"
+const { publicRuntimeConfig } = getConfig()
 
 const theme = {
   colors: {

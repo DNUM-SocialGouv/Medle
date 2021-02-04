@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
 import { untransform, validate } from "../../models/employments-references"
-import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 export const update = async ({ hid, rid }, data) => {
   // Check if query and body are consistent

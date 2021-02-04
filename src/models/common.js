@@ -1,6 +1,6 @@
-import { logError } from "../utils/logger"
 import { APIError } from "../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../utils/http"
+import { logError } from "../utils/logger"
 import { revertObject } from "../utils/misc"
 
 const configValidate = {

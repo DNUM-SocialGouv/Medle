@@ -1,7 +1,8 @@
-import React from "react"
 import { PropTypes } from "prop-types"
-import Layout from "../components/Layout"
+import React from "react"
 import { Alert, Container } from "reactstrap"
+
+import Layout from "../components/Layout"
 import { Title1 } from "../components/StyledComponents"
 import { withAuthentication } from "../utils/auth"
 

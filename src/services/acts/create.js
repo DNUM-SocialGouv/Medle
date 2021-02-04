@@ -1,8 +1,7 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../../utils/http"
-import { APIError } from "../../utils/errors"
-
 import { untransform } from "../../models/acts"
+import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../../utils/http"
 
 const examinationsOnlyIML = ["Autopsie", "Anthropologie", "Odontologie"]
 

@@ -8,6 +8,7 @@
         "specialLink": ["hrefLeft", "hrefRight"],
         "aspects": ["invalidHref", "preferButton"]
       }
-    ]
+    ],
+    "sort-keys-fix/sort-keys-fix": "off"
   }
 }

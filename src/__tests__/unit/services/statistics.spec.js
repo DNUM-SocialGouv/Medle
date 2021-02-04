@@ -1,5 +1,5 @@
 import { normalizeDates } from "../../../services/statistics/common"
-import { now, ISO_DATE } from "../../../utils/date"
+import { ISO_DATE, now } from "../../../utils/date"
 
 describe("tests on normalizeDates", () => {
   it("1) should return the dates when it's well formated and start before end", () => {

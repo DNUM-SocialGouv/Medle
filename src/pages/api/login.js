@@ -1,9 +1,9 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_OPTIONS, METHOD_POST } from "../../utils/http"
-import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
-import { authenticate } from "../../services/authentication"
 import { timeout } from "../../config"
+import { authenticate } from "../../services/authentication"
+import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
+import { METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../utils/http"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")

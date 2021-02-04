@@ -1,5 +1,5 @@
-import { authenticate } from "../../clients/authentication"
 import { searchActs } from "../../clients/acts"
+import { authenticate } from "../../clients/authentication"
 
 // const knexConfig = require("../knexfile")
 // const knex = require("knex")(knexConfig)
@@ -17,7 +17,7 @@ import { searchActs } from "../../clients/acts"
 const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 const headersActUserNantes = () => authenticate("acte@nantes.fr", "test")
 
-describe("clients for /acts ", () => {
+describe("clients for /acts", () => {
   it("should return 127414-vp act because it belongs to Nantes", async () => {
     const { headers } = await headersActUserNantes()
     const acts = await searchActs({ search: "127414-vp", headers })

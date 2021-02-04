@@ -1,6 +1,7 @@
 import Cors from "micro-cors"
-import { STATUS_200_OK, METHOD_GET, METHOD_OPTIONS } from "../../utils/http"
+
 import { sendMethodNotAllowedError } from "../../services/errorHelpers"
+import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../utils/http"
 
 const handler = async (req, res) => {
   switch (req.method) {

@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
+import { transform } from "../../models/employments-references"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { transform } from "../../models/employments-references"
 
 export const searchByMonth = async ({ hid }, { year, month }) => {
   if (!hid || !year || isNaN(year) || !month || isNaN(month))

@@ -3,7 +3,7 @@ import moize from "moize"
 
 import { API_URL, ASKERS_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
-import { METHOD_POST, METHOD_PUT, METHOD_DELETE } from "../utils/http"
+import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../utils/http"
 
 const MAX_AGE = 1000 * 60 * 60 // 1 hour
 

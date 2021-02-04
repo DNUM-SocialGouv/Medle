@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
 import { transformAll } from "../../models/users"
-import { makeWhereClause } from "./common"
 import { buildScope } from "../scope"
+import { makeWhereClause } from "./common"
 
 const LIMIT = 50
 

@@ -2,9 +2,9 @@ import Excel from "exceljs"
 
 import knex from "../../knex/knex"
 import { ISO_DATE, now } from "../../utils/date"
-import { addCellTitle, normalizeInputs, intervalDays } from "./common"
-import { buildScope } from "../scope"
 import { findList as findListHospitals } from "../hospitals"
+import { buildScope } from "../scope"
+import { addCellTitle, intervalDays, normalizeInputs } from "./common"
 
 const makeWhereClause = ({ startDate, endDate, scopeFilter = [], profile }) => (builder) => {
   builder

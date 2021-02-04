@@ -1,13 +1,14 @@
-import React, { useState } from "react"
 import Head from "next/head"
-import Login from "../components/Login"
-import { ValidationError } from "../utils/errors"
-import { registerAndRedirectUser } from "../utils/auth"
 import PropTypes from "prop-types"
-import { trackEvent, CATEGORY, ACTION } from "../utils/matomo"
-import { logError } from "../utils/logger"
+import React, { useState } from "react"
+
 import { authenticate } from "../clients/authentication"
 import { findAllMessages } from "../clients/messages"
+import Login from "../components/Login"
+import { registerAndRedirectUser } from "../utils/auth"
+import { ValidationError } from "../utils/errors"
+import { logError } from "../utils/logger"
+import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
 
 const LoginPage = ({ message, welcomeMessage }) => {
   const [error, setError] = useState(message || "")

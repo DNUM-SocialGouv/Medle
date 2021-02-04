@@ -1,5 +1,5 @@
-import getConfig from "next/config"
 import moment from "moment"
+import getConfig from "next/config"
 
 import { logError } from "../utils/logger"
 
@@ -15,9 +15,9 @@ export const NAME_MONTHS = {
   "07": "juillet",
   "08": "août",
   "09": "septembre",
-  "10": "octobre",
-  "11": "novembre",
-  "12": "décembre",
+  10: "octobre",
+  11: "novembre",
+  12: "décembre",
 }
 
 export const FORMAT_DATE = "DD/MM/YYYY"

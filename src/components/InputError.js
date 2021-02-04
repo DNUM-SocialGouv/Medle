@@ -1,6 +1,6 @@
-import React from "react"
-import PropTypes from "prop-types"
 import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined"
+import PropTypes from "prop-types"
+import React from "react"
 
 export const InputError = ({ children }) => {
   return (

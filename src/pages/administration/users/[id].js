@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react"
-import { useRouter } from "next/router"
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import PropTypes from "prop-types"
+import React, { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import Select from "react-select"
+import AsyncSelect from "react-select/async"
 import {
+  Alert,
   Button,
   Col,
-  Alert,
   Container,
   Form,
   FormFeedback,
@@ -13,24 +17,20 @@ import {
   Input,
   Label,
   Modal,
-  ModalHeader,
   ModalBody,
   ModalFooter,
+  ModalHeader,
 } from "reactstrap"
-import { useForm } from "react-hook-form"
-import AsyncSelect from "react-select/async"
-import Select from "react-select"
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 
-import Layout from "../../../components/Layout"
-import { Title1 } from "../../../components/StyledComponents"
-import { isEmpty } from "../../../utils/misc"
-import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
-import { availableRolesForUser, rulesOfRoles, ADMIN, ADMIN_HOSPITAL, ROLES_DESCRIPTION } from "../../../utils/roles"
-import { logError, logDebug } from "../../../utils/logger"
 import { searchHospitalsFuzzy } from "../../../clients/hospitals"
 import { createUser, deleteUser, findUser, updateUser } from "../../../clients/users"
-import { mapForSelect, mapArrayForSelect } from "../../../utils/select"
+import Layout from "../../../components/Layout"
+import { Title1 } from "../../../components/StyledComponents"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
+import { logDebug, logError } from "../../../utils/logger"
+import { isEmpty } from "../../../utils/misc"
+import { ADMIN, ADMIN_HOSPITAL, availableRolesForUser, ROLES_DESCRIPTION, rulesOfRoles } from "../../../utils/roles"
+import { mapArrayForSelect, mapForSelect } from "../../../utils/select"
 
 const MandatorySign = () => <span style={{ color: "red" }}>*</span>
 

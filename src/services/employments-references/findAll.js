@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
+import { transformAll } from "../../models/employments-references"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { transformAll } from "../../models/employments-references"
 
 export const findAll = async ({ hid }) => {
   if (!hid)

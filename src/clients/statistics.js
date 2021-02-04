@@ -1,16 +1,16 @@
+import { saveAs } from "file-saver"
 import fetch from "isomorphic-unfetch"
 import moize from "moize"
-import { saveAs } from "file-saver"
 
 import {
   API_URL,
+  DEACEASED_STATISTICS_ENDPOINT,
   GLOBAL_STATISTICS_ENDPOINT,
   LIVING_STATISTICS_ENDPOINT,
-  DEACEASED_STATISTICS_ENDPOINT,
 } from "../config"
+import { ISO_DATE, now } from "../utils/date"
 import { handleAPIResponse } from "../utils/errors"
 import { METHOD_POST } from "../utils/http"
-import { now, ISO_DATE } from "../utils/date"
 
 const endpoints = {
   Vivant: LIVING_STATISTICS_ENDPOINT,

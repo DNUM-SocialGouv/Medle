@@ -1,6 +1,6 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 export const del = async ({ hid, rid }) => {
   // Check if query and body are consistent

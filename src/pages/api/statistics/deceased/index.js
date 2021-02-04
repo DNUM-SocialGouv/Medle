@@ -1,10 +1,10 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_POST, METHOD_OPTIONS } from "../../../../utils/http"
-import { STATS_GLOBAL } from "../../../../utils/roles"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
-import { checkValidUserWithPrivilege } from "../../../../utils/auth"
 import { buildDeceasedStatistics } from "../../../../services/statistics/deceased"
+import { checkValidUserWithPrivilege } from "../../../../utils/auth"
+import { METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../../utils/http"
+import { STATS_GLOBAL } from "../../../../utils/roles"
 
 /**
  * API endpoint for deceased statistics.

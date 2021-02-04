@@ -1,13 +1,14 @@
-import React, { useState } from "react"
-import { useRouter } from "next/router"
-import Link from "next/link"
-import PropTypes from "prop-types"
-import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers"
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import Link from "next/link"
+import { useRouter } from "next/router"
+import PropTypes from "prop-types"
+import React, { useState } from "react"
+import { useForm } from "react-hook-form"
 import {
+  Alert,
   Button,
   Col,
-  Alert,
   Container,
   Form,
   FormFeedback,
@@ -15,20 +16,19 @@ import {
   Input,
   Label,
   Modal,
-  ModalHeader,
   ModalBody,
   ModalFooter,
+  ModalHeader,
 } from "reactstrap"
-import { useForm } from "react-hook-form"
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import * as yup from "yup"
 
+import { createHospital, deleteHospital, findHospital, updateHospital } from "../../../clients/hospitals"
 import Layout from "../../../components/Layout"
 import { Title1, Title2 } from "../../../components/StyledComponents"
-import { isEmpty } from "../../../utils/misc"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
+import { logDebug, logError } from "../../../utils/logger"
+import { isEmpty } from "../../../utils/misc"
 import { ADMIN } from "../../../utils/roles"
-import { logError, logDebug } from "../../../utils/logger"
-import { createHospital, deleteHospital, findHospital, updateHospital } from "../../../clients/hospitals"
 
 const MandatorySign = () => <span style={{ color: "red" }}>*</span>
 
@@ -139,7 +139,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
             </Button>
           </Link>
         ) : (
-          <span></span>
+          <span />
         )}
       </Container>
 

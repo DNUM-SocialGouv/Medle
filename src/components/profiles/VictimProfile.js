@@ -1,12 +1,13 @@
-import React from "react"
-import ActBlock from "../ActBlock"
-import PropTypes from "prop-types"
-import { Title2 } from "../StyledComponents"
-import { Col, Row } from "reactstrap"
-import { periodOfDayValues, getSituationDate } from "../../utils/actsConstants"
-import ColumnAct from "../../components/ColumnAct"
-import { getReferenceData } from "../../utils/init"
 import Link from "next/link"
+import PropTypes from "prop-types"
+import React from "react"
+import { Col, Row } from "reactstrap"
+
+import ColumnAct from "../../components/ColumnAct"
+import { getSituationDate, periodOfDayValues } from "../../utils/actsConstants"
+import { getReferenceData } from "../../utils/init"
+import ActBlock from "../ActBlock"
+import { Title2 } from "../StyledComponents"
 
 const VictimEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
@@ -209,7 +210,7 @@ const VictimRead = (act) => {
           <Col className="mr-3">
             <ColumnAct header={"Âge"} content={act && act.personAgeTag} />
           </Col>
-          <Col className="mr-3"></Col>
+          <Col className="mr-3" />
         </Row>
       </>
     )

@@ -1,21 +1,21 @@
-import React, { useReducer, useRef, useState } from "react"
-import PropTypes from "prop-types"
-import Router, { useRouter } from "next/router"
-import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "reactstrap"
 import moment from "moment"
+import Router, { useRouter } from "next/router"
+import PropTypes from "prop-types"
+import React, { useReducer, useRef, useState } from "react"
+import { Alert, Col, Container, FormFeedback, FormText, Input, Row } from "reactstrap"
 
-import AskerSelect from "../../components/AskerSelect"
-import { isEmpty, deleteProperty } from "../../utils/misc"
-import Layout from "../../components/Layout"
-import { InputError } from "../../components/InputError"
-import ActBlock from "../../components/ActBlock"
-import { Title1, Title2, Label, ValidationButton } from "../../components/StyledComponents"
-import { ACT_MANAGEMENT } from "../../utils/roles"
-import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
-import { now, ISO_DATE } from "../../utils/date"
-import { profiles, orderedProfileValues } from "../../utils/actsConstants"
-import { logError, logDebug } from "../../utils/logger"
 import { createAct, findAct, searchActsByKey, updateAct } from "../../clients/acts"
+import ActBlock from "../../components/ActBlock"
+import AskerSelect from "../../components/AskerSelect"
+import { InputError } from "../../components/InputError"
+import Layout from "../../components/Layout"
+import { Label, Title1, Title2, ValidationButton } from "../../components/StyledComponents"
+import { orderedProfileValues, profiles } from "../../utils/actsConstants"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
+import { ISO_DATE, now } from "../../utils/date"
+import { logDebug, logError } from "../../utils/logger"
+import { deleteProperty, isEmpty } from "../../utils/misc"
+import { ACT_MANAGEMENT } from "../../utils/roles"
 
 // import { useTraceUpdate } from "../../utils/debug"
 
@@ -357,7 +357,7 @@ const ActDeclaration = ({ act, currentUser }) => {
               checked={state.proofWithoutComplaint || false}
               style={{ margin: "auto" }}
               onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.checked } })}
-            ></Input>
+            />
           </Col>
         </Row>
         <Row className="mt-4 mt-md-3">

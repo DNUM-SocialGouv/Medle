@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { APIError } from "../../utils/errors"
 import { hashPassword } from "../../utils/bcrypt"
+import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 export const reset = async (id, password) => {
   if (!id || isNaN(id)) {

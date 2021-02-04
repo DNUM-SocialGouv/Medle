@@ -1,8 +1,8 @@
 import fetch from "isomorphic-unfetch"
-import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../utils/http"
 
 import { API_URL, HOSPITALS_ENDPOINT } from "../config"
 import { handleAPIResponse, handleAPIResponse2 } from "../utils/errors"
+import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../utils/http"
 
 export const createReferences = async ({ payload, headers } = {}) => {
   const response = await fetch(`${API_URL}${HOSPITALS_ENDPOINT}/${payload?.hospitalId}/employments-references`, {

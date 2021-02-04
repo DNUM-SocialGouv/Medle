@@ -1,4 +1,5 @@
 import Router from "next/router"
+
 import { logInfo } from "./logger"
 
 export function initMatomo({ siteId, piwikUrl, jsTrackerFile = "piwik.js", phpTrackerFile = "piwik.php" }) {

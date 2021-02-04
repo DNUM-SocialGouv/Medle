@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
-import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { APIError } from "../../utils/errors"
 import { transform, transformAll } from "../../models/hospitals"
+import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 export const find = async ({ hid }) => {
   if (!hid || isNaN(hid)) {

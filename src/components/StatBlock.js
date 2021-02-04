@@ -1,9 +1,10 @@
-import React from "react"
-import { PropTypes } from "prop-types"
-import { Pie, PieChart, Cell, Legend, Tooltip } from "recharts"
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline"
-import { Title2 } from "./StyledComponents"
+import { PropTypes } from "prop-types"
+import React from "react"
+import { Cell, Legend, Pie, PieChart, Tooltip } from "recharts"
+
 import { objToArray } from "../utils/object"
+import { Title2 } from "./StyledComponents"
 
 const StatBlock = ({ children }) => {
   return (

@@ -1,5 +1,5 @@
+import Document, { Head, Html, Main, NextScript } from "next/document"
 import React from "react"
-import Document, { Html, Head, Main, NextScript } from "next/document"
 
 class MyDocument extends Document {
   render() {
@@ -7,8 +7,8 @@ class MyDocument extends Document {
       <Html lang="fr">
         <Head>
           <script src="/polyfill.js" />
-          <script type="text/javascript" src="/tarteaucitron/tarteaucitron.js"></script>
-          <script type="text/javascript" src="/tarteaucitron/initTarteaucitron.js"></script>
+          <script type="text/javascript" src="/tarteaucitron/tarteaucitron.js" />
+          <script type="text/javascript" src="/tarteaucitron/initTarteaucitron.js" />
         </Head>
         <body>
           <Main />

@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
-import { buildScope } from "../scope"
-import { STATUS_400_BAD_REQUEST, STATUS_404_NOT_FOUND } from "../../utils/http"
 import { APIError } from "../../utils/errors"
+import { STATUS_400_BAD_REQUEST, STATUS_404_NOT_FOUND } from "../../utils/http"
+import { buildScope } from "../scope"
 import { makeWhereClause } from "./common"
 
 export const del = async ({ id }, currentUser) => {

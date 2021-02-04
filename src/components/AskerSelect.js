@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
+import React, { useEffect, useState } from "react"
 import AsyncSelect from "react-select/async"
 
 import { memoizedFindAsker, memoizedSearchAskers } from "../clients/askers"
-import { mapForSelect, mapArrayForSelect } from "../utils/select"
+import { mapArrayForSelect, mapForSelect } from "../utils/select"
 
 const AskerSelect = ({ dispatch, disabled, askerId }) => {
   const [existingValue, setExistingValue] = useState(null)

@@ -2,7 +2,7 @@ import fetch from "isomorphic-unfetch"
 
 import { API_URL, HOSPITALS_ENDPOINT } from "../config"
 import { handleAPIResponse } from "../utils/errors"
-import { METHOD_POST, METHOD_PUT, METHOD_DELETE } from "../utils/http"
+import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../utils/http"
 import { isEmpty } from "../utils/misc"
 
 export const searchHospitalsFuzzy = async ({ search, headers }) => {

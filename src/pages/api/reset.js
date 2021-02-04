@@ -1,11 +1,11 @@
 import Cors from "micro-cors"
 
-import { STATUS_200_OK, METHOD_OPTIONS, METHOD_PATCH } from "../../utils/http"
 import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
 import { reset } from "../../services/users/reset"
 import { checkValidUserWithPrivilege } from "../../utils/auth"
-import { ADMIN } from "../../utils/roles"
+import { METHOD_OPTIONS, METHOD_PATCH, STATUS_200_OK } from "../../utils/http"
 import { logDebug } from "../../utils/logger"
+import { ADMIN } from "../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")

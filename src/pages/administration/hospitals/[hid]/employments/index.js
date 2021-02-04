@@ -1,22 +1,19 @@
-import React, { useState } from "react"
-import PropTypes from "prop-types"
-import { useRouter } from "next/router"
-import Link from "next/link"
 import AddIcon from "@material-ui/icons/Add"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
-
+import Link from "next/link"
+import { useRouter } from "next/router"
+import PropTypes from "prop-types"
+import React, { useState } from "react"
 import { Container, Table } from "reactstrap"
 
-import { logError } from "../../../../../utils/logger"
-import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../../../utils/auth"
 import { findReferences } from "../../../../../clients/employments-references"
-import { getReferenceData } from "../../../../../utils/init"
-
 import { SearchButton } from "../../../../../components/form/SearchButton"
-import { Title1, Title2 } from "../../../../../components/StyledComponents"
-import { NAME_MONTHS } from "../../../../../utils/date"
 import Layout from "../../../../../components/Layout"
-
+import { Title1, Title2 } from "../../../../../components/StyledComponents"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../../../utils/auth"
+import { NAME_MONTHS } from "../../../../../utils/date"
+import { getReferenceData } from "../../../../../utils/init"
+import { logError } from "../../../../../utils/logger"
 import { ADMIN } from "../../../../../utils/roles"
 
 const EmploymentsPage = ({ currentUser, references }) => {
@@ -72,7 +69,7 @@ const EmploymentsPage = ({ currentUser, references }) => {
               <thead>
                 <tr className="table-light">
                   <th>Mois de début</th>
-                  <th></th>
+                  <th />
                 </tr>
               </thead>
               <tbody>

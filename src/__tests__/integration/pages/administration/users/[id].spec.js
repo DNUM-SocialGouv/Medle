@@ -1,13 +1,13 @@
-import React from "react"
-import { rest } from "msw"
-import { setupServer } from "msw/node"
 import { act, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import * as nextRouter from "next/router"
 import faker from "faker"
+import { rest } from "msw"
+import { setupServer } from "msw/node"
+import * as nextRouter from "next/router"
+import React from "react"
 
-import UserDetail from "../../../../../pages/administration/users/[id]"
 import { API_URL, USERS_ENDPOINT } from "../../../../../config"
+import UserDetail from "../../../../../pages/administration/users/[id]"
 
 describe("tests administration user", () => {
   const server = setupServer(

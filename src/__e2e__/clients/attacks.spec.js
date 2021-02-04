@@ -1,5 +1,5 @@
-import { authenticate } from "../../clients/authentication"
 import { findAllAttacks } from "../../clients/attacks"
+import { authenticate } from "../../clients/authentication"
 
 const headersActUserTours = () => authenticate("acte@tours.fr", "test")
 

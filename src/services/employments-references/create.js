@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
+import { untransform, validate } from "../../models/employments-references"
 import { APIError } from "../../utils/errors"
 import { STATUS_403_FORBIDDEN } from "../../utils/http"
-import { untransform, validate } from "../../models/employments-references"
 
 export const create = async (data) => {
   await validate(data)
