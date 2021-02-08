@@ -9,7 +9,7 @@ import { ADMIN } from "../../utils/roles"
 
 const EmploymentPage = ({ currentUser }) => {
   return (
-    <Layout page="employments" currentUser={currentUser} admin={true}>
+    <Layout page="etp" currentUser={currentUser} admin={true}>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"

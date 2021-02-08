@@ -3,16 +3,16 @@ import PropTypes from "prop-types"
 import React, { useState } from "react"
 
 import { authenticate } from "../clients/authentication"
-import { findAllMessages } from "../clients/messages"
+import { findAllActiveMessages } from "../clients/messages"
 import Login from "../components/Login"
 import { registerAndRedirectUser } from "../utils/auth"
 import { ValidationError } from "../utils/errors"
 import { logError } from "../utils/logger"
 import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
+import WelcomeMessage from "../components/WelcomeMessage"
 
-const LoginPage = ({ message, welcomeMessage }) => {
+const LoginPage = ({ message, welcomeMessages }) => {
   const [error, setError] = useState(message || "")
-  const [dismiss, setDismiss] = useState(false)
 
   const checkUserData = ({ email, password }) => {
     if (!email || !password) throw new ValidationError("Les champs ne peuvent pas être vides")
@@ -55,29 +55,9 @@ const LoginPage = ({ message, welcomeMessage }) => {
         className="d-flex flex-column justify-content-center align-items-center min-vh-100 container"
         style={{ maxWidth: 800 }}
       >
-        {welcomeMessage && (
-          <div
-            className={`alert alert-warning alert-dismissible w-100 mx-5 mt-3 mb-0 mb-md-5 py-3 overflow-auto ${
-              dismiss && "d-none"
-            }`}
-            style={{ maxHeight: 200 }}
-            role="alert"
-          >
-            <div className="mb-2">{/* <em>01/06/2020</em> */}</div>
-            <div className="text-justify">
-              {welcomeMessage}
-              <button
-                type="button"
-                className="close"
-                data-dismiss="alert"
-                aria-label="Close"
-                onClick={() => setDismiss(true)}
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          </div>
-        )}
+        {welcomeMessages.map((message, index) => (
+          <WelcomeMessage key={index} message={message} />
+        ))}
         <div className="d-flex flex-column flex-md-row justify-content-center align-items-center">
           <Login authentication={authentication} error={error} />
         </div>
@@ -88,7 +68,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
 
 LoginPage.propTypes = {
   message: PropTypes.string,
-  welcomeMessage: PropTypes.string,
+  welcomeMessages: PropTypes.arrayOf(PropTypes.string),
 }
 
 LoginPage.getInitialProps = async (ctx) => {
@@ -96,16 +76,15 @@ LoginPage.getInitialProps = async (ctx) => {
     query: { sessionTimeout },
   } = ctx
 
-  let welcomeMessage
+  let welcomeMessages = []
 
   try {
-    const messages = await findAllMessages()
-    if (messages?.length) welcomeMessage = messages?.[0]?.content
+    welcomeMessages = (await findAllActiveMessages()).map(({ content }) => content)
   } catch (error) {
     logError(error)
   }
 
-  return { message: sessionTimeout ? "Votre session s'est terminée." : "", welcomeMessage }
+  return { message: sessionTimeout ? "Votre session s'est terminée." : "", welcomeMessages }
 }
 
 export default LoginPage

@@ -303,12 +303,8 @@ const SidebarAdmin = ({ page, currentUser }) => {
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/employments">
-            <a
-              className={
-                "list-group-item list-group-item-action " + (page === "employments" ? "selected" : "unselected")
-              }
-            >
+          <Link href="/administration/etp">
+            <a className={"list-group-item list-group-item-action " + (page === "etp" ? "selected" : "unselected")}>
               <BusinessCenterIcon width={30} /> <br />
               {"ETP"}
             </a>
@@ -324,7 +320,9 @@ const SidebarAdmin = ({ page, currentUser }) => {
         )}
         {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/messages">
-            <a className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}>
+            <a
+              className={"list-group-item list-group-item-action " + (page === "messages" ? "selected" : "unselected")}
+            >
               <AnnouncementIcon width={30} /> <br />
               {"Messages"}
             </a>
