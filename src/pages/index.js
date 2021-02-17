@@ -11,7 +11,7 @@ import { logError } from "../utils/logger"
 import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
 import WelcomeMessage from "../components/WelcomeMessage"
 
-const LoginPage = ({ message, welcomeMessages }) => {
+const LoginPage = ({ message, welcomeMessages = [] }) => {
   const [error, setError] = useState(message || "")
 
   const checkUserData = ({ email, password }) => {

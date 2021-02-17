@@ -4,7 +4,6 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline"
 import AnnouncementIcon from "@material-ui/icons/Announcement"
 import ApartmentIcon from "@material-ui/icons/Apartment"
 import ArrowBackIcon from "@material-ui/icons/ArrowBack"
-import BusinessCenterIcon from "@material-ui/icons/BusinessCenter"
 import EqualizerIcon from "@material-ui/icons/Equalizer"
 import FaceIcon from "@material-ui/icons/Face"
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
@@ -299,14 +298,6 @@ const SidebarAdmin = ({ page, currentUser }) => {
             <a className={"list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")}>
               <WhatshotIcon width={30} /> <br />
               {"Attentats"}
-            </a>
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/etp">
-            <a className={"list-group-item list-group-item-action " + (page === "etp" ? "selected" : "unselected")}>
-              <BusinessCenterIcon width={30} /> <br />
-              {"ETP"}
             </a>
           </Link>
         )}
