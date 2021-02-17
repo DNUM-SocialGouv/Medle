@@ -52,12 +52,28 @@ This is supposed to work now!
 
 ## 🏗️ Development usage
 
-For development purpose, it is more handy to use `yarn dev` to benefit from the hot reload offered by Next.
+First, you need a database. A docker container is made for that.
+
+You only have to run the db container (and not the app): `docker-compose up --build -d db`
+
+Next, you have to create the database named medle and the app user.
+
+So, connect to the db container : `psql postgres://user:password@localhost:5436`
+
+```sh
+create user medle with encrypted password 'test';
+create database medle with owner medle encoding 'UTF8';
+alter user medle with superuser;
+```
+
+Now, you will build the tables of the medle db : `yarn migrate:latest`.
+
+And a minimal set of data : `yarn seed:run:dev`
+
+Second, the front office in Next. With `yarn dev`, you will benefit from the hot reload offered by Next.
 Just copy the file `.env.dev` given as reference and named it as `.env` to be used by dotenv.
 
 With this configuration, the API will run on `localhost:3000` and the database will be a Docker container running on your machine.
-
-So you only have to run the db container (and not the app): `docker-compose up --build -d db`
 
 Now run `yarn` to install the dependencies, then `yarn dev`.
 
