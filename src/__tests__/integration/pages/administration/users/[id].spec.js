@@ -9,6 +9,11 @@ import React from "react"
 import { API_URL, USERS_ENDPOINT } from "../../../../../config"
 import UserDetail from "../../../../../pages/administration/users/[id]"
 
+import { mockRouterImplmentation } from "../../../../../utils/test-utils"
+
+// Keep the standard router at hand in order to not interfere with other tests.
+const defaultRouter = nextRouter.useRouter
+
 describe("tests administration user", () => {
   const server = setupServer(
     rest.get(`${API_URL}${USERS_ENDPOINT}/42}`, (req, res, ctx) => {
@@ -21,10 +26,20 @@ describe("tests administration user", () => {
     server.listen()
     /* eslint-disable no-import-assign*/
     nextRouter.useRouter = jest.fn()
-    nextRouter.useRouter.mockImplementation(() => ({ query: { id: faker.random.number() } }))
+    // nextRouter.useRouter.mockImplementation(() => ({
+    //   prefetch: jest.fn(() => Promise.resolve()),
+    //   query: { id: faker.random.number() },
+    // }))
+    nextRouter.useRouter.mockImplementation(() => ({
+      ...mockRouterImplmentation,
+      query: { id: faker.random.number() },
+    }))
   })
 
-  afterAll(() => server.close())
+  afterAll(() => {
+    nextRouter.useRouter = defaultRouter
+    server.close()
+  })
 
   it("should not display Zone dangereuse for a new user", async () => {
     render(<UserDetail currentUser={{ role: "ADMIN_HOSPITAL" }} />)
