@@ -1,0 +1,28 @@
+name: medlé
+homepage: https://medle.fabrique.social.gouv.fr
+preprod: https://medle-dev.fabrique.social.gouv.fr
+
+# List your code repos
+repositories:
+  medle: https://github.com/SocialGouv/medle
+
+# List all docs links
+documentation:
+
+
+# List all the tools used by the team
+tools:
+  sentry: https://sentry.fabrique.social.gouv.fr/incubateur/medle
+  matomo: https://matomo.fabrique.social.gouv.fr
+  uptimeRobot: https://uptimerobot.com/
+
+# Overall technical stack
+stack:
+  frontend:
+    - NextJS
+  api:
+    - NextJS
+    - PostgreSQL
+    - knex
+  ci:
+    - install sur VMs, migration en cours
