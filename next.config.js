@@ -1,4 +1,3 @@
-const webpack = require("webpack")
 const withPlugins = require("next-compose-plugins")
 const withTM = require("next-transpile-modules")(["d3-scale", "d3-array"])
 const images = require("remark-images")
@@ -40,7 +39,7 @@ const nextConfig = {
     POSTGRES_SSL: process.env.POSTGRES_SSL,
     DATABASE_URL: process.env.DATABASE_URL,
   },
-  webpack: (config, { isServer, buildId }) => {
+  webpack: (config, { isServer, buildId, webpack }) => {
     //config.optimization.minimizer = []
 
     config.plugins.push(
