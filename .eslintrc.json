@@ -1,12 +1,23 @@
 {
-  "extends": ["@socialgouv/eslint-config-recommended", "@socialgouv/eslint-config-react"],
+  "extends": [
+    "@socialgouv/eslint-config-recommended",
+    "@socialgouv/eslint-config-react"
+  ],
   "rules": {
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
-        "components": ["Link"],
-        "specialLink": ["hrefLeft", "hrefRight"],
-        "aspects": ["invalidHref", "preferButton"]
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "hrefLeft",
+          "hrefRight"
+        ],
+        "aspects": [
+          "invalidHref",
+          "preferButton"
+        ]
       }
     ],
     "sort-keys-fix/sort-keys-fix": "off"

@@ -190,10 +190,10 @@ const Sidebar = ({ page, currentUser }) => {
           </Link>
         )}
         {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && currentUser.role !== SUPER_ADMIN && (
-          <Link href="/fillEmployments">
+          <Link href="/employments">
             <a
               className={
-                "list-group-item list-group-item-action " + (page === "fillEmployments" ? "selected" : "unselected")
+                "list-group-item list-group-item-action " + (page === "employments" ? "selected" : "unselected")
               }
             >
               <GroupIcon width={30} /> <br />

@@ -61,7 +61,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
 
   const dateNow = now()
   const year = dateNow.year()
-  const month = String(dateNow.month() + 1)
+  const month = String(dateNow.month() + 1).padStart(2, "0")
 
   let defaultValues = {
     startMonth: data ? { year: data.year, month: data.month } : { year, month },
@@ -107,7 +107,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
       if (isEmpty(formErrors)) {
         let payload = {
           hospitalId: hid,
-          reference: formData.reference,
+          reference: JSON.stringify(formData.reference),
           year: formData.startMonth.year,
           month: formData.startMonth.month?.toString().padStart(2, "0"),
         }

@@ -55,7 +55,7 @@ export const ROLES = {
   GUEST_HOSPITAL: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
   SUPER_ADMIN: PRIVILEGES, // le super admin qui a tous les privilèges
   REGIONAL_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un ARS par exemple
-  PUBLIC_SUPERVISOR: [ACT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // ex: un superviseur public, tel que ARS, Ministère de la justice
+  PUBLIC_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // ex: un superviseur public, tel que ARS, Ministère de la justice
 }
 
 export const ROLES_DESCRIPTION = {
@@ -72,7 +72,7 @@ export const ROLES_DESCRIPTION = {
 const START_PAGES = {
   ADMIN_HOSPITAL: "/acts",
   OPERATOR_ACT: "/acts",
-  OPERATOR_EMPLOYMENT: "/fillEmployments",
+  OPERATOR_EMPLOYMENT: "/employments",
 }
 
 export const startPageForRole = (role) => START_PAGES[role] || "/statistics"
