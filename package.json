@@ -1,6 +1,6 @@
 {
   "name": "medle",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "private": true,
   "scripts": {
     "dev": "node -r dotenv/config node_modules/next/dist/bin/next dev",
