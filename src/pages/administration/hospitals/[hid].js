@@ -59,12 +59,14 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
   const router = useRouter()
   const { id } = hospital
 
-  const { handleSubmit, register, errors: formErrors, setValue } = useForm({
+  const { handleSubmit, register, errors: formErrors, setValue, watch } = useForm({
     defaultValues: {
       ...hospital,
     },
     resolver: yupResolver(schema),
   })
+
+  const formId = watch("id")
 
   // General error (alert)
   const [error, setError] = useState(initialError)
@@ -87,7 +89,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
         logDebug(`Nb deleted rows: ${deleted}`)
         router.push("/administration/hospitals")
       } catch (error) {
-        setError(error)
+        setError("Erreur serveur.")
       }
     }
 
@@ -112,6 +114,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
         }
       }
     } catch (error) {
+
       setError("Erreur serveur.")
     }
   }
@@ -139,8 +142,8 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
             </Button>
           </Link>
         ) : (
-          <span />
-        )}
+            <span />
+          )}
       </Container>
 
       <Container style={{ maxWidth: 980, minWidth: 740 }}>
@@ -155,7 +158,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
                   <a>Retour à la liste</a>
                 </Button>
               </Link>
-              <Link href="/administration/hospitals/[hid]/new" as={`/administration/hospitals/${id}/new`}>
+              <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/new`}>
                 <Button outline color="success">
                   <a>Ajouter</a>
                 </Button>
@@ -170,7 +173,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" name="id" id="id" disabled innerRef={register} />
+              <Input type="text" name="id" id="id" readOnly innerRef={register} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -276,10 +279,10 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               </Button>
             </Link>
             <Button className="px-4 mt-5 " color="primary">
-              {isEmpty(hospital) ? "Ajouter" : "Modifier"}
+              {formId ? "Modifier" : "Ajouter"}
             </Button>
           </div>
-          {!isEmpty(hospital) && (
+          {formId && (
             <div style={{ border: "1px solid tomato" }} className="px-4 py-3 mt-5 rounded">
               <Title1 className="mb-4">Zone dangereuse</Title1>
               <div className="d-flex justify-content-between align-items-center">

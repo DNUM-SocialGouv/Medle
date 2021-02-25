@@ -56,7 +56,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
         logDebug(`Nb deleteAsker rows: ${deleted}`)
         router.push("/administration/askers")
       } catch (error) {
-        setError(error)
+        setError("Erreur serveur.")
       }
     }
 
@@ -129,7 +129,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" name="id" id="id" disabled innerRef={register} />
+              <Input type="text" name="id" id="id" readOnly innerRef={register} />
             </Col>
           </FormGroup>
           <FormGroup row>

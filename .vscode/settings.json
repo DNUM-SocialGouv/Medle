@@ -1,5 +1,4 @@
 {
-  "eslint.enable": true,
   "workbench.colorCustomizations": {
     "statusBar.background": "#5fba7d"
   },

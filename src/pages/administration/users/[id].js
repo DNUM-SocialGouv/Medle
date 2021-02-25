@@ -39,7 +39,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const router = useRouter()
   const { id } = router.query
 
-  const { handleSubmit, register, errors: formErrors, setValue } = useForm({
+  const { handleSubmit, register, errors: formErrors, setValue, watch } = useForm({
     defaultValues: {
       id: initialUser.id,
       firstName: initialUser.firstName,
@@ -50,6 +50,8 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       hospital: initialUser.hospital || currentUser?.hospital, // use ADMIN_HOSPITAL's hospital for creation
     },
   })
+
+  const formId = watch("id")
 
   // Special case due to react-select design : needs to store specifically the value of the select
   const [role, setRole] = useState(
@@ -103,15 +105,15 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const customRulesAdminHospital =
     currentUser?.role === ADMIN_HOSPITAL
       ? {
-          hospitalDisabled: true,
-          hospitalValue: mapForSelect(
-            currentUser.hospital,
-            (elt) => elt.id,
-            (elt) => elt.name
-          ),
+        hospitalDisabled: true,
+        hospitalValue: mapForSelect(
+          currentUser.hospital,
+          (elt) => elt.id,
+          (elt) => elt.name
+        ),
 
-          scopeDisabled: true,
-        }
+        scopeDisabled: true,
+      }
       : {}
 
   const customRuleOwnRecord = currentUser?.id === initialUser.id ? { roleDisabled: true } : {}
@@ -127,7 +129,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
         logDebug(`Nb deleted rows: ${deleted}`)
         router.push("/administration/users")
       } catch (error) {
-        setError(error)
+        setError(error.message || "Erreur serveur.")
       }
     }
 
@@ -209,9 +211,9 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       "hospital",
       selectedOption?.value
         ? {
-            id: selectedOption.value,
-            name: selectedOption.label,
-          }
+          id: selectedOption.value,
+          name: selectedOption.label,
+        }
         : null
     )
     // Needs to sync specifically the value to the react-select as well
@@ -295,7 +297,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" name="id" id="id" disabled innerRef={register} />
+              <Input type="text" name="id" id="id" readOnly innerRef={register} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -415,15 +417,15 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               </Button>
             </Link>
             <Button className="px-4 mt-3" color="primary">
-              {isEmpty(initialUser) ? "Ajouter" : "Modifier"}
+              {formId ? "Modifier" : "Ajouter"}
             </Button>
           </div>
-          {!isEmpty(initialUser) && (
+          {formId && (
             <div style={{ border: "1px solid tomato" }} className="px-4 pt-3 pb-4 mt-5 rounded">
               <Title1 className="mb-4 mt-2">Zone dangereuse</Title1>
               <div className="d-flex justify-content-between align-items-center">
                 Je réinitialise le mot de passe de cet utilisateur
-                <Link href="/administration/users/reset/[id]" as={`/administration/users/reset/${initialUser.id}`}>
+                <Link href="/administration/users/reset/[id]" as={`/administration/users/reset/${formId}`}>
                   <a>
                     <Button className="text-white" color="warning" style={{ minWidth: 150 }}>
                       Réinitialiser

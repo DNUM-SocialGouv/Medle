@@ -52,6 +52,7 @@ export const findByEmail = async (email) => {
 
   let [user] = await knex("users")
     .where("users.email", email)
+    .whereNull("deleted_at")
     .select(
       "users.id",
       "users.first_name",

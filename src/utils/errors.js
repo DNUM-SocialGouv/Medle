@@ -32,13 +32,14 @@ export class ValidationError extends MedleError {
   }
 }
 
+// @Deprecated. @See handleAPIResponse2.
 export const handleAPIResponse = async (response) => {
   if (!response.ok) {
     const json = await response.json()
 
     const error = new APIError(json)
     logError(error)
-    // TODO : problème si SSR et problème 401, car ça devrait redirigé mais il n'y a pas de contexte...
+    // TODO : problème si SSR et problème 401, car ça devrait rediriger mais il n'y a pas de contexte...
     redirectIfUnauthorized(error)
     return
   }

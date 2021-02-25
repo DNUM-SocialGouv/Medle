@@ -11,8 +11,10 @@ import { logError } from "../utils/logger"
 import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
 import WelcomeMessage from "../components/WelcomeMessage"
 
-const LoginPage = ({ message, welcomeMessages = [] }) => {
+const LoginPage = ({ message, welcomeMessage }) => {
   const [error, setError] = useState(message || "")
+
+  console.log("WelcomeMessage", welcomeMessage)
 
   const checkUserData = ({ email, password }) => {
     if (!email || !password) throw new ValidationError("Les champs ne peuvent pas être vides")
@@ -55,9 +57,9 @@ const LoginPage = ({ message, welcomeMessages = [] }) => {
         className="d-flex flex-column justify-content-center align-items-center min-vh-100 container"
         style={{ maxWidth: 800 }}
       >
-        {welcomeMessages.map((message, index) => (
-          <WelcomeMessage key={index} message={message} />
-        ))}
+        {welcomeMessage && (
+          <WelcomeMessage message={welcomeMessage} />
+        )}
         <div className="d-flex flex-column flex-md-row justify-content-center align-items-center">
           <Login authentication={authentication} error={error} />
         </div>
@@ -68,7 +70,7 @@ const LoginPage = ({ message, welcomeMessages = [] }) => {
 
 LoginPage.propTypes = {
   message: PropTypes.string,
-  welcomeMessages: PropTypes.arrayOf(PropTypes.string),
+  welcomeMessage: PropTypes.string,
 }
 
 LoginPage.getInitialProps = async (ctx) => {
@@ -76,15 +78,15 @@ LoginPage.getInitialProps = async (ctx) => {
     query: { sessionTimeout },
   } = ctx
 
-  let welcomeMessages = []
+  let welcomeMessage
 
   try {
-    welcomeMessages = (await findAllActiveMessages()).map(({ content }) => content)
+    [welcomeMessage] = (await findAllActiveMessages()).map(({ content }) => content)
   } catch (error) {
     logError(error)
   }
 
-  return { message: sessionTimeout ? "Votre session s'est terminée." : "", welcomeMessages }
+  return { message: sessionTimeout ? "Votre session s'est terminée." : "", welcomeMessage }
 }
 
 export default LoginPage

@@ -1,7 +1,7 @@
 import fetch from "isomorphic-unfetch"
 
 import { API_URL, MESSAGES_ENDPOINT } from "../config"
-import { handleAPIResponse } from "../utils/errors"
+import { handleAPIResponse2 } from "../utils/errors"
 
 const messageEndpoint = API_URL + MESSAGES_ENDPOINT
 
@@ -15,7 +15,7 @@ const makeMessageEndpointQuery = (queryParams = {}) => async (headers = {}) => {
   const response = await fetch(getMessageEndpointWithQueryParams(queryParams), {
     headers,
   })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const findAllActiveMessages = makeMessageEndpointQuery()
@@ -29,12 +29,12 @@ export const createMessage = async (message) => {
     body: JSON.stringify(message),
   })
 
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const deleteMessage = async (id) => {
   const response = await fetch(getMessageEndpointWithQueryParams({ id }), {
     method: "DELETE",
   })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }

@@ -1,12 +1,12 @@
 import fetch from "isomorphic-unfetch"
 
 import { API_URL, RESET_PWD_ENDPOINT, USERS_ENDPOINT } from "../config"
-import { handleAPIResponse } from "../utils/errors"
+import { handleAPIResponse2 } from "../utils/errors"
 import { METHOD_DELETE, METHOD_PATCH, METHOD_POST, METHOD_PUT } from "../utils/http"
 
 export const findUser = async ({ id, headers }) => {
   const response = await fetch(API_URL + USERS_ENDPOINT + "/" + id, { headers })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const searchUsersFuzzy = async ({ search, requestedPage, headers }) => {
@@ -20,7 +20,7 @@ export const searchUsersFuzzy = async ({ search, requestedPage, headers }) => {
   const bonus = arr.length ? "?" + arr.join("&") : ""
   const response = await fetch(`${API_URL}${USERS_ENDPOINT}${bonus}`, { headers })
 
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 export const createUser = async ({ user, headers }) => {
   const response = await fetch(`${API_URL}${USERS_ENDPOINT}`, {
@@ -28,7 +28,7 @@ export const createUser = async ({ user, headers }) => {
     headers: { ...headers, "Content-Type": "application/json" },
     body: JSON.stringify(user),
   })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const updateUser = async ({ user, headers }) => {
@@ -37,12 +37,12 @@ export const updateUser = async ({ user, headers }) => {
     headers: { ...headers, "Content-Type": "application/json" },
     body: JSON.stringify(user),
   })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const deleteUser = async ({ id, headers }) => {
   const response = await fetch(`${API_URL}${USERS_ENDPOINT}/${id}`, { method: METHOD_DELETE, headers })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const patchUser = async ({ id, password, headers }) => {
@@ -51,5 +51,5 @@ export const patchUser = async ({ id, password, headers }) => {
     headers: { ...headers, "Content-Type": "application/json" },
     body: JSON.stringify({ id, password }),
   })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }

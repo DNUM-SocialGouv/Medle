@@ -363,9 +363,9 @@ exports[`should renders UserDetail unchanged 1`] = `
               >
                 <input
                   className="form-control"
-                  disabled={true}
                   id="id"
                   name="id"
+                  readOnly={true}
                   type="text"
                 />
               </div>
