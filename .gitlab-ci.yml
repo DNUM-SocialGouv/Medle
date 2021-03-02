@@ -1,74 +1,48 @@
 include:
-  - project: SocialGouv/gitlab-ci-yml
-    file: /autodevops_simple_app.yml
-    ref: v16.2.0
+    - project: SocialGouv/gitlab-ci-yml
+      file: /autodevops.yml
+      ref: v20.7.9
 
 variables:
-  PROJECT: "medle"
-  PORT: 3000
-  VALUES_FILE: .k8s.app.values.yml
-  ENABLE_AZURE_POSTGRES: 1
-  TEST_DISABLED: 1
-
-# Some overrides of the autodevops pipeline
-# https://github.com/SocialGouv/gitlab-ci-yml/blob/master/autodevops_simple_app.yml
+    AUTO_DEVOPS_KANIKO: "🕹️"
+    AUTO_DEVOPS_ENABLE_KAPP: "🕹️"
+    AUTO_DEVOPS_RELEASE_AUTO: "🚀"
 
 stages:
-  - Install
-  - Code Quality
-  - Registration
-  - e2e
-  - Deploy
-  - Notify Finished Deployment
-  - Clean Up
+    - Install
+    - Code Quality
+    - Registration
+    - Release
+    - Deploy
+    - Seed
 
-Build:
-  extends: .autodevops_build
-  variables:
-    # these variables are needed at build time because embedded in the front
-    API_URL: "/api"
-    SENTRY_DSN: https://75f34cada95a4c189d69bc05e8aa324f@sentry.fabrique.social.gouv.fr/29
-    SENTRY_TOKEN: token
-    MATOMO_URL: https://matomo.io
-    MATOMO_SITE_ID: 4242
+Lint:
+    rules:
+        - when: never
+#
 
-# e2e tests need a running API so we use the built image as a gitlab service
-Tests e2e:
-  stage: e2e
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-  except:
-    refs:
-      - master
-  variables:
-    PGHOST: medledevserver.postgres.database.azure.com
-    DATABASE_URL: postgres://user_${CI_COMMIT_SHORT_SHA}%40${PGHOST}:pass_${CI_COMMIT_SHORT_SHA}@${PGHOST}/db_${CI_COMMIT_SHORT_SHA}?ssl=true
-    API_URL: http://api:3000
-    NODE_ENV: staging
-    POSTGRES_SSL: "true"
-  services:
-    - name: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-      alias: api
-  script:
-    - yarn migrate:latest
-    - yarn seed:run:staging
-    - yarn test
-
-# override DATABASE_URL with the dynamic DB from the pipeline
-Deploy app (dev):
-  extends: .autodevops_deploy_app_dev
-  variables:
-    PG_HOST: medledevserver.postgres.database.azure.com
-    HELM_RENDER_ARGS: >-
-      --set deployment.env[5].name=DATABASE_URL
-      --set deployment.env[5].value=postgresql://user_${CI_COMMIT_SHORT_SHA}%40${PG_HOST}:pass_${CI_COMMIT_SHORT_SHA}@${PG_HOST}:5432/db_${CI_COMMIT_SHORT_SHA}?ssl=true
-
-# testing with temporary prod URL to not override current prod
-Deploy app (prod):
-  extends: .autodevops_deploy_app_prod
-  variables:
-    HOST: prod-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
-    K8S_NAMESPACE: ${CI_PROJECT_NAME}
-    PRODUCTION: "true"
-  environment:
-    name: prod
-    url: https://prod-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+Create seeds DB (dev):
+    stage: Seed
+    environment:
+        name: ${CI_COMMIT_REF_NAME}-dev2
+        url: https://${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+    image:
+        name: node:14
+    only:
+        refs:
+            - branches
+    except:
+        refs:
+            - master
+        variables:
+            # Don't run when deploying in production or releasing
+            - $PRODUCTION
+            - $RELEASE
+    variables:
+        POSTGRES_SSL: "true"
+        PGHOST: medledevserver.postgres.database.azure.com
+        DATABASE_URL: postgresql://user_${CI_COMMIT_SHORT_SHA}%40${PGHOST}:password_${CI_COMMIT_SHORT_SHA}@${PGHOST}/autodevops_${CI_COMMIT_SHORT_SHA}?sslmode=require
+    script:
+        - yarn --frozen-lockfile
+        - yarn migrate:latest
+        - yarn seed:run:staging

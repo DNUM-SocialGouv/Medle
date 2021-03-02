@@ -4,16 +4,16 @@ const { publicRuntimeConfig } = getConfig() || {}
 
 // Timeout config : keep this timeout values in sync
 export const timeout = {
-  jwt: "9h",
-  cookie: 9 * 60 * 60,
-  session: { hours: 9 },
+    jwt: "9h",
+    cookie: 9 * 60 * 60,
+    session: { hours: 9 },
 }
 
 export const API_URL = publicRuntimeConfig ? publicRuntimeConfig.API_URL : "http://localhost:3000/api"
 
 export const isOpenFeature = (feature) => {
-  const flags = publicRuntimeConfig?.FEATURE_FLAGS || {}
-  return !!flags[feature]
+    const flags = publicRuntimeConfig?.FEATURE_FLAGS || {}
+    return !!flags[feature]
 }
 
 export const LOGIN_ENDPOINT = "/login"

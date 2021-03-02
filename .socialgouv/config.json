@@ -1,0 +1,7 @@
+{
+  "name": "medle",
+  "type": "app",
+  "subdomain": "medle",
+  "azurepg": true,
+  "probesPath": "/health-check"
+}
