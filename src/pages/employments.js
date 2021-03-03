@@ -32,19 +32,31 @@ function composeEmploymentDataMonth({ currentYear, currentMonth, selectedYear, h
     .map((month) => <PassedMonthEmployments key={month} month={month} year={selectedYear} hospitalId={hospitalId} />)
 }
 
-const EmploymentsPage = ({ currentUser }) => {
-  const moment = now()
-  const currentMonth = moment.format("MM")
-  const currentYear = Number(moment.format("YYYY"))
+/**
+ * Return month and year parts
+ * @param {*} date in moment.js format
+ */
+function decomposeDate(date) {
+  const currentMonth = date.format("MM")
+  const currentYear = Number(date.format("YYYY"))
 
+  return { currentMonth, currentYear }
+}
+
+function composeTitle({ currentMonth, currentYear, selectedYear }) {
+  return selectedYear === currentYear ? NAME_MONTHS[currentMonth] + " " + selectedYear : `Année ${selectedYear}`
+}
+
+export const EmploymentsPage = ({ currentUser }) => {
   const { hospital } = currentUser
   const { id: hospitalId } = hospital
 
+  const { currentMonth, currentYear } = decomposeDate(now())
   const [selectedYear, setSelectedYear] = React.useState(currentYear)
 
   const [employmentDataMonths, setEmploymentDataMonths] = React.useState()
 
-  const title = selectedYear === currentYear ? NAME_MONTHS[currentMonth] + " " + selectedYear : `Année ${selectedYear}`
+  const title = composeTitle({ currentMonth, currentYear, selectedYear })
 
   React.useEffect(() => {
     setEmploymentDataMonths(composeEmploymentDataMonth({ currentYear, currentMonth, selectedYear, hospitalId }))

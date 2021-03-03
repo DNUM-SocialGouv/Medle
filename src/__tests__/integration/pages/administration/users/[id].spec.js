@@ -1,55 +1,35 @@
-import { act, render, screen } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import faker from "faker"
-import { rest } from "msw"
-import { setupServer } from "msw/node"
 import * as nextRouter from "next/router"
 import React from "react"
 
-import { API_URL, USERS_ENDPOINT } from "../../../../../config"
 import UserDetail from "../../../../../pages/administration/users/[id]"
 
-import { mockRouterImplmentation } from "../../../../../utils/test-utils"
+import { mockRouterImplementation } from "../../../../../utils/test-utils"
 
-// Keep the standard router at hand in order to not interfere with other tests.
-const defaultRouter = nextRouter.useRouter
+jest.spyOn(nextRouter, "useRouter")
 
 describe("tests administration user", () => {
-  const server = setupServer(
-    rest.get(`${API_URL}${USERS_ENDPOINT}/42}`, (req, res, ctx) => {
-      const { userId } = req.params
-      return res(ctx.json({ data: "toto", userId }))
-    })
-  )
-
   beforeAll(() => {
-    server.listen()
     /* eslint-disable no-import-assign*/
-    nextRouter.useRouter = jest.fn()
-    // nextRouter.useRouter.mockImplementation(() => ({
-    //   prefetch: jest.fn(() => Promise.resolve()),
-    //   query: { id: faker.random.number() },
-    // }))
     nextRouter.useRouter.mockImplementation(() => ({
-      ...mockRouterImplmentation,
+      ...mockRouterImplementation,
       query: { id: faker.random.number() },
     }))
   })
 
   afterAll(() => {
-    nextRouter.useRouter = defaultRouter
-    server.close()
+    nextRouter.useRouter.mockRestore()
   })
 
   it("should not display Zone dangereuse for a new user", async () => {
     render(<UserDetail currentUser={{ role: "ADMIN_HOSPITAL" }} />)
 
-    // await expect(titleDangerousZone).rejects.toMatchInlineSnapshot()
     expect(screen.queryByText("Zone dangereuse")).not.toBeInTheDocument()
     expect(screen.queryByText("Retour à la liste")).not.toBeInTheDocument()
     expect(screen.queryByText("Ajouter")).toBeInTheDocument()
 
-    // expect(rendered).toMatchInlineSnapshot()
   })
 
   it("should display Zone dangereuse for an existing user", async () => {
@@ -66,15 +46,11 @@ describe("tests administration user", () => {
 
     expect(screen.queryByText("Ajouter")).toBeInTheDocument()
 
-    await act(async () => {
-      userEvent.click(screen.getByText("Ajouter"))
-    })
+    userEvent.click(screen.getByText("Ajouter"))
 
     await screen.findByText(/Le nom est obligatoire./i)
     await screen.findByText(/Courriel a un format incorrect./i)
 
-    const expectedButton = await screen.queryByText("Retour à la liste")
-
-    expect(expectedButton).not.toBeInTheDocument()
+    expect(screen.queryByText("Retour à la liste")).not.toBeInTheDocument()
   })
 })

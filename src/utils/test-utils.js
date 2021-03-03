@@ -1,6 +1,6 @@
 // see https://github.com/vercel/next.js/issues/7479#issuecomment-659859682
 
-export const mockRouterImplmentation = {
+export const mockRouterImplementation = {
   asPath: "/",
   back: jest.fn(() => Promise.resolve(true)),
   basePath: "/",

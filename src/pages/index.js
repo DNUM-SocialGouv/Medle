@@ -14,8 +14,6 @@ import WelcomeMessage from "../components/WelcomeMessage"
 const LoginPage = ({ message, welcomeMessage }) => {
   const [error, setError] = useState(message || "")
 
-  console.log("WelcomeMessage", welcomeMessage)
-
   const checkUserData = ({ email, password }) => {
     if (!email || !password) throw new ValidationError("Les champs ne peuvent pas être vides")
   }

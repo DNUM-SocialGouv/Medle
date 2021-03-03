@@ -436,10 +436,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@eslint/eslintrc@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.3.0.tgz#d736d6963d7003b6514e6324bec9c602ac340318"
-  integrity sha512-1JTKgrOKAHVivSvOYw+sJOunkBjUOvjqWk1DPja7ZFhIS2mX/4EgTT8M7eTK9jrKhL/FvXXEbQwIs3pg1xp3dg==
+"@eslint/eslintrc@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.0.tgz#99cc0a0584d72f1df38b900fb062ba995f395547"
+  integrity sha512-2ZPCc+uNbjV5ERJr+aKSPRwZgKd2z11x0EgLvb1PURmUrn9QNRXFqje0Ldq454PfAVyaJYyrDvvIKSFP4NnBog==
   dependencies:
     ajv "^6.12.4"
     debug "^4.1.1"
@@ -448,7 +448,6 @@
     ignore "^4.0.6"
     import-fresh "^3.2.1"
     js-yaml "^3.13.1"
-    lodash "^4.17.20"
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
@@ -1005,20 +1004,20 @@
   integrity sha512-bBN7oGhmYGA61gyWTqTwSXh3YWkN1RWlMFAfi3NQa6L8ziJsSCgN5yk4FVpBq6uRFDQz061PgH8mlyGAyxwVqg==
 
 "@socialgouv/eslint-config-react@^1.49.0":
-  version "1.52.0"
-  resolved "https://registry.yarnpkg.com/@socialgouv/eslint-config-react/-/eslint-config-react-1.52.0.tgz#4b55d8612478ad1e869321292fdcad4b770065d1"
-  integrity sha512-JDSdV6plizppTXelekmnB6iuEOYhlt5rFEw5kkhBNFg8UWtp5JBteC4so53CSftayjKgzoyDC+KIvYWLhMucjA==
+  version "1.54.0"
+  resolved "https://registry.yarnpkg.com/@socialgouv/eslint-config-react/-/eslint-config-react-1.54.0.tgz#9fe0dd82477111279b6cde4969ae813485017232"
+  integrity sha512-qTWaLQbN6MNgwRBctfIzKV6FF/qzzMjYiBIY4x6kVAG1sP3/jU07t9+EJ3dHBYz1S8jWDlNxi+6zEDrLl041fA==
   dependencies:
-    "@socialgouv/eslint-config-recommended" "^1.52.0"
+    "@socialgouv/eslint-config-recommended" "^1.54.0"
     babel-eslint "^10.1.0"
     eslint-plugin-jsx-a11y "~6.4.1"
     eslint-plugin-react "~7.22.0"
     eslint-plugin-react-hooks "~4.2.0"
 
-"@socialgouv/eslint-config-recommended@^1.49.0", "@socialgouv/eslint-config-recommended@^1.52.0":
-  version "1.52.0"
-  resolved "https://registry.yarnpkg.com/@socialgouv/eslint-config-recommended/-/eslint-config-recommended-1.52.0.tgz#9350a2eb08364cd5143c644b896dfe3e6064067c"
-  integrity sha512-XeBxtAI3OzSRKWLetp0EzdyHrzINnU6JPmOQoW+IO1sXGB/sKFBzq5SqlQJgfGr/J5HqwjOmK2Kzxu59x0JrKA==
+"@socialgouv/eslint-config-recommended@^1.49.0", "@socialgouv/eslint-config-recommended@^1.54.0":
+  version "1.54.0"
+  resolved "https://registry.yarnpkg.com/@socialgouv/eslint-config-recommended/-/eslint-config-recommended-1.54.0.tgz#e4258ee8eae961266048bd8d8f3cadd4f5f4c33b"
+  integrity sha512-NZucBSEWNUGYKjHoPyYcn+cGYqrgQIaHQ8mA+SF/5K3FpWfQRY1EAgBHA+1pwfj9EPns78EgVYtD4W59oQEhZA==
   dependencies:
     eslint-config-prettier "~7.2.0"
     eslint-plugin-import "~2.22.1"
@@ -3311,12 +3310,12 @@ eslint-visitor-keys@^2.0.0:
   integrity sha512-QudtT6av5WXels9WjIM7qz1XD1cWGvX4gGXvp/zBn9nXG02D0utdU3Em2m/QjTnrsk6bBjmCygl3rmj118msQQ==
 
 eslint@^7.18.0:
-  version "7.20.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.20.0.tgz#db07c4ca4eda2e2316e7aa57ac7fc91ec550bdc7"
-  integrity sha512-qGi0CTcOGP2OtCQBgWZlQjcTuP0XkIpYFj25XtRTQSHC+umNnp7UMshr2G8SLsRFYDdAPFeHOsiteadmMH02Yw==
+  version "7.21.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.21.0.tgz#4ecd5b8c5b44f5dedc9b8a110b01bbfeb15d1c83"
+  integrity sha512-W2aJbXpMNofUp0ztQaF40fveSsJBjlSCSWpy//gzfTvwC+USs/nceBrKmlJOiM8r1bLwP2EuYkCqArn/6QTIgg==
   dependencies:
     "@babel/code-frame" "7.12.11"
-    "@eslint/eslintrc" "^0.3.0"
+    "@eslint/eslintrc" "^0.4.0"
     ajv "^6.10.0"
     chalk "^4.0.0"
     cross-spawn "^7.0.2"
@@ -3329,7 +3328,7 @@ eslint@^7.18.0:
     espree "^7.3.1"
     esquery "^1.4.0"
     esutils "^2.0.2"
-    file-entry-cache "^6.0.0"
+    file-entry-cache "^6.0.1"
     functional-red-black-tree "^1.0.1"
     glob-parent "^5.0.0"
     globals "^12.1.0"
@@ -3627,7 +3626,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "2.1.1"
 
-file-entry-cache@^6.0.0:
+file-entry-cache@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-6.0.1.tgz#211b2dd9659cb0394b073e7323ac3c933d522027"
   integrity sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==

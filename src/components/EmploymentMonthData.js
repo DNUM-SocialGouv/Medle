@@ -25,6 +25,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
           <Label htmlFor="doctors">Médecin</Label>
           <Input
             name="doctors"
+            id="doctors"
             type="number"
             min={0}
             step="0.05"
@@ -35,12 +36,13 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             autoComplete="off"
           />
 
-          <Badge value={makeLabel(reference?.doctors)} />
+          <Badge value={makeLabel(reference?.doctors)} label={"reference.doctors"} />
         </Col>
         <Col className="mr-3">
           <Label htmlFor="secretaries">Secrétaire</Label>
           <Input
             name="secretaries"
+            id="secretaries"
             type="number"
             min={0}
             step="0.05"
@@ -50,12 +52,13 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             disabled={readOnly}
             autoComplete="off"
           />
-          <Badge value={makeLabel(reference?.secretaries)} />
+          <Badge value={makeLabel(reference?.secretaries)} label={"reference.secretaries"} />
         </Col>
         <Col className="mr-3">
           <Label htmlFor="nursings">Aide soignant.e</Label>
           <Input
             name="nursings"
+            id="nursings"
             type="number"
             min={0}
             step="0.05"
@@ -66,12 +69,13 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             autoComplete="off"
           />
 
-          <Badge value={makeLabel(reference?.nursings)} />
+          <Badge value={makeLabel(reference?.nursings)} label={"reference.nursings"} />
         </Col>
         <Col className="mr-3">
           <Label htmlFor="executives">Cadre de santé</Label>
           <Input
             name="executives"
+            id="executives"
             type="number"
             min={0}
             step="0.05"
@@ -81,7 +85,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             disabled={readOnly}
             autoComplete="off"
           />
-          <Badge value={makeLabel(reference?.executives)} />
+          <Badge value={makeLabel(reference?.executives)} label={"reference.executives"} />
         </Col>
       </Row>
       <Row className="my-4">
@@ -89,6 +93,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
           <Label htmlFor="ides">IDE</Label>
           <Input
             name="ides"
+            id="ides"
             type="number"
             min={0}
             step="0.05"
@@ -98,12 +103,13 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             disabled={readOnly}
             autoComplete="off"
           />
-          <Badge value={makeLabel(reference?.ides)} />
+          <Badge value={makeLabel(reference?.ides)} label={"reference.ides"} />
         </Col>
         <Col className="mr-3">
           <Label htmlFor="auditoriumAgents">{"Agent d'amphi."}</Label>
           <Input
             name="auditoriumAgents"
+            id="auditoriumAgents"
             type="number"
             min={0}
             step="0.05"
@@ -113,12 +119,13 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             disabled={readOnly}
             autoComplete="off"
           />
-          <Badge value={makeLabel(reference?.auditoriumAgents)} />
+          <Badge value={makeLabel(reference?.auditoriumAgents)} label={"reference.auditoriumAgents"} />
         </Col>
         <Col className="mr-3">
           <Label htmlFor="others">Autres</Label>
           <Input
             name="others"
+            id="others"
             type="number"
             min={0}
             step="0.05"
@@ -128,7 +135,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             disabled={readOnly}
             autoComplete="off"
           />
-          <Badge value={makeLabel(reference?.others)} />
+          <Badge value={makeLabel(reference?.others)} label={"reference.others"} />
         </Col>
         <Col className="mr-3" />
       </Row>
@@ -285,7 +292,6 @@ function useEmployments({ month, year, hospitalId }) {
         setDataMonth(json)
         setReference(etpReference?.reference)
       } catch (error) {
-        logError(error)
         return { error: "Erreur serveur" }
       }
     }
@@ -308,7 +314,6 @@ function useEmployments({ month, year, hospitalId }) {
       await updateEmployment({ hospitalId, year, month, dataMonth })
       setSuccess("Vos informations ont bien été enregistrées.")
     } catch (error) {
-      logError(error)
       setErrors({ general: "Erreur lors de la mise à jour des ETP" })
     }
   }
