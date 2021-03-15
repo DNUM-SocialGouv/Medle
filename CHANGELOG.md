@@ -1,3 +1,10 @@
+## [1.6.9](https://github.com/SocialGouv/medle/compare/v1.6.8...v1.6.9) (2021-03-15)
+
+
+### Bug Fixes
+
+* Prod PG user. ([162a092](https://github.com/SocialGouv/medle/commit/162a092f061c18f4a01861d6ebab7c7395ee5707))
+
 ## [1.6.8](https://github.com/SocialGouv/medle/compare/v1.6.7...v1.6.8) (2021-03-15)
 
 
