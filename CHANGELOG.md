@@ -1,3 +1,10 @@
+## [1.6.8](https://github.com/SocialGouv/medle/compare/v1.6.7...v1.6.8) (2021-03-15)
+
+
+### Bug Fixes
+
+* Prod sealed secrets. ([7551275](https://github.com/SocialGouv/medle/commit/7551275839c6676ef4de2ca9b48c33f0ff551ece))
+
 ## [1.6.7](https://github.com/SocialGouv/medle/compare/v1.6.6...v1.6.7) (2021-03-15)
 
 
