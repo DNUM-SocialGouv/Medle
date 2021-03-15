@@ -1,3 +1,10 @@
+## [1.6.7](https://github.com/SocialGouv/medle/compare/v1.6.6...v1.6.7) (2021-03-15)
+
+
+### Bug Fixes
+
+* Update autodevops version. ([b77f931](https://github.com/SocialGouv/medle/commit/b77f93179881b70442ec6a52a19b4ff3fea4e697))
+
 ## [1.6.6](https://github.com/SocialGouv/medle/compare/v1.6.5...v1.6.6) (2021-03-15)
 
 
