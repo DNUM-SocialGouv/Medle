@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/SocialGouv/medle/compare/v1.6.10...v1.7.0) (2021-03-16)
+
+
+### Features
+
+* add screen list for employments for supervisors and admin users ([#121](https://github.com/SocialGouv/medle/issues/121)) ([8289a4e](https://github.com/SocialGouv/medle/commit/8289a4ef387150228ad83503a5c9c37b35236eb3))
+
 ## [1.6.10](https://github.com/SocialGouv/medle/compare/v1.6.9...v1.6.10) (2021-03-16)
 
 
