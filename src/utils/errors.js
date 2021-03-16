@@ -12,14 +12,14 @@ class MedleError extends Error {
 
 export class APIError extends MedleError {
   constructor({ message, detail, status }) {
-    super({ message, detail })
+    super({ detail, message })
     this.name = this.constructor.name
     this.status = status
   }
 }
 export class InternalError extends MedleError {
   constructor({ detail }) {
-    super({ message: "Internal server error", detail })
+    super({ detail, message: "Internal server error" })
     this.name = this.constructor.name
     this.status = STATUS_500_INTERNAL_SERVER_ERROR
   }
@@ -27,7 +27,7 @@ export class InternalError extends MedleError {
 
 export class ValidationError extends MedleError {
   constructor(message, detail) {
-    super({ message, detail })
+    super({ detail, message })
     this.name = this.constructor.name
   }
 }
@@ -56,7 +56,6 @@ export const handleAPIResponse2 = async (response) => {
     const error = new Error(message)
     error.detail = detail
     error.status = status
-    logError(error)
     throw error
   }
   return response.json()

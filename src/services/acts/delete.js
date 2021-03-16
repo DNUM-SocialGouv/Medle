@@ -1,14 +1,14 @@
 import knex from "../../knex/knex"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST, STATUS_404_NOT_FOUND } from "../../utils/http"
-import { buildScope } from "../scope"
+import { buildScope } from "../../utils/scope"
 import { makeWhereClause } from "./common"
 
 export const del = async ({ id }, currentUser) => {
   if (!id || isNaN(id)) {
     throw new APIError({
-      status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
     })
   }
 
@@ -18,8 +18,8 @@ export const del = async ({ id }, currentUser) => {
 
   if (!act) {
     throw new APIError({
-      status: STATUS_404_NOT_FOUND,
       message: "Not found",
+      status: STATUS_404_NOT_FOUND,
     })
   }
 

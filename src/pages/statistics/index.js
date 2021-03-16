@@ -12,7 +12,6 @@ import { StatBlockNumbers, StatBlockPieChart } from "../../components/StatBlock"
 import { Label, Title1 } from "../../components/StyledComponents"
 import TabButton from "../../components/TabButton"
 import { isOpenFeature } from "../../config"
-import { buildScope } from "../../services/scope"
 import { isValidEndDate, isValidStartDate } from "../../services/statistics/common"
 import { livingProfiles } from "../../utils/actsConstants"
 import { buildAuthHeaders, withAuthentication } from "../../utils/auth"
@@ -20,11 +19,12 @@ import { getReferenceData } from "../../utils/init"
 import { logDebug } from "../../utils/logger"
 import { isEmpty, pluralize } from "../../utils/misc"
 import { PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, STATS_GLOBAL, SUPER_ADMIN } from "../../utils/roles"
+import { buildScope } from "../../utils/scope"
 import { mapArrayForSelect } from "../../utils/select"
 
 const supervisorRoles = [PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, SUPER_ADMIN]
 
-const defaultProfile = { value: "", label: "Tous les profils" }
+const defaultProfile = { label: "Tous les profils", value: "" }
 const profileChoices = [defaultProfile, ...livingProfiles]
 
 const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
@@ -33,8 +33,8 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   const [scopeFilter, setScopeFilter] = useState({ isNational: true, scope: [] })
   const [selectedProfile, setSelectedProfile] = useState(defaultProfile)
   const [formState, setFormState] = useState({
-    startDate: statistics?.inputs?.startDate,
     endDate: statistics?.inputs?.endDate,
+    startDate: statistics?.inputs?.startDate,
   })
   const [errors, setErrors] = useState({})
 
@@ -49,11 +49,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       const profile = ["Global", "Thanato"].includes(type) ? "" : selectedProfile?.value
 
       const statistics = await memoizedFetchStatistics({
-        type,
-        startDate: formState.startDate,
         endDate: formState.endDate,
-        scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
         profile,
+        scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
+        startDate: formState.startDate,
+        type,
       })
       setStatistics(statistics)
     }
@@ -80,9 +80,9 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
         ? getReferenceData("hospitals")
         : getReferenceData("hospitals").filter((hospital) => scope.includes(hospital.id)),
       (elt) => elt.id,
-      (elt) => elt.name
+      (elt) => elt.name,
     ),
-    [scope]
+    [scope],
   )
   const toggleScopeFilter = async (checked) => {
     setScopeFilter({ isNational: checked, scope: checked || scope?.length === 0 ? [] : hospitalsChoices })
@@ -105,11 +105,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 
   const onExport = async () => {
     await fetchExport({
-      type,
-      startDate: formState.startDate,
       endDate: formState.endDate,
-      scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
       profile: selectedProfile?.value,
+      scopeFilter: scopeFilter.scope?.map((elt) => elt.value),
+      startDate: formState.startDate,
+      type,
     })
   }
 
@@ -126,8 +126,8 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   const customStylesProfiles = {
     container: (styles) => ({
       ...styles,
-      width: 300,
       margin: "15px 20px",
+      width: 300,
     }),
     menu: (styles) => ({
       ...styles,
@@ -141,7 +141,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
       <Container className="text-center" style={{ maxWidth: 1100 }}>
         <Form onSubmit={(e) => e.preventDefault()}>
           <Row className="align-items-baseline">
-            <Col lg={{ size: 4, offset: 2 }} md="6" sm="12" className="text-right">
+            <Col lg={{ offset: 2, size: 4 }} md="6" sm="12" className="text-right">
               <FormGroup row className="justify-content-md-end justify-content-center align-items-baseline">
                 <Label htmlFor="examinationDate" className="mr-2">
                   {"Du"}
@@ -269,11 +269,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               title="Actes hors examens"
               firstNumber={statistics?.profilesDistribution?.["Autre activité/Reconstitution"]}
               firstLabel={`Reconstitution${pluralize(
-                statistics?.profilesDistribution?.["Autre activité/Reconstitution"]
+                statistics?.profilesDistribution?.["Autre activité/Reconstitution"],
               )}.`}
               secondNumber={statistics?.profilesDistribution?.["Autre activité/Assises"]}
               secondLabel={`Participation${pluralize(
-                statistics?.profilesDistribution?.["Autre activité/Assises"]
+                statistics?.profilesDistribution?.["Autre activité/Assises"],
               )} aux assises.`}
             />
             <StatBlockNumbers
@@ -366,8 +366,8 @@ StatisticsPage.getInitialProps = async (ctx) => {
 }
 
 StatisticsPage.propTypes = {
-  statistics: PropTypes.object,
   currentUser: PropTypes.object.isRequired,
+  statistics: PropTypes.object,
 }
 
 export default withAuthentication(StatisticsPage, STATS_GLOBAL)

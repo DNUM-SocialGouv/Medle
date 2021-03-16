@@ -1,4 +1,5 @@
-import { find } from "./find"
+import { exportEmployments } from "./export"
+import { find, findLastEdit } from "./find"
 import { update } from "./update"
 
-export { find, update }
+export { exportEmployments, find, findLastEdit, update }

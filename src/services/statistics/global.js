@@ -1,8 +1,8 @@
 import Excel from "exceljs"
 
 import knex from "../../knex/knex"
-import { buildScope } from "../../services/scope"
 import { ISO_DATE, now } from "../../utils/date"
+import { buildScope } from "../../utils/scope"
 import { findList as findListHospitals } from "../hospitals"
 import { addCellTitle, intervalDays, normalizeInputs } from "./common"
 
@@ -32,7 +32,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 
   const fetchCountHospitals = knex("hospitals").whereNull("deleted_at").count()
 
-  const fetchGlobalCount = knex("acts").count().where(makeWhereClause({ startDate, endDate, scopeFilter }))
+  const fetchGlobalCount = knex("acts").count().where(makeWhereClause({ endDate, scopeFilter, startDate }))
 
   const fetchProfilesDistribution = knex("acts")
     .select(
@@ -40,17 +40,17 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
         `count(1) filter (where profile not in ('Personne décédée', 'Autre activité/Assises', 'Autre activité/Reconstitution'))::integer as "Vivants",` +
           `count(1) filter (where profile = 'Personne décédée')::integer as "Personne décédée",` +
           `count(1) filter (where profile = 'Autre activité/Assises')::integer as "Autre activité/Assises",` +
-          `count(1) filter (where profile = 'Autre activité/Reconstitution')::integer as "Autre activité/Reconstitution"`
-      )
+          `count(1) filter (where profile = 'Autre activité/Reconstitution')::integer as "Autre activité/Reconstitution"`,
+      ),
     )
-    .where(makeWhereClause({ startDate, endDate, scopeFilter }))
+    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
 
   const fetchActsWithSamePV = knex
     .with("acts_with_same_pv", (builder) => {
       builder
         .select(knex.raw("pv_number, count(1) as count"))
         .from("acts")
-        .where(makeWhereClause({ startDate, endDate, scopeFilter }))
+        .where(makeWhereClause({ endDate, scopeFilter, startDate }))
         .whereRaw("pv_number is not null and pv_number <> ''")
         .groupBy("pv_number")
         .havingRaw("count(1) > 1")
@@ -63,7 +63,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
       builder
         .select(knex.raw("count(*) as count"))
         .from("acts")
-        .where(makeWhereClause({ startDate, endDate, scopeFilter }))
+        .where(makeWhereClause({ endDate, scopeFilter, startDate }))
         .whereRaw("pv_number is not null and pv_number <> ''")
         .groupBy("pv_number")
     })
@@ -81,21 +81,21 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
     globalCount = parseInt(globalCount?.count, 10) || 0
 
     const scopeFilterLength = scopeFilter.length || countHospitals
-    const periodInDays = intervalDays({ startDate, endDate })
+    const periodInDays = intervalDays({ endDate, startDate })
 
     return {
-      inputs: {
-        startDate: startDate.format(ISO_DATE),
-        endDate: endDate.format(ISO_DATE),
-        scopeFilter,
-      },
-      globalCount,
+      actsWithSamePV: actsWithSamePV.sum || 0,
       averageCount:
         periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
-
-      profilesDistribution,
-      actsWithSamePV: actsWithSamePV.sum || 0,
       averageWithSamePV: averageWithSamePV.avg || 0,
+
+      globalCount,
+      inputs: {
+        endDate: endDate.format(ISO_DATE),
+        scopeFilter,
+        startDate: startDate.format(ISO_DATE),
+      },
+      profilesDistribution,
     }
   })
 }
@@ -112,7 +112,7 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
     profilesDistribution,
     actsWithSamePV,
     averageWithSamePV,
-  } = await buildGlobalStatistics({ startDate, endDate, scopeFilter }, currentUser)
+  } = await buildGlobalStatistics({ endDate, scopeFilter, startDate }, currentUser)
 
   const hospitals = await findListHospitals(scopeFilter)
 

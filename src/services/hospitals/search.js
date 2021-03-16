@@ -1,7 +1,9 @@
 import knex from "../../knex/knex"
 import { transformAll } from "../../models/hospitals"
+import { canAccessAllHospitals } from "../../utils/roles"
+import { buildScope } from "../../utils/scope"
 
-export const search = async ({ fuzzy }) => {
+export const search = async ({ fuzzy } = {}) => {
   const hospitals = await knex("hospitals")
     .whereNull("deleted_at")
     .where((builder) => {
@@ -12,4 +14,20 @@ export const search = async ({ fuzzy }) => {
     .orderBy("postal_code")
 
   return hospitals?.length ? transformAll(hospitals) : []
+}
+
+/**
+ * Get available hospitals of user (version for sever side)
+ *
+ * @param {User} user
+ * @returns Hospitals[]
+ */
+export async function hospitalsOfUser(user) {
+  const allHospitals = await search()
+  const scopeUser = buildScope(user)
+  const hospitals = canAccessAllHospitals(user)
+    ? allHospitals
+    : allHospitals.filter((hospital) => scopeUser.includes(hospital.id))
+
+  return hospitals
 }

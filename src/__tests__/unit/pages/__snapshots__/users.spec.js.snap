@@ -47,6 +47,7 @@ exports[`should renders UserDetail unchanged 1`] = `
               className="nav-link"
               href="#"
               onClick={[Function]}
+              title="Menu vers mon compte"
             >
               <svg
                 aria-hidden={true}
@@ -129,8 +130,9 @@ exports[`should renders UserDetail unchanged 1`] = `
       className="jsx-1821637326 border-right"
       id="sidebar-wrapper"
     >
-      <div
-        className="jsx-1576199254 list-group list-group-flush text-center"
+      <nav
+        aria-label="Navigation latérale d'administration"
+        className="jsx-1576199254 text-center list-group list-group-flush"
       >
         <a
           className="jsx-1576199254 list-group-item list-group-item-action selected"
@@ -292,7 +294,7 @@ exports[`should renders UserDetail unchanged 1`] = `
           />
           Retour
         </a>
-      </div>
+      </nav>
     </div>
     <div
       className="jsx-1821637326"

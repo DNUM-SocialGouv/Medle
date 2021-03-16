@@ -11,9 +11,13 @@ export const NO_PRIVILEGE_REQUIRED = "NO_PRIVILEGE_REQUIRED"
 export const ADMIN = "ADMIN"
 
 export const ADMIN_HOSPITAL = "ADMIN_HOSPITAL"
-export const SUPER_ADMIN = "SUPER_ADMIN"
+export const GUEST_HOSPITAL = "GUEST_HOSPITAL"
+export const OPERATOR_ACT = "OPERATOR_ACT"
+export const OPERATOR_EMPLOYMENT = "OPERATOR_EMPLOYMENT"
+export const OPERATOR_GENERIC = "OPERATOR_GENERIC"
 export const REGIONAL_SUPERVISOR = "REGIONAL_SUPERVISOR"
 export const PUBLIC_SUPERVISOR = "PUBLIC_SUPERVISOR"
+export const SUPER_ADMIN = "SUPER_ADMIN"
 
 export const PRIVILEGES = [
   HOSPITAL_DETAILS_MANAGEMENT,
@@ -42,8 +46,13 @@ export const ROLES = {
     STATS_GLOBAL,
     ADMIN,
   ],
-  OPERATOR_ACT: [ACT_CONSULTATION, ACT_MANAGEMENT, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un gestionnaire d'acte
-  OPERATOR_EMPLOYMENT: [EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT, ACT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un gestionnaire d'ETP
+  // un gestionnaire d'actes et d'ETP
+  GUEST_HOSPITAL: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
+
+  OPERATOR_ACT: [ACT_CONSULTATION, ACT_MANAGEMENT, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
+  // un gestionnaire d'acte
+  OPERATOR_EMPLOYMENT: [EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT, ACT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
+  // un gestionnaire d'ETP
   OPERATOR_GENERIC: [
     EMPLOYMENT_CONSULTATION,
     EMPLOYMENT_MANAGEMENT,
@@ -51,19 +60,27 @@ export const ROLES = {
     ACT_MANAGEMENT,
     STATS_LOCAL,
     STATS_GLOBAL,
-  ], // un gestionnaire d'actes et d'ETP
-  GUEST_HOSPITAL: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
-  SUPER_ADMIN: PRIVILEGES, // le super admin qui a tous les privilèges
-  REGIONAL_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // un ARS par exemple
-  PUBLIC_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL], // ex: un superviseur public, tel que ARS, Ministère de la justice
+  ],
+
+  // un ARS par exemple
+  PUBLIC_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
+
+  // le super admin qui a tous les privilèges
+  REGIONAL_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
+  SUPER_ADMIN: PRIVILEGES, // ex: un superviseur public, tel que ARS, Ministère de la justice
 }
 
 export const ROLES_DESCRIPTION = {
-  ADMIN_HOSPITAL: "Administrateur d'UMJ ou d'IML", // no scope, 1 hospital_id
-  OPERATOR_ACT: "Gestionnaire d'actes", // no scope, 1 hospital_id
-  OPERATOR_EMPLOYMENT: "Gestionnaire d'ETP", // no scope, 1 hospital_id
+  ADMIN_HOSPITAL: "Administrateur d'UMJ ou d'IML",
+  // no scope, 1 hospital_id
+  GUEST_HOSPITAL: "Invité (ex: inspections générales, cour des comptes..)",
+
+  // no scope, 1 hospital_id
+  OPERATOR_ACT: "Gestionnaire d'actes",
+  // no scope, 1 hospital_id
+  OPERATOR_EMPLOYMENT: "Gestionnaire d'ETP",
+  // no scope, 1 hospital_id
   OPERATOR_GENERIC: "Gestionnaire d'actes et d'ETP", // no scope, 1 hospital_id
-  GUEST_HOSPITAL: "Invité (ex: inspections générales, cour des comptes..)", // no scope, 1 hospital_id
   PUBLIC_SUPERVISOR: "Ministères", // no scope, no hospital_id
   REGIONAL_SUPERVISOR: "ARS / TGI / CA", // n hospitals in scope, no hospital_id
   SUPER_ADMIN: "Administrateur de Medlé", // no scope, no hospital_id
@@ -147,6 +164,8 @@ export const rulesOfRoles = (role) => {
       }
   }
 }
+
+export const canAccessAllHospitals = (user) => [SUPER_ADMIN, PUBLIC_SUPERVISOR].includes(user?.role)
 
 export const isAllowed = (role, privilege) =>
   privilege === NO_PRIVILEGE_REQUIRED || (ROLES[role] && ROLES[role].includes(privilege))

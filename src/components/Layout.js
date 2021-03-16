@@ -71,7 +71,7 @@ const Header = ({ currentUser }) => {
                 </NavItem>
               )}
               <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav>
+                <DropdownToggle title="Menu vers mon compte" nav>
                   <AccountCircleIcon className="text-black-50" width={30} />
                   <span className="d-sm-inline d-md-none text-black-50">&nbsp;Mon compte</span>
                 </DropdownToggle>
@@ -167,7 +167,7 @@ const Sidebar = ({ page, currentUser }) => {
   if (!currentUser) return ""
   return (
     <>
-      <div className="text-center list-group list-group-flush">
+      <nav aria-label="Navigation latérale" className="text-center list-group list-group-flush">
         {isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
           <Link href="/acts/declaration">
             <a
@@ -189,7 +189,7 @@ const Sidebar = ({ page, currentUser }) => {
             </a>
           </Link>
         )}
-        {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && currentUser.role !== SUPER_ADMIN && (
+        {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
           <Link href="/employments">
             <a
               className={
@@ -235,7 +235,7 @@ const Sidebar = ({ page, currentUser }) => {
           </Link>
         )}{" "}
         {/* </Link> */}
-      </div>
+      </nav>
       <style jsx>{`
         a {
           font-variant: small-caps;
@@ -256,15 +256,15 @@ const Sidebar = ({ page, currentUser }) => {
 }
 
 Sidebar.propTypes = {
-  page: PropTypes.string,
   currentUser: PropTypes.object,
+  page: PropTypes.string,
 }
 
 const SidebarAdmin = ({ page, currentUser }) => {
   if (!currentUser) return ""
   return (
     <>
-      <div className="list-group list-group-flush text-center">
+      <nav aria-label="Navigation latérale d'administration" className="text-center list-group list-group-flush">
         {isAllowed(currentUser.role, ADMIN) && (
           <Link href="/administration/users">
             <a className={"list-group-item list-group-item-action " + (page === "users" ? "selected" : "unselected")}>
@@ -325,7 +325,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
             {"Retour"}
           </a>
         </Link>
-      </div>
+      </nav>
       <style jsx>{`
         a {
           font-variant: small-caps;
@@ -346,8 +346,8 @@ const SidebarAdmin = ({ page, currentUser }) => {
 }
 
 SidebarAdmin.propTypes = {
-  page: PropTypes.string,
   currentUser: PropTypes.object,
+  page: PropTypes.string,
 }
 
 const Layout = ({ children, page, currentUser, admin = false }) => {
@@ -386,10 +386,10 @@ const Layout = ({ children, page, currentUser, admin = false }) => {
 }
 
 Layout.propTypes = {
-  children: PropTypes.node,
-  page: PropTypes.string,
-  currentUser: PropTypes.object,
   admin: PropTypes.bool,
+  children: PropTypes.node,
+  currentUser: PropTypes.object,
+  page: PropTypes.string,
 }
 
 export default Layout

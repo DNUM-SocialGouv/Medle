@@ -19,13 +19,13 @@ import { VerticalList } from "../../components/VerticalList"
 import { isOpenFeature } from "../../config"
 import { useDebounce } from "../../hooks/useDebounce"
 import { usePaginatedData } from "../../hooks/usePaginatedData"
-import { buildScope } from "../../services/scope"
 import { profiles as profilesConstants } from "../../utils/actsConstants"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { isoToFr } from "../../utils/date"
 import { getReferenceData } from "../../utils/init"
 import { logError } from "../../utils/logger"
 import { ACT_CONSULTATION } from "../../utils/roles"
+import { buildScope } from "../../utils/scope"
 import { mapArrayForSelect } from "../../utils/select"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
@@ -49,9 +49,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
           ? getReferenceData("hospitals")
           : getReferenceData("hospitals").filter((hospital) => scope.includes(hospital.id)),
         (elt) => elt.id,
-        (elt) => elt.name
+        (elt) => elt.name,
       ),
-    [scope]
+    [scope],
   )
 
   const existingProfiles = useMemo(
@@ -59,9 +59,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
       mapArrayForSelect(
         Object.keys(profilesConstants) || [],
         (elt) => elt,
-        (elt) => elt
+        (elt) => elt,
       ),
-    []
+    [],
   )
 
   useEffect(() => {
@@ -124,7 +124,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     return mapArrayForSelect(
       askers?.elements,
       (elt) => elt.id,
-      (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : "")
+      (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
     )
   }
 

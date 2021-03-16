@@ -1,6 +1,6 @@
 import knex from "../../knex/knex"
 import { transformAll } from "../../models/users"
-import { buildScope } from "../scope"
+import { buildScope } from "../../utils/scope"
 import { makeWhereClause } from "./common"
 
 const LIMIT = 50
@@ -10,7 +10,7 @@ export const search = async ({ fuzzy, requestedPage, currentUser }) => {
 
   requestedPage = requestedPage && !isNaN(requestedPage) && parseInt(requestedPage, 10)
 
-  const [usersCount] = await knex("users").where(makeWhereClause({ scope, fuzzy })).count()
+  const [usersCount] = await knex("users").where(makeWhereClause({ fuzzy, scope })).count()
 
   const totalCount = parseInt(usersCount.count, 10)
   const maxPage = Math.ceil(totalCount / LIMIT)
@@ -24,7 +24,7 @@ export const search = async ({ fuzzy, requestedPage, currentUser }) => {
   // SQL query
   const users = await knex("users")
     .leftJoin("hospitals", "users.hospital_id", "hospitals.id")
-    .where(makeWhereClause({ scope, fuzzy }))
+    .where(makeWhereClause({ fuzzy, scope }))
     .orderByRaw("case when (users.updated_at is not null) then users.updated_at else users.created_at end desc")
     .limit(LIMIT)
     .offset(offset)
@@ -37,8 +37,8 @@ export const search = async ({ fuzzy, requestedPage, currentUser }) => {
       "users.role",
       "users.hospital_id",
       "hospitals.name as hospital_name",
-      "users.scope"
+      "users.scope",
     )
 
-  return { users: users?.length ? transformAll(users) : [], totalCount, currentPage, maxPage, byPage: LIMIT }
+  return { byPage: LIMIT, currentPage, maxPage, totalCount, users: users?.length ? transformAll(users) : [] }
 }

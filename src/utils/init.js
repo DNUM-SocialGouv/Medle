@@ -2,6 +2,8 @@ import { findAllAttacks } from "../clients/attacks"
 import { findAllHospitals } from "../clients/hospitals"
 import { logInfo } from "../utils/logger"
 
+// TODO: passer à useSWR ou autre pour avoir un cache qui peut être update?
+// Ex de problème : si le super admin supprime un hôpital, il le verra toujours (dans la liste des ETP) jusqu'à ce qu'il se reconnecte...
 export const fetchReferenceData = async () => {
   logInfo("Récupération des libellés des données de référence")
   try {

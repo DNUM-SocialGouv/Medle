@@ -1,6 +1,7 @@
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import EditOutlinedIcon from "@material-ui/icons/Edit"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import WarningRoundedIcon from "@material-ui/icons/WarningRounded"
 import PropTypes from "prop-types"
 import React, { useEffect, useState } from "react"
 import { Alert, Button, Col, Form, Input, Row } from "reactstrap"
@@ -9,8 +10,7 @@ import { findEmployment, updateEmployment } from "../clients/employments"
 import { searchReferenceForMonth } from "../clients/employments-references"
 import { AnchorButton, Label, ValidationButton } from "../components/StyledComponents"
 import { useUser } from "../hooks/useUser"
-import { NAME_MONTHS } from "../utils/date"
-import { logError } from "../utils/logger"
+import { extractMonthYear, NAME_MONTHS } from "../utils/date"
 import { isEmpty, pluralize } from "../utils/misc"
 import { EMPLOYMENT_MANAGEMENT, isAllowed } from "../utils/roles"
 import Badge from "./Badge"
@@ -29,7 +29,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             type="number"
             min={0}
             step="0.05"
-            placeholder="ex: 2,1"
+            placeholder={!readOnly ? "ex: 2,1" : "non rempli"}
             value={dataMonth?.["doctors"] || ""}
             onChange={handleChange}
             disabled={readOnly}
@@ -46,7 +46,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             type="number"
             min={0}
             step="0.05"
-            placeholder="ex: 2,1"
+            placeholder={!readOnly ? "ex: 2,1" : "non rempli"}
             value={dataMonth?.["secretaries"] || ""}
             onChange={handleChange}
             disabled={readOnly}
@@ -62,7 +62,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             type="number"
             min={0}
             step="0.05"
-            placeholder="ex: 2,1"
+            placeholder={!readOnly ? "ex: 2,1" : "non rempli"}
             value={dataMonth?.["nursings"] || ""}
             onChange={handleChange}
             disabled={readOnly}
@@ -79,7 +79,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             type="number"
             min={0}
             step="0.05"
-            placeholder="ex: 2,1"
+            placeholder={!readOnly ? "ex: 2,1" : "non rempli"}
             value={dataMonth?.["executives"] || ""}
             onChange={handleChange}
             disabled={readOnly}
@@ -97,7 +97,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             type="number"
             min={0}
             step="0.05"
-            placeholder="ex: 2,1"
+            placeholder={!readOnly ? "ex: 2,1" : "non rempli"}
             value={dataMonth?.["ides"] || ""}
             onChange={handleChange}
             disabled={readOnly}
@@ -113,7 +113,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             type="number"
             min={0}
             step="0.05"
-            placeholder="ex: 2,1"
+            placeholder={!readOnly ? "ex: 2,1" : "non rempli"}
             value={dataMonth?.["auditoriumAgents"] || ""}
             onChange={handleChange}
             disabled={readOnly}
@@ -129,7 +129,7 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
             type="number"
             min={0}
             step="0.05"
-            placeholder="ex: 2,1"
+            placeholder={!readOnly ? "ex: 2,1" : "non rempli"}
             value={dataMonth?.["others"] || ""}
             onChange={handleChange}
             disabled={readOnly}
@@ -139,15 +139,22 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
         </Col>
         <Col className="mr-3" />
       </Row>
+      <style jsx>{`
+        :global(input:disabled) {
+          border: 0;
+          background-color: white !important;
+          font-weight: 500;
+        }
+      `}</style>
     </>
   )
 }
 
 FormEmployment.propTypes = {
   dataMonth: PropTypes.object,
-  reference: PropTypes.object,
   handleChange: PropTypes.func,
   readOnly: PropTypes.bool,
+  reference: PropTypes.object,
 }
 
 const composeMonthName = (month, year) => NAME_MONTHS[month] + " " + year
@@ -161,8 +168,8 @@ const Messages = ({ success, errors }) => (
 )
 
 Messages.propTypes = {
-  success: PropTypes.string,
   errors: PropTypes.object,
+  success: PropTypes.string,
 }
 
 // TODO: ajouter la vérification que la saisie n'est pas définitive (!isFinal, ...)
@@ -172,12 +179,12 @@ const isAllowedToWrite = ({ user, hospitalId }) =>
 export const CurrentMonthEmployments = ({ month, year, hospitalId }) => {
   const currentUser = useUser()
   const { success, errors, handleChange, handleSubmit, dataMonth, reference } = useEmployments({
+    hospitalId,
     month,
     year,
-    hospitalId,
   })
 
-  const isWritable = isAllowedToWrite({ user: currentUser, hospitalId })
+  const isWritable = isAllowedToWrite({ hospitalId, user: currentUser })
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -199,14 +206,18 @@ export const CurrentMonthEmployments = ({ month, year, hospitalId }) => {
 export const PassedMonthEmployments = ({ month, year, hospitalId, readOnly = false }) => {
   const currentUser = useUser()
 
+  const { year: currentYear } = extractMonthYear()
+
+  const warningEnabled = year < currentYear
+
   const { success, errors, handleChange, handleSubmit, dataMonth, reference } = useEmployments({
+    hospitalId,
     month,
     year,
-    hospitalId,
   })
 
   const [open, setOpen] = useState(false)
-  const isWritable = isAllowedToWrite({ user: currentUser, hospitalId })
+  const isWritable = isAllowedToWrite({ hospitalId, user: currentUser })
 
   const [readOnlyState, setReadOnlyState] = useState(!isWritable || readOnly)
 
@@ -224,8 +235,16 @@ export const PassedMonthEmployments = ({ month, year, hospitalId, readOnly = fal
     >
       <Button outline color="secondary" block className="pt-2 pb-2 mb-2 pl-4 text-left" onClick={() => setOpen(!open)}>
         {monthName}
-        {!open && <ArrowForwardIosIcon className="float-right" width={24} />}
-        {open && <ExpandMoreIcon className="float-right" width={24} />}
+        <div className="float-right">
+          {warningEnabled && isEmpty(dataMonth) && (
+            <span className="mr-4">
+              À compléter&nbsp;
+              <WarningRoundedIcon width="24" className="align-top" />
+            </span>
+          )}
+          {!open && <ArrowForwardIosIcon width={24} />}
+          {open && <ExpandMoreIcon width={24} />}
+        </div>
       </Button>
       {open && (
         <div className="px-2">
@@ -235,8 +254,8 @@ export const PassedMonthEmployments = ({ month, year, hospitalId, readOnly = fal
                 Modifier <EditOutlinedIcon width={24} />
               </Button>
             ) : (
-                <AnchorButton>Enregistrer</AnchorButton>
-              )}
+              <AnchorButton>Enregistrer</AnchorButton>
+            )}
           </div>
 
           <Messages success={success} errors={errors} />
@@ -254,9 +273,9 @@ export const PassedMonthEmployments = ({ month, year, hospitalId, readOnly = fal
 }
 
 CurrentMonthEmployments.propTypes = {
+  hospitalId: PropTypes.number.isRequired,
   month: PropTypes.string.isRequired,
   year: PropTypes.number.isRequired,
-  hospitalId: PropTypes.number.isRequired,
 }
 
 PassedMonthEmployments.propTypes = { ...CurrentMonthEmployments.propTypes, readOnly: PropTypes.bool }
@@ -281,12 +300,12 @@ function useEmployments({ month, year, hospitalId }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const json = await findEmployment({ hospitalId, year, month })
+        const json = await findEmployment({ hospitalId, month, year })
 
         const etpReference = await searchReferenceForMonth({
           hospitalId,
-          year,
           month,
+          year,
         })
 
         setDataMonth(json)
@@ -311,12 +330,12 @@ function useEmployments({ month, year, hospitalId }) {
     setErrors({})
 
     try {
-      await updateEmployment({ hospitalId, year, month, dataMonth })
+      await updateEmployment({ dataMonth, hospitalId, month, year })
       setSuccess("Vos informations ont bien été enregistrées.")
     } catch (error) {
       setErrors({ general: "Erreur lors de la mise à jour des ETP" })
     }
   }
 
-  return { success, errors, handleChange, handleSubmit, dataMonth, reference }
+  return { dataMonth, errors, handleChange, handleSubmit, reference, success }
 }

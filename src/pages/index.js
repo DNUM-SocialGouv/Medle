@@ -5,11 +5,11 @@ import React, { useState } from "react"
 import { authenticate } from "../clients/authentication"
 import { findAllActiveMessages } from "../clients/messages"
 import Login from "../components/Login"
+import WelcomeMessage from "../components/WelcomeMessage"
 import { registerAndRedirectUser } from "../utils/auth"
 import { ValidationError } from "../utils/errors"
 import { logError } from "../utils/logger"
 import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
-import WelcomeMessage from "../components/WelcomeMessage"
 
 const LoginPage = ({ message, welcomeMessage }) => {
   const [error, setError] = useState(message || "")
@@ -55,9 +55,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
         className="d-flex flex-column justify-content-center align-items-center min-vh-100 container"
         style={{ maxWidth: 800 }}
       >
-        {welcomeMessage && (
-          <WelcomeMessage message={welcomeMessage} />
-        )}
+        {welcomeMessage && <WelcomeMessage message={welcomeMessage} />}
         <div className="d-flex flex-column flex-md-row justify-content-center align-items-center">
           <Login authentication={authentication} error={error} />
         </div>
@@ -79,7 +77,7 @@ LoginPage.getInitialProps = async (ctx) => {
   let welcomeMessage
 
   try {
-    [welcomeMessage] = (await findAllActiveMessages()).map(({ content }) => content)
+    ;[welcomeMessage] = (await findAllActiveMessages()).map(({ content }) => content)
   } catch (error) {
     logError(error)
   }

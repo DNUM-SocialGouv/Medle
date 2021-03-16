@@ -2,10 +2,12 @@ import getConfig from "next/config"
 
 const { publicRuntimeConfig } = getConfig() || {}
 
+export const START_YEAR_MEDLE = 2020
+
 // Timeout config : keep this timeout values in sync
 export const timeout = {
-    jwt: "9h",
     cookie: 9 * 60 * 60,
+    jwt: "9h",
     session: { hours: 9 },
 }
 

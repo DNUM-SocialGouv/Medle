@@ -3,6 +3,7 @@ import "@socialgouv/bootstrap.core/dist/socialgouv-bootstrap.min.css"
 import * as Sentry from "@sentry/node"
 import App from "next/app"
 import getConfig from "next/config"
+import Head from "next/head"
 import React from "react"
 import { ThemeProvider } from "styled-components"
 
@@ -41,17 +42,23 @@ Sentry.init({
 export default class MyApp extends App {
   componentDidMount() {
     initMatomo({
-      siteId: process.env.MATOMO_SITE_ID,
       piwikUrl: process.env.MATOMO_URL,
+      siteId: process.env.MATOMO_SITE_ID,
     })
   }
 
   render() {
     const { Component, pageProps } = this.props
     return (
-      <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <>
+        <Head>
+          <title>Médlé</title>
+        </Head>
+
+        <ThemeProvider theme={theme}>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </>
     )
   }
 }

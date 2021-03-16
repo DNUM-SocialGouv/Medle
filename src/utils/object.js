@@ -31,3 +31,9 @@ export const objToArray = (obj, labels = []) => {
     })
     .filter((item) => !!item.value)
 }
+
+export function castArrayInMap({ array, propAsKey }) {
+  return array.reduce((acc, curr) => {
+    return { [curr[propAsKey]]: curr, ...acc }
+  }, {})
+}

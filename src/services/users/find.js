@@ -2,14 +2,14 @@ import knex from "../../knex/knex"
 import { transform } from "../../models/users"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { buildScope } from "../scope"
+import { buildScope } from "../../utils/scope"
 import { makeWhereClause } from "./common"
 
 export const find = async ({ id, currentUser }) => {
   if (!id || isNaN(id)) {
     throw new APIError({
-      status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
     })
   }
 
@@ -28,7 +28,7 @@ export const find = async ({ id, currentUser }) => {
       "users.role",
       "users.hospital_id",
       "hospitals.name as hospital_name",
-      "users.scope"
+      "users.scope",
     )
 
   user = transform(user)
@@ -45,8 +45,8 @@ export const find = async ({ id, currentUser }) => {
 export const findByEmail = async (email) => {
   if (!email) {
     throw new APIError({
-      status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
     })
   }
 
@@ -61,7 +61,7 @@ export const findByEmail = async (email) => {
       "users.password",
       "users.role",
       "users.hospital_id",
-      "users.scope"
+      "users.scope",
     )
 
   user = transform(user)
