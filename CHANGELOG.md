@@ -1,3 +1,10 @@
+## [1.6.10](https://github.com/SocialGouv/medle/compare/v1.6.9...v1.6.10) (2021-03-16)
+
+
+### Bug Fixes
+
+* Prod PG connection string. ([4727f96](https://github.com/SocialGouv/medle/commit/4727f96aa23166bfb8d0fb5742d8c8a49aac5837))
+
 ## [1.6.9](https://github.com/SocialGouv/medle/compare/v1.6.8...v1.6.9) (2021-03-15)
 
 
