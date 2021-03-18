@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/SocialGouv/medle/compare/v1.7.0...v1.7.1) (2021-03-18)
+
+
+### Bug Fixes
+
+* bug chrome/IE for employments with comma ([#125](https://github.com/SocialGouv/medle/issues/125)) ([1992200](https://github.com/SocialGouv/medle/commit/1992200a3263c73c27cdc455ef63a3e34c386c82))
+
 # [1.7.0](https://github.com/SocialGouv/medle/compare/v1.6.10...v1.7.0) (2021-03-16)
 
 
