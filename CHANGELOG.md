@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/SocialGouv/medle/compare/v1.7.1...v1.7.2) (2021-03-18)
+
+
+### Bug Fixes
+
+* corrige le problème de format JSONB dans les tables employments et employments-reference ([#126](https://github.com/SocialGouv/medle/issues/126)) ([216a12d](https://github.com/SocialGouv/medle/commit/216a12d953bd3c7be09201d7617fee34196c6c08))
+
 ## [1.7.1](https://github.com/SocialGouv/medle/compare/v1.7.0...v1.7.1) (2021-03-18)
 
 
