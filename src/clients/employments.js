@@ -10,7 +10,12 @@ export const findEmployment = async ({ hospitalId, year, month, headers }) => {
   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/${year}/${month}`, {
     headers: headers,
   })
-  return handleAPIResponse2(response)
+  const res = await handleAPIResponse2(response)
+
+  // bug Chrome/IE: some numbers are stored with comma and can't be parsed. Cast in Number before that.
+  Object.keys(res).forEach((key) => (res[key] = Number(res[key])))
+
+  return res
 }
 
 export const findLastEdit = async ({ hospitalId, headers }) => {
