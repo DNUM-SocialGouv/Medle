@@ -64,7 +64,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
   const month = String(dateNow.month() + 1).padStart(2, "0")
 
   let defaultValues = {
-    startMonth: data ? { year: data.year, month: data.month } : { year, month },
+    startMonth: data ? { month: data.month, year: data.year } : { month, year },
   }
 
   if (data?.reference) {
@@ -102,6 +102,10 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
   }
 
   const onSubmit = async (formData) => {
+    Object.keys(formData.reference).forEach((key) => {
+      formData.reference[key] = Number(formData.reference[key])
+    })
+
     setSuccess("")
     setError("")
 
@@ -109,9 +113,9 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
       if (isEmpty(formErrors)) {
         let payload = {
           hospitalId: hid,
-          reference: JSON.stringify(formData.reference),
-          year: formData.startMonth.year,
           month: formData.startMonth.month?.toString().padStart(2, "0"),
+          reference: formData.reference,
+          year: formData.startMonth.year,
         }
 
         if (formData?.id) {
@@ -170,7 +174,10 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
                   <a>Retour à la liste</a>
                 </Button>
               </Link>
-              <Link href="/administration/hospitals/[hid]/employments/[rid]" as={`/administration/hospitals/${hid}/employments/new`}>
+              <Link
+                href="/administration/hospitals/[hid]/employments/[rid]"
+                as={`/administration/hospitals/${hid}/employments/new`}
+              >
                 <Button outline color="success">
                   <a>Ajouter</a>
                 </Button>
@@ -393,7 +400,7 @@ EmploymentsReferencesDetailPage.getInitialProps = async (ctx) => {
   if (!rid || isNaN(rid)) return { key: Number(new Date()) }
 
   try {
-    const data = await findReference({ hospitalId: hid, referencesId: rid, headers })
+    const data = await findReference({ headers, hospitalId: hid, referencesId: rid })
     return { data, key: Number(new Date()) }
   } catch (error) {
     logError("APP error", error)

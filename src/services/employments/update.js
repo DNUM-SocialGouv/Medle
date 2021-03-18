@@ -6,22 +6,22 @@ import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 import { isValid } from "./common"
 
 export const update = async ({ year, month, hospitalId, data }) => {
-  if (!isValid({ year, month, hospitalId }) || !data)
+  if (!isValid({ hospitalId, month, year }) || !data)
     throw new APIError({
-      status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
     })
 
   const result = await upsert({
     db: knex,
-    table: "employments",
-    object: {
-      hospital_id: hospitalId,
-      year,
-      month,
-      data_month: JSON.stringify(data),
-    },
     key: ["hospital_id", "year", "month"],
+    object: {
+      data_month: data,
+      hospital_id: hospitalId,
+      month,
+      year,
+    },
+    table: "employments",
   })
 
   return result

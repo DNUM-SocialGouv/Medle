@@ -3,19 +3,19 @@ import * as yup from "yup"
 import * as common from "./common"
 
 const JStoDBKeys = {
-  id: "id",
   hospitalId: "hospital_id",
-  year: "year",
+  id: "id",
   month: "month",
   reference: "reference",
+  year: "year",
 }
 
 const schema = yup.object().shape({
-  id: yup.number().positive().integer().nullable(),
   hospitalId: yup.number().positive().integer(),
-  year: yup.number().positive().integer(),
+  id: yup.number().positive().integer().nullable(),
   month: yup.string().length(2),
-  reference: yup.string(),
+  reference: yup.object(),
+  year: yup.number().positive().integer(),
 })
 
 export const { transform, transformAll, untransform, untransformAll, validate } = common.build({ JStoDBKeys, schema })

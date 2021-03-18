@@ -321,7 +321,7 @@ function useEmployments({ month, year, hospitalId }) {
   const handleChange = (event) => {
     event.preventDefault()
 
-    setDataMonth({ ...dataMonth, [event.target.name]: event.target.value })
+    setDataMonth({ ...dataMonth, [event.target.name]: Number(event.target.value) })
   }
 
   const handleSubmit = async (event) => {

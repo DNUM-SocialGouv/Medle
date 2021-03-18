@@ -21,7 +21,7 @@ const handler = async (req, res) => {
       case METHOD_PUT: {
         checkValidUserWithPrivilege(EMPLOYMENT_MANAGEMENT, req, res)
 
-        const data = await req.body
+        const data = req.body
         const result = await update({ ...req.query, data })
 
         return result ? res.status(STATUS_200_OK).json(result) : sendNotFoundError(res)
