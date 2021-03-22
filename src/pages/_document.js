@@ -7,8 +7,8 @@ class MyDocument extends Document {
       <Html lang="fr">
         <Head>
           <script src="/polyfill.js" />
-          <script type="text/javascript" src="/tarteaucitron/tarteaucitron.js" />
-          <script type="text/javascript" src="/tarteaucitron/initTarteaucitron.js" />
+          {/* <script type="text/javascript" src="/tarteaucitron/tarteaucitron.js" />
+          <script type="text/javascript" src="/tarteaucitron/initTarteaucitron.js" /> */}
         </Head>
         <body>
           <Main />

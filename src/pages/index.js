@@ -4,6 +4,7 @@ import React, { useState } from "react"
 
 import { authenticate } from "../clients/authentication"
 import { findAllActiveMessages } from "../clients/messages"
+import { Footer } from "../components/Layout"
 import Login from "../components/Login"
 import WelcomeMessage from "../components/WelcomeMessage"
 import { registerAndRedirectUser } from "../utils/auth"
@@ -60,6 +61,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
           <Login authentication={authentication} error={error} />
         </div>
       </div>
+      <Footer />
     </>
   )
 }

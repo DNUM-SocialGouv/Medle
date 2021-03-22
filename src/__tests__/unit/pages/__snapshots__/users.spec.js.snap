@@ -12,6 +12,7 @@ exports[`should renders UserDetail unchanged 1`] = `
     >
       <a
         className="navbar-brand"
+        onClick={[Function]}
       >
         <img
           alt="Logo"
@@ -667,29 +668,43 @@ exports[`should renders UserDetail unchanged 1`] = `
             className="jsx-1982338225 pl-0 list-unstyled"
           >
             <li
-              className="jsx-1982338225"
+              className="jsx-1982338225 mb-2"
             >
               <a
                 className="jsx-1982338225"
-                href="/statistics"
+                href="/mentions"
                 onClick={[Function]}
                 onMouseEnter={[Function]}
               >
-                Statistiques
+                Mentions légales
               </a>
             </li>
             <li
-              className="jsx-1982338225"
+              className="jsx-1982338225 mb-2"
             >
               <a
                 className="jsx-1982338225"
-                href="mailto:contact.medle@fabrique.social.gouv.fr"
+                href="/politique-confidentialite"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
               >
-                Contactez‑nous
+                Politique de confidentialité
               </a>
             </li>
             <li
-              className="jsx-1982338225"
+              className="jsx-1982338225 mb-2"
+            >
+              <a
+                className="jsx-1982338225"
+                href="/cgu"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+              >
+                Conditions générales d'utilisation
+              </a>
+            </li>
+            <li
+              className="jsx-1982338225 mb-2"
             >
               <a
                 className="jsx-1982338225"
@@ -698,6 +713,16 @@ exports[`should renders UserDetail unchanged 1`] = `
                 onMouseEnter={[Function]}
               >
                 FAQ
+              </a>
+            </li>
+            <li
+              className="jsx-1982338225 mb-2"
+            >
+              <a
+                className="jsx-1982338225"
+                href="mailto:contact.medle@fabrique.social.gouv.fr"
+              >
+                Contactez‑nous
               </a>
             </li>
           </ul>

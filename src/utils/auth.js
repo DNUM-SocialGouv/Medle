@@ -51,7 +51,9 @@ export const getCurrentUser = (ctx) => {
   }
 }
 export const getCurrentUserFromSessionStorage = () => {
-  const currentUser = sessionStorage.getItem("currentUser")
+  if (typeof sessionStorage === "undefined") return null
+
+  const currentUser = sessionStorage?.getItem("currentUser")
 
   return currentUser ? JSON.parse(currentUser) : null
 }
