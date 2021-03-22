@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/SocialGouv/medle/compare/v1.7.2...v1.7.3) (2021-03-22)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([#128](https://github.com/SocialGouv/medle/issues/128)) ([71d4e4e](https://github.com/SocialGouv/medle/commit/71d4e4e17ee344f45b5c656b07e22eb546689c6c))
+
 ## [1.7.2](https://github.com/SocialGouv/medle/compare/v1.7.1...v1.7.2) (2021-03-18)
 
 
