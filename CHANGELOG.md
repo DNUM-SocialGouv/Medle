@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/SocialGouv/medle/compare/v1.7.3...v1.8.0) (2021-03-22)
+
+
+### Features
+
+* ajout des fichiers CGU, mentions légales et politique de confidentialité ([#127](https://github.com/SocialGouv/medle/issues/127)) ([8c6566c](https://github.com/SocialGouv/medle/commit/8c6566c600f1bca915d044cf52a1b0749b62d450))
+
 ## [1.7.3](https://github.com/SocialGouv/medle/compare/v1.7.2...v1.7.3) (2021-03-22)
 
 
