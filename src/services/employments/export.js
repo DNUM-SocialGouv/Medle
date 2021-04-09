@@ -58,7 +58,7 @@ function parse({ data_month, ...rest }) {
     others: 0,
     secretaries: 0,
   }
-  return { ...rest, ...model, ...JSON.parse(data_month) }
+  return { ...rest, ...model, ...data_month }
 }
 
 function parseReference({ reference, ...rest }) {
