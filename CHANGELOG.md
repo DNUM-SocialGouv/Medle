@@ -1,3 +1,11 @@
+## [1.8.2](https://github.com/SocialGouv/medle/compare/v1.8.1...v1.8.2) (2021-04-09)
+
+
+### Bug Fixes
+
+* **k8s:** DB prod secrets ([#136](https://github.com/SocialGouv/medle/issues/136)) ([20b1b3e](https://github.com/SocialGouv/medle/commit/20b1b3e22a6078ee7d7c6f24aacbcf2e3f2f6708))
+* **k8s:** restore real subdomain ([#137](https://github.com/SocialGouv/medle/issues/137)) ([951b123](https://github.com/SocialGouv/medle/commit/951b1237a5a71f42ac690645865214817690ce63))
+
 ## [1.8.1](https://github.com/SocialGouv/medle/compare/v1.8.0...v1.8.1) (2021-04-09)
 
 
