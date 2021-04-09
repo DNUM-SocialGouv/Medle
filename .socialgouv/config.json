@@ -1,7 +1,6 @@
 {
   "name": "medle",
   "type": "app",
-  "subdomain": "medle-k8s",
   "azurepg": true,
   "probesPath": "/health-check"
 }
