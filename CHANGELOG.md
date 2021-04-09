@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/SocialGouv/medle/compare/v1.8.0...v1.8.1) (2021-04-09)
+
+
+### Bug Fixes
+
+* error on etp export ([#138](https://github.com/SocialGouv/medle/issues/138)) ([67d45f4](https://github.com/SocialGouv/medle/commit/67d45f4552326563776dc59ed132dca4a923d4b7))
+
 # [1.8.0](https://github.com/SocialGouv/medle/compare/v1.7.3...v1.8.0) (2021-03-22)
 
 
