@@ -32,6 +32,7 @@ export const exportActs = async (params, currentUser) => {
     { header: "Contexte violences", key: "violenceContexts", width: 40 },
     { header: "Durée", key: "duration", width: 20 },
     { header: "Distance", key: "distance", width: 20 },
+    { header: "Cause du décès", key: "deathCause", width: 20 },
   ]
 
   if (elements?.length) elements.forEach((element) => worksheet.addRow(element))

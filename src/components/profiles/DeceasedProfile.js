@@ -12,7 +12,7 @@ const examinationsIML = [...examinationsUMJ, "Autopsie", "Anthropologie", "Odont
 
 const DeceasedEdit = ({ dispatch, state, errors, hospital }) => {
   const situationDate = getSituationDate(state.examinationDate)
-  const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
+  const periods = periodOfDayValues[situationDate].period.map((elt) => ({ subTitle: elt.subTitle, title: elt.title }))
 
   return (
     <>
@@ -53,6 +53,15 @@ const DeceasedEdit = ({ dispatch, state, errors, hospital }) => {
         dispatch={dispatch}
         state={state.periodOfDay || ""}
         invalid={!!errors.periodOfDay}
+      />
+      <ActBlock
+        type="deathCause"
+        title="Quelle est la cause présumée du décès ?"
+        values={["Suicide", "Autre"]}
+        mode="toggle"
+        dispatch={dispatch}
+        state={state.deathCause || ""}
+        invalid={!!errors.deathCause}
       />
       <Title2 className="mt-5 mb-2">{"Profil de la personne décédée"}</Title2>
       <ActBlock
@@ -104,7 +113,9 @@ const DeceasedRead = (act) => {
         <Col className="mr-3">
           <ColumnAct header={"Âge"} content={act && act.personAgeTag} />
         </Col>
-        <Col className="mr-3" />
+        <Col className="mr-3">
+          <ColumnAct header={"Cause du décès"} content={act && act.deathCause} />
+        </Col>
         <Col className="mr-3" />
       </Row>
     </>
@@ -128,19 +139,22 @@ const hasErrors = (state) => {
   if (!state.personAgeTag) {
     errors.personAgeTag = "Obligatoire"
   }
+  if (!state.deathCause) {
+    errors.deathCause = "Obligatoire"
+  }
 
   return errors
 }
 
 DeceasedEdit.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  state: PropTypes.object.isRequired,
   errors: PropTypes.object,
   hospital: PropTypes.object,
+  state: PropTypes.object.isRequired,
 }
 
 export default {
   edit: DeceasedEdit,
-  read: DeceasedRead,
   hasErrors,
+  read: DeceasedRead,
 }
