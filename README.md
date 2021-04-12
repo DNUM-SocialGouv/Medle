@@ -4,6 +4,8 @@ MedLé is a platform for french hospitals to declare their medico-legal activity
 
 ## 👔 Install
 
+> Since april 2021, Medlé is deployed by Gitlab on Kubernetes. The instructions with docker-compose are kept for reference.
+
 First, install git, yarn, docker, docker-compose with [brew](https://brew.sh/) on Mac OS.
 
 Then, run the containers with `docker-compose`.
@@ -19,9 +21,16 @@ Connect to the DB via a Postgresql client. For start, there a user with the name
 Create the medle database and the user medle with the password of your choice.
 
 ```sql
-create database medle;
 create user medle with encrypted password 'jJFWsfW5ePbN7J';
-grant all privileges on database medle to medle
+create database medle with owner medle encoding 'UTF8';
+alter user medle with superuser;
+```
+
+Alternatively, if you have already a Postgres user :
+
+```sql
+create database medle encoding 'UTF8';
+grant all privileges on database medle to other-user
 ```
 
 Then create/modify an `.env` file in the root of the project (see `.env.dev` as a reference).
@@ -60,7 +69,7 @@ Next, you have to create the database named medle and the app user.
 
 So, connect to the db container : `psql postgres://user:password@localhost:5436`
 
-```sh
+```sql
 create user medle with encrypted password 'test';
 create database medle with owner medle encoding 'UTF8';
 alter user medle with superuser;
