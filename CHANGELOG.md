@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/SocialGouv/medle/compare/v1.8.2...v1.9.0) (2021-04-12)
+
+
+### Features
+
+* update README with the use of Kubernetes now ([f448e1d](https://github.com/SocialGouv/medle/commit/f448e1da9e454f31c18577bc7a4ec4c9f5bb1bc4))
+
 ## [1.8.2](https://github.com/SocialGouv/medle/compare/v1.8.1...v1.8.2) (2021-04-09)
 
 
