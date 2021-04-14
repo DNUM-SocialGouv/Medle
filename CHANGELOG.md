@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/SocialGouv/medle/compare/v1.9.0...v1.9.1) (2021-04-14)
+
+
+### Bug Fixes
+
+* add tipimail secrets ([#141](https://github.com/SocialGouv/medle/issues/141)) ([027b993](https://github.com/SocialGouv/medle/commit/027b9933d86e0157a75c6cd0bcb32f6da5de9f50))
+
 # [1.9.0](https://github.com/SocialGouv/medle/compare/v1.8.2...v1.9.0) (2021-04-12)
 
 
