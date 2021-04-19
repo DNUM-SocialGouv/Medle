@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/SocialGouv/medle/compare/v1.9.1...v1.10.0) (2021-04-19)
+
+
+### Features
+
+* add forgot and reset password pages and api ([#140](https://github.com/SocialGouv/medle/issues/140)) ([402519d](https://github.com/SocialGouv/medle/commit/402519daf8ae112a151146861552461ac5a93495))
+
 ## [1.9.1](https://github.com/SocialGouv/medle/compare/v1.9.0...v1.9.1) (2021-04-14)
 
 
