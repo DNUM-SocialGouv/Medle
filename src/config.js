@@ -6,21 +6,22 @@ export const START_YEAR_MEDLE = 2020
 
 // Timeout config : keep this timeout values in sync
 export const timeout = {
-    cookie: 9 * 60 * 60,
-    jwt: "9h",
-    session: { hours: 9 },
+  cookie: 9 * 60 * 60,
+  jwt: "9h",
+  session: { hours: 9 },
 }
 
 export const API_URL = publicRuntimeConfig ? publicRuntimeConfig.API_URL : "http://localhost:3000/api"
 
 export const isOpenFeature = (feature) => {
-    const flags = publicRuntimeConfig?.FEATURE_FLAGS || {}
-    return !!flags[feature]
+  const flags = publicRuntimeConfig?.FEATURE_FLAGS || {}
+  return !!flags[feature]
 }
 
 export const LOGIN_ENDPOINT = "/login"
 export const LOGOUT_ENDPOINT = "/logout"
-export const RESET_PWD_ENDPOINT = "/reset"
+export const RESET_PWD_ENDPOINT = "/reset-password"
+export const FORGOT_PWD_ENDPOINT = "/forgot-password"
 
 export const ACTS_ENDPOINT = "/acts"
 export const ASKERS_ENDPOINT = "/askers"

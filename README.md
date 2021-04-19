@@ -6,17 +6,19 @@ MedLé is a platform for french hospitals to declare their medico-legal activity
 
 > Since april 2021, Medlé is deployed by Gitlab on Kubernetes. The instructions with docker-compose are kept for reference.
 
-First, install git, yarn, docker, docker-compose with [brew](https://brew.sh/) on Mac OS.
+As a prerequisite, install git, yarn, docker, docker-compose with [brew](https://brew.sh/) on Mac OS.
 
-Then, run the containers with `docker-compose`.
+First, you need a database. A docker container is made for that.
 
-`docker-compose up --build -d`
+You only have to run the db container (and not the app): `docker-compose up --build -d db`
 
 Then, the DB is exposed on port 5434 and the app is accessible on port 80.
 
-Connect to the DB via a Postgresql client. For start, there a user with the name `user` and the password `password`.
+Next, you have to create the database named medle and the app user.
+At start, there is a user with the name `user` and the password `password`.
 
-`docker exec -it medle_db_1 psql -U user`
+So, connect to the db container : `psql postgres://user:password@localhost:5436`
+Alternatively, if you don't have `psql` CLI, you can use : `docker exec -it medle_db_1 psql -U user`
 
 Create the medle database and the user medle with the password of your choice.
 
@@ -26,61 +28,74 @@ create database medle with owner medle encoding 'UTF8';
 alter user medle with superuser;
 ```
 
-Alternatively, if you have already a Postgres user :
+Alternatively, if you have create in other way a Postgres user :
 
 ```sql
-create database medle encoding 'UTF8';
 grant all privileges on database medle to other-user
 ```
 
-Then create/modify an `.env` file in the root of the project (see `.env.dev` as a reference).
-
+Set some environment variables (see next paragraph how) for accessing this Postgres server :
 For DATABASE_URL, be sure to use the matching password you have just created before.
 
-```js
-NODE_ENV=development
-
-API_URL=http://localhost/api
-
-# for container app usage
-POSTGRES_SSL=false
+For example :
+```
 DATABASE_URL=psql://medle:jJFWsfW5ePbN7J@db:5432/medle
-
-# JWT
-JWT_SECRET=NEGLaRS3n9JHuY
-
-# Test variables
-#TEST_CURRENT_DATE=10/09/2019
+POSTGRES_SSL=false
 ```
 
-Then rerun the container app, to force usage of this `.env` file.
+Then run the container app :
+
 `docker-compose up --build -d app`
 
-This is supposed to work now!
+This will run the HTTP server and run automatically the Knex migrations to create the tables in DB.
+
+Optionnaly, in test environements, you may want to populate some data. Run Knex seeds for that :
+
+`docker-compose exec app yarn seed:run:dev`
+
+This is supposed to work now! ✨
+
+### 🎛️ Env vars
+
+As previously said, you need to set `process.env` variables.
+
+Usually, the easiest solution to set the variables is to populate the `.env` file at the project's root.
+
+A blueprint of `env` can be seen with the file `.env.sample`.
+
+The variables are :
+
+- NODE_ENV=development or production
+- API_URL URL of the api (in local, it's http://localhost:3000/api)
+- POSTGRES_SSL mode to connect to Postgres (false in local,  true for for Azure hosted)
+- DATABASE_URL URL of Postgres DB
+- JWT_SECRET the secret for generating JWT tokens
+- MATOMO_SITE_ID site id on piwik instance
+- MATOMO_URL URL to your piwik instance
+- SENTRY_DSN DSN of your sentry project
+- MAIL_HOST SMTP host for mailing
+- MAIL_PORT port for SMTP server
+- MAIL_USERNAME username of SMTP server account
+- MAIL_PASSWORD password of SMTP server account
+- MAIL_FROM string used in from email
+
+Besides, in some cases you may want to set :
+
+- DEBUG used to debug Knex (ex: knex:query to show SQL queries)
+- DEBUG_MODE set to true to console.debug
+- TEST_CURRENT_DATE useful to set a date in the past and have consistent result for tests using dates
+- E2E_JEST_DATABASE_URL URL of Postgres DB for E2E tests
 
 
 ## 🏗️ Development usage
 
-First, you need a database. A docker container is made for that.
+In local development usage, you don't have to use docker-compose for all the ops stuff.
 
-You only have to run the db container (and not the app): `docker-compose up --build -d db`
-
-Next, you have to create the database named medle and the app user.
-
-So, connect to the db container : `psql postgres://user:password@localhost:5436`
-
-```sql
-create user medle with encrypted password 'test';
-create database medle with owner medle encoding 'UTF8';
-alter user medle with superuser;
-```
-
-Now, you will build the tables of the medle db : `yarn migrate:latest`.
+For example, you can manually apply the last migration in db with : `yarn migrate:latest`.
 
 And a minimal set of data : `yarn seed:run:dev`
 
-Second, the front office in Next. With `yarn dev`, you will benefit from the hot reload offered by Next.
-Just copy the file `.env.dev` given as reference and named it as `.env` to be used by dotenv.
+Second, the front office in Next. With `yarn dev`, you will benefit from the hot reload/fast refresh offered by Next.
 
 With this configuration, the API will run on `localhost:3000` and the database will be a Docker container running on your machine.
 
@@ -111,27 +126,19 @@ To initiate a migration, the easiest way is to use `migrate:make` script in pack
 yarn knex migrate:make my-name-of-migration
 ```
 
-Modify it accordingly to the business needs.
+Modify it accordingly to your business needs.
 
 To apply it, use `migrate:latest` script in package.json.
 
-In development mode
-`yarn migrate:latest`
-
-In production mode
-`sudo docker-compose exec app yarn migrate:latest`
-
-So on another platform like production, the pattern is:
-
-```sh
-git pull
-sudo docker-compose up --build -d
-sudo docker-compose exec app yarn migrate:latest
-```
+In development mode : `yarn migrate:latest`
 
 If you're not happy with the migration done, you can rollback with the script `migrate:rollback` in package.json.
 
-`sudo docker-compose exec app yarn migrate:rollback`
+Alternatively, if you are in VM mode :
+```bash
+sudo docker-compose exec app yarn migrate:latest
+sudo docker-compose exec app yarn migrate:rollback
+```
 
 On the development platform (local or staging environment), you may need to populate table in JS (you may yet do it directly with SQL client too).
 
@@ -140,7 +147,7 @@ Make a new seed file, in src/knex/seeds/development or src/knex/seeds/staging, t
 In development mode, for applying the development seeds:
 `yarn seed:run:dev`
 
-In production mode, for applying the staging seeds:
+In VM mode, for applying the staging seeds:
 `sudo docker-compose exec app yarn seed:run:staging`
 
 Never, never, never <strike>give up</strike> apply this seeds in real production environment (under penalty of fetching a Postgres backup in Azure 😭).
@@ -199,6 +206,8 @@ In staging mode:
 You need to use the commit lint convention for commit message.
 
 I.e, you must specify a type in prefix position, for the message using one of the following:
+
+NB : The Gitlab CI configuration uses semantic release. If you want to have automatically a new release, the commit must begin with `feat:` or `fix:`.
 
 - build: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
 - ci: Changes to our CI configuration files and scripts (example scopes: Circle, BrowserStack, SauceLabs)

@@ -51,7 +51,7 @@ const Login = ({ authentication, error }) => {
             <FormGroup>
               <Label for="password">Mot de passe</Label>
               <div className="float-right">
-                <Link href="forgotPassword">
+                <Link href="forgot-password">
                   <a>Mot de passe oublié&nbsp;?</a>
                 </Link>
               </div>
@@ -68,8 +68,8 @@ const Login = ({ authentication, error }) => {
                 <InputGroupAddon addonType="append" style={{ backgroundColor: "#e9ecef" }}>
                   <InputGroupText
                     style={{
-                      borderColor: "#ced4da",
                       backgroundColor: "#e9ecef",
+                      borderColor: "#ced4da",
                     }}
                     onClick={handleClick}
                     className={hidden ? "" : "text-primary"}
@@ -87,12 +87,6 @@ const Login = ({ authentication, error }) => {
               {error}
             </Alert>
           </Form>
-        </div>
-        <div className="encadre shadow border m-4 px-3 py-2 rounded">
-          Vous êtes nouveau sur Medlé&nbsp;?{" "}
-          <Link href="createAccount">
-            <a>Créer un compte</a>
-          </Link>
         </div>
       </div>
       <style jsx>{`

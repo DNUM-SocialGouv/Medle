@@ -52,7 +52,7 @@ export default class MyApp extends App {
     return (
       <>
         <Head>
-          <title>Médlé</title>
+          <title>Medlé</title>
         </Head>
 
         <ThemeProvider theme={theme}>

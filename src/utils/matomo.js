@@ -64,33 +64,35 @@ export function matopush(args) {
 
 export const CATEGORY = {
   act: "acte",
+  auth: "authentification",
   emp: "etp",
   stat: "statistiques",
-  auth: "authentification",
 }
 
 export const ACTION = {
   act: {
-    declaration: "declaration",
     ajout: "ajout",
-    suppression: "suppression",
-    modification: "modification",
-  },
-  emp: {
     declaration: "declaration",
     modification: "modification",
-    lecture: "lecture",
-    validation: "validation",
-  },
-  stat: {
-    global: "global",
-    living: "vivant",
-    dead: "thanatologie",
+    suppression: "suppression",
   },
   auth: {
     connection: "connexion",
     deconnection: "déconnexion",
     error: "erreur",
+    oubliMdp: "Oubli de mot de passe",
+    resetMdp: "Reset de mot de passe",
+  },
+  emp: {
+    declaration: "declaration",
+    lecture: "lecture",
+    modification: "modification",
+    validation: "validation",
+  },
+  stat: {
+    dead: "thanatologie",
+    global: "global",
+    living: "vivant",
   },
 }
 

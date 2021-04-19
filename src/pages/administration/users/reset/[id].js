@@ -5,7 +5,7 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Alert, Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap"
 
-import { patchUser } from "../../../../clients/users"
+import { resetPasswordByAdmin } from "../../../../clients/users"
 import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"
 import { withAuthentication } from "../../../../utils/auth"
@@ -25,7 +25,7 @@ const UserReset = ({ currentUser }) => {
 
     try {
       if (isEmpty(formErrors)) {
-        const { modified } = await patchUser({ id, password: data.firstValue })
+        const { modified } = await resetPasswordByAdmin({ id, password: data.firstValue })
         logDebug(`Nb modified rows: ${modified}`)
         setsuccess("Mot de passe mis à jour.")
       }
@@ -63,10 +63,10 @@ const UserReset = ({ currentUser }) => {
                 name="firstValue"
                 id="firstValue"
                 innerRef={register({
-                  required: true,
                   pattern: {
                     value: /^[a-zA-Z0-9]{8,30}$/,
                   },
+                  required: true,
                 })}
                 invalid={!!formErrors.firstValue}
               />
@@ -112,8 +112,8 @@ const UserReset = ({ currentUser }) => {
 }
 
 UserReset.propTypes = {
-  initialUser: PropTypes.object,
   currentUser: PropTypes.object.isRequired,
+  initialUser: PropTypes.object,
 }
 
 export default withAuthentication(UserReset, ADMIN)
