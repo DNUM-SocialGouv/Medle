@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/SocialGouv/medle/compare/v1.10.0...v1.10.1) (2021-04-20)
+
+
+### Bug Fixes
+
+* pb build time variables in k8s. ([#142](https://github.com/SocialGouv/medle/issues/142)) ([9f14fe8](https://github.com/SocialGouv/medle/commit/9f14fe8422c8a4d4e0776ae450efd3af2516cd9d))
+
 # [1.10.0](https://github.com/SocialGouv/medle/compare/v1.9.1...v1.10.0) (2021-04-19)
 
 
