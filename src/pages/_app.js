@@ -23,9 +23,9 @@ logInfo("----------- MEDLE configuration --------")
 logInfo("NODE_ENV", process.env.NODE_ENV)
 logInfo("DEBUG_MODE", publicRuntimeConfig.DEBUG_MODE)
 
-logInfo("SENTRY_DSN", process.env.SENTRY_DSN)
-logInfo("MATOMO_SITE_ID", process.env.MATOMO_SITE_ID)
-logInfo("MATOMO_URL", process.env.MATOMO_URL)
+logInfo("SENTRY_DSN", publicRuntimeConfig.SENTRY_DSN)
+logInfo("MATOMO_SITE_ID", publicRuntimeConfig.MATOMO_SITE_ID)
+logInfo("MATOMO_URL", publicRuntimeConfig.MATOMO_URL)
 
 logInfo("API_URL", publicRuntimeConfig.API_URL)
 logInfo("TEST_CURRENT_DATE", publicRuntimeConfig.TEST_CURRENT_DATE)
@@ -36,14 +36,14 @@ logInfo("DATABASE_URL", process.env.DATABASE_URL)
 logInfo("-----------------------------------------")
 
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: publicRuntimeConfig.SENTRY_DSN,
 })
 
 export default class MyApp extends App {
   componentDidMount() {
     initMatomo({
-      piwikUrl: process.env.MATOMO_URL,
-      siteId: process.env.MATOMO_SITE_ID,
+      piwikUrl: publicRuntimeConfig.MATOMO_URL,
+      siteId: publicRuntimeConfig.MATOMO_SITE_ID,
     })
   }
 

@@ -1,14 +1,19 @@
 // NOTE: This require will be replaced with `@sentry/browser`
 // client side thanks to the webpack config in next.config.js
+
+import getConfig from "next/config"
+
 const Sentry = require("@sentry/node")
 const SentryIntegrations = require("@sentry/integrations")
 
+const { publicRuntimeConfig } = getConfig()
+
 module.exports = (release = process.env.SENTRY_RELEASE) => {
   const sentryOptions = {
-    dsn: process.env.SENTRY_DSN,
-    release,
-    maxBreadcrumbs: 50,
     attachStacktrace: true,
+    dsn: publicRuntimeConfig.SENTRY_DSN,
+    maxBreadcrumbs: 50,
+    release,
   }
 
   // When we're developing locally
