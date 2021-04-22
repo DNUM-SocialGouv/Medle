@@ -1,7 +1,7 @@
 include:
     - project: SocialGouv/gitlab-ci-yml
       file: /autodevops.yml
-      ref: v21.0.2
+      ref: v22.0.0
 
 variables:
     AUTO_DEVOPS_KANIKO: "🕹️"
@@ -23,6 +23,7 @@ Lint:
 
 Create seeds DB (dev):
     stage: Seed
+    allow_failure: true
     environment:
         name: ${CI_COMMIT_REF_NAME}-dev2
         url: https://${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
