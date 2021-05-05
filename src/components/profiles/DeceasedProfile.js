@@ -57,7 +57,7 @@ const DeceasedEdit = ({ dispatch, state, errors, hospital }) => {
       <ActBlock
         type="deathCause"
         title="Quelle est la cause présumée du décès ?"
-        values={["Suicide", "Autre"]}
+        values={["Suicide", "Suicide probable", "Autre"]}
         mode="toggle"
         dispatch={dispatch}
         state={state.deathCause || ""}

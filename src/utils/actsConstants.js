@@ -7,6 +7,7 @@ import CriminalCourtProfile from "../components/profiles/CriminalCourtProfile"
 import CustodyProfile from "../components/profiles/CustodyProfile"
 import DeceasedProfile from "../components/profiles/DeceasedProfile"
 import DrunkProfile from "../components/profiles/DrunkProfile"
+import FileStudyProfile from "../components/profiles/FileStudyProfile"
 import ReconstitutionProfile from "../components/profiles/ReconstitutionProfile"
 import RestrainedProfile from "../components/profiles/RestrainedProfile"
 import RoadRelatedExaminationProfile from "../components/profiles/RoadRelatedExaminationProfile"
@@ -20,89 +21,91 @@ export const orderedProfileValues = [
   "Examen pour OFPRA",
   "Personne décédée",
   {
+    subValues: ["Personne retenue", "Examen lié à la route", "IPM", "Assises", "Reconstitution", "Étude de dossier"],
     title: "Autre activité",
-    subValues: ["Personne retenue", "Examen lié à la route", "IPM", "Assises", "Reconstitution"],
   },
 ]
 
 export const profiles = {
-  "Victime (vivante)": VictimProfile,
-  "Personne décédée": DeceasedProfile,
-  "Gardé.e à vue": CustodyProfile,
-  "Personne pour âge osseux (hors GAV)": BoneAgeProfile,
-  "Examen pour OFPRA": AsylumSeekerProfile,
-  "Autre activité/Personne retenue": RestrainedProfile,
+  "Autre activité/Assises": CriminalCourtProfile,
   "Autre activité/Examen lié à la route": RoadRelatedExaminationProfile,
   "Autre activité/IPM": DrunkProfile,
-  "Autre activité/Assises": CriminalCourtProfile,
+  "Autre activité/Personne retenue": RestrainedProfile,
   "Autre activité/Reconstitution": ReconstitutionProfile,
+  "Autre activité/Étude de dossier": FileStudyProfile,
+  "Examen pour OFPRA": AsylumSeekerProfile,
+  "Gardé.e à vue": CustodyProfile,
+  "Personne décédée": DeceasedProfile,
+  "Personne pour âge osseux (hors GAV)": BoneAgeProfile,
+  "Victime (vivante)": VictimProfile,
 }
 
 export const livingProfiles = [
-  { value: "Victime (vivante)", label: "Victime" },
-  { value: "Gardé.e à vue", label: "Gardé.e à vue" },
-  { value: "Personne pour âge osseux (hors GAV)", label: "Personne pour âge osseux" },
-  { value: "Examen pour OFPRA", label: "Examen pour OFPRA" },
-  { value: "Autre activité/Personne retenue", label: "Personne retenue" },
-  { value: "Autre activité/Examen lié à la route", label: "Examen lié à la route" },
-  { value: "Autre activité/IPM", label: "IPM" },
+  { label: "Victime", value: "Victime (vivante)" },
+  { label: "Gardé.e à vue", value: "Gardé.e à vue" },
+  { label: "Personne pour âge osseux", value: "Personne pour âge osseux (hors GAV)" },
+  { label: "Examen pour OFPRA", value: "Examen pour OFPRA" },
+  { label: "Personne retenue", value: "Autre activité/Personne retenue" },
+  { label: "Examen lié à la route", value: "Autre activité/Examen lié à la route" },
+  { label: "IPM", value: "Autre activité/IPM" },
+  { label: "Étude de dossier", value: "Autre activité/Étude de dossier" },
 ]
 
 const periodOfDayValues = {
-  week: {
-    title: "lun.-ven.",
-    period: [
-      {
-        title: "Nuit profonde",
-        subTitle: "(00h-8h30)",
-      },
-      {
-        title: "Journée",
-        subTitle: "(8h30-18h30)",
-      },
-      {
-        title: "Soirée",
-        subTitle: "(18h30-00h)",
-      },
-    ],
-  },
   saturday: {
-    title: "sam.",
     period: [
       {
-        title: "Nuit profonde",
         subTitle: "(00h-8h30)",
+        title: "Nuit profonde",
       },
       {
-        title: "Matin",
         subTitle: "(8h30-12h30)",
+        title: "Matin",
       },
       {
-        title: "Après-midi",
         subTitle: "(12h30-18h)",
+        title: "Après-midi",
       },
       {
-        title: "Soirée",
         subTitle: "(18h-00h)",
+        title: "Soirée",
       },
     ],
+    title: "sam.",
   },
   sunday: {
-    title: "dim. et férié",
     period: [
       {
-        title: "Nuit profonde",
         subTitle: "(00h-8h30)",
+        title: "Nuit profonde",
       },
       {
-        title: "Journée",
         subTitle: "(08h30-18h30)",
+        title: "Journée",
       },
       {
-        title: "Soirée",
         subTitle: "(18h30-00h)",
+        title: "Soirée",
       },
     ],
+    title: "dim. et férié",
+  },
+  week: {
+    period: [
+      {
+        subTitle: "(00h-8h30)",
+        title: "Nuit profonde",
+      },
+      {
+        subTitle: "(8h30-18h30)",
+        title: "Journée",
+      },
+      {
+        subTitle: "(18h30-00h)",
+        title: "Soirée",
+      },
+    ],
+    title: "lun.-ven.",
   },
 }
 
