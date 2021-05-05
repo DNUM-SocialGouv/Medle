@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/SocialGouv/medle/compare/v1.10.2...v1.11.0) (2021-05-05)
+
+
+### Features
+
+* add new profile ([#144](https://github.com/SocialGouv/medle/issues/144)) ([41bc96b](https://github.com/SocialGouv/medle/commit/41bc96b128e89252292c8a0a33973b53def6e243))
+
 ## [1.10.2](https://github.com/SocialGouv/medle/compare/v1.10.1...v1.10.2) (2021-04-22)
 
 
