@@ -2,5 +2,15 @@
   "name": "medle",
   "type": "app",
   "azurepg": true,
-  "probesPath": "/health-check"
+  "probesPath": "/health-check",
+  "resources": {
+    "requests": {
+      "memory": "128Mi",
+      "cpu": "200m"
+    },
+    "limits": {
+      "memory": "256Mi",
+      "cpu": "500m"
+    }
+  }
 }
