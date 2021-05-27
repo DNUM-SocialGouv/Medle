@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/SocialGouv/medle/compare/v1.11.1...v1.11.2) (2021-05-27)
+
+
+### Bug Fixes
+
+* **ci:** another upgrade ([503ea43](https://github.com/SocialGouv/medle/commit/503ea43c8503f60f69d01c0933096efd985a09ff))
+
 ## [1.11.1](https://github.com/SocialGouv/medle/compare/v1.11.0...v1.11.1) (2021-05-26)
 
 
