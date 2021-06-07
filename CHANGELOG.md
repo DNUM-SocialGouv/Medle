@@ -1,3 +1,11 @@
+## [1.11.4](https://github.com/SocialGouv/medle/compare/v1.11.3...v1.11.4) (2021-06-07)
+
+
+### Bug Fixes
+
+* **release:** run release ([9a60953](https://github.com/SocialGouv/medle/commit/9a609539bbeb58ef3ff0efc90217b73c4b39f37e))
+* decrease the number of exportables acts ([#152](https://github.com/SocialGouv/medle/issues/152)) ([fceb4b7](https://github.com/SocialGouv/medle/commit/fceb4b76bef475d45d4dfaf2008ed25f2a5b342d))
+
 ## [1.11.3](https://github.com/SocialGouv/medle/compare/v1.11.2...v1.11.3) (2021-06-07)
 
 
