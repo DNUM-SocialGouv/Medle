@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/SocialGouv/medle/compare/v1.11.2...v1.11.3) (2021-06-07)
+
+
+### Bug Fixes
+
+* **k8s:** upgrade mem limits ([#151](https://github.com/SocialGouv/medle/issues/151)) ([4b4e15c](https://github.com/SocialGouv/medle/commit/4b4e15cebb85acad88f881f40f2fe76269ef75c3))
+
 ## [1.11.2](https://github.com/SocialGouv/medle/compare/v1.11.1...v1.11.2) (2021-05-27)
 
 
