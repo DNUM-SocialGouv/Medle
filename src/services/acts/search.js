@@ -8,7 +8,7 @@ import { APIError } from "../../utils/errors"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 
 const LIMIT = 50
-const LIMIT_EXPORT = 10000
+const LIMIT_EXPORT = 5000
 
 export const makeWhereClause = ({
   scope,
@@ -36,7 +36,7 @@ export const makeWhereClause = ({
 
   if (queriedHospitals?.length) {
     builder.where(
-      knex.raw("acts.hospital_id in (" + queriedHospitals.map(() => "?").join(",") + ")", [...queriedHospitals])
+      knex.raw("acts.hospital_id in (" + queriedHospitals.map(() => "?").join(",") + ")", [...queriedHospitals]),
     )
   }
 
@@ -72,16 +72,16 @@ export const makeWhereClause = ({
 }
 
 const searchSchema = yup.object().shape({
-  startDate: yup.string().transform((value, originalValue) => (isValidIsoDate(value) ? originalValue : null)),
-  endDate: yup.string().transform((value, originalValue) => (isValidIsoDate(value) ? originalValue : null)),
-  hospitals: yup.array().of(yup.number().positive().integer()),
-  profiles: yup.array(),
   asker: yup.number().integer().positive(),
-  internalNumber: yup.string(),
-  pvNumber: yup.string(),
-  fuzzy: yup.string(),
-  requestedPage: yup.number().integer().positive(),
   currentUser: yup.object(),
+  endDate: yup.string().transform((value, originalValue) => (isValidIsoDate(value) ? originalValue : null)),
+  fuzzy: yup.string(),
+  hospitals: yup.array().of(yup.number().positive().integer()),
+  internalNumber: yup.string(),
+  profiles: yup.array(),
+  pvNumber: yup.string(),
+  requestedPage: yup.number().integer().positive(),
+  startDate: yup.string().transform((value, originalValue) => (isValidIsoDate(value) ? originalValue : null)),
 })
 
 export const normalizeParams = async (params, currentUser) => {
@@ -119,13 +119,13 @@ export const search = async (params, currentUser) => {
   const acts = await knex("acts")
     .where(makeWhereClause(params))
     .orderByRaw(
-      "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc"
+      "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc",
     )
     .limit(LIMIT)
     .offset(offset)
     .select("*")
 
-  return { totalCount, currentPage: requestedPage, maxPage, byPage: LIMIT, elements: transformAll(acts) }
+  return { byPage: LIMIT, currentPage: requestedPage, elements: transformAll(acts), maxPage, totalCount }
 }
 
 export const searchForExport = async (params, currentUser) => {
@@ -136,8 +136,8 @@ export const searchForExport = async (params, currentUser) => {
   // Limit the number of lines in export feature for security reason.
   if (actsCount && actsCount > LIMIT_EXPORT)
     throw new APIError({
-      status: STATUS_406_NOT_ACCEPTABLE,
       message: `Too many rows (limit is ${LIMIT_EXPORT})`,
+      status: STATUS_406_NOT_ACCEPTABLE,
     })
 
   // SQL query
@@ -147,7 +147,7 @@ export const searchForExport = async (params, currentUser) => {
     .join("users", "acts.added_by", "users.id")
     .where(makeWhereClause(params))
     .orderByRaw(
-      "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc"
+      "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc",
     )
     .select([
       "acts.*",
@@ -158,5 +158,5 @@ export const searchForExport = async (params, currentUser) => {
       "users.last_name as user_last_name",
     ])
 
-  return { totalCount: actsCount, elements: transformAllForExport(acts) }
+  return { elements: transformAllForExport(acts), totalCount: actsCount }
 }
