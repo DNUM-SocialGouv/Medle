@@ -1,3 +1,11 @@
+## [1.11.5](https://github.com/SocialGouv/medle/compare/v1.11.4...v1.11.5) (2021-06-07)
+
+
+### Bug Fixes
+
+* **export:** bug on export ([#154](https://github.com/SocialGouv/medle/issues/154)) ([6b55620](https://github.com/SocialGouv/medle/commit/6b55620c647ad381f91e6c22ab4c800155634f34))
+* **k8s:** increate memory limit ([#153](https://github.com/SocialGouv/medle/issues/153)) ([166d1af](https://github.com/SocialGouv/medle/commit/166d1af63c026d32c582c1d5d287b7582de73ac5))
+
 ## [1.11.4](https://github.com/SocialGouv/medle/compare/v1.11.3...v1.11.4) (2021-06-07)
 
 
