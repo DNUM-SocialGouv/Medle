@@ -135,6 +135,7 @@ In development mode : `yarn migrate:latest`
 If you're not happy with the migration done, you can rollback with the script `migrate:rollback` in package.json.
 
 Alternatively, if you are in VM mode :
+
 ```bash
 sudo docker-compose exec app yarn migrate:latest
 sudo docker-compose exec app yarn migrate:rollback
