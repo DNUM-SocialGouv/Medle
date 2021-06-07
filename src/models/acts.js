@@ -1,3 +1,4 @@
+import formatISO from "date-fns/formatISO"
 import moment from "moment"
 
 import { ISO_DATE } from "../utils/date"
@@ -7,19 +8,19 @@ export const transform = (knexData) => {
   return !knexData
     ? null
     : {
+        asker: { id: knexData.asker_id, name: knexData.asker_name },
+        examinationDate: moment(knexData.examination_date).format(ISO_DATE),
+        hospital: { id: knexData.hospital_id, name: knexData.hospital_name },
         id: knexData.id,
         internalNumber: knexData.internal_number,
-        pvNumber: knexData.pv_number,
-        examinationDate: moment(knexData.examination_date).format(ISO_DATE),
         profile: knexData.profile,
-        asker: { id: knexData.asker_id, name: knexData.asker_name },
+        pvNumber: knexData.pv_number,
         user: {
-          id: knexData.added_by,
-          firstName: knexData.user_first_name,
-          lastName: knexData.user_last_name,
           email: knexData.user_email,
+          firstName: knexData.user_first_name,
+          id: knexData.added_by,
+          lastName: knexData.user_last_name,
         },
-        hospital: { id: knexData.hospital_id, name: knexData.hospital_name },
         ...knexData.extra_data,
       }
 }
@@ -28,14 +29,14 @@ export const transformForExport = (knexData) => {
   return !knexData
     ? null
     : {
+        asker: knexData.asker_name,
+        examinationDate: formatISO(knexData.examination_date, { representation: "date" }),
+        hospital: knexData.hospital_name,
         id: knexData.id,
         internalNumber: knexData.internal_number,
-        pvNumber: knexData.pv_number,
-        examinationDate: moment(knexData.examination_date).format(ISO_DATE),
         profile: knexData.profile,
-        asker: knexData.asker_name,
+        pvNumber: knexData.pv_number,
         user: knexData.user_email,
-        hospital: knexData.hospital_name,
         ...knexData.extra_data,
       }
 }
@@ -48,14 +49,14 @@ export const untransform = (model) => {
   const knexData = { extra_data: {} }
 
   const mainKeys = {
+    addedBy: "added_by",
+    askerId: "asker_id",
+    examinationDate: "examination_date",
+    hospitalId: "hospital_id",
     id: "id",
     internalNumber: "internal_number",
-    pvNumber: "pv_number",
-    examinationDate: "examination_date",
     profile: "profile",
-    askerId: "asker_id",
-    addedBy: "added_by",
-    hospitalId: "hospital_id",
+    pvNumber: "pv_number",
   }
 
   Object.keys(model).forEach((key) => {

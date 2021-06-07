@@ -4,6 +4,8 @@ const { publicRuntimeConfig } = getConfig() || {}
 
 export const START_YEAR_MEDLE = 2020
 
+export const LIMIT_EXPORT = 10000
+
 // Timeout config : keep this timeout values in sync
 export const timeout = {
   cookie: 9 * 60 * 60,

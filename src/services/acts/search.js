@@ -1,5 +1,6 @@
 import * as yup from "yup"
 
+import { LIMIT_EXPORT } from "../../config"
 import knex from "../../knex/knex"
 import { transformAll, transformAllForExport } from "../../models/acts"
 import { normalize } from "../../services/normalize"
@@ -8,7 +9,6 @@ import { APIError } from "../../utils/errors"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 
 const LIMIT = 50
-const LIMIT_EXPORT = 5000
 
 export const makeWhereClause = ({
   scope,
@@ -133,8 +133,10 @@ export const searchForExport = async (params, currentUser) => {
 
   const [actsCount] = await knex("acts").where(makeWhereClause(params)).count()
 
+  const count = actsCount?.count
+
   // Limit the number of lines in export feature for security reason.
-  if (actsCount && actsCount > LIMIT_EXPORT)
+  if (count && count > LIMIT_EXPORT)
     throw new APIError({
       message: `Too many rows (limit is ${LIMIT_EXPORT})`,
       status: STATUS_406_NOT_ACCEPTABLE,
@@ -158,5 +160,5 @@ export const searchForExport = async (params, currentUser) => {
       "users.last_name as user_last_name",
     ])
 
-  return { elements: transformAllForExport(acts), totalCount: actsCount }
+  return { elements: transformAllForExport(acts), totalCount: count }
 }

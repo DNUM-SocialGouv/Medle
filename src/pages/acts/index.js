@@ -16,7 +16,7 @@ import Layout from "../../components/Layout"
 import Pagination from "../../components/Pagination"
 import { Title1 } from "../../components/StyledComponents"
 import { VerticalList } from "../../components/VerticalList"
-import { isOpenFeature } from "../../config"
+import { isOpenFeature, LIMIT_EXPORT } from "../../config"
 import { useDebounce } from "../../hooks/useDebounce"
 import { usePaginatedData } from "../../hooks/usePaginatedData"
 import { profiles as profilesConstants } from "../../utils/actsConstants"
@@ -41,6 +41,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   const [search, setSearch] = useState("")
   useDebounce(onChange, 500, [search])
   const scope = useMemo(() => buildScope(currentUser), [currentUser])
+  const [errorExport, setErrorExport] = useState("")
 
   const hospitalsChoices = useMemo(
     () =>
@@ -130,6 +131,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
   function onChange() {
     onSubmit(getValues())
+    setErrorExport("")
   }
 
   function onSubmit(formData) {
@@ -137,6 +139,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   }
 
   async function onExport() {
+    if (paginatedData.totalCount > LIMIT_EXPORT) {
+      setErrorExport(`Le nombre d'éléments dépasse ${LIMIT_EXPORT} 😅. Veuillez filtrer votre recherche, svp.`)
+    }
     await fetchExport(getValues())
   }
 
@@ -305,11 +310,16 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
             </Table>
             <Pagination data={paginatedData} fn={fetchPage(getValues())} />
             {isOpenFeature("export") && (
-              <div className="mt-5 d-flex justify-content-center">
-                <SearchButton className="btn-outline-primary" disabled={loading} onClick={onExport}>
-                  <ListAltIcon /> Exporter les données
-                </SearchButton>
-              </div>
+              <>
+                <div className="mt-5 d-flex justify-content-center">
+                  <SearchButton className="btn-outline-primary" disabled={loading} onClick={onExport}>
+                    <ListAltIcon /> Exporter les données
+                  </SearchButton>
+                </div>
+                <div style={{ color: "red" }} className="mt-3 text-center">
+                  {errorExport}
+                </div>
+              </>
             )}
           </>
         )}
