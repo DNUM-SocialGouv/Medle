@@ -9,7 +9,7 @@
       "cpu": "200m"
     },
     "limits": {
-      "memory": "256Mi",
+      "memory": "512Mi",
       "cpu": "500m"
     }
   }
