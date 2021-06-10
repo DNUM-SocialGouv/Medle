@@ -1,10 +1,10 @@
 import Cors from "micro-cors"
 
-import knex from "../../../knex/knex"
+import { create, search } from "../../../services/attacks"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
-import { checkValidUserWithPrivilege } from "../../../utils/auth"
-import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../../utils/http"
-import { STATS_GLOBAL } from "../../../utils/roles"
+import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
+import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
+import { ACT_CONSULTATION, ADMIN } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -12,11 +12,20 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_GET: {
-        checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
+        const currentUser = checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
-        const attacks = await knex("attacks").whereNull("deleted_at").orderBy("name", "desc").select("id", "name")
+        const { attacks, totalCount, currentPage, maxPage, byPage } = await search({ ...req.query, currentUser })
 
-        return res.status(STATUS_200_OK).json(attacks)
+        return res.status(STATUS_200_OK).json({ byPage, currentPage, elements: attacks, maxPage, totalCount })
+      }
+      case METHOD_POST: {
+        const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
+
+        checkIsSuperAdmin(currentUser)
+
+        const id = await create(req.body)
+
+        return res.status(STATUS_200_OK).json({ id })
       }
       default:
         if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)
@@ -27,7 +36,7 @@ const handler = async (req, res) => {
 }
 
 const cors = Cors({
-  allowMethods: [METHOD_GET, METHOD_OPTIONS],
+  allowMethods: [METHOD_GET, METHOD_POST, METHOD_OPTIONS],
 })
 
 export default cors(handler)

@@ -1,4 +1,4 @@
-const { triggerUp } = require("../lib")
+const { triggerUp, triggerDown } = require("../lib")
 
 exports.up = async function (knex) {
   await knex.schema.createTable("employments_references", function (table) {
@@ -18,6 +18,7 @@ exports.up = async function (knex) {
   await knex.raw(triggerUp("employments_references"))
 }
 
-exports.down = function (knex) {
-  knex.schema.dropTable("employments_references")
+exports.down = async function (knex) {
+  await knex.raw(triggerDown("employments_references"))
+  await knex.schema.dropTable("employments_references")
 }

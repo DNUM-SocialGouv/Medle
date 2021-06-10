@@ -10,7 +10,7 @@ export const fetchReferenceData = async () => {
     const attacks = await findAllAttacks()
     const hospitals = await findAllHospitals()
 
-    sessionStorage.setItem("attacks", JSON.stringify(attacks))
+    sessionStorage.setItem("attacks", JSON.stringify(attacks.elements))
     sessionStorage.setItem("hospitals", JSON.stringify(hospitals))
   } catch (error) {
     console.error("Problème pour récupérer les données de référence")

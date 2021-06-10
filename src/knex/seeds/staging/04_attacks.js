@@ -4,37 +4,44 @@ exports.seed = function (knex) {
       return knex("attacks").insert([
         {
           id: 1,
-          name: "2015 Bataclan",
+          name: "Bataclan",
+          year: 2015,
         },
         {
           id: 2,
-          name: "2015 Hyper Cacher",
+          name: "Hyper Cacher",
+          year: 2015,
         },
         {
           id: 3,
-          name: "2015 Les terrasses Paris",
+          name: "Les terrasses Paris",
+          year: 2015,
         },
         {
           id: 4,
-          name: "2016 Nice",
+          name: "Nice",
+          year: 2016,
         },
         {
           id: 5,
-          name: "2020 Villejuif",
+          name: "Villejuif",
+          year: 2020,
         },
         {
           id: 6,
-          name: "2012 École Ozar Hatorah Toulouse",
+          name: "École Ozar Hatorah Toulouse",
+          year: 2012,
         },
         {
           id: 7,
-          name: "2015 Charlie Hebdo",
+          name: "Charlie Hebdo",
+          year: 2015,
         },
       ])
     })
     .then(function () {
       return knex.raw(
-        "select pg_catalog.setval(pg_get_serial_sequence('attacks', 'id'), (select max(id) from attacks) + 1);"
+        "select pg_catalog.setval(pg_get_serial_sequence('attacks', 'id'), (select max(id) from attacks) + 1);",
       )
     })
 }

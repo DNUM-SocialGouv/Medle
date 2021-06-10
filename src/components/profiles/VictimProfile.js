@@ -70,7 +70,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
               "Maltraitance",
               "Violence psychologique",
               { title: "Accident", subValues: ["Collectif", "Non collectif"] },
-              { title: "Attentat", subValues: getReferenceData("attacks").map((elt) => elt.name) },
+              { title: "Attentat", subValues: getReferenceData("attacks").map((elt) => elt.year + ' ' + elt.name) },
             ]}
             mode="toggleMultiple"
             dispatch={dispatch}
