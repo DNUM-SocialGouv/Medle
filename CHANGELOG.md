@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/SocialGouv/medle/compare/v1.11.5...v1.12.0) (2021-06-10)
+
+
+### Features
+
+* realease for attacks administration ([ded1b3b](https://github.com/SocialGouv/medle/commit/ded1b3bfc94ae31f4bbdfef35018274b574e5b20))
+
 ## [1.11.5](https://github.com/SocialGouv/medle/compare/v1.11.4...v1.11.5) (2021-06-07)
 
 
