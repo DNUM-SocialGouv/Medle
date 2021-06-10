@@ -133,6 +133,7 @@ To apply it, use `migrate:latest` script in package.json.
 In development mode : `yarn migrate:latest`
 
 If you're not happy with the migration done, you can rollback with the script `migrate:rollback` in package.json.
+It will then rollback all the migration files with the biggest batch number (column `batch` in knex_migrations).
 
 Alternatively, if you are in VM mode :
 
