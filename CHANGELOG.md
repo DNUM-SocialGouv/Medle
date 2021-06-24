@@ -1,3 +1,10 @@
+## [1.12.2](https://github.com/SocialGouv/medle/compare/v1.12.1...v1.12.2) (2021-06-24)
+
+
+### Bug Fixes
+
+* **ci:** use new cluster for seeds ([#159](https://github.com/SocialGouv/medle/issues/159)) ([80d0c30](https://github.com/SocialGouv/medle/commit/80d0c30209a9291de50063bc1642f851795bc9df))
+
 ## [1.12.1](https://github.com/SocialGouv/medle/compare/v1.12.0...v1.12.1) (2021-06-16)
 
 
