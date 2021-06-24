@@ -25,7 +25,7 @@ Create seeds DB (dev):
     stage: Seed
     allow_failure: true
     environment:
-        name: ${CI_COMMIT_REF_NAME}-dev2
+        name: ${CI_COMMIT_REF_NAME}-dev
         url: https://${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
     image:
         name: node:14
