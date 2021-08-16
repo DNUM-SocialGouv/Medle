@@ -4,6 +4,7 @@
     "@socialgouv/eslint-config-react"
   ],
   "rules": {
+    "sort-keys-fix/sort-keys-fix": "off",
     "jsx-a11y/anchor-is-valid": [
       "error",
       {

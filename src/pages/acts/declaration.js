@@ -131,9 +131,6 @@ const reduceByMode = (state, action) => {
 }
 
 const ActDeclaration = ({ act, currentUser }) => {
-  // const renderCount = React.useRef(0)
-  // renderCount.current++
-
   const router = useRouter()
   const { internalNumber, pvNumber } = router.query
   const refPersonType = useRef()
@@ -177,7 +174,7 @@ const ActDeclaration = ({ act, currentUser }) => {
           newState = resetState(newState)
         }
 
-        const errors = hasErrors(newState, setErrors)
+        const errors = hasErrors(newState)
 
         if (!isEmpty(errors)) {
           setErrors(errors)
@@ -205,7 +202,7 @@ const ActDeclaration = ({ act, currentUser }) => {
       pvNumber,
       userId,
       hospitalId,
-    })
+    }),
   )
 
   const getProfiledRender = ({ profile }) => {

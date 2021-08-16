@@ -77,8 +77,8 @@ function parseReference({ reference, ...rest }) {
 export const exportEmployments = async (params, currentUser) => {
   params = await normalizeParams(params, currentUser)
 
-  const elements = await findEmployments(params, currentUser)
-  const references = await findReferenceEmployments(params, currentUser)
+  const elements = await findEmployments(params)
+  const references = await findReferenceEmployments(params)
 
   const workbook = new Excel.Workbook()
 

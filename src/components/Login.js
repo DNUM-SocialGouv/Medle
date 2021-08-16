@@ -51,7 +51,7 @@ const Login = ({ authentication, error }) => {
             <FormGroup>
               <Label for="password">Mot de passe</Label>
               <div className="float-right">
-                <Link href="forgot-password">
+                <Link href="/forgot-password">
                   <a>Mot de passe oublié&nbsp;?</a>
                 </Link>
               </div>
