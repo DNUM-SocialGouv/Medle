@@ -12,7 +12,12 @@ import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
 import { isEmpty } from "../utils/misc"
 
 const UserReset = () => {
-  const { handleSubmit, register, errors: formErrors, watch } = useForm()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors: formErrors },
+    watch,
+  } = useForm()
   const [status, setStatus] = React.useState({ type: "idle" })
   const router = useRouter()
   const { loginToken } = router.query
@@ -38,6 +43,19 @@ const UserReset = () => {
     }
   }
 
+  const { ref: firstValueRef, ...firstValueReg } = register("firstValue", {
+    pattern: {
+      value: /^[a-zA-Z0-9]{8,30}$/,
+    },
+    required: true,
+  })
+  const { ref: confirmedValueRef, ...confirmedValueReg } = register("confirmedValue", {
+    required: true,
+    validate: (value) => {
+      return value === watch("firstValue")
+    },
+  })
+
   return (
     <Layout>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
@@ -52,14 +70,9 @@ const UserReset = () => {
               <Col sm={8}>
                 <Input
                   type="password"
-                  name="firstValue"
                   id="firstValue"
-                  innerRef={register({
-                    pattern: {
-                      value: /^[a-zA-Z0-9]{8,30}$/,
-                    },
-                    required: true,
-                  })}
+                  {...firstValueReg}
+                  innerRef={firstValueRef}
                   invalid={!!formErrors.firstValue}
                 />
                 <FormFeedback>
@@ -74,14 +87,9 @@ const UserReset = () => {
               <Col sm={8}>
                 <Input
                   type="password"
-                  name="confirmedValue"
                   id="confirmedValue"
-                  innerRef={register({
-                    required: true,
-                    validate: (value) => {
-                      return value === watch("firstValue")
-                    },
-                  })}
+                  {...confirmedValueReg}
+                  innerRef={confirmedValueRef}
                   invalid={!!formErrors.confirmedValue}
                 />
                 <FormFeedback>{formErrors.confirmedValue && "Les mots de passe ne correspondent pas."}</FormFeedback>

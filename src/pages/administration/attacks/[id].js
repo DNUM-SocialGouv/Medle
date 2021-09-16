@@ -34,7 +34,12 @@ const MandatorySign = () => <span style={{ color: "red" }}>*</span>
 const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
   const router = useRouter()
   const { id } = router.query
-  const { handleSubmit, register, errors: formErrors, setValue } = useForm({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors: formErrors },
+    setValue,
+  } = useForm({
     defaultValues: {
       ...attack,
     },
@@ -82,12 +87,21 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
       }
     } catch (error) {
       setError(
-        error.message === "Attack already present"
-          ? "Cet attentat existe déjà avec le même nom."
-          : "Erreur serveur."
+        error.message === "Attack already present" ? "Cet attentat existe déjà avec le même nom." : "Erreur serveur.",
       )
     }
   }
+
+  const { ref: idRef, ...idReg } = register("id")
+  const { ref: yearRef, ...yearReg } = register("year", {
+    required: true,
+    pattern: {
+      value: /^(20[0-9]{2})|(19[8-9][0-9])$/i,
+    },
+  })
+  const { ref: nameRef, ...nameReg } = register("name", {
+    required: true,
+  })
 
   return (
     <Layout page="attacks" currentUser={currentUser} admin={true}>
@@ -129,7 +143,7 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" name="id" id="id" readOnly innerRef={register} />
+              <Input type="text" id="id" readOnly {...idReg} innerRef={idRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -138,18 +152,7 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
-                type="text"
-                name="year"
-                id="year"
-                innerRef={register({
-                  required: true,
-                  pattern: {
-                    value: /^(20[0-9]{2})|(19[8-9][0-9])$/i,
-                  },
-                })}
-                invalid={!!formErrors.year}
-              />
+              <Input type="text" id="year" {...yearReg} innerRef={yearRef} invalid={!!formErrors.year} />
               <FormFeedback>{formErrors.year && "L'année a un format incorrect."}</FormFeedback>
             </Col>
           </FormGroup>
@@ -159,13 +162,7 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
-                type="text"
-                name="name"
-                id="name"
-                invalid={!!formErrors.name}
-                innerRef={register({ required: true })}
-              />
+              <Input type="text" id="name" {...nameReg} innerRef={nameRef} invalid={!!formErrors.name} />
               <FormFeedback>{formErrors.name && "Le nom est obligatoire."}</FormFeedback>
             </Col>
           </FormGroup>
@@ -195,8 +192,8 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
           <Modal isOpen={modal} toggle={toggle}>
             <ModalHeader toggle={toggle}>Voulez-vous vraiment supprimer cet attentat?</ModalHeader>
             <ModalBody>
-              Si vous supprimez cet attentat, il ne sera plus visible ni modifiable dans la liste des attentats.
-              Merci de confirmer votre choix.
+              Si vous supprimez cet attentat, il ne sera plus visible ni modifiable dans la liste des attentats. Merci
+              de confirmer votre choix.
             </ModalBody>
             <ModalFooter>
               <Button color="primary" outline onClick={toggle}>

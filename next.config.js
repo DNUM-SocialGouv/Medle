@@ -11,6 +11,9 @@ const withMDX = require("@next/mdx")({
 })
 
 const nextConfig = {
+  future: {
+    webpack5: true,
+  },
   cssLoaderOptions: {
     url: false,
   },

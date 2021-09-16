@@ -34,7 +34,12 @@ const MandatorySign = () => <span style={{ color: "red" }}>*</span>
 const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
   const router = useRouter()
   const { id } = router.query
-  const { handleSubmit, register, errors: formErrors, setValue } = useForm({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors: formErrors },
+    setValue,
+  } = useForm({
     defaultValues: {
       ...asker,
     },
@@ -84,10 +89,19 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
       setError(
         error.message === "Asker already present"
           ? "Ce demandeur existe déjà avec le même nom pour le même département."
-          : "Erreur serveur."
+          : "Erreur serveur.",
       )
     }
   }
+
+  const { ref: idRef, ...idReg } = register("id")
+  const { ref: nameRef, ...nameReg } = register("name", { required: true })
+  const { ref: depCodeRef, ...depCodeReg } = register("depCode", {
+    required: false,
+    pattern: {
+      value: /^[0-9]{2,3}$/i,
+    },
+  })
 
   return (
     <Layout page="askers" currentUser={currentUser} admin={true}>
@@ -129,7 +143,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" name="id" id="id" readOnly innerRef={register} />
+              <Input type="text" id="id" readOnly {...idReg} innerRef={idRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -138,13 +152,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
-                type="text"
-                name="name"
-                id="name"
-                invalid={!!formErrors.name}
-                innerRef={register({ required: true })}
-              />
+              <Input type="text" id="name" {...nameReg} innerRef={nameRef} invalid={!!formErrors.name} />
               <FormFeedback>{formErrors.name && "Le nom est obligatoire."}</FormFeedback>
             </Col>
           </FormGroup>
@@ -153,18 +161,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
               Département&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
-                type="text"
-                name="depCode"
-                id="depCode"
-                innerRef={register({
-                  required: false,
-                  pattern: {
-                    value: /^[0-9]{2,3}$/i,
-                  },
-                })}
-                invalid={!!formErrors.depCode}
-              />
+              <Input type="text" id="depCode" {...depCodeReg} innerRef={depCodeRef} invalid={!!formErrors.depCode} />
               <FormFeedback>{formErrors.depCode && "Le département a un format incorrect."}</FormFeedback>
             </Col>
           </FormGroup>

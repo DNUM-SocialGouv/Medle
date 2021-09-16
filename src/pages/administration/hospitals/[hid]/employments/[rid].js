@@ -71,7 +71,14 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
     defaultValues = { ...defaultValues, id: data?.id || null, reference: data.reference }
   }
 
-  const { control, handleSubmit, register, errors: formErrors, setValue, watch } = useForm({
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors: formErrors },
+    setValue,
+    watch,
+  } = useForm({
     defaultValues,
   })
 
@@ -138,6 +145,15 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
     }
   }
 
+  const { ref: idRef, ...idReg } = register("id")
+  const { ref: referenceDoctorsRef, ...referenceDoctorsReg } = register("reference.doctors")
+  const { ref: referenceSecretariesRef, ...referenceSecretariesReg } = register("reference.secretaries")
+  const { ref: referenceNursingsRef, ...referenceNursingsReg } = register("reference.nursings")
+  const { ref: referenceExecutivesRef, ...referenceExecutivesReg } = register("reference.executives")
+  const { ref: referenceIdesRef, ...referenceIdesReg } = register("reference.ides")
+  const { ref: referenceAuditoriumAgentsRef, ...referenceAuditoriumAgentsReg } = register("reference.auditoriumAgents")
+  const { ref: referenceOthersRef, ...referenceOthersReg } = register("reference.others")
+
   return (
     <Layout page="hospitals" currentUser={currentUser} admin={true}>
       <Container
@@ -200,7 +216,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" name="id" id="id" readOnly innerRef={register} />
+              <Input type="text" id="id" readOnly {...idReg} innerRef={idRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -211,15 +227,14 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               <Input
                 type="number"
                 autoComplete="off"
-                name="reference.doctors"
                 id="doctors"
-                innerRef={register}
+                {...referenceDoctorsReg}
+                innerRef={referenceDoctorsRef}
                 invalid={!!formErrors.etp?.doctors}
                 min={0}
                 defaultValue={0}
                 step="0.05"
               />
-
               <FormFeedback>{formErrors.etp?.doctors?.message}</FormFeedback>
             </Col>
           </FormGroup>
@@ -231,9 +246,9 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               <Input
                 type="number"
                 autoComplete="off"
-                name="reference.secretaries"
                 id="secretaries"
-                innerRef={register}
+                {...referenceSecretariesReg}
+                innerRef={referenceSecretariesRef}
                 invalid={!!formErrors.etp?.secretaries}
                 min={0}
                 defaultValue={0}
@@ -250,9 +265,9 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               <Input
                 type="number"
                 autoComplete="off"
-                name="reference.nursings"
                 id="nursings"
-                innerRef={register}
+                {...referenceNursingsReg}
+                innerRef={referenceNursingsRef}
                 invalid={!!formErrors.etp?.nursings}
                 min={0}
                 defaultValue={0}
@@ -269,9 +284,9 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               <Input
                 type="number"
                 autoComplete="off"
-                name="reference.executives"
                 id="executives"
-                innerRef={register}
+                {...referenceExecutivesReg}
+                innerRef={referenceExecutivesRef}
                 invalid={!!formErrors.etp?.executives}
                 min={0}
                 defaultValue={0}
@@ -288,9 +303,9 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               <Input
                 type="number"
                 autoComplete="off"
-                name="reference.ides"
                 id="ides"
-                innerRef={register}
+                {...referenceIdesReg}
+                innerRef={referenceIdesRef}
                 invalid={!!formErrors.etp?.ides}
                 min={0}
                 defaultValue={0}
@@ -307,9 +322,9 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               <Input
                 type="number"
                 autoComplete="off"
-                name="reference.auditoriumAgents"
                 id="auditoriumAgents"
-                innerRef={register}
+                {...referenceAuditoriumAgentsReg}
+                innerRef={referenceAuditoriumAgentsRef}
                 invalid={!!formErrors.etp?.auditoriumAgents}
                 min={0}
                 defaultValue={0}
@@ -326,9 +341,9 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               <Input
                 type="number"
                 autoComplete="off"
-                name="reference.others"
                 id="others"
-                innerRef={register}
+                {...referenceOthersReg}
+                innerRef={referenceOthersRef}
                 invalid={!!formErrors.etp?.others}
                 min={0}
                 defaultValue={0}

@@ -39,7 +39,13 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const router = useRouter()
   const { id } = router.query
 
-  const { handleSubmit, register, errors: formErrors, setValue, watch } = useForm({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors: formErrors },
+    setValue,
+    watch,
+  } = useForm({
     defaultValues: {
       id: initialUser.id,
       firstName: initialUser.firstName,
@@ -58,31 +64,31 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
     mapForSelect(
       initialUser?.role,
       (elt) => elt,
-      (elt) => ROLES_DESCRIPTION[elt]
-    )
+      (elt) => ROLES_DESCRIPTION[elt],
+    ),
   )
 
   const initialUserHospitalSelect = mapForSelect(
     initialUser?.hospital,
     (elt) => elt.id,
-    (elt) => elt.name
+    (elt) => elt.name,
   )
 
   const currentUserHospitalSelect = mapForSelect(
     currentUser?.hospital,
     (elt) => elt.id,
-    (elt) => elt.name
+    (elt) => elt.name,
   )
 
   // Get the hospital of initialUser for updates, but the one of currentUser for creates
   const [hospital, setHospital] = useState(
-    initialUser?.hospital ? initialUserHospitalSelect : currentUserHospitalSelect
+    initialUser?.hospital ? initialUserHospitalSelect : currentUserHospitalSelect,
   )
 
   const initialUserScopeSelect = mapArrayForSelect(
     initialUser?.scope,
     (elt) => elt.id,
-    (elt) => elt.name
+    (elt) => elt.name,
   )
 
   const [scope, setScope] = useState(initialUserScopeSelect)
@@ -105,15 +111,15 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const customRulesAdminHospital =
     currentUser?.role === ADMIN_HOSPITAL
       ? {
-        hospitalDisabled: true,
-        hospitalValue: mapForSelect(
-          currentUser.hospital,
-          (elt) => elt.id,
-          (elt) => elt.name
-        ),
+          hospitalDisabled: true,
+          hospitalValue: mapForSelect(
+            currentUser.hospital,
+            (elt) => elt.id,
+            (elt) => elt.name,
+          ),
 
-        scopeDisabled: true,
-      }
+          scopeDisabled: true,
+        }
       : {}
 
   const customRuleOwnRecord = currentUser?.id === initialUser.id ? { roleDisabled: true } : {}
@@ -211,10 +217,10 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       "hospital",
       selectedOption?.value
         ? {
-          id: selectedOption.value,
-          name: selectedOption.label,
-        }
-        : null
+            id: selectedOption.value,
+            name: selectedOption.label,
+          }
+        : null,
     )
     // Needs to sync specifically the value to the react-select as well
     setHospital(selectedOption)
@@ -227,7 +233,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
     // Needs transformation between format of react-select to expected format for API call
     setValue(
       "scope",
-      !selectedOption?.length ? null : selectedOption.map((curr) => ({ id: curr.value, name: curr.label }))
+      !selectedOption?.length ? null : selectedOption.map((curr) => ({ id: curr.value, name: curr.label })),
     )
     // Needs to sync specifically the value to the react-select as well
     setScope(selectedOption)
@@ -235,9 +241,9 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
 
   useEffect(() => {
     // Extra field in form to store the value of selects
-    register({ name: "role" })
-    register({ name: "hospital" })
-    register({ name: "scope" })
+    register("role")
+    register("hospital")
+    register("scope")
   }, [register])
 
   const customStyles = (hasError) => ({
@@ -253,9 +259,19 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
     return mapArrayForSelect(
       hospitals,
       (elt) => elt.id,
-      (elt) => elt.name
+      (elt) => elt.name,
     )
   }
+
+  const { ref: idRef, ...idReg } = register("id")
+  const { ref: firstNameRef, ...firstNameReg } = register("firstName")
+  const { ref: lastNameRef, ...lastNameReg } = register("lastName", { required: true })
+  const { ref: emailRef, ...emailReg } = register("email", {
+    required: true,
+    pattern: {
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+    },
+  })
 
   return (
     <Layout page="users" currentUser={currentUser} admin={true}>
@@ -297,7 +313,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" name="id" id="id" readOnly innerRef={register} />
+              <Input type="text" id="id" readOnly {...idReg} innerRef={idRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -305,7 +321,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               Prénom
             </Label>
             <Col sm={9}>
-              <Input type="text" name="firstName" id="firstName" innerRef={register} />
+              <Input type="text" id="firstName" {...firstNameReg} innerRef={firstNameRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -316,10 +332,10 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
             <Col sm={9}>
               <Input
                 type="text"
-                name="lastName"
                 id="lastName"
+                {...lastNameReg}
+                innerRef={lastNameRef}
                 invalid={!!formErrors.lastName}
-                innerRef={register({ required: true })}
               />
               <FormFeedback>{formErrors.lastName && "Le nom est obligatoire."}</FormFeedback>
             </Col>
@@ -330,18 +346,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
-                type="text"
-                name="email"
-                id="email"
-                innerRef={register({
-                  required: true,
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                  },
-                })}
-                invalid={!!formErrors.email}
-              />
+              <Input type="text" id="email" {...emailReg} innerRef={emailRef} invalid={!!formErrors.email} />
               <FormFeedback>{formErrors.email && "Courriel a un format incorrect."}</FormFeedback>
             </Col>
           </FormGroup>

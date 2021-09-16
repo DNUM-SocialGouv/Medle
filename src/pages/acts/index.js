@@ -67,16 +67,16 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
   useEffect(() => {
     // Extra field in form to store the value of selects
-    register({ name: "hospitals" })
-    register({ name: "profiles" })
-    register({ name: "asker" })
-    register({ name: "search" })
+    register("hospitals")
+    register("profiles")
+    register("asker")
+    register("search")
 
     return () => {
-      unregister({ name: "hospitals" })
-      unregister({ name: "profiles" })
-      unregister({ name: "asker" })
-      unregister({ name: "search" })
+      unregister("hospitals")
+      unregister("profiles")
+      unregister("asker")
+      unregister("search")
     }
   }, [register, unregister])
 
@@ -145,6 +145,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     await fetchExport(getValues())
   }
 
+  const { ref: startDateRef, ...startDateReg } = register("startDate")
+  const { ref: endDateRef, ...endDateReg } = register("endDate")
+
   return (
     <Layout page="acts" currentUser={currentUser}>
       <Title1 className="mt-5 mb-4">{"Tous les actes"}</Title1>
@@ -190,10 +193,10 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                         </Label>
                         <Input
                           type="date"
-                          name="startDate"
                           id="startDate"
                           placeholder="Date de début"
-                          innerRef={register}
+                          {...startDateReg}
+                          innerRef={startDateRef}
                           onChange={onChange}
                         />
                       </Col>
@@ -203,10 +206,10 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                         </Label>
                         <Input
                           type="date"
-                          name="endDate"
                           id="endDate"
                           placeholder="Date de fin"
-                          innerRef={register}
+                          {...endDateReg}
+                          innerRef={endDateRef}
                           onChange={onChange}
                         />
                       </Col>
