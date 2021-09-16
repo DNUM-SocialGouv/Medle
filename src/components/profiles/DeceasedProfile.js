@@ -14,6 +14,8 @@ const DeceasedEdit = ({ dispatch, state, errors, hospital }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ subTitle: elt.subTitle, title: elt.title }))
 
+  const personTitle = "Profil de la personne décédée"
+
   return (
     <>
       <ActBlock
@@ -63,10 +65,12 @@ const DeceasedEdit = ({ dispatch, state, errors, hospital }) => {
         state={state.deathCause || ""}
         invalid={!!errors.deathCause}
       />
-      <Title2 className="mt-5 mb-2">{"Profil de la personne décédée"}</Title2>
+
+      <Title2 className="mt-5 mb-2">{personTitle}</Title2>
+
       <ActBlock
         type="personGender"
-        title=""
+        title={personTitle}
         subTitle="Genre"
         values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
         mode="toggle"
@@ -76,7 +80,7 @@ const DeceasedEdit = ({ dispatch, state, errors, hospital }) => {
       />
       <ActBlock
         type="personAgeTag"
-        title=""
+        title={personTitle}
         subTitle="Âge"
         values={["0-2 ans", "3-6 ans", "7-17 ans", "+ de 18 ans", "Non déterminé"]}
         mode="toggle"

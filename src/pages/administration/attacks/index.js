@@ -1,4 +1,5 @@
 import AddIcon from "@material-ui/icons/Add"
+import Head from "next/head"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
 import React, { useState } from "react"
@@ -8,7 +9,7 @@ import { searchAttacksFuzzy } from "../../../clients/attacks"
 import { SearchButton } from "../../../components/form/SearchButton"
 import Layout from "../../../components/Layout"
 import Pagination from "../../../components/Pagination"
-import { Title1 } from "../../../components/StyledComponents"
+import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { usePaginatedData } from "../../../hooks/usePaginatedData"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
@@ -29,6 +30,9 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
 
   return (
     <Layout page="attacks" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Administration des attentats - Medlé</title>
+      </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
@@ -46,9 +50,9 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
 
       <Container style={{ maxWidth: 980, minWidth: 740 }}>
         <Form onSubmit={onSubmit}>
-          <FormGroup row inline className="mb-4 justify-content-center">
+          <FormGroup row inline className="mb-4 justify-content-center" role="group">
             <Col className="flex-grow-1">
-              <Input
+              <InputDarker
                 type="text"
                 name="es"
                 id="es"
@@ -56,6 +60,7 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
                 value={search}
                 onChange={onChange}
                 autoComplete="off"
+                aria-label="Rechercher un attentat par son nom ou son année"
               />
             </Col>
             <Col className="flex-grow-0">
@@ -80,14 +85,14 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
             <Table responsive className="table-hover">
               <thead>
                 <tr className="table-light">
-                  <th>Nom</th>
-                  <th>Année</th>
+                  <th scope="col">Nom</th>
+                  <th scope="col">Année</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedData.elements.map((attack) => (
                   <Link key={attack.id} href="/administration/attacks/[id]" as={`/administration/attacks/${attack.id}`}>
-                    <tr>
+                    <tr style={{ cursor: 'pointer'}}>
                       <td>
                         <b>{`${attack.name}`}</b>
                       </td>

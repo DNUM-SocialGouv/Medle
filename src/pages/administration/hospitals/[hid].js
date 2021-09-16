@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -13,7 +14,6 @@ import {
   Form,
   FormFeedback,
   FormGroup,
-  Input,
   Label,
   Modal,
   ModalBody,
@@ -24,13 +24,17 @@ import * as yup from "yup"
 
 import { createHospital, deleteHospital, findHospital, updateHospital } from "../../../clients/hospitals"
 import Layout from "../../../components/Layout"
-import { Title1, Title2 } from "../../../components/StyledComponents"
+import { InputDarker, Title1, Title2 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logDebug, logError } from "../../../utils/logger"
 import { isEmpty } from "../../../utils/misc"
 import { ADMIN } from "../../../utils/roles"
 
-const MandatorySign = () => <span style={{ color: "red" }}>*</span>
+const MandatorySign = () => (
+  <span style={{ color: "red" }} aria-hidden="true">
+    *
+  </span>
+)
 
 const schema = yup.object({
   finesseNumber: yup.string(),
@@ -136,13 +140,16 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
 
   return (
     <Layout page="hospitals" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Hôpital {hospital?.name} - Medlé</title>
+      </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
         <div className="d-flex justify-content-between">
           <Link href="/administration/hospitals">
-            <a>
+            <a style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour
             </a>
@@ -182,13 +189,13 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Ajout d'un hôpital">
           <FormGroup row>
             <Label for="id" sm={3}>
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" id="id" readOnly {...idReg} innerRef={idRef} />
+              <InputDarker type="text" id="id" readOnly {...idReg} innerRef={idRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -196,7 +203,13 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               N° Finess
             </Label>
             <Col sm={9}>
-              <Input type="text" id="finesseNumber" {...finesseNumberReg} innerRef={finesseNumberRef} />
+              <InputDarker
+                type="text"
+                id="finesseNumber"
+                {...finesseNumberReg}
+                innerRef={finesseNumberRef}
+                aria-label="Numéro Finess"
+              />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -205,7 +218,14 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input type="text" id="name" {...nameReg} innerRef={nameRef} invalid={!!formErrors.name} />
+              <InputDarker
+                type="text"
+                id="name"
+                {...nameReg}
+                innerRef={nameRef}
+                invalid={!!formErrors.name}
+                aria-required="true"
+              />
               <FormFeedback>{formErrors.name?.message}</FormFeedback>
             </Col>
           </FormGroup>
@@ -214,7 +234,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               Adresse 1&nbsp;
             </Label>
             <Col sm={9}>
-              <Input type="text" id="addr1" {...addr1Reg} innerRef={addr1Ref} />
+              <InputDarker type="text" id="addr1" {...addr1Reg} innerRef={addr1Ref} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -222,7 +242,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               Adresse 2&nbsp;
             </Label>
             <Col sm={9}>
-              <Input type="text" id="addr2" {...addr2Reg} innerRef={addr2Ref} />
+              <InputDarker type="text" id="addr2" {...addr2Reg} innerRef={addr2Ref} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -231,7 +251,14 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input type="text" id="town" {...townReg} innerRef={townRef} invalid={!!formErrors.town} />
+              <InputDarker
+                type="text"
+                id="town"
+                {...townReg}
+                innerRef={townRef}
+                invalid={!!formErrors.town}
+                aria-required="true"
+              />
               <FormFeedback>{formErrors.town?.message}</FormFeedback>
             </Col>
           </FormGroup>
@@ -241,13 +268,14 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="text"
                 id="depCode"
                 {...depCodeReg}
                 innerRef={depCodeRef}
                 invalid={!!formErrors.depCode}
                 placeholder="Ex: 44 ou 971"
+                aria-required="true"
               />
               <FormFeedback>{formErrors.depCode?.message}</FormFeedback>
             </Col>
@@ -257,7 +285,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               Code postal&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="text"
                 id="postalCode"
                 {...postalCodeReg}
@@ -276,13 +304,14 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="checkbox"
                 id="canDoPostMortem"
                 {...canDoPostMortemReg}
                 innerRef={canDoPostMortemRef}
                 invalid={!!formErrors.canDoPostMortem}
                 className="mt-3 ml-0"
+                aria-required="true"
               />
             </Col>
           </FormGroup>

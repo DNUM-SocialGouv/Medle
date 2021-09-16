@@ -15,6 +15,10 @@ export const colors = {
     background: "#26353f",
     color: "white",
   },
+  footerHover: {
+    background: "#26353f",
+    color: "lightgray",
+  },
   main: {
     background: "#ebeff3",
     color: "black",

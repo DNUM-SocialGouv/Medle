@@ -1,4 +1,4 @@
-import { Button as RSButton, DropdownToggle as RSDropdownToggle } from "reactstrap"
+import { Button as RSButton, DropdownToggle as RSDropdownToggle, Input as RSInput } from "reactstrap"
 import styled, { css } from "styled-components"
 
 export const DropdownToggle = styled(RSDropdownToggle)`
@@ -123,4 +123,10 @@ export const Label = styled.label`
   line-height: 15px;
   font-variant: small-caps;
   margin-bottom: 0;
+`
+export const InputDarker = styled(RSInput)`
+  border-color: #555C64;
+  &::placeholder{
+    color: #555C64;
+  }
 `

@@ -1,5 +1,6 @@
 import AddIcon from "@material-ui/icons/Add"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -26,6 +27,9 @@ const EmploymentsPage = ({ currentUser, references }) => {
 
   return (
     <Layout page="hospitals" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Hôpital {hospital?.name} - Historique des ETP de référence - Medlé</title>
+      </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"

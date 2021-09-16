@@ -1,4 +1,5 @@
 import AddIcon from "@material-ui/icons/Add"
+import Head from "next/head"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
 import React, { useState } from "react"
@@ -8,7 +9,7 @@ import { searchUsersFuzzy } from "../../../clients/users"
 import { SearchButton } from "../../../components/form/SearchButton"
 import Layout from "../../../components/Layout"
 import Pagination from "../../../components/Pagination"
-import { Title1 } from "../../../components/StyledComponents"
+import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { usePaginatedData } from "../../../hooks/usePaginatedData"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
@@ -29,6 +30,9 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
 
   return (
     <Layout page="users" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Administration des utilisateurs - Medlé</title>
+      </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
@@ -45,10 +49,10 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
       </Container>
 
       <Container style={{ maxWidth: 980, minWidth: 740 }}>
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit} role="group">
           <FormGroup row inline className="mb-4 justify-content-center">
             <Col className="flex-grow-1">
-              <Input
+              <InputDarker
                 type="text"
                 name="es"
                 id="es"
@@ -56,6 +60,7 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                 value={search}
                 onChange={onChange}
                 autoComplete="off"
+                aria-label="Rechercher un utilisateur par nom, prénom, email.."
               />
             </Col>
             <Col className="flex-grow-0">
@@ -78,17 +83,17 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
             <Table responsive className="table-hover">
               <thead>
                 <tr className="table-light">
-                  <th>Nom</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Établissement</th>
-                  <th />
+                  <th scope="col">Nom</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Établissement</th>
+                  <th scope="col"/>
                 </tr>
               </thead>
               <tbody>
                 {paginatedData.elements.map((user) => (
                   <Link key={user.id} href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
-                    <tr>
+                    <tr style={{ cursor: 'pointer'}}> 
                       <td>
                         <b>{`${user.firstName} ${user.lastName}`}</b>
                       </td>

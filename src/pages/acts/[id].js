@@ -1,6 +1,7 @@
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined"
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -53,6 +54,9 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
 
   return (
     <Layout page="acts" currentUser={currentUser}>
+      <Head>
+        <title>{`Acte numéro ${(act && act.internalNumber) || ""}`} - Medlé</title>
+      </Head>
       <Container style={{ maxWidth: 780 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
           <Link href="/acts">

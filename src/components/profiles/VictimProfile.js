@@ -13,6 +13,9 @@ const VictimEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
+  const violenceTitle = "Type(s) de violence"
+  const personTitle = "Profil de la personne examinée"
+
   if (!state.honoredMeeting)
     dispatch({
       type: "honoredMeeting",
@@ -48,18 +51,20 @@ const VictimEdit = ({ dispatch, state, errors }) => {
             invalid={!!errors.examinationTypes}
           />
 
-          <Title2 className="mt-5 mb-4">{"Type(s) de violence"}</Title2>
+          <Title2 className="mt-5 mb-4">{violenceTitle}</Title2>
 
           <ActBlock
             type="violenceNatures"
-            title=""
+            title={violenceTitle}
             detail={
               <span>
                 Note : accident collectif = accident de grande ampleur, comme par exemple Lubrizol 2020, AZF 2001...Il
                 est donc à distinguer d&apos;un accident de la route, de la voie publique, etc. qui aurait entraîné
                 plusieurs victimes.&nbsp;
                 <Link href="/faq#collectif" scroll={false}>
-                  <a target="_blank">Voir FAQ</a>
+                  <a target="_blank" aria-label="Voir la FAQ (nouvelle fenêtre)">
+                    Voir FAQ
+                  </a>
                 </Link>
               </span>
             }
@@ -70,7 +75,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
               "Maltraitance",
               "Violence psychologique",
               { title: "Accident", subValues: ["Collectif", "Non collectif"] },
-              { title: "Attentat", subValues: getReferenceData("attacks").map((elt) => elt.year + ' ' + elt.name) },
+              { title: "Attentat", subValues: getReferenceData("attacks").map((elt) => elt.year + " " + elt.name) },
             ]}
             mode="toggleMultiple"
             dispatch={dispatch}
@@ -79,7 +84,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
           />
           <ActBlock
             type="violenceContexts"
-            title=""
+            title={violenceTitle}
             subTitle="Contexte"
             values={[
               "Conjugale",
@@ -130,11 +135,11 @@ const VictimEdit = ({ dispatch, state, errors }) => {
             invalid={!!errors.periodOfDay}
           />
 
-          <Title2 className="mt-5 mb-2">{"Profil de la personne examinée"}</Title2>
+          <Title2 className="mt-5 mb-2">{personTitle}</Title2>
 
           <ActBlock
             type="personGender"
-            title=""
+            title={personTitle}
             subTitle="Genre"
             values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
             mode="toggle"
@@ -144,7 +149,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
           />
           <ActBlock
             type="personAgeTag"
-            title=""
+            title={personTitle}
             subTitle="Âge"
             values={["0-2 ans", "3-17 ans", "+ de 18 ans"]}
             mode="toggle"

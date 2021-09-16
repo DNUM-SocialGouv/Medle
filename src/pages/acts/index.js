@@ -1,20 +1,21 @@
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ArrowRightIcon from "@material-ui/icons/ArrowRight"
 import ListAltIcon from "@material-ui/icons/ListAlt"
+import Head from "next/head"
 import Link from "next/link"
 import PropTypes from "prop-types"
 import React, { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import Select from "react-select"
 import AsyncSelect from "react-select/async"
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row, Table } from "reactstrap"
+import { Alert, Button, Col, Container, Form, FormGroup, Label, Row, Table } from "reactstrap"
 
 import { fetchExport, searchActs } from "../../clients/acts"
 import { memoizedSearchAskers } from "../../clients/askers"
 import { SearchButton } from "../../components/form/SearchButton"
 import Layout from "../../components/Layout"
 import Pagination from "../../components/Pagination"
-import { Title1 } from "../../components/StyledComponents"
+import { Title1, InputDarker } from "../../components/StyledComponents"
 import { VerticalList } from "../../components/VerticalList"
 import { isOpenFeature, LIMIT_EXPORT } from "../../config"
 import { useDebounce } from "../../hooks/useDebounce"
@@ -64,6 +65,14 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
       ),
     [],
   )
+  
+  // Darker color for Select 
+  const colourStyles = {
+    control: styles => ({ ...styles, backgroundColor: 'white', borderColor: '#555C64', color: '#555C64' }),
+    placeholder: styles => ({ ...styles, color: '#555C64' }),
+    indicatorSeparator: styles => ({ ...styles, backgroundColor: '#555C64'}),
+    dropdownIndicator: styles => ({ ...styles, color: '#555C64'})
+  };
 
   useEffect(() => {
     // Extra field in form to store the value of selects
@@ -150,19 +159,23 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
   return (
     <Layout page="acts" currentUser={currentUser}>
+      <Head>
+        <title>Tous les actes - Medlé</title>
+      </Head>
       <Title1 className="mt-5 mb-4">{"Tous les actes"}</Title1>
       <Container style={{ maxWidth: 980 }}>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <FormGroup inline className="mb-4 justify-content-center">
+          <FormGroup inline className="mb-4 justify-content-center" role="group" aria-label="Recherche d'actes">
             <Row>
               <Col className="flex-grow-1">
-                <Input
+                <InputDarker
                   type="text"
                   name="search"
                   id="search"
                   placeholder="Rechercher un acte ou plusieurs, par n° interne ou n° de PV"
                   autoComplete="off"
                   value={search}
+                  aria-label="Rechercher un acte ou plusieurs, par numéro interne ou numéro de PV"
                   onChange={onSearchChange}
                 />
               </Col>
@@ -191,7 +204,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                         <Label htmlFor="startDate" className="text-dark">
                           Date de début
                         </Label>
-                        <Input
+                        <InputDarker
                           type="date"
                           id="startDate"
                           placeholder="Date de début"
@@ -201,10 +214,10 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                         />
                       </Col>
                       <Col sm="3">
-                        <Label htmlFor="startDate" className="text-dark">
+                        <Label htmlFor="endDate" className="text-dark">
                           Date de fin
                         </Label>
-                        <Input
+                        <InputDarker
                           type="date"
                           id="endDate"
                           placeholder="Date de fin"
@@ -217,8 +230,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                     {hospitalsChoices?.length > 1 && (
                       <Row className="mt-3">
                         <Col>
-                          <Label className="text-dark">Établissements</Label>
+                          <Label className="text-dark" id="hospitalsLabel">Établissements</Label>
                           <Select
+                            id="hospitals"
                             options={hospitalsChoices}
                             value={hospitals}
                             isMulti
@@ -227,14 +241,17 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                             placeholder="Choisissez un établissement de votre périmètre"
                             isClearable={true}
                             isSearchable={true}
+                            styles={ colourStyles }
+                            aria-labelledby="hospitalsLabel"
                           />
                         </Col>
                       </Row>
                     )}{" "}
                     <Row className="mt-3">
                       <Col>
-                        <Label className="text-dark">Profils et autres activités</Label>
+                        <Label className="text-dark" id="profilesLabel">Profils et autres activités</Label>
                         <Select
+                          id="profiles"
                           options={existingProfiles}
                           value={profiles}
                           isMulti
@@ -243,13 +260,16 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           placeholder="Choisissez un profil ou activité"
                           isClearable={true}
                           isSearchable={true}
+                          styles={ colourStyles }
+                          aria-labelledby="profilesLabel"
                         />
                       </Col>
                     </Row>
                     <Row className="mt-3">
                       <Col>
-                        <Label className="text-dark">Demandeur</Label>
+                        <Label className="text-dark" id="askerLabel">Demandeur</Label>
                         <AsyncSelect
+                          id="asker"
                           loadOptions={(search) => loadAskers(search)}
                           placeholder="Tapez le nom du demandeur"
                           noOptionsMessage={() => "Aucun résultat"}
@@ -258,6 +278,8 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           isClearable={true}
                           isSearchable={true}
                           value={asker}
+                          styles={ colourStyles }
+                          aria-labelledby="askerLabel"
                         />
                       </Col>
                     </Row>
@@ -282,18 +304,18 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
             <Table responsive className="table-hover">
               <thead>
                 <tr className="table-light">
-                  <th>N° dossier interne</th>
-                  <th>N° PV</th>
-                  <th>Date</th>
-                  <th>Type de profil</th>
-                  <th>{"Type d'acte"}</th>
+                  <th scope="col" id="internNumber" aria-label="Numéro dossier interne">N° dossier interne</th>
+                  <th scope="col" id="PvNumber" aria-label="Numéro PV">N° PV</th>
+                  <th scope="col" id="date">Date</th>
+                  <th scope="col" id="profilType">Type de profil</th>
+                  <th scope="col" id="ActType">{"Type d'acte"}</th>
                   <th />
                 </tr>
               </thead>
               <tbody>
                 {paginatedData.elements.map((act) => (
                   <Link key={act.id} href="/acts/[id]" as={`/acts/${act.id}`}>
-                    <tr key={act.id}>
+                    <tr key={act.id} style={{ cursor: 'pointer'}}>
                       <td>
                         <b>{act.internalNumber}</b>
                       </td>

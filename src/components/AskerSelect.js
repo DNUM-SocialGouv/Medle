@@ -16,8 +16,8 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
         mapForSelect(
           asker,
           (elt) => elt.id,
-          (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : "")
-        )
+          (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
+        ),
       )
     }
     const fetchPreviousValues = async () => {
@@ -26,8 +26,8 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
           mapArrayForSelect(
             arr,
             (elt) => elt.id,
-            (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : "")
-          )
+            (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
+          ),
         )
       })
     }
@@ -46,7 +46,7 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
     return mapArrayForSelect(
       askers?.elements,
       (elt) => elt.id,
-      (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : "")
+      (elt) => elt.name + (elt.depCode ? ` (${elt.depCode})` : ""),
     )
   }
 
@@ -62,6 +62,8 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
         onChange={onChange}
         isDisabled={disabled}
         value={existingValue}
+        aria-label="Choix du demandeur"
+        aria-required="true"
       />
     </>
   )

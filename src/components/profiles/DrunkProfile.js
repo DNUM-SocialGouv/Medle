@@ -11,6 +11,8 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
+  const personTitle = "Profil de la personne examinée"
+
   return (
     <>
       <ActBlock
@@ -51,11 +53,11 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
         invalid={!!errors.periodOfDay}
       />
 
-      <Title2 className="mt-5 mb-2">{"Profil de la personne examinée"}</Title2>
+      <Title2 className="mt-5 mb-2">{personTitle}</Title2>
 
       <ActBlock
         type="personGender"
-        title=""
+        title={personTitle}
         subTitle="Genre"
         values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
         mode="toggle"
@@ -65,7 +67,7 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
       />
       <ActBlock
         type="personAgeTag"
-        title=""
+        title={personTitle}
         subTitle="Âge"
         values={["Mineur", "Majeur", "Non déterminé"]}
         mode="toggle"

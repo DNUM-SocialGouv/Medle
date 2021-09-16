@@ -1,13 +1,14 @@
 import AddIcon from "@material-ui/icons/Add"
+import Head from "next/head"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
 import React, { useState } from "react"
-import { Alert, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
+import { Alert, Col, Container, Form, FormGroup, Spinner, Table } from "reactstrap"
 
 import { searchHospitalsFuzzy } from "../../../clients/hospitals"
 import { SearchButton } from "../../../components/form/SearchButton"
 import Layout from "../../../components/Layout"
-import { Title1 } from "../../../components/StyledComponents"
+import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
 import { ADMIN } from "../../../utils/roles"
@@ -36,6 +37,9 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
 
   return (
     <Layout page="hospitals" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Administration des établissements - Medlé</title>
+      </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
@@ -53,9 +57,9 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
 
       <Container style={{ maxWidth: 980, minWidth: 740 }}>
         <Form onSubmit={onSubmit}>
-          <FormGroup row inline className="mb-4 justify-content-center">
+          <FormGroup row inline className="mb-4 justify-content-center" role="group">
             <Col className="flex-grow-1">
-              <Input
+              <InputDarker
                 type="text"
                 name="es"
                 id="es"
@@ -63,6 +67,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                 value={search}
                 onChange={onChange}
                 autoComplete="off"
+                aria-label="Rechercher un établissement par son nom, etc."
               />
             </Col>
             <Col className="flex-grow-0">
@@ -84,10 +89,10 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
             <Table responsive className="table-hover">
               <thead>
                 <tr className="table-light">
-                  <th>Nom</th>
-                  <th>N° Finess</th>
-                  <th>Ville</th>
-                  <th>Code postal</th>
+                  <th scope="col">Nom</th>
+                  <th scope="col" aria-label="Numéro Finess">N° Finess</th>
+                  <th scope="col">Ville</th>
+                  <th scope="col">Code postal</th>
                 </tr>
               </thead>
               <tbody>
@@ -97,7 +102,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                     href="/administration/hospitals/[hid]"
                     as={`/administration/hospitals/${hospital.id}`}
                   >
-                    <tr>
+                    <tr style={{ cursor: 'pointer'}}>
                       <td>
                         <b>{`${hospital.name}`}</b>
                       </td>

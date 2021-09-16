@@ -54,10 +54,16 @@ const Header = ({ currentUser }) => {
   const toggle = () => setIsOpen(!isOpen)
 
   return (
-    <header className="border-bottom">
+    <header className="border-bottom" role="banner">
       <Navbar expand="md" light>
-        <NavbarBrand onClick={() => router.push("/")}>
-          <img src={"/images/logo.png"} alt="Logo" title="Logo" width="100" />
+        <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
+          <img
+            src={"/images/logo.png"}
+            alt="Retour à l'accueil de Medlé"
+            width="100"
+            style={{ cursor: "pointer" }}
+            id="header"
+          />
         </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         {currentUser && (
@@ -74,7 +80,7 @@ const Header = ({ currentUser }) => {
               )}
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle title="Menu vers mon compte" nav>
-                  <AccountCircleIcon className="text-black-50" width={30} />
+                  <AccountCircleIcon width={30} style={{ color: "#555C64" }} />
                   <span className="d-sm-inline d-md-none text-black-50">&nbsp;Mon compte</span>
                 </DropdownToggle>
 
@@ -82,9 +88,7 @@ const Header = ({ currentUser }) => {
                   {currentUser && <DropdownItem>{currentUser.firstName + " " + currentUser.lastName} </DropdownItem>}
                   <DropdownItem divider />
                   <Link href="/profile">
-                    <a>
-                      <DropdownItem>Profil</DropdownItem>
-                    </a>
+                    <DropdownItem>Profil</DropdownItem>
                   </Link>
                   <DropdownItem divider />
                   <DropdownItem onClick={logout}>Se déconnecter</DropdownItem>
@@ -103,27 +107,45 @@ Header.propTypes = {
 }
 
 export const Footer = () => (
-  <footer className="pt-4 pb-5 m-0">
+  <footer className="pt-4 pb-5 m-0" role="contentinfo">
     <Container>
       <Row>
         <Col className="mr-5">
-          <h4>Medle.fabrique.social.gouv.fr</h4>
+          <h3>Medle.fabrique.social.gouv.fr</h3>
           Un service proposé par la{" "}
-          <a
-            target="_blank"
-            rel="noreferrer noopener"
-            href="https://solidarites-sante.gouv.fr/ministere/organisation/organisation-des-directions-et-services/article/organisation-de-la-direction-generale-de-l-offre-de-soins-dgos"
-          >
-            DGOS
-          </a>{" "}
+          <b>
+            <a
+              target="_blank"
+              rel="noreferrer noopener"
+              id="footer"
+              href="https://solidarites-sante.gouv.fr/ministere/organisation/organisation-des-directions-et-services/article/organisation-de-la-direction-generale-de-l-offre-de-soins-dgos"
+              aria-label="DGOS (nouvelle fenêtre)"
+            >
+              DGOS
+            </a>
+          </b>{" "}
           (ministère de la santé) et{" "}
-          <a target="_blank" href="https://www.fabrique.social.gouv.fr/" rel="noopener noreferrer">
-            {"la fabrique numérique des ministères sociaux"}
-          </a>{" "}
+          <b>
+            <a
+              target="_blank"
+              href="https://www.fabrique.social.gouv.fr/"
+              rel="noopener noreferrer"
+              aria-label="Fabrique numérique des ministères sociaux (nouvelle fenêtre)"
+            >
+              {"la fabrique numérique des ministères sociaux"}
+            </a>
+          </b>{" "}
           (
-          <a target="_blank" href="https://beta.gouv.fr/" rel="noopener noreferrer">
-            beta.gouv.fr
-          </a>
+          <b>
+            <a
+              target="_blank"
+              href="https://beta.gouv.fr/"
+              rel="noopener noreferrer"
+              aria-label="beta.gouv.fr (nouvelle fenêtre)"
+            >
+              beta.gouv.fr
+            </a>
+          </b>
           )
         </Col>
         <Col className="mt-4 mt-md-0">
@@ -149,6 +171,11 @@ export const Footer = () => (
               </Link>
             </li>
             <li className="mb-2">
+              <Link href={"/sitemap"}>
+                <a>Plan du site</a>
+              </Link>
+            </li>
+            <li className="mb-2">
               {/* <Link> */}
               <a href="mailto:contact.medle@fabrique.social.gouv.fr">Contactez&#8209;nous</a>
               {/* </Link> */}
@@ -162,9 +189,14 @@ export const Footer = () => (
         background-color: ${colors.footer.background};
         color: ${colors.footer.color};
       }
-      footer a,
-      footer a:hover {
+      footer a {
         color: ${colors.footer.color};
+      }
+      footer a:hover {
+        color: ${colors.footerHover.color};
+      }
+      footer b {
+        text-decoration: underline dotted;
       }
     `}</style>
   </footer>
@@ -174,81 +206,107 @@ const Sidebar = ({ page, currentUser }) => {
   if (!currentUser) return ""
   return (
     <>
-      <nav aria-label="Navigation latérale" className="text-center list-group list-group-flush">
-        {isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
-          <Link href="/acts/declaration">
-            <a
-              className={
-                "list-group-item list-group-item-action " + (page === "declaration" ? "selected" : "unselected")
-              }
-            >
-              <AddCircleOutlineIcon width={30} />
-              <br />
-              {"Ajout d'acte"}
-            </a>
-          </Link>
-        )}
-        {isAllowed(currentUser.role, ACT_CONSULTATION) && (
-          <Link href="/acts">
-            <a className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}>
-              <FormatListBulletedIcon width={30} /> <br />
-              {"Tous les actes"}
-            </a>
-          </Link>
-        )}
-        {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
-          <Link href="/employments">
-            <a
-              className={
-                "list-group-item list-group-item-action " + (page === "employments" ? "selected" : "unselected")
-              }
-            >
-              <GroupIcon width={30} /> <br />
-              {"Personnel"}
-            </a>
-          </Link>
-        )}
-        <Link href="/statistics">
-          <a
-            className={"list-group-item list-group-item-action " + (page === "statistics" ? "selected" : "unselected")}
-          >
-            <EqualizerIcon width={30} /> <br />
-            {"Statistiques"}
-          </a>
-        </Link>
-        {/* <Link href="/_error"> */}
-        {isOpenFeature("directory") && (
-          <a className="list-group-item list-group-item-action">
-            <PhoneIcon width={30} /> <br />
-            {"Annuaire"}
-          </a>
-        )}{" "}
-        {/* </Link> */}
-        {/* <Link href="/_error"> */}
-        {isOpenFeature("resources") && (
-          <a className="list-group-item list-group-item-action">
-            <LocalLibraryIcon width={30} /> <br />
-            {"Ressources"}
-          </a>
-        )}{" "}
-        {/* </Link> */}
-        {/* <Link href="/_error"> */}
-        {isOpenFeature("administration") && isAllowed(currentUser.role, ADMIN) && (
-          <Link href="/administration/users">
+      <nav aria-label="Navigation latérale" className="text-center list-group list-group-flush" role="navigation">
+        <ul>
+          {isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
+            <li>
+              <Link href="/acts/declaration">
+                <a
+                  className={
+                    "list-group-item list-group-item-action " + (page === "declaration" ? "selected" : "unselected")
+                  }
+                >
+                  <AddCircleOutlineIcon width={30} />
+                  <br />
+                  {"Ajout d'acte"}
+                </a>
+              </Link>
+            </li>
+          )}
+          {isAllowed(currentUser.role, ACT_CONSULTATION) && (
+            <li>
+              <Link href="/acts">
+                <a
+                  className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}
+                  id="navigation"
+                >
+                  <FormatListBulletedIcon width={30} /> <br />
+                  {"Tous les actes"}
+                </a>
+              </Link>
+            </li>
+          )}
+          {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
+            <li>
+              <Link href="/employments">
+                <a
+                  className={
+                    "list-group-item list-group-item-action " + (page === "employments" ? "selected" : "unselected")
+                  }
+                >
+                  <GroupIcon width={30} /> <br />
+                  {"Personnel"}
+                </a>
+              </Link>
+            </li>
+          )}
+          <li>
+            <Link href="/statistics">
+              <a
+                className={
+                  "list-group-item list-group-item-action " + (page === "statistics" ? "selected" : "unselected")
+                }
+              >
+                <EqualizerIcon width={30} /> <br />
+                {"Statistiques"}
+              </a>
+            </Link>
+          </li>
+          {/* <Link href="/_error"> */}
+          {isOpenFeature("directory") && (
             <a className="list-group-item list-group-item-action">
-              <SettingsIcon width={30} /> <br />
-              {"Administration"}
+              <PhoneIcon width={30} /> <br />
+              {"Annuaire"}
             </a>
-          </Link>
-        )}{" "}
-        {/* </Link> */}
+          )}{" "}
+          {/* </Link> */}
+          {/* <Link href="/_error"> */}
+          {isOpenFeature("resources") && (
+            <a className="list-group-item list-group-item-action">
+              <LocalLibraryIcon width={30} /> <br />
+              {"Ressources"}
+            </a>
+          )}{" "}
+          {/* </Link> */}
+          {/* <Link href="/_error"> */}
+          {isOpenFeature("administration") && isAllowed(currentUser.role, ADMIN) && (
+            <li>
+              <Link href="/administration/users">
+                <a className="list-group-item list-group-item-action">
+                  <SettingsIcon width={30} /> <br />
+                  {"Administration"}
+                </a>
+              </Link>
+            </li>
+          )}{" "}
+          {/* </Link> */}
+        </ul>
       </nav>
       <style jsx>{`
+        ul {
+          padding-left: 0;
+        }
+        li {
+          list-style: none;
+        }
         a {
           font-variant: small-caps;
           font-size: 12px;
           font-family: "Source Sans Pro";
-          color: #9b9b9b;
+          color: #555c64;
+        }
+        a:hover {
+          color: black;
         }
         a.selected {
           border-left: 5px solid #307df6;
@@ -274,8 +332,11 @@ const SidebarAdmin = ({ page, currentUser }) => {
       <nav aria-label="Navigation latérale d'administration" className="text-center list-group list-group-flush">
         {isAllowed(currentUser.role, ADMIN) && (
           <Link href="/administration/users">
-            <a className={"list-group-item list-group-item-action " + (page === "users" ? "selected" : "unselected")}>
-              <FaceIcon className="text-black-50" width={30} />
+            <a
+              className={"list-group-item list-group-item-action " + (page === "users" ? "selected" : "unselected")}
+              id="adminNavigation"
+            >
+              <FaceIcon width={30} />
 
               <br />
               {"Utilisateurs"}
@@ -338,7 +399,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
           font-variant: small-caps;
           font-size: 12px;
           font-family: "Source Sans Pro";
-          color: #9b9b9b;
+          color: #555c64;
         }
         a.selected {
           border-left: 5px solid #9c27b0;
@@ -357,6 +418,70 @@ SidebarAdmin.propTypes = {
   page: PropTypes.string,
 }
 
+function giveFooterFocus() {
+  document.getElementById("footer").focus()
+}
+function giveNavFocus() {
+  const sidebar = document.getElementById("navigation")
+
+  if (sidebar) {
+    document.getElementById("navigation").focus()
+  } else {
+    document.getElementById("adminNavigation").focus()
+  }
+}
+function giveMainFocus() {
+  document.getElementById("page-content-wrapper").focus()
+}
+
+const SkipLinks = () => {
+  return (
+    <>
+      <nav role="navigation">
+        <ul className="skipLinks">
+          <li>
+            <a className="link-skip-to-content" onClick={giveNavFocus} href="#navigation">
+              Aller au menu
+            </a>
+          </li>
+          <li>
+            <a className="link-skip-to-content" onClick={giveMainFocus} href="#main">
+              Aller au contenu
+            </a>
+          </li>
+          <li>
+            <a className="link-skip-to-content" onClick={giveFooterFocus} href="#footer">
+              Aller au pied de page
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <style jsx>{`
+        .skipLinks {
+          position: absolute;
+          z-index: 999;
+          left: 50%;
+          text-align: center;
+          margin-top: 0;
+          margin-bottom: 1rem;
+          list-style: none;
+        }
+        .link-skip-to-content {
+          position: absolute;
+          height: 1px;
+          width: 1px;
+          font-weight: 700;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+        .link-skip-to-content:focus {
+          overflow: visible;
+        }
+      `}</style>
+    </>
+  )
+}
+
 const Layout = ({ children, page, currentUser, admin = false }) => {
   return (
     <>
@@ -364,11 +489,14 @@ const Layout = ({ children, page, currentUser, admin = false }) => {
         <Header currentUser={currentUser} />
         <div id="wrapper" className="d-flex">
           <div id="sidebar-wrapper" className="border-right">
+            <SkipLinks />
             {!admin && <Sidebar page={page} currentUser={currentUser} />}
             {admin && <SidebarAdmin page={page} currentUser={currentUser} />}
           </div>
           <div id="page-content-wrapper">
-            <main className="pb-5">{children}</main>
+            <main role="main" className="pb-5" id="main">
+              {children}
+            </main>
           </div>
         </div>
         <Footer />

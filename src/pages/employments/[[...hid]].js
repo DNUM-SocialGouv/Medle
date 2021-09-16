@@ -1,5 +1,5 @@
 import ListAltIcon from "@material-ui/icons/ListAlt"
-import WarningRoundedIcon from "@material-ui/icons/WarningRounded"
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -11,7 +11,7 @@ import { exportEmployments, findLastEdit } from "../../clients/employments"
 import { CurrentMonthEmployments, PassedMonthEmployments } from "../../components/EmploymentMonthData"
 import { SearchButton } from "../../components/form/SearchButton"
 import Layout from "../../components/Layout"
-import { Title1, Title2 } from "../../components/StyledComponents"
+import { InputDarker, Title1, Title2 } from "../../components/StyledComponents"
 import { START_YEAR_MEDLE } from "../../config"
 import { useDebounce } from "../../hooks/useDebounce"
 import { withAuthentication } from "../../utils/auth"
@@ -137,6 +137,14 @@ const ListEmploymentsHospital = ({ currentUser }) => {
     [currentUser],
   )
 
+  // Darker color for Select 
+  const colourStyles = {
+    control: styles => ({ ...styles, backgroundColor: 'white', borderColor: '#555C64', color: '#555C64' }),
+    placeholder: styles => ({ ...styles, color: '#555C64' }),
+    indicatorSeparator: styles => ({ ...styles, backgroundColor: '#555C64'}),
+    dropdownIndicator: styles => ({ ...styles, color: '#555C64'})
+  };
+
   React.useEffect(() => {
     const fetchData = async () => {
       const allHospitalsOfUser = filterHospitals()
@@ -195,14 +203,17 @@ const ListEmploymentsHospital = ({ currentUser }) => {
   }
 
   return (
-    <Layout page="emploments" currentUser={currentUser}>
+    <Layout page="employments" currentUser={currentUser}>
+      <Head>
+        <title>Tous les établissements - Medlé</title>
+      </Head>
       <Title1 className="mt-5 mb-4">{"Tous les établissements"}</Title1>
       <Container style={{ maxWidth: 980 }}>
         <Form onSubmit={handleSubmit}>
-          <FormGroup inline className="mb-4 justify-content-center">
+          <FormGroup inline className="mb-4 justify-content-center" role="group">
             <Row>
               <Col className="flex-grow-1">
-                <Input
+                <InputDarker
                   type="text"
                   name="search"
                   id="search"
@@ -210,6 +221,7 @@ const ListEmploymentsHospital = ({ currentUser }) => {
                   autoComplete="off"
                   value={search}
                   onChange={handleSearchChange}
+                  aria-label="Rechercher un établissement"
                 />
               </Col>
             </Row>
@@ -221,17 +233,17 @@ const ListEmploymentsHospital = ({ currentUser }) => {
         <Table responsive className="table-hover">
           <thead>
             <tr className="table-light">
-              <th>Établissement</th>
-              <th>Année {currentYear - 1}</th>
-              <th>Dernier mois ajouté</th>
-              <th>Ajouté le</th>
+              <th scope="col">Établissement</th>
+              <th scope="col">Année {currentYear - 1}</th>
+              <th scope="col">Dernier mois ajouté</th>
+              <th scope="col">Ajouté le</th>
               <th />
             </tr>
           </thead>
           <tbody>
             {hospitals.map((hospital) => (
               <Link key={hospital.id} href="/employments/[[...hid]]" as={`/employments/${hospital?.id}`}>
-                <tr key={hospital.id}>
+                <tr key={hospital.id} style={{ cursor: 'pointer'}}>
                   <td>
                     <span>{hospital.name}</span>
                   </td>
@@ -261,6 +273,7 @@ const ListEmploymentsHospital = ({ currentUser }) => {
               options={yearsOptions}
               defaultValue={yearsOptions[0]}
               onChange={handleYearChange}
+              styles={colourStyles}
               aria-label="Changer l'année"
             />
           </div>
@@ -306,6 +319,9 @@ const EmploymentsHospital = ({ currentUser, hospitalId }) => {
 
   return (
     <Layout page="employments" currentUser={currentUser}>
+      <Head>
+        <title>Déclaration du personnel {hospital?.name && ` de ${hospital.name}`}{" "} - Medlé</title>
+      </Head>
       <div className="d-flex flex-column flex-md-row justify-content-center align-items-center">
         <Title1 className="mt-5 mr-5 mb-4 mb-md-5">
           Déclaration du personnel {hospital?.name && ` de ${hospital.name}`}{" "}
@@ -334,7 +350,7 @@ const EmploymentsHospital = ({ currentUser, hospitalId }) => {
               <small>
                 Attention, un ETP est un Equivalent Temps Plein et non un poste.{" "}
                 <Link href={"/faq"}>
-                  <a>{"+ d'infos dans la FAQ"}</a>
+                  <a style={{ color: "#376FE6" }}>{"+ d'infos dans la FAQ"}</a>
                 </Link>
                 .
               </small>

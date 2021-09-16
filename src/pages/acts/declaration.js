@@ -1,4 +1,5 @@
 import moment from "moment"
+import Head from "next/head"
 import Router, { useRouter } from "next/router"
 import PropTypes from "prop-types"
 import React, { useReducer, useRef, useState } from "react"
@@ -287,9 +288,14 @@ const ActDeclaration = ({ act, currentUser }) => {
     }
   }
 
+  const profileTitle = "Qui a été examiné ?"
+
   if (!hospitalId)
     return (
       <Layout page="declaration" currentUser={currentUser}>
+        <Head>
+          <title>{!state.id ? "Ajout d'acte" : "Modification d'un acte"} - Medlé</title>
+        </Head>
         <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
         <Container style={{ maxWidth: 720 }}>
           <Alert color="danger">
@@ -301,102 +307,108 @@ const ActDeclaration = ({ act, currentUser }) => {
 
   return (
     <Layout page="declaration" currentUser={currentUser}>
+      <Head>
+        <title>{!state.id ? "Ajout d'acte" : "Modification d'un acte"} - Medlé</title>
+      </Head>
       <Title1 className="mt-5 mb-5">{!state.id ? "Ajout d'acte" : "Modification d'un acte"}</Title1>
       <Container style={{ maxWidth: 720 }}>
-        <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>
+        <div role="group" aria-label="Données d'identification de l'acte">
+          <Title2 className="mb-4">{"Données d'identification de l'acte"}</Title2>
 
-        <Row>
-          <Col sm="6" md="4">
-            <Label htmlFor="internalNumber" className="mb-0">
-              Numéro interne
-            </Label>
-            <Input
-              id="internalNumber"
-              invalid={errors && !!errors.internalNumber}
-              placeholder="Ex: 2019-23091"
-              value={state.internalNumber}
-              onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
-              autoComplete="off"
-              onBlur={onBlurNumberInputs("internalNumber")}
-            />
-            {warnings && warnings.internalNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
-            <FormFeedback>
-              <InputError>{errors && errors.internalNumber}</InputError>
-            </FormFeedback>
-          </Col>
-          <Col sm="6" md="4" className="mt-3 mt-sm-0">
-            <Label htmlFor="examinationDate" className="mb-0">
-              {"Date d'examen"}
-            </Label>
-            <Input
-              id="examinationDate"
-              invalid={errors && !!errors.examinationDate}
-              type="date"
-              value={state.examinationDate || moment(now()).format(ISO_DATE)}
-              // value={state.examinationDate}
-              onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
-            />
-            <FormFeedback>
-              <InputError>{errors && errors.examinationDate}</InputError>
-            </FormFeedback>
-          </Col>
-          <Col className="mt-4 text-center mt-md-0" sm="12" md="4">
-            <Label htmlFor="proofWithoutComplaint" className="mb-0">
-              Victime hors réquisition judiciaire
-            </Label>
-            <small>(recueil de preuve sans plainte)</small>
-            <br />
-            <Input
-              type="checkbox"
-              name="proofWithoutComplaint"
-              id="proofWithoutComplaint"
-              value={state.proofWithoutComplaint || false}
-              checked={state.proofWithoutComplaint || false}
-              style={{ margin: "auto" }}
-              onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.checked } })}
-            />
-          </Col>
-        </Row>
-        <Row className="mt-4 mt-md-3">
-          <Col md="4">
-            <Label htmlFor="pvNumber" className="mb-0">
-              Numéro de PV
-            </Label>
-            <Input
-              id="pvNumber"
-              placeholder={state.proofWithoutComplaint ? "" : "Recommandé"}
-              value={state.pvNumber}
-              disabled={!!state.proofWithoutComplaint}
-              onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
-              autoComplete="off"
-              onBlur={onBlurNumberInputs("pvNumber")}
-            />
-            {warnings && warnings.pvNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
-          </Col>
-          <Col md="8" className="mt-3 mt-md-0">
-            <Label htmlFor="askerId" className="mb-0">
-              Demandeur
-            </Label>
-            <AskerSelect
-              dispatch={dispatch}
-              id="askerId"
-              askerId={state.askerId}
-              disabled={!!state.proofWithoutComplaint}
-              error={errors && errors.askerId ? errors.askerId : null}
-            />
-            <div style={{ color: "#d63626", fontSize: "80%" }} className="d-flex align-items-center">
-              {errors && errors.askerId}
-            </div>
-          </Col>
-        </Row>
-
-        <Title2 className="mt-5 mb-4" ref={refPersonType}>
-          Qui a été examiné?
-        </Title2>
+          <Row>
+            <Col sm="6" md="4">
+              <Label htmlFor="internalNumber" className="mb-0">
+                Numéro interne
+              </Label>
+              <Input
+                id="internalNumber"
+                invalid={errors && !!errors.internalNumber}
+                placeholder="Ex: 2019-23091"
+                value={state.internalNumber}
+                onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
+                autoComplete="off"
+                onBlur={onBlurNumberInputs("internalNumber")}
+                aria-required="true"
+              />
+              {warnings && warnings.internalNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
+              <FormFeedback>
+                <InputError>{errors && errors.internalNumber}</InputError>
+              </FormFeedback>
+            </Col>
+            <Col sm="6" md="4" className="mt-3 mt-sm-0">
+              <Label htmlFor="examinationDate" className="mb-0">
+                {"Date d'examen"}
+              </Label>
+              <Input
+                id="examinationDate"
+                invalid={errors && !!errors.examinationDate}
+                type="date"
+                value={state.examinationDate || moment(now()).format(ISO_DATE)}
+                // value={state.examinationDate}
+                onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
+              />
+              <FormFeedback>
+                <InputError>{errors && errors.examinationDate}</InputError>
+              </FormFeedback>
+            </Col>
+            <Col className="mt-4 text-center mt-md-0" sm="12" md="4">
+              <Label
+                htmlFor="proofWithoutComplaint"
+                className="mb-0"
+                style={{ display: "block", height: "auto", paddingBottom: "0.5em" }}
+              >
+                Victime hors réquisition judiciaire
+                <br /> <small>(recueil de preuve sans plainte)</small>
+              </Label>
+              <Input
+                type="checkbox"
+                name="proofWithoutComplaint"
+                id="proofWithoutComplaint"
+                value={state.proofWithoutComplaint || false}
+                checked={state.proofWithoutComplaint || false}
+                style={{ margin: "auto" }}
+                onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.checked } })}
+              />
+            </Col>
+          </Row>
+          <Row className="mt-4 mt-md-3">
+            <Col md="4">
+              <Label htmlFor="pvNumber" className="mb-0">
+                Numéro de PV
+              </Label>
+              <Input
+                id="pvNumber"
+                placeholder={state.proofWithoutComplaint ? "" : "Recommandé"}
+                value={state.pvNumber}
+                disabled={!!state.proofWithoutComplaint}
+                onChange={(e) => dispatch({ type: e.target.id, payload: { val: e.target.value } })}
+                autoComplete="off"
+                onBlur={onBlurNumberInputs("pvNumber")}
+              />
+              {warnings && warnings.pvNumber && <FormText color="warning">Ce numéro existe déjà</FormText>}
+            </Col>
+            <Col md="8" className="mt-3 mt-md-0">
+              <Label htmlFor="askerId" className="mb-0">
+                Demandeur
+              </Label>
+              <AskerSelect
+                dispatch={dispatch}
+                id="askerId"
+                askerId={state.askerId}
+                disabled={!!state.proofWithoutComplaint}
+                error={errors && errors.askerId ? errors.askerId : null}
+              />
+              <div style={{ color: "#d63626", fontSize: "80%" }} className="d-flex align-items-center">
+                {errors && errors.askerId}
+              </div>
+            </Col>
+          </Row>
+        </div>
 
         {state.proofWithoutComplaint ? (
           <ActBlock
             type="profile"
+            title={profileTitle}
             values={["Victime (vivante)"]}
             mode="toggle"
             dispatch={dispatch}
@@ -405,13 +417,21 @@ const ActDeclaration = ({ act, currentUser }) => {
         ) : !state.id ? (
           <ActBlock
             type="profile"
+            title={profileTitle}
             values={orderedProfileValues}
             mode="toggle"
             dispatch={dispatch}
             state={state.profile}
           />
         ) : (
-          <ActBlock type="profile" values={[state.profile]} mode="lock" dispatch={dispatch} state={state.profile} />
+          <ActBlock
+            type="profile"
+            title={profileTitle}
+            values={[state.profile]}
+            mode="lock"
+            dispatch={dispatch}
+            state={state.profile}
+          />
         )}
 
         {shouldDisplayProfile() && getProfiledRender(state)}

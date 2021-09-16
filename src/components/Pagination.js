@@ -70,6 +70,9 @@ const Pagination = ({ data, fn }) => {
             justify-content: center;
             align-items: center;
           }
+          .page-link :hover {
+            background-color: #A0ADBA;
+          }
         `}</style>
       </>
     )

@@ -49,7 +49,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
   return (
     <>
       <Head>
-        <title>Medlé : connexion</title>
+        <title>Connexion - Medlé</title>
       </Head>
 
       <div

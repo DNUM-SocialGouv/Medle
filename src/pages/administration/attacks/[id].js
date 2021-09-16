@@ -1,4 +1,5 @@
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -12,7 +13,6 @@ import {
   Form,
   FormFeedback,
   FormGroup,
-  Input,
   Label,
   Modal,
   ModalBody,
@@ -22,13 +22,17 @@ import {
 
 import { createAttack, deleteAttack, findAttack, updateAttack } from "../../../clients/attacks"
 import Layout from "../../../components/Layout"
-import { Title1 } from "../../../components/StyledComponents"
+import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logDebug, logError } from "../../../utils/logger"
 import { isEmpty } from "../../../utils/misc"
 import { ADMIN } from "../../../utils/roles"
 
-const MandatorySign = () => <span style={{ color: "red" }}>*</span>
+const MandatorySign = () => (
+  <span style={{ color: "red" }} aria-hidden="true">
+    *
+  </span>
+)
 
 // TODO : vérifier que seul le super admin puisse accéder à cette page
 const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
@@ -105,10 +109,13 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
 
   return (
     <Layout page="attacks" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Attentat - Medlé</title>
+      </Head>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
           <Link href="/administration/attacks">
-            <a>
+            <a style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour
             </a>
@@ -137,13 +144,13 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Ajout d'un attentat">
           <FormGroup row>
             <Label for="id" sm={3}>
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" id="id" readOnly {...idReg} innerRef={idRef} />
+              <InputDarker type="text" id="id" readOnly {...idReg} innerRef={idRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -152,7 +159,14 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input type="text" id="year" {...yearReg} innerRef={yearRef} invalid={!!formErrors.year} />
+              <InputDarker
+                type="text"
+                id="year"
+                {...yearReg}
+                innerRef={yearRef}
+                invalid={!!formErrors.year}
+                aria-required="true"
+              />
               <FormFeedback>{formErrors.year && "L'année a un format incorrect."}</FormFeedback>
             </Col>
           </FormGroup>
@@ -162,7 +176,14 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input type="text" id="name" {...nameReg} innerRef={nameRef} invalid={!!formErrors.name} />
+              <InputDarker
+                type="text"
+                id="name"
+                {...nameReg}
+                innerRef={nameRef}
+                invalid={!!formErrors.name}
+                aria-required="true"
+              />
               <FormFeedback>{formErrors.name && "Le nom est obligatoire."}</FormFeedback>
             </Col>
           </FormGroup>

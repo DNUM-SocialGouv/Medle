@@ -1,21 +1,21 @@
 import { AddCircle, Delete } from "@material-ui/icons"
 import { PropTypes } from "prop-types"
 import moment from "moment"
-
+import Head from "next/head"
 
 
 import React, { useState } from "react"
-import { Alert, Button, Container, Input, Table } from "reactstrap"
+import { Alert, Button, Container, Table } from "reactstrap"
 
 import { createMessage, deleteMessage, findAllMessages } from "../../../clients/messages"
 import Layout from "../../../components/Layout"
-import { Title1 } from "../../../components/StyledComponents"
+import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { preventDefault } from "../../../utils/form"
 import { ADMIN } from "../../../utils/roles"
 import { logError } from "../../../utils/logger"
 
-import { FORMAT_DATE, isoToFr } from "../../../utils/date"
+import { FORMAT_DATE } from "../../../utils/date"
 
 const MessageRow = ({ message, onDelete }) => (
   <tr>
@@ -23,7 +23,7 @@ const MessageRow = ({ message, onDelete }) => (
     <td>{moment(message.start_date).format(FORMAT_DATE)}</td>
     <td>{!message.end_date ? "" : moment(message.end_date).format(FORMAT_DATE)}</td>
     <td>
-      <Button onClick={() => onDelete(message.id)}>
+      <Button onClick={() => onDelete(message.id)} aria-label="Supprimer le message">
         <Delete />
       </Button>
     </td>
@@ -80,6 +80,9 @@ const MessagePage = ({ currentUser, messages = [] }) => {
   })
   return (
     <Layout page="messages" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Administration des messages - Medlé</title>
+      </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
@@ -106,32 +109,35 @@ const MessagePage = ({ currentUser, messages = [] }) => {
 
               <tr>
                 <td>
-                  <Input
+                  <InputDarker
                     type="textarea"
                     name="content"
                     placeholder="Message"
                     value={content}
                     onChange={(event) => setContent(event.target.value)}
+                    aria-label="Zone de texte du message à afficher"
                   />
                 </td>
                 <td>
-                  <Input
+                  <InputDarker
                     type="date"
                     name="start_date"
                     value={startDate}
                     onChange={(event) => setStartDate(event.target.value)}
+                    aria-label="Date de début de l'affichage du message"
                   />
                 </td>
                 <td>
-                  <Input
+                  <InputDarker
                     type="date"
                     name="end_date"
                     value={endDate}
                     onChange={(event) => setEndDate(event.target.value)}
+                    aria-label="Date de fin de l'affichage du message"
                   />
                 </td>
                 <td>
-                  <Button type="submit">
+                  <Button type="submit" aria-label="Valider l'ajout du message">
                     <AddCircle />
                   </Button>
                 </td>

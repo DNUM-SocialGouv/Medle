@@ -114,74 +114,76 @@ const ActBlock = ({ title, subTitle, detail, type, values, dispatch, state, inva
 
   return (
     <>
-      {title && (
-        <Title2 className="mt-5 mb-4" style={colorOptions}>
-          {title}&nbsp;
-          {invalid && <InputError />}
-        </Title2>
-      )}
-
-      {subTitle && (
-        <Row className="mt-3">
-          <Col sm={4} className="mb-1" style={colorOptions}>
-            {subTitle}&nbsp;
+      <div role="group" aria-label={subTitle ? `${title} - ${subTitle}` : title}>
+        {title && !subTitle && (
+          <Title2 className="mt-5 mb-4" style={colorOptions}>
+            {title}&nbsp;
             {invalid && <InputError />}
-          </Col>
-        </Row>
-      )}
+          </Title2>
+        )}
 
-      {detail && (
-        <Row className="mt-3 mb-4">
-          <Col className="mb-1" style={{ color: "#9b9b9b" }}>
-            <i>{detail}</i>
-          </Col>
-        </Row>
-      )}
+        {subTitle && (
+          <Row className="mt-3">
+            <Col sm={4} className="mb-1" style={colorOptions}>
+              {subTitle}&nbsp;
+              {invalid && <InputError />}
+            </Col>
+          </Row>
+        )}
 
-      <Row className={rowClassNames}>
-        {newValues.map((val, index) => {
-          if (val.subValues?.length) {
-            return (
-              <BlockChildren
-                key={index}
-                title={val.title}
-                values={val.subValues}
-                state={state}
-                dispatch={dispatch}
-                type={type}
-                mode={mode}
-                colOptions={colOptions}
-              />
-            )
-          } else {
-            return (
-              <Col key={index} {...colOptions} className="mb-4">
-                <Button
-                  style={{ fontSize: 14 }}
-                  className="h-100"
-                  outline
-                  color="secondary"
-                  block
-                  invert={isSelected(state, val.title)}
-                  onClick={() =>
-                    dispatch({
-                      type,
-                      payload: {
-                        mode,
-                        val: val.title,
-                      },
-                    })
-                  }
-                >
-                  {val.title}
-                  <br />
-                  {val.subTitle}
-                </Button>
-              </Col>
-            )
-          }
-        })}
-      </Row>
+        {detail && (
+          <Row className="mt-3 mb-4">
+            <Col className="mb-1" style={{ color: "#9b9b9b" }}>
+              <i>{detail}</i>
+            </Col>
+          </Row>
+        )}
+
+        <Row className={rowClassNames}>
+          {newValues.map((val, index) => {
+            if (val.subValues?.length) {
+              return (
+                <BlockChildren
+                  key={index}
+                  title={val.title}
+                  values={val.subValues}
+                  state={state}
+                  dispatch={dispatch}
+                  type={type}
+                  mode={mode}
+                  colOptions={colOptions}
+                />
+              )
+            } else {
+              return (
+                <Col key={index} {...colOptions} className="mb-4">
+                  <Button
+                    style={{ fontSize: 14 }}
+                    className="h-100"
+                    outline
+                    color="secondary"
+                    block
+                    invert={isSelected(state, val.title)}
+                    onClick={() =>
+                      dispatch({
+                        type,
+                        payload: {
+                          mode,
+                          val: val.title,
+                        },
+                      })
+                    }
+                  >
+                    {val.title}
+                    <br />
+                    {val.subTitle}
+                  </Button>
+                </Col>
+              )
+            }
+          })}
+        </Row>
+      </div>
     </>
   )
 }

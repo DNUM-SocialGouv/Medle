@@ -1,15 +1,16 @@
 import ListAltIcon from "@material-ui/icons/ListAlt"
+import Head from "next/head"
 import { PropTypes } from "prop-types"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import Select from "react-select"
 import Switch from "react-switch"
-import { Alert, Col, Container, Form, FormGroup, Input, Row } from "reactstrap"
+import { Alert, Col, Container, Form, FormGroup, Row } from "reactstrap"
 
 import { fetchExport, memoizedFetchStatistics } from "../../clients/statistics"
 import { SearchButton } from "../../components/form/SearchButton"
 import Layout from "../../components/Layout"
 import { StatBlockNumbers, StatBlockPieChart } from "../../components/StatBlock"
-import { Label, Title1 } from "../../components/StyledComponents"
+import { InputDarker, Label, Title1 } from "../../components/StyledComponents"
 import TabButton from "../../components/TabButton"
 import { isOpenFeature } from "../../config"
 import { isValidEndDate, isValidStartDate } from "../../services/statistics/common"
@@ -114,6 +115,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
   }
 
   const customStyles = {
+    control: (styles) => ({ ...styles, backgroundColor: "white", borderColor: "#555C64", color: "#555C64" }),
+    placeholder: (styles) => ({ ...styles, color: "#555C64" }),
+    indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "#555C64" }),
+    dropdownIndicator: (styles) => ({ ...styles, color: "#555C64" }),
     container: (styles) => ({
       ...styles,
       flexGrow: 1,
@@ -124,6 +129,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
     }),
   }
   const customStylesProfiles = {
+    control: (styles) => ({ ...styles, backgroundColor: "white", borderColor: "#555C64", color: "#555C64" }),
+    placeholder: (styles) => ({ ...styles, color: "#555C64" }),
+    indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "#555C64" }),
+    dropdownIndicator: (styles) => ({ ...styles, color: "#555C64" }),
     container: (styles) => ({
       ...styles,
       margin: "15px 20px",
@@ -137,37 +146,42 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 
   return (
     <Layout page="statistics" currentUser={currentUser}>
+      <Head>
+        <title>Statistiques - Medlé</title>
+      </Head>
       <Title1 className="mt-5 mb-4">{"Statistiques"}</Title1>
       <Container className="text-center" style={{ maxWidth: 1100 }}>
         <Form onSubmit={(e) => e.preventDefault()}>
           <Row className="align-items-baseline">
             <Col lg={{ offset: 2, size: 4 }} md="6" sm="12" className="text-right">
               <FormGroup row className="justify-content-md-end justify-content-center align-items-baseline">
-                <Label htmlFor="examinationDate" className="mr-2">
-                  {"Du"}
-                </Label>
-                <Input
+                <Label className="mr-2">{"Du"}</Label>
+                <InputDarker
                   id="startDate"
                   type="date"
                   invalid={errors && !!errors.startDate}
                   value={formState.startDate}
                   onChange={onDateChange}
                   style={{ maxWidth: 160 }}
+                  aria-label="Date de début de la recherche"
                 />
               </FormGroup>
             </Col>
             <Col lg={{ size: 4 }} md="6" sm="12">
-              <FormGroup row className="justify-content-md-start justify-content-center align-items-baseline">
-                <Label htmlFor="examinationDate" className="mr-2 ml-md-3">
-                  {"au"}
-                </Label>
-                <Input
+              <FormGroup
+                row
+                className="justify-content-md-start justify-content-center align-items-baseline"
+                role="group"
+              >
+                <Label className="mr-2 ml-md-3">{"au"}</Label>
+                <InputDarker
                   id="endDate"
                   type="date"
                   invalid={errors && !!errors.startDate}
                   value={formState.endDate}
                   onChange={onDateChange}
                   style={{ maxWidth: 160 }}
+                  aria-label="Date de fin de la recherche"
                 />
               </FormGroup>
             </Col>
@@ -194,6 +208,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                     width={33}
                     className="ml-1 mr-1 react-switch"
                     id="material-switch"
+                    aria-label={
+                      supervisorRoles.includes(currentUser?.role)
+                        ? "Mode Personnalisé (non coché) ou National (coché)"
+                        : "Mode Ma structure (non coché) ou National (coché)"
+                    }
                   />
                   <span style={{ color: scopeFilter && scopeFilter.isNational ? "#9c27b0" : "#000" }}>National</span>
                 </div>
@@ -203,7 +222,9 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 
           {!scopeFilter.isNational && hospitalsChoices?.length > 1 && (
             <div className="mx-auto d-lg-flex align-items-baseline" style={{ maxWidth: 800 }}>
-              <Label className="mr-3">Établissements</Label>
+              <Label className="mr-3" id="hospitalsLabel">
+                Établissements
+              </Label>
               <Select
                 options={hospitalsChoices}
                 value={scopeFilter.scope}
@@ -214,6 +235,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                 isClearable={true}
                 isSearchable={true}
                 styles={customStyles}
+                aria-labelledby="hospitalsLabel"
               />
             </div>
           )}
@@ -232,6 +254,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           labels={["Global", "Vivant", "Thanato"]}
           colorScheme={scopeFilter && scopeFilter.isNational ? "violet" : "blue"}
           callback={setType}
+          ariaLabel="Choix de la catégorie"
         />
 
         <div
@@ -247,6 +270,8 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
             isClearable={false}
             isSearchable={true}
             styles={customStylesProfiles}
+            id="selectCategorie"
+            aria-label="Profil"
           />
         </div>
         {type === "Global" && (
@@ -258,12 +283,11 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               secondNumber={statistics?.averageCount}
               secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
-
             <StatBlockPieChart
               data={statistics?.profilesDistribution}
+              title="Répartition Vivant/Thanato"
               labels={[{ Vivants: "Pers. vivantes" }, { "Personne décédée": "Pers. décédées" }]}
               hoverTitle="Hors assises et reconstitutions"
-              title="Répartition Vivant/Thanato"
             />
             <StatBlockNumbers
               title="Actes hors examens"
@@ -302,6 +326,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                 { "Sans réquisition": "Sans n° de réquisition" },
                 "Recueil de preuve sans plainte",
               ]}
+              aria-label="Numéro de réquisition"
             />
             <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
             <StatBlockPieChart

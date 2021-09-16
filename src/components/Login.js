@@ -29,7 +29,8 @@ const Login = ({ authentication, error }) => {
 
   return (
     <>
-      <img src={"/images/logo.png"} alt="logo" title="logo" className="my-5" />
+    <main role="main">
+      <img src={"/images/logo.png"} alt="Medlé - Plateforme médecine légale" className="my-5" style={{ maxHeight: '6.5rem'}} />
       <div>
         <div className="encadre shadow border mx-4 px-3 py-4 rounded">
           <Form onSubmit={onSubmit} data-testid="authent-form" method="post">
@@ -45,6 +46,7 @@ const Login = ({ authentication, error }) => {
                   ref={emailRef}
                   className={"form-control"}
                   autoComplete="email"
+                  aria-required="true"
                 />
               </InputGroup>
             </FormGroup>
@@ -52,7 +54,7 @@ const Login = ({ authentication, error }) => {
               <Label for="password">Mot de passe</Label>
               <div className="float-right">
                 <Link href="/forgot-password">
-                  <a>Mot de passe oublié&nbsp;?</a>
+                  <a style={{ color: "#376FE6" }}>Mot de passe oublié&nbsp;?</a>
                 </Link>
               </div>
               <InputGroup>
@@ -64,18 +66,20 @@ const Login = ({ authentication, error }) => {
                   ref={passwordRef}
                   className={"form-control"}
                   autoComplete="current-password"
+                  aria-required="true"
                 />
                 <InputGroupAddon addonType="append" style={{ backgroundColor: "#e9ecef" }}>
-                  <InputGroupText
-                    style={{
-                      backgroundColor: "#e9ecef",
-                      borderColor: "#ced4da",
-                    }}
-                    onClick={handleClick}
-                    className={hidden ? "" : "text-primary"}
-                  >
-                    <RemoveRedEyeIcon width={24} />
-                  </InputGroupText>
+                  <button type="button" onClick={handleClick} aria-label="Afficher ou masquer le mot de passe">
+                    <InputGroupText
+                      style={{
+                        backgroundColor: "#e9ecef",
+                        borderColor: "#ced4da",
+                      }}
+                      className={hidden ? "" : "text-primary"}
+                    >
+                      <RemoveRedEyeIcon width={24} focusable="true" style={{ cursor: 'pointer' }}/>
+                    </InputGroupText>
+                  </button>
                 </InputGroupAddon>
               </InputGroup>
             </FormGroup>
@@ -90,6 +94,14 @@ const Login = ({ authentication, error }) => {
         </div>
       </div>
       <style jsx>{`
+        button{
+          border: none;
+          padding: 0;
+          display: flex;
+        }
+        main{
+          display:flex;
+        }
         .encadre {
           background-color: rgb(249, 249, 249);
         }
@@ -106,18 +118,17 @@ const Login = ({ authentication, error }) => {
           /* Microsoft Edge */
           color: #767676;
         }
-
         img[alt="logo"] {
           max-width: 300px;
           object-fit: contain;
         }
-
         @media screen and (max-width: 768px) {
           img[alt="logo"] {
             width: 100%;
           }
         }
       `}</style>
+      </main>
     </>
   )
 }

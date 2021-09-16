@@ -4,7 +4,6 @@ import React from "react"
 import { Cell, Legend, Pie, PieChart, Tooltip } from "recharts"
 
 import { objToArray } from "../utils/object"
-import { Title2 } from "./StyledComponents"
 
 const StatBlock = ({ children }) => {
   return (
@@ -35,33 +34,55 @@ StatBlock.propTypes = {
 export const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber, secondLabel }) => {
   return (
     <StatBlock>
-      <Title2 className="mb-4">{title}</Title2>
-      <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{firstNumber}</p>
-
-      <p
-        style={{
-          color: "#4a4a4a",
-          marginTop: -25,
-          marginLeft: 2,
-          fontSize: 15,
-          fontFamily: "Source Sans Pro",
-        }}
-        className="mb-4"
+      <div
+        className="text-center"
+        style={{ display: "inline-flex", verticalAlign: "middle", alignItems: "center", width: "100%" }}
+        aria-hidden="true"
       >
-        {firstLabel}
-      </p>
-      <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{secondNumber}</p>
-      <p
-        style={{
-          color: "#4a4a4a",
-          marginTop: -25,
-          marginLeft: 2,
-          fontSize: 15,
-          fontFamily: "Source Sans Pro",
-        }}
-      >
-        {secondLabel}
-      </p>
+        <span
+          style={{
+            height: 24,
+            color: "#212529",
+            fontFamily: "Evolventa",
+            fontSize: 18,
+            fontWeight: 400,
+            width: "100%",
+          }}
+          id="statNumbersTitle"
+        >
+          {title}
+        </span>
+      </div>
+      <div aria-labelledby="statNumbersTitle" tabIndex="0">
+        <span id="statNumbersTitle" className="sr-only">
+          Données {title}
+        </span>
+        <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{firstNumber}</p>
+        <p
+          style={{
+            color: "#4a4a4a",
+            marginTop: -25,
+            marginLeft: 2,
+            fontSize: 15,
+            fontFamily: "Source Sans Pro",
+          }}
+          className="mb-4"
+        >
+          {firstLabel}
+        </p>
+        <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{secondNumber}</p>
+        <p
+          style={{
+            color: "#4a4a4a",
+            marginTop: -25,
+            marginLeft: 2,
+            fontSize: 15,
+            fontFamily: "Source Sans Pro",
+          }}
+        >
+          {secondLabel}
+        </p>
+      </div>
     </StatBlock>
   )
 }
@@ -79,44 +100,54 @@ export const StatBlockPieChart = ({ data, labels = [], hoverTitle, title }) => {
 
   return (
     <StatBlock>
-      <div
-        className="text-center"
-        style={{ display: "inline-flex", verticalAlign: "middle", alignItems: "center", width: "100%" }}
-        title={hoverTitle}
-      >
-        <span
-          style={{
-            height: 24,
-            color: "#212529",
-            fontFamily: "Evolventa",
-            fontSize: 18,
-            fontWeight: 400,
-            width: "100%",
-          }}
-        >
-          {title}
+      <div aria-labelledby="statPieChartTitle" aria-describedby="statPieChartDescription" tabIndex="0">
+        <span id="statPieChartTitle" className="sr-only">
+          Graphique {title} {hoverTitle ? "(" + hoverTitle + ")" : ""}
         </span>
-        {hoverTitle && <HelpOutlineIcon fontSize="small" />}
-      </div>
-      <PieChart width={280} height={210}>
-        <Pie
-          data={values}
-          dataKey="value"
-          cx="50%"
-          cy="50%"
-          outerRadius={70}
-          innerRadius={20}
-          labelLine={false}
-          label={RenderCustomizedLabel}
+        <p id="statPieChartDescription" className="sr-only">
+          {getChartPieDescription(values)}
+        </p>
+        <div
+          aria-hidden="true"
+          className="text-center"
+          style={{ display: "inline-flex", verticalAlign: "middle", alignItems: "center", width: "100%" }}
+          title={hoverTitle}
         >
-          {values.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-
-        <Legend wrapperStyle={{ color: "#9f9f9f" }} />
-      </PieChart>
+          <span
+            style={{
+              height: 24,
+              color: "#212529",
+              fontFamily: "Evolventa",
+              fontSize: 18,
+              fontWeight: 400,
+              width: "100%",
+            }}
+          >
+            {title}
+          </span>
+          {hoverTitle && <HelpOutlineIcon fontSize="small" />}
+        </div>
+      </div>
+      <div aria-hidden="true">
+        <PieChart width={280} height={210} role="img">
+          <Pie
+            data={values}
+            dataKey="value"
+            cx="50%"
+            cy="50%"
+            outerRadius={70}
+            innerRadius={20}
+            labelLine={false}
+            label={RenderCustomizedLabel}
+          >
+            {values.map((_, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend wrapperStyle={{ color: "#9f9f9f" }} />
+        </PieChart>
+      </div>
     </StatBlock>
   )
 }
@@ -142,6 +173,22 @@ const RenderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
       {`${(percent * 100).toFixed(0)}%`}
     </text>
   )
+}
+
+const getChartPieDescription = (donnees) => {
+  let total = 0
+  donnees.forEach((e) => {
+    total += e.value
+  })
+  if (total != 0) {
+    let description = "Ce graphique présente les données suivantes : "
+    donnees.forEach((e) => {
+      description += e.name + " : " + e.value + " (soit " + Math.round((e.value * 100) / total) + "%), "
+    })
+    return description.slice(0, -2)
+  } else {
+    return "Ce graphique ne présente aucune donnée"
+  }
 }
 
 RenderCustomizedLabel.propTypes = {

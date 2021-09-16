@@ -82,6 +82,7 @@ const UserReset = ({ currentUser }) => {
                 {...firstValueReg}
                 innerRef={firstValueRef}
                 invalid={!!formErrors.firstValue}
+                aria-required="true"
               />
               <FormFeedback>
                 {formErrors.firstValue && "Mot de passe invalide (8 à 30 caractères avec lettres ou chiffres)."}
@@ -99,6 +100,7 @@ const UserReset = ({ currentUser }) => {
                 {...confirmedValueReg}
                 innerRef={confirmedValueRef}
                 invalid={!!formErrors.confirmedValue}
+                aria-required="true"
               />
               <FormFeedback>{formErrors.confirmedValue && "Les mots de passe ne correspondent pas."}</FormFeedback>
             </Col>

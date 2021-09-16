@@ -1,4 +1,5 @@
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -12,7 +13,6 @@ import {
   Form,
   FormFeedback,
   FormGroup,
-  Input,
   Label,
   Modal,
   ModalBody,
@@ -28,7 +28,7 @@ import {
 } from "../../../../../clients/employments-references"
 import Layout from "../../../../../components/Layout"
 import MonthPicker from "../../../../../components/MonthPicker"
-import { Title1, Title2 } from "../../../../../components/StyledComponents"
+import { InputDarker, Title1, Title2 } from "../../../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../../../utils/auth"
 import { NAME_MONTHS, now } from "../../../../../utils/date"
 import { getReferenceData } from "../../../../../utils/init"
@@ -156,13 +156,16 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
 
   return (
     <Layout page="hospitals" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Hôpital {hospital?.name} - Paramètres ETP - Medlé</title>
+      </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
         <div className="d-flex justify-content-between">
           <Link href="/administration/hospitals/[hid]/employments" as={`/administration/hospitals/${hid}/employments`}>
-            <a>
+            <a style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour
             </a>
@@ -202,7 +205,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group">
           <FormGroup row>
             <Label for="others" sm={3}>
               {"Mois d'effet "}
@@ -216,7 +219,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" id="id" readOnly {...idReg} innerRef={idRef} />
+              <InputDarker type="text" id="id" readOnly {...idReg} innerRef={idRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -224,7 +227,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               Médecins&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="number"
                 autoComplete="off"
                 id="doctors"
@@ -243,7 +246,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               Secrétaires&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="number"
                 autoComplete="off"
                 id="secretaries"
@@ -262,7 +265,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               Aide soignant.e&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="number"
                 autoComplete="off"
                 id="nursings"
@@ -281,7 +284,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               Cadre de santé&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="number"
                 autoComplete="off"
                 id="executives"
@@ -300,7 +303,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               IDE&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="number"
                 autoComplete="off"
                 id="ides"
@@ -319,7 +322,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               {"Agent d'amphithéâtre"}&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="number"
                 autoComplete="off"
                 id="auditoriumAgents"
@@ -338,7 +341,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               Autres&nbsp;
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="number"
                 autoComplete="off"
                 id="others"

@@ -1,4 +1,5 @@
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -14,7 +15,6 @@ import {
   Form,
   FormFeedback,
   FormGroup,
-  Input,
   Label,
   Modal,
   ModalBody,
@@ -25,14 +25,18 @@ import {
 import { searchHospitalsFuzzy } from "../../../clients/hospitals"
 import { createUser, deleteUser, findUser, updateUser } from "../../../clients/users"
 import Layout from "../../../components/Layout"
-import { Title1 } from "../../../components/StyledComponents"
+import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logDebug, logError } from "../../../utils/logger"
 import { isEmpty } from "../../../utils/misc"
 import { ADMIN, ADMIN_HOSPITAL, availableRolesForUser, ROLES_DESCRIPTION, rulesOfRoles } from "../../../utils/roles"
 import { mapArrayForSelect, mapForSelect } from "../../../utils/select"
 
-const MandatorySign = () => <span style={{ color: "red" }}>*</span>
+const MandatorySign = () => (
+  <span style={{ color: "red" }} aria-hidden="true">
+    *
+  </span>
+)
 
 // React component : only available for ADMIN or ADMIN_HOSPITAL
 const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
@@ -247,10 +251,11 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   }, [register])
 
   const customStyles = (hasError) => ({
-    control: (styles) => ({
-      ...styles,
-      ...(hasError && { borderColor: "#d63626" }),
-    }),
+    control: (styles) => ({ ...styles, borderColor: "#555C64", ...(hasError && { borderColor: "#d63626" }) }),
+    placeholder: (styles) => ({ ...styles, color: "#555C64" }),
+    indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "#555C64" }),
+    dropdownIndicator: (styles) => ({ ...styles, color: "#555C64" }),
+    clearIndicator: (styles) => ({ ...styles, color: "#555C64" }),
   })
 
   const searchHospitals = async (search) => {
@@ -275,10 +280,13 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
 
   return (
     <Layout page="users" currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Utilisateur - Medlé</title>
+      </Head>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
           <Link href="/administration/users">
-            <a>
+            <a style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour
             </a>
@@ -307,13 +315,13 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Ajout d'un utilisateur">
           <FormGroup row>
             <Label for="id" sm={3}>
               Id
             </Label>
             <Col sm={9}>
-              <Input type="text" id="id" readOnly {...idReg} innerRef={idRef} />
+              <InputDarker type="text" id="id" readOnly {...idReg} innerRef={idRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -321,7 +329,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               Prénom
             </Label>
             <Col sm={9}>
-              <Input type="text" id="firstName" {...firstNameReg} innerRef={firstNameRef} />
+              <InputDarker type="text" id="firstName" {...firstNameReg} innerRef={firstNameRef} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -330,12 +338,13 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input
+              <InputDarker
                 type="text"
                 id="lastName"
                 {...lastNameReg}
                 innerRef={lastNameRef}
                 invalid={!!formErrors.lastName}
+                aria-required="true"
               />
               <FormFeedback>{formErrors.lastName && "Le nom est obligatoire."}</FormFeedback>
             </Col>
@@ -346,17 +355,25 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               <MandatorySign />
             </Label>
             <Col sm={9}>
-              <Input type="text" id="email" {...emailReg} innerRef={emailRef} invalid={!!formErrors.email} />
+              <InputDarker
+                type="text"
+                id="email"
+                {...emailReg}
+                innerRef={emailRef}
+                invalid={!!formErrors.email}
+                aria-required="true"
+              />
               <FormFeedback>{formErrors.email && "Courriel a un format incorrect."}</FormFeedback>
             </Col>
           </FormGroup>
           <FormGroup row>
-            <Label for="role" sm={3}>
+            <Label sm={3} id="roleLabel">
               Rôle&nbsp;
               <MandatorySign />
             </Label>
             <Col sm={9}>
               <Select
+                id="role"
                 options={roles}
                 value={role}
                 onChange={onRoleChange}
@@ -366,6 +383,8 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                 isSearchable={true}
                 isDisabled={rules.roleDisabled}
                 styles={customStyles(errors.role)}
+                aria-labelledby="roleLabel"
+                aria-required="true"
               />
               {errors.role && <FormFeedback className="d-block">{errors.role}</FormFeedback>}
             </Col>
@@ -387,6 +406,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                   isClearable={true}
                   isDisabled={rules.hospitalDisabled}
                   styles={customStyles(errors.hospital)}
+                  aria-required="true"
                 />
                 {errors.hospital && <FormFeedback className="d-block">{errors.hospital}</FormFeedback>}
               </Col>
@@ -410,6 +430,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                   isClearable={true}
                   isDisabled={rules.scopeDisabled}
                   styles={customStyles(errors.scope)}
+                  aria-required="true"
                 />
                 {errors.scope && <FormFeedback className="d-block">{errors.scope}</FormFeedback>}
               </Col>
