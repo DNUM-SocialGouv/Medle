@@ -18,8 +18,6 @@ import { logDebug, logError } from "../../utils/logger"
 import { deleteProperty, isEmpty } from "../../utils/misc"
 import { ACT_MANAGEMENT } from "../../utils/roles"
 
-// import { useTraceUpdate } from "../../utils/debug"
-
 // internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
   if (act && act.id) {
@@ -134,7 +132,7 @@ const reduceByMode = (state, action) => {
 const ActDeclaration = ({ act, currentUser }) => {
   const router = useRouter()
   const { internalNumber, pvNumber } = router.query
-  const refPersonType = useRef()
+  const refPerson = useRef(null)
   const [errors, setErrors] = useState({})
   const [warnings, setWarnings] = useState({})
 
@@ -182,7 +180,7 @@ const ActDeclaration = ({ act, currentUser }) => {
           logError(errors)
         } else {
           setErrors({})
-          refPersonType.current.scrollIntoView({
+          refPerson.current.scrollIntoView({
             behavior: "smooth",
             block: "start",
           })
@@ -405,34 +403,36 @@ const ActDeclaration = ({ act, currentUser }) => {
           </Row>
         </div>
 
-        {state.proofWithoutComplaint ? (
-          <ActBlock
-            type="profile"
-            title={profileTitle}
-            values={["Victime (vivante)"]}
-            mode="toggle"
-            dispatch={dispatch}
-            state={state.profile}
-          />
-        ) : !state.id ? (
-          <ActBlock
-            type="profile"
-            title={profileTitle}
-            values={orderedProfileValues}
-            mode="toggle"
-            dispatch={dispatch}
-            state={state.profile}
-          />
-        ) : (
-          <ActBlock
-            type="profile"
-            title={profileTitle}
-            values={[state.profile]}
-            mode="lock"
-            dispatch={dispatch}
-            state={state.profile}
-          />
-        )}
+        <div ref={refPerson}>
+          {state.proofWithoutComplaint ? (
+            <ActBlock
+              type="profile"
+              title={profileTitle}
+              values={["Victime (vivante)"]}
+              mode="toggle"
+              dispatch={dispatch}
+              state={state.profile}
+            />
+          ) : !state.id ? (
+            <ActBlock
+              type="profile"
+              title={profileTitle}
+              values={orderedProfileValues}
+              mode="toggle"
+              dispatch={dispatch}
+              state={state.profile}
+            />
+          ) : (
+            <ActBlock
+              type="profile"
+              title={profileTitle}
+              values={[state.profile]}
+              mode="lock"
+              dispatch={dispatch}
+              state={state.profile}
+            />
+          )}
+        </div>
 
         {shouldDisplayProfile() && getProfiledRender(state)}
 
