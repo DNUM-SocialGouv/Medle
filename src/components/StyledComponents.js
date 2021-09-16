@@ -24,11 +24,12 @@ export const AnchorButton = styled(RSButton)`
   border: 0;
   background-color: white;
   color: black;
+  border: 1px solid;
 
   :hover {
-    color: red;
-    background-color: white;
-    color: black;
+    border: 1px solid;
+    background-color: #6c757d;
+    color: white;
     text-decoration: underline;
   }
 `
@@ -125,8 +126,8 @@ export const Label = styled.label`
   margin-bottom: 0;
 `
 export const InputDarker = styled(RSInput)`
-  border-color: #555C64;
-  &::placeholder{
-    color: #555C64;
+  border-color: #555c64;
+  &::placeholder {
+    color: #555c64;
   }
 `
