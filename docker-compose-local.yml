@@ -2,14 +2,14 @@ version: "3"
 services:
   db:
     restart: always
-    image: postgres:10.14
+    image: postgres:13
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U medle"]
       interval: 5s
       timeout: 5s
       retries: 10
     environment:
-      # master password
+      # Master password
       - POSTGRES_USER=${POSTGRES_USER:-user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
       # API dedicated password
@@ -24,16 +24,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.compose
-      # build-time variables
       args:
-        - SENTRY_DSN=https://75f34cada95a4c189d69bc05e8aa324f@sentry.fabrique.social.gouv.fr/29
-        - SENTRY_TOKEN=1234
-        - MATOMO_URL=https://matomo.fabrique.social.gouv.fr
-        - MATOMO_SITE_ID=16
-        - POSTGRES_HOST=db
-        - JWT_SECRET=${JWT_SECRET:-j63NFc@YNWThqZ}
+        - DATABASE_URL=psql://medle:jJFWsfW5ePbN7J@db:5432/medle
+        - POSTGRES_SSL=false
+        - API_URL=http://localhost:3000/api
+        - JWT_SECRET=j63NFc@YNWThqZ
     ports:
-      - 80:3000
+      - 3000:3000
 
 volumes:
   medle-pgdata:
