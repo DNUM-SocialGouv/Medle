@@ -68,6 +68,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                 onChange={onChange}
                 autoComplete="off"
                 aria-label="Rechercher un établissement par son nom, etc."
+                role="search"
               />
             </Col>
             <Col className="flex-grow-0">
@@ -90,7 +91,9 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
               <thead>
                 <tr className="table-light">
                   <th scope="col">Nom</th>
-                  <th scope="col" aria-label="Numéro Finess">N° Finess</th>
+                  <th scope="col" aria-label="Numéro Finess">
+                    N° Finess
+                  </th>
                   <th scope="col">Ville</th>
                   <th scope="col">Code postal</th>
                 </tr>
@@ -102,7 +105,7 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                     href="/administration/hospitals/[hid]"
                     as={`/administration/hospitals/${hospital.id}`}
                   >
-                    <tr style={{ cursor: 'pointer'}}>
+                    <tr style={{ cursor: "pointer" }}>
                       <td>
                         <b>{`${hospital.name}`}</b>
                       </td>
@@ -111,7 +114,9 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                       <td>{hospital.postalCode}</td>
                       <td>
                         <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hospital.id}`}>
-                          <a className="text-decoration-none">Voir</a>
+                          <a className="text-decoration-none" aria-label={"Voir l'établissement " + hospital.name}>
+                            Voir
+                          </a>
                         </Link>
                       </td>
                     </tr>

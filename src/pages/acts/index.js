@@ -15,7 +15,7 @@ import { memoizedSearchAskers } from "../../clients/askers"
 import { SearchButton } from "../../components/form/SearchButton"
 import Layout from "../../components/Layout"
 import Pagination from "../../components/Pagination"
-import { Title1, InputDarker } from "../../components/StyledComponents"
+import { InputDarker, Title1 } from "../../components/StyledComponents"
 import { VerticalList } from "../../components/VerticalList"
 import { isOpenFeature, LIMIT_EXPORT } from "../../config"
 import { useDebounce } from "../../hooks/useDebounce"
@@ -27,7 +27,7 @@ import { getReferenceData } from "../../utils/init"
 import { logError } from "../../utils/logger"
 import { ACT_CONSULTATION } from "../../utils/roles"
 import { buildScope } from "../../utils/scope"
-import { mapArrayForSelect } from "../../utils/select"
+import { ariaLiveMessagesFR, mapArrayForSelect, reactSelectCustomTheme } from "../../utils/select"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   // const renderCount = React.useRef(0)
@@ -65,14 +65,14 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
       ),
     [],
   )
-  
-  // Darker color for Select 
+
+  // Darker color for Select
   const colourStyles = {
-    control: styles => ({ ...styles, backgroundColor: 'white', borderColor: '#555C64', color: '#555C64' }),
-    placeholder: styles => ({ ...styles, color: '#555C64' }),
-    indicatorSeparator: styles => ({ ...styles, backgroundColor: '#555C64'}),
-    dropdownIndicator: styles => ({ ...styles, color: '#555C64'})
-  };
+    control: (styles) => ({ ...styles, backgroundColor: "white", borderColor: "#555C64", color: "#555C64" }),
+    placeholder: (styles) => ({ ...styles, color: "#555C64" }),
+    indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "#555C64" }),
+    dropdownIndicator: (styles) => ({ ...styles, color: "#555C64" }),
+  }
 
   useEffect(() => {
     // Extra field in form to store the value of selects
@@ -148,8 +148,8 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   }
 
   async function onExport() {
-    if (paginatedData.totalCount > LIMIT_EXPORT) {
-      setErrorExport(`Le nombre d'éléments dépasse ${LIMIT_EXPORT} 😅. Veuillez filtrer votre recherche, svp.`)
+    if (paginatedData.totalCount < LIMIT_EXPORT) {
+      setErrorExport(`Le nombre d'éléments dépasse ${LIMIT_EXPORT}. Veuillez filtrer votre recherche, s'il vous plaît.`)
     }
     await fetchExport(getValues())
   }
@@ -177,6 +177,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                   value={search}
                   aria-label="Rechercher un acte ou plusieurs, par numéro interne ou numéro de PV"
                   onChange={onSearchChange}
+                  role="search"
                 />
               </Col>
             </Row>
@@ -230,7 +231,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                     {hospitalsChoices?.length > 1 && (
                       <Row className="mt-3">
                         <Col>
-                          <Label className="text-dark" id="hospitalsLabel">Établissements</Label>
+                          <Label className="text-dark" id="hospitalsLabel">
+                            Établissements
+                          </Label>
                           <Select
                             id="hospitals"
                             options={hospitalsChoices}
@@ -241,15 +244,19 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                             placeholder="Choisissez un établissement de votre périmètre"
                             isClearable={true}
                             isSearchable={true}
-                            styles={ colourStyles }
+                            styles={colourStyles}
                             aria-labelledby="hospitalsLabel"
+                            ariaLiveMessages={ariaLiveMessagesFR}
+                            theme={reactSelectCustomTheme}
                           />
                         </Col>
                       </Row>
                     )}{" "}
                     <Row className="mt-3">
                       <Col>
-                        <Label className="text-dark" id="profilesLabel">Profils et autres activités</Label>
+                        <Label className="text-dark" id="profilesLabel">
+                          Profils et autres activités
+                        </Label>
                         <Select
                           id="profiles"
                           options={existingProfiles}
@@ -260,14 +267,18 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           placeholder="Choisissez un profil ou activité"
                           isClearable={true}
                           isSearchable={true}
-                          styles={ colourStyles }
+                          styles={colourStyles}
                           aria-labelledby="profilesLabel"
+                          ariaLiveMessages={ariaLiveMessagesFR}
+                          theme={reactSelectCustomTheme}
                         />
                       </Col>
                     </Row>
                     <Row className="mt-3">
                       <Col>
-                        <Label className="text-dark" id="askerLabel">Demandeur</Label>
+                        <Label className="text-dark" id="askerLabel">
+                          Demandeur
+                        </Label>
                         <AsyncSelect
                           id="asker"
                           loadOptions={(search) => loadAskers(search)}
@@ -278,8 +289,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           isClearable={true}
                           isSearchable={true}
                           value={asker}
-                          styles={ colourStyles }
+                          styles={colourStyles}
                           aria-labelledby="askerLabel"
+                          ariaLiveMessages={ariaLiveMessagesFR}
                         />
                       </Col>
                     </Row>
@@ -304,18 +316,28 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
             <Table responsive className="table-hover">
               <thead>
                 <tr className="table-light">
-                  <th scope="col" id="internNumber" aria-label="Numéro dossier interne">N° dossier interne</th>
-                  <th scope="col" id="PvNumber" aria-label="Numéro PV">N° PV</th>
-                  <th scope="col" id="date">Date</th>
-                  <th scope="col" id="profilType">Type de profil</th>
-                  <th scope="col" id="ActType">{"Type d'acte"}</th>
+                  <th scope="col" id="internNumber" aria-label="Numéro dossier interne">
+                    N° dossier interne
+                  </th>
+                  <th scope="col" id="PvNumber" aria-label="Numéro PV">
+                    N° PV
+                  </th>
+                  <th scope="col" id="date">
+                    Date
+                  </th>
+                  <th scope="col" id="profilType">
+                    Type de profil
+                  </th>
+                  <th scope="col" id="ActType">
+                    {"Type d'acte"}
+                  </th>
                   <th />
                 </tr>
               </thead>
               <tbody>
                 {paginatedData.elements.map((act) => (
                   <Link key={act.id} href="/acts/[id]" as={`/acts/${act.id}`}>
-                    <tr key={act.id} style={{ cursor: 'pointer'}}>
+                    <tr key={act.id} style={{ cursor: "pointer" }}>
                       <td>
                         <b>{act.internalNumber}</b>
                       </td>
@@ -325,7 +347,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                       <td>{act.examinationTypes && <VerticalList content={act.examinationTypes} />}</td>
                       <td className="text-decoration">
                         <Link href="/acts/[id]" as={`/acts/${act.id}`}>
-                          <a className="text-decoration-none">Voir</a>
+                          <a className="text-decoration-none" aria-label={"Voir l'acte numéro " + act.internalNumber}>
+                            Voir
+                          </a>
                         </Link>
                       </td>
                     </tr>
@@ -341,7 +365,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                     <ListAltIcon /> Exporter les données
                   </SearchButton>
                 </div>
-                <div style={{ color: "red" }} className="mt-3 text-center">
+                <div style={{ color: "#EE0700" }} className="mt-3 text-center" role="alert">
                   {errorExport}
                 </div>
               </>

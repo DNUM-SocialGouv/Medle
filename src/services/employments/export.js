@@ -94,7 +94,7 @@ export const exportEmployments = async (params, currentUser) => {
     { header: "Année", key: "year", style: centerAlignment, width: 10 },
     { header: "Mois", key: "month", style: centerAlignment, width: 10 },
     {
-      header: "Id étab.",
+      header: "ID étab.",
       key: "hospital_id",
       style: centerAlignment,
       width: 10,
@@ -146,7 +146,7 @@ export const exportEmployments = async (params, currentUser) => {
     { header: "Année", key: "year", style: centerAlignment, width: 10 },
     { header: "Mois", key: "month", style: centerAlignment, width: 10 },
     {
-      header: "Id étab.",
+      header: "ID étab.",
       key: "hospital_id",
       style: centerAlignment,
       width: 10,

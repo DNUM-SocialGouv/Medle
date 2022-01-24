@@ -30,10 +30,10 @@ import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "..
 import { logDebug, logError } from "../../../utils/logger"
 import { isEmpty } from "../../../utils/misc"
 import { ADMIN, ADMIN_HOSPITAL, availableRolesForUser, ROLES_DESCRIPTION, rulesOfRoles } from "../../../utils/roles"
-import { mapArrayForSelect, mapForSelect } from "../../../utils/select"
+import { ariaLiveMessagesFR, mapArrayForSelect, mapForSelect, reactSelectCustomTheme } from "../../../utils/select"
 
 const MandatorySign = () => (
-  <span style={{ color: "red" }} aria-hidden="true">
+  <span style={{ color: "#EE0700" }} aria-hidden="true">
     *
   </span>
 )
@@ -281,17 +281,26 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   return (
     <Layout page="users" currentUser={currentUser} admin={true}>
       <Head>
-        <title>Utilisateur - Medlé</title>
+        <title>
+          {initialUser?.id
+            ? "Détails de l'utilisateur " + initialUser?.lastName + " " + initialUser?.firstName + " "
+            : "Ajouter un utilisateur "}
+          - Medlé
+        </title>
       </Head>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
           <Link href="/administration/users">
             <a style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour
+              Retour à la liste
             </a>
           </Link>
-          <Title1>{"Utilisateur"}</Title1>
+          <Title1>
+            {initialUser?.id
+              ? "Détails de l'utilisateur " + initialUser?.lastName + " " + initialUser?.firstName
+              : "Ajouter un utilisateur"}
+          </Title1>
           <span>&nbsp;</span>
         </div>
 
@@ -302,12 +311,12 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
             {success}&nbsp;
             <div>
               <Link href="/administration/users">
-                <Button className="mr-3" outline color="success">
+                <Button className="mr-3" color="primary">
                   <a>Retour à la liste</a>
                 </Button>
               </Link>
               <Link href="/administration/users/[id]" as={`/administration/users/new`}>
-                <Button outline color="success">
+                <Button color="primary">
                   <a>Ajouter</a>
                 </Button>
               </Link>
@@ -315,10 +324,19 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Ajout d'un utilisateur">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Détails de l'utilisateur">
+          <p>
+            <i>
+              Les champs indiqués par un&nbsp;
+              <span style={{ color: "#EE0700" }} aria-hidden="true">
+                *
+              </span>
+              <span className="sr-only">astérisque rouge</span>&nbsp;sont obligatoires.
+            </i>
+          </p>
           <FormGroup row>
-            <Label for="id" sm={3}>
-              Id
+            <Label for="id" sm={3} aria-label="Identifiant">
+              ID
             </Label>
             <Col sm={9}>
               <InputDarker type="text" id="id" readOnly {...idReg} innerRef={idRef} />
@@ -384,19 +402,22 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                 isDisabled={rules.roleDisabled}
                 styles={customStyles(errors.role)}
                 aria-labelledby="roleLabel"
-                aria-required="true"
+                aria-required={true}
+                ariaLiveMessages={ariaLiveMessagesFR}
+                theme={reactSelectCustomTheme}
               />
               {errors.role && <FormFeedback className="d-block">{errors.role}</FormFeedback>}
             </Col>
           </FormGroup>
           {!rules.hospitalDisabled && role && (
             <FormGroup row>
-              <Label for="hospital" sm={3}>
+              <Label id="hospitalLabel" sm={3}>
                 {"Établissement d'appartenance"}&nbsp;
                 <MandatorySign />
               </Label>
               <Col sm={9}>
                 <AsyncSelect
+                  id="hospital"
                   loadOptions={searchHospitals}
                   value={hospital}
                   onChange={onHospitalChange}
@@ -406,7 +427,10 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                   isClearable={true}
                   isDisabled={rules.hospitalDisabled}
                   styles={customStyles(errors.hospital)}
-                  aria-required="true"
+                  aria-labelledby="hospitalLabel"
+                  aria-required={true}
+                  ariaLiveMessages={ariaLiveMessagesFR}
+                  theme={reactSelectCustomTheme}
                 />
                 {errors.hospital && <FormFeedback className="d-block">{errors.hospital}</FormFeedback>}
               </Col>
@@ -414,12 +438,13 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
           )}
           {!rules.scopeDisabled && role && (
             <FormGroup row>
-              <Label for="scope" sm={3}>
+              <Label id="scopeLabel" sm={3}>
                 Établissements visibles&nbsp;
                 <MandatorySign />
               </Label>
               <Col sm={9}>
                 <AsyncSelect
+                  id="scope"
                   loadOptions={searchHospitals}
                   isMulti
                   value={scope}
@@ -430,7 +455,9 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
                   isClearable={true}
                   isDisabled={rules.scopeDisabled}
                   styles={customStyles(errors.scope)}
-                  aria-required="true"
+                  aria-labelledby="scopeLabel"
+                  aria-required={true}
+                  ariaLiveMessages={ariaLiveMessagesFR}
                 />
                 {errors.scope && <FormFeedback className="d-block">{errors.scope}</FormFeedback>}
               </Col>
@@ -447,13 +474,13 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
             </Button>
           </div>
           {formId && (
-            <div style={{ border: "1px solid tomato" }} className="px-4 pt-3 pb-4 mt-5 rounded">
+            <div style={{ border: "1px solid #EE0700" }} className="px-4 pt-3 pb-4 mt-5 rounded">
               <Title1 className="mb-4 mt-2">Zone dangereuse</Title1>
               <div className="d-flex justify-content-between align-items-center">
                 Je réinitialise le mot de passe de cet utilisateur
                 <Link href="/administration/users/reset/[id]" as={`/administration/users/reset/${formId}`}>
                   <a>
-                    <Button className="text-white" color="warning" style={{ minWidth: 150 }}>
+                    <Button color="warning" style={{ minWidth: 150 }}>
                       Réinitialiser
                     </Button>
                   </a>
@@ -461,7 +488,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               </div>
               <div className="d-flex justify-content-between align-items-center mt-3">
                 Je supprime cet utilisateur
-                <Button className="" color="danger" outline onClick={toggle} style={{ minWidth: 150 }}>
+                <Button color="danger" outline onClick={toggle} style={{ minWidth: 150 }}>
                   Supprimer
                 </Button>
               </div>

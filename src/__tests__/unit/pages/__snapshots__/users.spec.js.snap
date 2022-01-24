@@ -15,14 +15,14 @@ exports[`should renders UserDetail unchanged 1`] = `
         onClick={[Function]}
       >
         <img
-          alt="Logo"
+          alt="Logo Medlé plateforme médecine légale"
           src="/images/logo.png"
           title="Logo"
           width="100"
         />
       </a>
       <button
-        aria-label="Toggle navigation"
+        aria-label="Afficher ou masquer le menu"
         className="navbar-toggler"
         onClick={[Function]}
         type="button"
@@ -48,7 +48,7 @@ exports[`should renders UserDetail unchanged 1`] = `
               className="nav-link"
               href="#"
               onClick={[Function]}
-              title="Menu vers mon compte"
+              aria-label="Mon compte"
             >
               <svg
                 aria-hidden={true}
@@ -293,7 +293,7 @@ exports[`should renders UserDetail unchanged 1`] = `
           <br
             className="jsx-1576199254"
           />
-          Retour
+          Retour à la liste
         </a>
       </nav>
     </div>
@@ -336,7 +336,7 @@ exports[`should renders UserDetail unchanged 1`] = `
                   d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"
                 />
               </svg>
-              Retour
+              Retour à la liste
             </a>
             <h1
               className="StyledComponents__Title1-yzg90z-6 kaiHmj"
@@ -358,8 +358,9 @@ exports[`should renders UserDetail unchanged 1`] = `
               <label
                 className="col-sm-3 col-form-label"
                 htmlFor="id"
+                aria-label="Identifiant">
               >
-                Id
+                ID
               </label>
               <div
                 className="col-sm-9"
@@ -404,7 +405,7 @@ exports[`should renders UserDetail unchanged 1`] = `
                 <span
                   style={
                     Object {
-                      "color": "red",
+                      "color": "#EE0700",
                     }
                   }
                 >
@@ -437,7 +438,7 @@ exports[`should renders UserDetail unchanged 1`] = `
                 <span
                   style={
                     Object {
-                      "color": "red",
+                      "color": "#EE0700",
                     }
                   }
                 >
@@ -470,7 +471,7 @@ exports[`should renders UserDetail unchanged 1`] = `
                 <span
                   style={
                     Object {
-                      "color": "red",
+                      "color": "#EE0700",
                     }
                   }
                 >
@@ -712,7 +713,7 @@ exports[`should renders UserDetail unchanged 1`] = `
                 onClick={[Function]}
                 onMouseEnter={[Function]}
               >
-                FAQ
+                Foire aux questions
               </a>
             </li>
             <li

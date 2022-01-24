@@ -1,7 +1,7 @@
 export const colors = {
   primary: "blue",
   success: "green",
-  error: "red",
+  error: "#EE0700",
   banner: {
     border: "#d3d3d3",
     background: "#0069e1",

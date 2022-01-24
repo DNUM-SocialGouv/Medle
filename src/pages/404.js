@@ -1,6 +1,13 @@
+import Head from "next/head"
 import React from "react"
 
-// pages/404.js
 export default function Custom404() {
-  return <h1>404 - Page Not Found</h1>
+  return (
+    <>
+      <Head>
+        <title>Page non trouvée - Medlé</title>
+      </Head>
+      <h1>Erreur 404 - Page non trouvée</h1>
+    </>
+  )
 }

@@ -62,10 +62,12 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
           <Link href="/acts">
             <a>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour
+              Retour à la liste
             </a>
           </Link>
-          <Title1>{`Acte n° ${(act && act.internalNumber) || ""}`}</Title1>
+          <Title1 aria-label={`Acte numéro ${(act && act.internalNumber) || ""}`}>{`Acte n° ${
+            (act && act.internalNumber) || ""
+          }`}</Title1>
           <span>&nbsp;</span>
         </div>
 

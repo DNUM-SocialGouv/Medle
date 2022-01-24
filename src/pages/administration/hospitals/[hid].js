@@ -31,7 +31,7 @@ import { isEmpty } from "../../../utils/misc"
 import { ADMIN } from "../../../utils/roles"
 
 const MandatorySign = () => (
-  <span style={{ color: "red" }} aria-hidden="true">
+  <span style={{ color: "#EE0700" }} aria-hidden="true">
     *
   </span>
 )
@@ -141,7 +141,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
   return (
     <Layout page="hospitals" currentUser={currentUser} admin={true}>
       <Head>
-        <title>Hôpital {hospital?.name} - Medlé</title>
+        <title>{hospital?.id ? "Détails de l'hôpital " + hospital?.name : "Ajouter un hôpital"} - Medlé</title>
       </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
@@ -151,11 +151,12 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
           <Link href="/administration/hospitals">
             <a style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour
+              Retour à la liste
             </a>
           </Link>
         </div>
-        <Title1>Hôpital {hospital?.name}</Title1>
+
+        <Title1>{hospital?.id ? "Détails de l'hôpital " + hospital?.name : "Ajouter un hôpital"}</Title1>
 
         {id ? (
           <Link href="/administration/hospitals/[hid]/employments" as={`/administration/hospitals/${id}/employments`}>
@@ -176,12 +177,12 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
             {success}&nbsp;
             <div>
               <Link href="/administration/hospitals">
-                <Button className="mr-3" outline color="success">
+                <Button className="mr-3" color="primary">
                   <a>Retour à la liste</a>
                 </Button>
               </Link>
               <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/new`}>
-                <Button outline color="success">
+                <Button color="primary">
                   <a>Ajouter</a>
                 </Button>
               </Link>
@@ -189,10 +190,19 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Ajout d'un hôpital">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Détails de l'hôpital">
+          <p>
+            <i>
+              Les champs indiqués par un&nbsp;
+              <span style={{ color: "#EE0700" }} aria-hidden="true">
+                *
+              </span>
+              <span className="sr-only">astérisque rouge</span>&nbsp;sont obligatoires.
+            </i>
+          </p>
           <FormGroup row>
-            <Label for="id" sm={3}>
-              Id
+            <Label for="id" sm={3} aria-label="Identifiant">
+              ID
             </Label>
             <Col sm={9}>
               <InputDarker type="text" id="id" readOnly {...idReg} innerRef={idRef} />
@@ -327,7 +337,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
             </Button>
           </div>
           {formId && (
-            <div style={{ border: "1px solid tomato" }} className="px-4 py-3 mt-5 rounded">
+            <div style={{ border: "1px solid #EE0700" }} className="px-4 py-3 mt-5 rounded">
               <Title1 className="mb-4">Zone dangereuse</Title1>
               <div className="d-flex justify-content-between align-items-center">
                 Je souhaite supprimer cet hôpital

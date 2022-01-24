@@ -16,7 +16,7 @@ const MyError = ({ hasGetInitialPropsRun, statusCode, err }) => {
 
   return (
     <div>
-      <div className="alert alert-warning">Une erreur {statusCode} est apparue ¯\_(ツ)_/¯</div>
+      <div className="alert alert-warning">Une erreur {statusCode} est apparue.</div>
     </div>
   )
 }

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import AsyncSelect from "react-select/async"
 
 import { memoizedFindAsker, memoizedSearchAskers } from "../clients/askers"
-import { mapArrayForSelect, mapForSelect } from "../utils/select"
+import { ariaLiveMessagesFR, mapArrayForSelect, mapForSelect, reactSelectCustomTheme } from "../utils/select"
 
 const AskerSelect = ({ dispatch, disabled, askerId }) => {
   const [existingValue, setExistingValue] = useState(null)
@@ -63,7 +63,9 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
         isDisabled={disabled}
         value={existingValue}
         aria-label="Choix du demandeur"
-        aria-required="true"
+        aria-required={true}
+        ariaLiveMessages={ariaLiveMessagesFR}
+        theme={reactSelectCustomTheme}
       />
     </>
   )

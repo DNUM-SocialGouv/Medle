@@ -29,7 +29,7 @@ import { isEmpty } from "../../../utils/misc"
 import { ADMIN } from "../../../utils/roles"
 
 const MandatorySign = () => (
-  <span style={{ color: "red" }} aria-hidden="true">
+  <span style={{ color: "#EE0700" }} aria-hidden="true">
     *
   </span>
 )
@@ -110,17 +110,17 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
   return (
     <Layout page="askers" currentUser={currentUser} admin={true}>
       <Head>
-        <title>Demandeur - Medlé</title>
+        <title>{asker?.id ? "Détails du demandeur " + asker?.name : "Ajouter un demandeur"} - Medlé</title>
       </Head>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
           <Link href="/administration/askers">
             <a style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour
+              Retour à la liste
             </a>
           </Link>
-          <Title1>{"Demandeur"}</Title1>
+          <Title1>{asker?.id ? "Détails du demandeur " + asker?.name : "Ajouter un demandeur"}</Title1>
           <span>&nbsp;</span>
         </div>
 
@@ -131,12 +131,12 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
             {success}&nbsp;
             <div>
               <Link href="/administration/askers">
-                <Button className="mr-3" outline color="success">
+                <Button className="mr-3" color="primary">
                   <a>Retour à la liste</a>
                 </Button>
               </Link>
               <Link href="/administration/askers/[id]" as={`/administration/askers/new`}>
-                <Button outline color="success">
+                <Button color="primary">
                   <a>Ajouter</a>
                 </Button>
               </Link>
@@ -144,10 +144,19 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Ajout d'un demandeur">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Détails du demandeur">
+          <p>
+            <i>
+              Les champs indiqués par un&nbsp;
+              <span style={{ color: "#EE0700" }} aria-hidden="true">
+                *
+              </span>
+              <span className="sr-only">astérisque rouge</span>&nbsp;sont obligatoires.
+            </i>
+          </p>
           <FormGroup row>
-            <Label for="id" sm={3}>
-              Id
+            <Label for="id" sm={3} aria-label="Identifiant">
+              ID
             </Label>
             <Col sm={9}>
               <InputDarker type="text" id="id" readOnly {...idReg} innerRef={idRef} />
@@ -197,7 +206,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
             </Button>
           </div>
           {!isEmpty(asker) && (
-            <div style={{ border: "1px solid tomato" }} className="px-4 py-3 mt-5 rounded">
+            <div style={{ border: "1px solid #EE0700" }} className="px-4 py-3 mt-5 rounded">
               <Title1 className="mb-4">Zone dangereuse</Title1>
               <div className="d-flex justify-content-between align-items-center">
                 Je souhaite supprimer ce demandeur

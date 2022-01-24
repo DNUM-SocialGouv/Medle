@@ -189,7 +189,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
                 href="/administration/hospitals/[hid]/employments"
                 as={`/administration/hospitals/${hid}/employments`}
               >
-                <Button className="mr-3" outline color="success">
+                <Button className="mr-3" color="primary">
                   <a>Retour à la liste</a>
                 </Button>
               </Link>
@@ -197,7 +197,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
                 href="/administration/hospitals/[hid]/employments/[rid]"
                 as={`/administration/hospitals/${hid}/employments/new`}
               >
-                <Button outline color="success">
+                <Button color="primary">
                   <a>Ajouter</a>
                 </Button>
               </Link>
@@ -205,7 +205,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
           </Alert>
         )}
 
-        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mt-4" role="group" aria-label="Détails de l'ETP">
           <FormGroup row>
             <Label for="others" sm={3}>
               {"Mois d'effet "}
@@ -215,8 +215,8 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
             </Col>
           </FormGroup>
           <FormGroup row>
-            <Label for="id" sm={3}>
-              Id
+            <Label for="id" sm={3} aria-label="Identifiant">
+              ID
             </Label>
             <Col sm={9}>
               <InputDarker type="text" id="id" readOnly {...idReg} innerRef={idRef} />
@@ -370,7 +370,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
             </Button>
           </div>
           {formId && (
-            <div style={{ border: "1px solid tomato" }} className="px-4 py-3 mt-5 rounded">
+            <div style={{ border: "1px solid #EE0700" }} className="px-4 py-3 mt-5 rounded">
               <Title1 className="mb-4">Zone dangereuse</Title1>
               <div className="d-flex justify-content-between align-items-center">
                 Je souhaite supprimer cet enregistrement

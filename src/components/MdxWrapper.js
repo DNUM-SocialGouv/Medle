@@ -7,16 +7,16 @@ import { useUser } from "../hooks/useUser"
 import Layout from "./Layout"
 import { Title1 } from "./StyledComponents"
 
-// TODO: Section/Question/Answer ont été faits à l'origin pour la FAQ. Voir si l'on crée un autre style
+// TODO: Section/Question/SubQuestion/Answer ont été faits à l'origin pour la FAQ. Voir si l'on crée un autre style
 // pour les autres pages ou si l'on renomme avec des noms plus génériques
 const Section = ({ children }) => (
   <>
-    <h1 className="mt-5 text-left border-bottom text-capitalize font-weight-bold">{children}</h1>
+    <h2 className="mt-5 text-left border-bottom text-capitalize font-weight-bold">{children}</h2>
     <style jsx>{`
-      h1 {
+      h2 {
         font-family: Evolventa;
         font-size: 18px;
-        color: tomato;
+        color: #d4451b;
       }
     `}</style>
   </>
@@ -24,15 +24,28 @@ const Section = ({ children }) => (
 
 const Question = ({ children }) => (
   <>
-    <h2 className="mt-5 text-left text-info">{children}</h2>
+    <h3 className="mt-5 text-left text-info">{children}</h3>
     <style jsx>{`
-      h2 {
+      h3 {
+        font-family: Evolventa;
+        font-size: 17px;
+      }
+    `}</style>
+  </>
+)
+
+const SubQuestion = ({ children }) => (
+  <>
+    <h4 className="mt-5 text-left text-info">{children}</h4>
+    <style jsx>{`
+      h4 {
         font-family: Evolventa;
         font-size: 16px;
       }
     `}</style>
   </>
 )
+
 const Answer = ({ children }) => <div dangerouslySetInnerHTML={{ __html: children }} />
 
 Section.propTypes = {
@@ -40,14 +53,19 @@ Section.propTypes = {
 }
 Question.propTypes = Section.propTypes
 
+SubQuestion.propTypes = Section.propTypes
+
 Answer.propTypes = Section.propTypes
 
 const mdComponents = {
-  h1: function SectionWrapper(props) {
+  h2: function SectionWrapper(props) {
     return <Section {...props} />
   },
-  h2: function QuestionWrapper(props) {
+  h3: function QuestionWrapper(props) {
     return <Question {...props} />
+  },
+  h4: function SubQuestionWrapper(props) {
+    return <SubQuestion {...props} />
   },
 }
 

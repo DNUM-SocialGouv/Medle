@@ -3,7 +3,7 @@ import Head from "next/head"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
 import React, { useState } from "react"
-import { Alert, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
+import { Alert, Col, Container, Form, FormGroup, Spinner, Table } from "reactstrap"
 
 import { searchUsersFuzzy } from "../../../clients/users"
 import { SearchButton } from "../../../components/form/SearchButton"
@@ -56,11 +56,12 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                 type="text"
                 name="es"
                 id="es"
-                placeholder="Rechercher un utilisateur par nom, prénom, email.."
+                placeholder="Rechercher un utilisateur par nom, prénom, email..."
                 value={search}
                 onChange={onChange}
                 autoComplete="off"
-                aria-label="Rechercher un utilisateur par nom, prénom, email.."
+                aria-label="Rechercher un utilisateur par nom, prénom, email..."
+                role="search"
               />
             </Col>
             <Col className="flex-grow-0">
@@ -87,13 +88,13 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                   <th scope="col">Email</th>
                   <th scope="col">Role</th>
                   <th scope="col">Établissement</th>
-                  <th scope="col"/>
+                  <th scope="col" />
                 </tr>
               </thead>
               <tbody>
                 {paginatedData.elements.map((user) => (
                   <Link key={user.id} href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
-                    <tr style={{ cursor: 'pointer'}}> 
+                    <tr style={{ cursor: "pointer" }}>
                       <td>
                         <b>{`${user.firstName} ${user.lastName}`}</b>
                       </td>
@@ -102,7 +103,12 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                       <td>{user.hospital && user.hospital.name}</td>
                       <td>
                         <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
-                          <a className="text-decoration-none">Voir</a>
+                          <a
+                            className="text-decoration-none"
+                            aria-label={"Voir l'utilisateur " + user.firstName + " " + user.lastName}
+                          >
+                            Voir
+                          </a>
                         </Link>
                       </td>
                     </tr>

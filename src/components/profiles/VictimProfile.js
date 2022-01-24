@@ -62,8 +62,8 @@ const VictimEdit = ({ dispatch, state, errors }) => {
                 est donc à distinguer d&apos;un accident de la route, de la voie publique, etc. qui aurait entraîné
                 plusieurs victimes.&nbsp;
                 <Link href="/faq#collectif" scroll={false}>
-                  <a target="_blank" aria-label="Voir la FAQ (nouvelle fenêtre)">
-                    Voir FAQ
+                  <a target="_blank" aria-label="Voir la foire aux questions (nouvelle fenêtre)">
+                    Voir la foire aux questions
                   </a>
                 </Link>
               </span>

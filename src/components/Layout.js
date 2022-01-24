@@ -65,7 +65,7 @@ const Header = ({ currentUser }) => {
             id="header"
           />
         </NavbarBrand>
-        <NavbarToggler onClick={toggle} />
+        <NavbarToggler onClick={toggle} aria-label="Afficher ou masquer le menu" />
         {currentUser && (
           <Collapse isOpen={isOpen} navbar>
             <Nav
@@ -79,9 +79,11 @@ const Header = ({ currentUser }) => {
                 </NavItem>
               )}
               <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle title="Menu vers mon compte" nav>
+                <DropdownToggle aria-label="Mon compte" nav>
                   <AccountCircleIcon width={30} style={{ color: "#555C64" }} />
-                  <span className="d-sm-inline d-md-none text-black-50">&nbsp;Mon compte</span>
+                  <span className="d-sm-inline d-md-none text-black-50" aria-hidden="true">
+                    &nbsp;Mon compte
+                  </span>
                 </DropdownToggle>
 
                 <DropdownMenu right>
@@ -111,7 +113,7 @@ export const Footer = () => (
     <Container>
       <Row>
         <Col className="mr-5">
-          <h3>Medle.fabrique.social.gouv.fr</h3>
+          <p className="service-title">Medle.fabrique.social.gouv.fr</p>
           Un service proposé par la{" "}
           <b>
             <a
@@ -167,7 +169,7 @@ export const Footer = () => (
             </li>
             <li className="mb-2">
               <Link href={"/faq"}>
-                <a>FAQ</a>
+                <a>Foire aux questions</a>
               </Link>
             </li>
             <li className="mb-2">
@@ -198,6 +200,13 @@ export const Footer = () => (
       footer b {
         text-decoration: underline dotted;
       }
+      .service-title {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        font-family: Evolventa, "Trebuchet MS", sans-serif;
+        font-weight: 700;
+        line-height: 1.2;
+      }
     `}</style>
   </footer>
 )
@@ -215,6 +224,7 @@ const Sidebar = ({ page, currentUser }) => {
                   className={
                     "list-group-item list-group-item-action " + (page === "declaration" ? "selected" : "unselected")
                   }
+                  aria-current={page === "declaration" ? "true" : "false"}
                 >
                   <AddCircleOutlineIcon width={30} />
                   <br />
@@ -229,6 +239,7 @@ const Sidebar = ({ page, currentUser }) => {
                 <a
                   className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}
                   id="navigation"
+                  aria-current={page === "acts" ? "true" : "false"}
                 >
                   <FormatListBulletedIcon width={30} /> <br />
                   {"Tous les actes"}
@@ -243,6 +254,7 @@ const Sidebar = ({ page, currentUser }) => {
                   className={
                     "list-group-item list-group-item-action " + (page === "employments" ? "selected" : "unselected")
                   }
+                  aria-current={page === "employments" ? "true" : "false"}
                 >
                   <GroupIcon width={30} /> <br />
                   {"Personnel"}
@@ -256,6 +268,7 @@ const Sidebar = ({ page, currentUser }) => {
                 className={
                   "list-group-item list-group-item-action " + (page === "statistics" ? "selected" : "unselected")
                 }
+                aria-current={page === "statistics" ? "true" : "false"}
               >
                 <EqualizerIcon width={30} /> <br />
                 {"Statistiques"}
@@ -309,7 +322,7 @@ const Sidebar = ({ page, currentUser }) => {
           color: black;
         }
         a.selected {
-          border-left: 5px solid #307df6;
+          border-left: 5px solid #2e73e2;
           background-color: #e7f1fe !important;
         }
         a.unselected {
@@ -329,12 +342,17 @@ const SidebarAdmin = ({ page, currentUser }) => {
   if (!currentUser) return ""
   return (
     <>
-      <nav aria-label="Navigation latérale d'administration" className="text-center list-group list-group-flush">
+      <nav
+        role="navigation"
+        aria-label="Navigation latérale d'administration"
+        className="text-center list-group list-group-flush"
+      >
         {isAllowed(currentUser.role, ADMIN) && (
           <Link href="/administration/users">
             <a
               className={"list-group-item list-group-item-action " + (page === "users" ? "selected" : "unselected")}
               id="adminNavigation"
+              aria-current={page === "users" ? "true" : "false"}
             >
               <FaceIcon width={30} />
 
@@ -347,6 +365,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
           <Link href="/administration/hospitals">
             <a
               className={"list-group-item list-group-item-action " + (page === "hospitals" ? "selected" : "unselected")}
+              aria-current={page === "hospitals" ? "true" : "false"}
             >
               <ApartmentIcon width={30} /> <br />
               {"Établissements"}
@@ -355,7 +374,10 @@ const SidebarAdmin = ({ page, currentUser }) => {
         )}
         {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/askers">
-            <a className={"list-group-item list-group-item-action " + (page === "askers" ? "selected" : "unselected")}>
+            <a
+              className={"list-group-item list-group-item-action " + (page === "askers" ? "selected" : "unselected")}
+              aria-current={page === "askers" ? "true" : "false"}
+            >
               <AccountBalanceIcon width={30} /> <br />
               {"Demandeurs"}
             </a>
@@ -363,7 +385,10 @@ const SidebarAdmin = ({ page, currentUser }) => {
         )}
         {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/attacks">
-            <a className={"list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")}>
+            <a
+              className={"list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")}
+              aria-current={page === "attacks" ? "true" : "false"}
+            >
               <WhatshotIcon width={30} /> <br />
               {"Attentats"}
             </a>
@@ -371,7 +396,10 @@ const SidebarAdmin = ({ page, currentUser }) => {
         )}
         {currentUser.role === SUPER_ADMIN && (
           <Link href="/administration/acts">
-            <a className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}>
+            <a
+              className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}
+              aria-current={page === "acts" ? "true" : "false"}
+            >
               <ReceiptIcon width={30} /> <br />
               {"Actes"}
             </a>
@@ -381,6 +409,7 @@ const SidebarAdmin = ({ page, currentUser }) => {
           <Link href="/administration/messages">
             <a
               className={"list-group-item list-group-item-action " + (page === "messages" ? "selected" : "unselected")}
+              aria-current={page === "messages" ? "true" : "false"}
             >
               <AnnouncementIcon width={30} /> <br />
               {"Messages"}
@@ -437,7 +466,7 @@ function giveMainFocus() {
 const SkipLinks = () => {
   return (
     <>
-      <nav role="navigation">
+      <nav>
         <ul className="skipLinks">
           <li>
             <a className="link-skip-to-content" onClick={giveNavFocus} href="#navigation">
