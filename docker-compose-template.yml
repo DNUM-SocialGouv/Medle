@@ -9,6 +9,7 @@ services:
         - DATABASE_URL=${DATABASE_URL}
         - POSTGRES_SSL=${POSTGRES_SSL}
         - API_URL=${API_URL}
+        - APP_BASE_URL=${APP_BASE_URL}
         - JWT_SECRET=${JWT_SECRET}
         - MAIL_HOST=${MAIL_HOST}
         - MAIL_PORT=${MAIL_PORT}
