@@ -67,6 +67,7 @@ The variables are :
 
 - NODE_ENV=development or production
 - API_URL URL of the api (in local, it's http://localhost:3000/api)
+- APP_BASE_URL Base URL of the app (in local, it's http://localhost:3000)
 - POSTGRES_SSL mode to connect to Postgres (false in local,  true for for Azure hosted)
 - DATABASE_URL URL of Postgres DB
 - JWT_SECRET the secret for generating JWT tokens

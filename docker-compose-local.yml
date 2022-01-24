@@ -28,6 +28,7 @@ services:
         - DATABASE_URL=psql://medle:jJFWsfW5ePbN7J@db:5432/medle
         - POSTGRES_SSL=false
         - API_URL=http://localhost:3000/api
+        - APP_BASE_URL=http://localhost:3000
         - JWT_SECRET=j63NFc@YNWThqZ
     ports:
       - 3000:3000
