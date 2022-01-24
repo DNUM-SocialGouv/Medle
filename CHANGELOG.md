@@ -4,6 +4,7 @@
 ### Bug Fixes
 * **accessibility:** corrections accessibilité suite audit
 * **ci:** mise à jour templates Docker
+* administration : correction affichage page Paramètres ETP
 
 ## [1.13.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.12.2...v1.13.0) (2021-10-08)
 
