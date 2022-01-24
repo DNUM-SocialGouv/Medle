@@ -61,6 +61,7 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
                 onChange={onChange}
                 autoComplete="off"
                 aria-label="Rechercher un demandeur par son nom, etc."
+                role="search"
               />
             </Col>
             <Col className="flex-grow-0">
@@ -99,7 +100,9 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
                       <td>{asker.depCode}</td>
                       <td>
                         <Link href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}>
-                          <a className="text-decoration-none">Voir</a>
+                          <a className="text-decoration-none" aria-label={"Voir le demandeur " + asker.name}>
+                            Voir
+                          </a>
                         </Link>
                       </td>
                     </tr>

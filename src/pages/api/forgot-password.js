@@ -16,7 +16,7 @@ const APP_URL = process.env.APP_BASE_URL || "http://localhost:3000"
 
 function buildHtml({ token }) {
   const html = `
-    Bonjour 👋,
+    Bonjour,
 
     <p>Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.</p>
 
@@ -24,15 +24,15 @@ function buildHtml({ token }) {
 
     <p><a href="${APP_URL}/reset-password?loginToken=${token}">${APP_URL}/reset-password?loginToken=${token}</a></p>
 
-    <p>Si le lien de réinitialisation ne s’affiche pas, copiez et collez-le dans votre navigateur.</p>
+    <p>Si le lien de réinitialisation ne s'affiche pas, copiez et collez-le dans votre navigateur.</p>
 
     <p>Si votre lien de réinitialisation a expiré, demandez-en un nouveau.</p>
 
     <p>Si vous ne souhaitez pas réinitialiser votre mot de passe, vous pouvez ignorer cet e-mail.</p>
 
-    <p>A bientôt sur Medlé 🚀,</p>
+    <p>A bientôt sur Medlé,</p>
 
-    <p>Des questions sur Medlé? La réponse se trouve peut-être dans la <a href="${APP_URL}/faq">FAQ</a> 🤞.</p>
+    <p>Des questions sur Medlé? La réponse se trouve peut-être dans la <a href="${APP_URL}/faq">foire aux questions</a>.</p>
     `
 
   return html

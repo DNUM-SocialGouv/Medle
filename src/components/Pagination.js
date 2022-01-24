@@ -14,50 +14,73 @@ const Pagination = ({ data, fn }) => {
   if (data)
     return (
       <>
-        <RSPagination aria-label="Navigation">
+        <RSPagination aria-label="Pagination">
           <PaginationItem>
-            <PaginationLink first href="#" onClick={() => fn(0)} />
+            <PaginationLink aria-label="Aller à la première page" first href="#" onClick={() => fn(0)} />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink previous href="#" onClick={() => fn(data.currentPage - 1)} />
+            <PaginationLink
+              aria-label="Aller à la page précédente"
+              previous
+              href="#"
+              onClick={() => fn(data.currentPage - 1)}
+            />
           </PaginationItem>
           {isExistingPage(data, data.currentPage - 2) && (
             <PaginationItem>
-              <PaginationLink href="#">...</PaginationLink>
+              <PaginationLink aria-hidden="true" tag={"span"}>
+                &hellip;
+              </PaginationLink>
             </PaginationItem>
           )}
-
           {isExistingPage(data, data.currentPage - 1) && (
             <PaginationItem>
-              <PaginationLink href="#" onClick={() => fn(data.currentPage - 1)}>
+              <PaginationLink
+                aria-label={`Aller à la page ${data.currentPage - 1}`}
+                href="#"
+                onClick={() => fn(data.currentPage - 1)}
+              >
                 {data.currentPage - 1}
               </PaginationLink>
             </PaginationItem>
           )}
-
           <PaginationItem active={true}>
-            <PaginationLink href="#" onClick={() => fn(data.currentPage)}>
+            <PaginationLink
+              aria-label={`Aller à la page ${data.currentPage}`}
+              href="#"
+              onClick={() => fn(data.currentPage)}
+            >
               {data.currentPage}
             </PaginationLink>
           </PaginationItem>
-
           {isExistingPage(data, data.currentPage + 1) && (
             <PaginationItem>
-              <PaginationLink href="#" onClick={() => fn(data.currentPage + 1)}>
+              <PaginationLink
+                aria-label={`Aller à la page ${data.currentPage + 1}`}
+                href="#"
+                onClick={() => fn(data.currentPage + 1)}
+              >
                 {data.currentPage + 1}
               </PaginationLink>
             </PaginationItem>
           )}
           {isExistingPage(data, data.currentPage + 2) && (
             <PaginationItem>
-              <PaginationLink href="#">&hellip;</PaginationLink>
+              <PaginationLink aria-hidden="true" tag={"span"}>
+                &hellip;
+              </PaginationLink>
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationLink next href="#" onClick={() => fn(data.currentPage + 1)} />
+            <PaginationLink
+              aria-label="Aller à la page suivante"
+              next
+              href="#"
+              onClick={() => fn(data.currentPage + 1)}
+            />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink last href="#" onClick={() => fn(data.maxPage)} />
+            <PaginationLink aria-label="Aller à la dernière page" last href="#" onClick={() => fn(data.maxPage)} />
           </PaginationItem>
         </RSPagination>
         <style jsx global>{`
@@ -71,7 +94,7 @@ const Pagination = ({ data, fn }) => {
             align-items: center;
           }
           .page-link :hover {
-            background-color: #A0ADBA;
+            background-color: #a0adba;
           }
         `}</style>
       </>

@@ -38,7 +38,7 @@ const EmploymentsPage = ({ currentUser, references }) => {
           <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hid}`}>
             <a>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour
+              Retour aux détails
             </a>
           </Link>
         </div>
@@ -92,7 +92,14 @@ const EmploymentsPage = ({ currentUser, references }) => {
                           href={`/administration/hospitals/[hid]/employments/[rid]`}
                           as={`/administration/hospitals/${hid}/employments/${reference.id}`}
                         >
-                          <a className="text-decoration-none">Voir / modifier</a>
+                          <a
+                            className="text-decoration-none"
+                            aria-label={
+                              "Voir ou modifier la référence " + NAME_MONTHS[reference.month] + " " + reference.year
+                            }
+                          >
+                            Voir / Modifier
+                          </a>
                         </Link>
                       </td>
                     </tr>

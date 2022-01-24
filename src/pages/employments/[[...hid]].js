@@ -5,7 +5,7 @@ import { useRouter } from "next/router"
 import PropTypes from "prop-types"
 import React from "react"
 import Select from "react-select"
-import { Alert, Col, Container, Form, FormGroup, Input, Row, Table } from "reactstrap"
+import { Alert, Col, Container, Form, FormGroup, Row, Table } from "reactstrap"
 
 import { exportEmployments, findLastEdit } from "../../clients/employments"
 import { CurrentMonthEmployments, PassedMonthEmployments } from "../../components/EmploymentMonthData"
@@ -15,11 +15,12 @@ import { InputDarker, Title1, Title2 } from "../../components/StyledComponents"
 import { START_YEAR_MEDLE } from "../../config"
 import { useDebounce } from "../../hooks/useDebounce"
 import { withAuthentication } from "../../utils/auth"
-import { extractMonthYear, isoToFr, NAME_MONTHS, now } from "../../utils/date"
+import { extractMonthYear, isoToFr, NAME_MONTHS } from "../../utils/date"
 import { getReferenceData } from "../../utils/init"
 import { castArrayInMap } from "../../utils/object"
 import { canAccessAllHospitals, EMPLOYMENT_CONSULTATION } from "../../utils/roles"
 import { buildScope, hospitalsOfUser } from "../../utils/scope"
+import { ariaLiveMessagesFR, reactSelectCustomTheme } from "../../utils/select"
 
 function buildEmploymentDataMonth({ currentYear, currentMonth, selectedYear, hospitalId }) {
   if (currentYear === selectedYear) {
@@ -137,13 +138,13 @@ const ListEmploymentsHospital = ({ currentUser }) => {
     [currentUser],
   )
 
-  // Darker color for Select 
+  // Darker color for Select
   const colourStyles = {
-    control: styles => ({ ...styles, backgroundColor: 'white', borderColor: '#555C64', color: '#555C64' }),
-    placeholder: styles => ({ ...styles, color: '#555C64' }),
-    indicatorSeparator: styles => ({ ...styles, backgroundColor: '#555C64'}),
-    dropdownIndicator: styles => ({ ...styles, color: '#555C64'})
-  };
+    control: (styles) => ({ ...styles, backgroundColor: "white", borderColor: "#555C64", color: "#555C64" }),
+    placeholder: (styles) => ({ ...styles, color: "#555C64" }),
+    indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "#555C64" }),
+    dropdownIndicator: (styles) => ({ ...styles, color: "#555C64" }),
+  }
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -222,6 +223,7 @@ const ListEmploymentsHospital = ({ currentUser }) => {
                   value={search}
                   onChange={handleSearchChange}
                   aria-label="Rechercher un établissement"
+                  role="search"
                 />
               </Col>
             </Row>
@@ -243,13 +245,13 @@ const ListEmploymentsHospital = ({ currentUser }) => {
           <tbody>
             {hospitals.map((hospital) => (
               <Link key={hospital.id} href="/employments/[[...hid]]" as={`/employments/${hospital?.id}`}>
-                <tr key={hospital.id} style={{ cursor: 'pointer'}}>
+                <tr key={hospital.id} style={{ cursor: "pointer" }}>
                   <td>
                     <span>{hospital.name}</span>
                   </td>
                   <td>
                     {getStatusHospital(hospital) === "UNCOMPLETED" ? (
-                      <div style={{ color: "tomato" }}>{buildLabelMissingMonths(hospital)}</div>
+                      <div style={{ color: "#EE0700" }}>{buildLabelMissingMonths(hospital)}</div>
                     ) : (
                       getStatusHospital(hospital) === "COMPLETED" && "Complète"
                     )}
@@ -258,7 +260,9 @@ const ListEmploymentsHospital = ({ currentUser }) => {
                   <td>{lastEdits[hospital.id]?.lastUpdated}</td>
                   <td>
                     <Link href="/employments/[[...hid]]" as={`/employments/${hospital?.id}`}>
-                      <a className="text-decoration-none">Voir&nbsp;&gt;</a>
+                      <a className="text-decoration-none" aria-label={"Voir la déclaration de " + hospital.name}>
+                        Voir<span aria-hidden="true">&nbsp;&gt;</span>
+                      </a>
                     </Link>
                   </td>
                 </tr>
@@ -274,7 +278,9 @@ const ListEmploymentsHospital = ({ currentUser }) => {
               defaultValue={yearsOptions[0]}
               onChange={handleYearChange}
               styles={colourStyles}
-              aria-label="Changer l'année"
+              aria-label="Choix de l'année"
+              ariaLiveMessages={ariaLiveMessagesFR}
+              theme={reactSelectCustomTheme}
             />
           </div>
           <SearchButton className="btn-outline-primary" disabled={!hospitals?.length} onClick={handleExport}>
@@ -320,7 +326,7 @@ const EmploymentsHospital = ({ currentUser, hospitalId }) => {
   return (
     <Layout page="employments" currentUser={currentUser}>
       <Head>
-        <title>Déclaration du personnel {hospital?.name && ` de ${hospital.name}`}{" "} - Medlé</title>
+        <title>Déclaration du personnel {hospital?.name && ` de ${hospital.name}`} - Medlé</title>
       </Head>
       <div className="d-flex flex-column flex-md-row justify-content-center align-items-center">
         <Title1 className="mt-5 mr-5 mb-4 mb-md-5">
@@ -331,7 +337,9 @@ const EmploymentsHospital = ({ currentUser, hospitalId }) => {
             options={yearsOptions}
             defaultValue={yearsOptions[0]}
             onChange={handleYearChange}
-            aria-label="Changer l'année"
+            aria-label="Choix de l'année"
+            ariaLiveMessages={ariaLiveMessagesFR}
+            theme={reactSelectCustomTheme}
           />
         </div>
       </div>
@@ -348,9 +356,9 @@ const EmploymentsHospital = ({ currentUser, hospitalId }) => {
             </p>
             <p className="mb-5 text-center">
               <small>
-                Attention, un ETP est un Equivalent Temps Plein et non un poste.{" "}
+                Attention, un ETP est un Équivalent Temps Plein et non un poste.{" "}
                 <Link href={"/faq"}>
-                  <a style={{ color: "#376FE6" }}>{"+ d'infos dans la FAQ"}</a>
+                  <a style={{ color: "#376FE6" }}>{"+ d'informations dans la foire aux questions"}</a>
                 </Link>
                 .
               </small>

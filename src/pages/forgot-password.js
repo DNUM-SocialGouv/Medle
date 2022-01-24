@@ -1,3 +1,4 @@
+import Head from "next/head"
 import Link from "next/link"
 import React from "react"
 import { Button, Col, Container, Form, FormGroup, Input, Label } from "reactstrap"
@@ -32,8 +33,7 @@ const ForgotPasswordPage = () => {
         trackEvent(CATEGORY.auth, ACTION.auth.oubliMdp, `${email} : Error (${error?.status})`)
 
         setStatus({
-          message:
-            error.status === 404 ? "Le courriel ne semble pas exister 😕." : "Erreur lors de l'envoi du courriel",
+          message: error.status === 404 ? "Le courriel ne semble pas exister." : "Erreur lors de l'envoi du courriel",
           type: "error",
         })
       }
@@ -64,7 +64,10 @@ const ForgotPasswordPage = () => {
 
   return (
     <Layout>
-      <Title1 className="mt-5">Vous avez oublié votre mot de passe&nbsp;?</Title1>
+      <Head>
+        <title>Vous avez oublié votre mot de passe ? - Medlé</title>
+      </Head>
+      <Title1 className="mt-5">Vous avez oublié votre mot de passe ?</Title1>
       <Container style={{ maxWidth: 700 }}>
         <span>&nbsp;</span>
 

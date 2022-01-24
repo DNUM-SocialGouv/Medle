@@ -1,3 +1,4 @@
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -54,8 +55,11 @@ const UserReset = ({ currentUser }) => {
 
   return (
     <Layout currentUser={currentUser} admin={true}>
+      <Head>
+        <title>Réinitialiser le mot de passe de cet utilisateur - Medlé</title>
+      </Head>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
-        <Title1>{"Utilisateur"}</Title1>
+        <Title1>{"Réinitialiser le mot de passe de cet utilisateur"}</Title1>
 
         {error && <Alert color="danger mt-4">{error}</Alert>}
 
@@ -63,7 +67,7 @@ const UserReset = ({ currentUser }) => {
           <Alert color="success" className="d-flex justify-content-between align-items-center mt-4">
             {success}&nbsp;
             <Link href="/administration/users">
-              <Button className="" outline color="success">
+              <Button className="" color="primary">
                 <a>Retour à la liste</a>
               </Button>
             </Link>
@@ -112,7 +116,7 @@ const UserReset = ({ currentUser }) => {
               </Button>
             </Link>
             <Button className="px-4 mt-5 " color="primary" onClick={handleSubmit(onSubmit)}>
-              Mettre à jour
+              Valider
             </Button>
           </div>
         </Form>

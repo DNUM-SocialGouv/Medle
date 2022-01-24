@@ -145,7 +145,7 @@ export const StatBlockPieChart = ({ data, labels = [], hoverTitle, title }) => {
             ))}
           </Pie>
           <Tooltip />
-          <Legend wrapperStyle={{ color: "#9f9f9f" }} />
+          <Legend wrapperStyle={{ color: "#797676" }} />
         </PieChart>
       </div>
     </StatBlock>
@@ -159,7 +159,7 @@ StatBlockPieChart.propTypes = {
   title: PropTypes.string,
 }
 
-const colors = ["#307df6", "#ed6b67", "#eaa844", "#7ce0c3", "#ad33d8", "#f687b3", "#2f855a", "#c05621"]
+const colors = ["#2E73E2", "#CB4C48", "#986C1B", "#2B856A", "#AD33D8", "#D72974", "#2F855A", "#C05621"]
 
 const RADIAN = Math.PI / 180
 

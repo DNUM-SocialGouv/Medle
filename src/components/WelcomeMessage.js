@@ -18,7 +18,7 @@ const WelcomeMessage = ({ message }) => {
           type="button"
           className="close"
           data-dismiss="alert"
-          aria-label="Close"
+          aria-label="Fermer ce message"
           onClick={() => setDismissed(true)}
         >
           <span aria-hidden="true">&times;</span>

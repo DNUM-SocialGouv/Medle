@@ -17,15 +17,15 @@ import Badge from "./Badge"
 
 const makeLabel = (number) => (number ? `${number} ETP prévu${pluralize(number)}` : null)
 
-const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }) => {
+const FormEmployment = ({ dataMonth, year, month, handleChange, reference, readOnly = false }) => {
   return (
     <>
       <Row>
         <Col className="mr-3">
-          <Label htmlFor="doctors">Médecin</Label>
+          <Label htmlFor={`doctors${month}${year}`}>Médecin</Label>
           <Input
             name="doctors"
-            id="doctors"
+            id={`doctors${month}${year}`}
             type="number"
             min={0}
             step="0.05"
@@ -39,10 +39,10 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
           <Badge value={makeLabel(reference?.doctors)} label={"reference.doctors"} />
         </Col>
         <Col className="mr-3">
-          <Label htmlFor="secretaries">Secrétaire</Label>
+          <Label htmlFor={`secretaries${month}${year}`}>Secrétaire</Label>
           <Input
             name="secretaries"
-            id="secretaries"
+            id={`secretaries${month}${year}`}
             type="number"
             min={0}
             step="0.05"
@@ -55,10 +55,10 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
           <Badge value={makeLabel(reference?.secretaries)} label={"reference.secretaries"} />
         </Col>
         <Col className="mr-3">
-          <Label htmlFor="nursings">Aide soignant.e</Label>
+          <Label htmlFor={`nursings${month}${year}`}>Aide soignant.e</Label>
           <Input
             name="nursings"
-            id="nursings"
+            id={`nursings${month}${year}`}
             type="number"
             min={0}
             step="0.05"
@@ -72,10 +72,10 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
           <Badge value={makeLabel(reference?.nursings)} label={"reference.nursings"} />
         </Col>
         <Col className="mr-3">
-          <Label htmlFor="executives">Cadre de santé</Label>
+          <Label htmlFor={`executives${month}${year}`}>Cadre de santé</Label>
           <Input
             name="executives"
-            id="executives"
+            id={`executives${month}${year}`}
             type="number"
             min={0}
             step="0.05"
@@ -90,10 +90,10 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
       </Row>
       <Row className="my-4">
         <Col className="mr-3">
-          <Label htmlFor="ides">IDE</Label>
+          <Label htmlFor={`ides${month}${year}`}>IDE</Label>
           <Input
             name="ides"
-            id="ides"
+            id={`ides${month}${year}`}
             type="number"
             min={0}
             step="0.05"
@@ -106,10 +106,10 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
           <Badge value={makeLabel(reference?.ides)} label={"reference.ides"} />
         </Col>
         <Col className="mr-3">
-          <Label htmlFor="auditoriumAgents">{"Agent d'amphi."}</Label>
+          <Label htmlFor={`auditoriumAgents${month}${year}`}>{"Agent d'amphi."}</Label>
           <Input
             name="auditoriumAgents"
-            id="auditoriumAgents"
+            id={`auditoriumAgents${month}${year}`}
             type="number"
             min={0}
             step="0.05"
@@ -122,10 +122,10 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
           <Badge value={makeLabel(reference?.auditoriumAgents)} label={"reference.auditoriumAgents"} />
         </Col>
         <Col className="mr-3">
-          <Label htmlFor="others">Autres</Label>
+          <Label htmlFor={`others${month}${year}`}>Autres</Label>
           <Input
             name="others"
-            id="others"
+            id={`others${month}${year}`}
             type="number"
             min={0}
             step="0.05"
@@ -152,6 +152,8 @@ const FormEmployment = ({ dataMonth, handleChange, reference, readOnly = false }
 
 FormEmployment.propTypes = {
   dataMonth: PropTypes.object,
+  year: PropTypes.number,
+  month: PropTypes.string,
   handleChange: PropTypes.func,
   readOnly: PropTypes.bool,
   reference: PropTypes.object,
@@ -190,7 +192,14 @@ export const CurrentMonthEmployments = ({ month, year, hospitalId }) => {
     <Form onSubmit={handleSubmit}>
       <Messages success={success} errors={errors} />
 
-      <FormEmployment dataMonth={dataMonth} handleChange={handleChange} reference={reference} readOnly={!isWritable} />
+      <FormEmployment
+        dataMonth={dataMonth}
+        year={year}
+        month={month}
+        handleChange={handleChange}
+        reference={reference}
+        readOnly={!isWritable}
+      />
 
       {isWritable && (
         <div className="my-5 text-center">
@@ -233,7 +242,15 @@ export const PassedMonthEmployments = ({ month, year, hospitalId, readOnly = fal
         toggleReadOnly()
       }}
     >
-      <Button outline color="secondary" block className="pt-2 pb-2 mb-2 pl-4 text-left" onClick={() => setOpen(!open)}>
+      <Button
+        outline
+        color="secondary"
+        block
+        className="pt-2 pb-2 mb-2 pl-4 text-left"
+        onClick={() => setOpen(!open)}
+        aria-controls={`bloc${month}${year}`}
+        aria-expanded={open === true ? true : false}
+      >
         {monthName}
         <div className="float-right">
           {warningEnabled && isEmpty(dataMonth) && (
@@ -247,7 +264,7 @@ export const PassedMonthEmployments = ({ month, year, hospitalId, readOnly = fal
         </div>
       </Button>
       {open && (
-        <div className="px-2">
+        <div className="px-2" id={`bloc${month}${year}`}>
           <div className="py-2 pr-2 text-right">
             {!isWritable ? null : readOnlyState ? (
               <Button outline onClick={toggleReadOnly} className="border-0">
@@ -262,6 +279,8 @@ export const PassedMonthEmployments = ({ month, year, hospitalId, readOnly = fal
 
           <FormEmployment
             dataMonth={dataMonth}
+            year={year}
+            month={month}
             handleChange={handleChange}
             reference={reference}
             readOnly={readOnlyState}

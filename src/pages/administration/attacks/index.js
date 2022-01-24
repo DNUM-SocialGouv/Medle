@@ -3,7 +3,7 @@ import Head from "next/head"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
 import React, { useState } from "react"
-import { Alert, Col, Container, Form, FormGroup, Input, Spinner, Table } from "reactstrap"
+import { Alert, Col, Container, Form, FormGroup, Spinner, Table } from "reactstrap"
 
 import { searchAttacksFuzzy } from "../../../clients/attacks"
 import { SearchButton } from "../../../components/form/SearchButton"
@@ -61,6 +61,7 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
                 onChange={onChange}
                 autoComplete="off"
                 aria-label="Rechercher un attentat par son nom ou son année"
+                role="search"
               />
             </Col>
             <Col className="flex-grow-0">
@@ -92,7 +93,7 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
               <tbody>
                 {paginatedData.elements.map((attack) => (
                   <Link key={attack.id} href="/administration/attacks/[id]" as={`/administration/attacks/${attack.id}`}>
-                    <tr style={{ cursor: 'pointer'}}>
+                    <tr style={{ cursor: "pointer" }}>
                       <td>
                         <b>{`${attack.name}`}</b>
                       </td>
@@ -101,7 +102,9 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
                       </td>
                       <td>
                         <Link href="/administration/attacks/[id]" as={`/administration/attacks/${attack.id}`}>
-                          <a className="text-decoration-none">Voir</a>
+                          <a className="text-decoration-none" aria-label={"Voir l'attentat " + attack.name}>
+                            Voir
+                          </a>
                         </Link>
                       </td>
                     </tr>

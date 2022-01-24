@@ -14,7 +14,7 @@ export const exportActs = async (params, currentUser) => {
   const worksheet = workbook.addWorksheet("Onglet 1")
 
   worksheet.columns = [
-    { header: "Id", key: "id", width: 10 },
+    { header: "ID", key: "id", width: 10 },
     { header: "Numéro interne", key: "internalNumber", width: 20 },
     { header: "Numéro réquisition", key: "pvNumber", width: 20 },
     { header: "Demandeur", key: "asker", width: 40 },

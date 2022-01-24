@@ -29,105 +29,110 @@ const Login = ({ authentication, error }) => {
 
   return (
     <>
-    <main role="main">
-      <img src={"/images/logo.png"} alt="Medlé - Plateforme médecine légale" className="my-5" style={{ maxHeight: '6.5rem'}} />
-      <div>
-        <div className="encadre shadow border mx-4 px-3 py-4 rounded">
-          <Form onSubmit={onSubmit} data-testid="authent-form" method="post">
-            <FormGroup>
-              <Label for="email">Adresse courriel</Label>
-              <InputGroup>
-                <InputGroupAddon addonType="prepend">@</InputGroupAddon>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="adresse@mail.com"
-                  ref={emailRef}
-                  className={"form-control"}
-                  autoComplete="email"
-                  aria-required="true"
-                />
-              </InputGroup>
-            </FormGroup>
-            <FormGroup>
-              <Label for="password">Mot de passe</Label>
-              <div className="float-right">
-                <Link href="/forgot-password">
-                  <a style={{ color: "#376FE6" }}>Mot de passe oublié&nbsp;?</a>
-                </Link>
-              </div>
-              <InputGroup>
-                <input
-                  type={hidden ? "password" : "text"}
-                  name="password"
-                  id="password"
-                  placeholder="Mot de passe"
-                  ref={passwordRef}
-                  className={"form-control"}
-                  autoComplete="current-password"
-                  aria-required="true"
-                />
-                <InputGroupAddon addonType="append" style={{ backgroundColor: "#e9ecef" }}>
-                  <button type="button" onClick={handleClick} aria-label="Afficher ou masquer le mot de passe">
-                    <InputGroupText
-                      style={{
-                        backgroundColor: "#e9ecef",
-                        borderColor: "#ced4da",
-                      }}
-                      className={hidden ? "" : "text-primary"}
-                    >
-                      <RemoveRedEyeIcon width={24} focusable="true" style={{ cursor: 'pointer' }}/>
-                    </InputGroupText>
-                  </button>
-                </InputGroupAddon>
-              </InputGroup>
-            </FormGroup>
-            <Button block className="d-flex justify-content-center align-items-center">
-              Se connecter&nbsp;
-              {isLoading ? <Spinner size="sm" className="ml-2" color="light" data-testid="loading" /> : ""}
-            </Button>
-            <Alert color="danger" isOpen={!!error} className="mt-3 mb-0" fade={false}>
-              {error}
-            </Alert>
-          </Form>
+      <main role="main">
+        <img
+          src={"/images/logo.png"}
+          alt="Logo Medlé plateforme médecine légale"
+          className="my-5"
+          style={{ maxHeight: "6.5rem" }}
+        />
+        <div>
+          <div className="encadre shadow border mx-4 px-3 py-4 rounded">
+            <Form onSubmit={onSubmit} data-testid="authent-form" method="post">
+              <FormGroup>
+                <Label for="email">Adresse courriel</Label>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">@</InputGroupAddon>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="adresse@mail.com"
+                    ref={emailRef}
+                    className={"form-control"}
+                    autoComplete="email"
+                    aria-required="true"
+                  />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <Label for="password">Mot de passe</Label>
+                <div className="float-right">
+                  <Link href="/forgot-password">
+                    <a style={{ color: "#376FE6" }}>Mot de passe oublié&nbsp;?</a>
+                  </Link>
+                </div>
+                <InputGroup>
+                  <input
+                    type={hidden ? "password" : "text"}
+                    name="password"
+                    id="password"
+                    placeholder="Mot de passe"
+                    ref={passwordRef}
+                    className={"form-control"}
+                    autoComplete="current-password"
+                    aria-required="true"
+                  />
+                  <InputGroupAddon addonType="append" style={{ backgroundColor: "#e9ecef" }}>
+                    <button type="button" onClick={handleClick} aria-label="Afficher ou masquer le mot de passe">
+                      <InputGroupText
+                        style={{
+                          backgroundColor: "#e9ecef",
+                          borderColor: "#ced4da",
+                        }}
+                        className={hidden ? "" : "text-primary"}
+                      >
+                        <RemoveRedEyeIcon width={24} focusable="true" style={{ cursor: "pointer" }} />
+                      </InputGroupText>
+                    </button>
+                  </InputGroupAddon>
+                </InputGroup>
+              </FormGroup>
+              <Button block className="d-flex justify-content-center align-items-center">
+                Se connecter&nbsp;
+                {isLoading ? <Spinner size="sm" className="ml-2" color="light" data-testid="loading" /> : ""}
+              </Button>
+              <Alert color="danger" isOpen={!!error} className="mt-3 mb-0" fade={false}>
+                {error}
+              </Alert>
+            </Form>
+          </div>
         </div>
-      </div>
-      <style jsx>{`
-        button{
-          border: none;
-          padding: 0;
-          display: flex;
-        }
-        main{
-          display:flex;
-        }
-        .encadre {
-          background-color: rgb(249, 249, 249);
-        }
-        ::placeholder {
-          /* Chrome, Firefox, Opera, Safari 10.1+ */
-          color: #767676;
-          opacity: 1; /* Firefox */
-        }
-        :-ms-input-placeholder {
-          /* Internet Explorer 10-11 */
-          color: #767676;
-        }
-        ::-ms-input-placeholder {
-          /* Microsoft Edge */
-          color: #767676;
-        }
-        img[alt="logo"] {
-          max-width: 300px;
-          object-fit: contain;
-        }
-        @media screen and (max-width: 768px) {
-          img[alt="logo"] {
-            width: 100%;
+        <style jsx>{`
+          button {
+            border: none;
+            padding: 0;
+            display: flex;
           }
-        }
-      `}</style>
+          main {
+            display: flex;
+          }
+          .encadre {
+            background-color: rgb(249, 249, 249);
+          }
+          ::placeholder {
+            /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: #767676;
+            opacity: 1; /* Firefox */
+          }
+          :-ms-input-placeholder {
+            /* Internet Explorer 10-11 */
+            color: #767676;
+          }
+          ::-ms-input-placeholder {
+            /* Microsoft Edge */
+            color: #767676;
+          }
+          img[alt="logo"] {
+            max-width: 300px;
+            object-fit: contain;
+          }
+          @media screen and (max-width: 768px) {
+            img[alt="logo"] {
+              width: 100%;
+            }
+          }
+        `}</style>
       </main>
     </>
   )

@@ -108,7 +108,7 @@ BlockChildren.propTypes = {
 const ActBlock = ({ title, subTitle, detail, type, values, dispatch, state, invalid, mode }) => {
   const colOptions = makeColOptions(values)
   const rowClassNames = values?.length && values.length === 1 ? "justify-content-center" : ""
-  const colorOptions = invalid ? { color: "red" } : {}
+  const colorOptions = invalid ? { color: "#EE0700" } : {}
 
   const newValues = normalizeValues(values)
 

@@ -21,7 +21,7 @@ import { logDebug } from "../../utils/logger"
 import { isEmpty, pluralize } from "../../utils/misc"
 import { PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, STATS_GLOBAL, SUPER_ADMIN } from "../../utils/roles"
 import { buildScope } from "../../utils/scope"
-import { mapArrayForSelect } from "../../utils/select"
+import { ariaLiveMessagesFR, mapArrayForSelect, reactSelectCustomTheme } from "../../utils/select"
 
 const supervisorRoles = [PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, SUPER_ADMIN]
 
@@ -189,16 +189,16 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
             <Col lg={{ size: 2 }} md="12" sm="12">
               <div className="mb-4 mr-4 d-flex justify-content-lg-end justify-content-center align-items-center">
                 <div className="d-flex align-items-center">
-                  <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#307df6" }}>
+                  <span style={{ color: scopeFilter && scopeFilter.isNational ? "black" : "#2E73E2" }}>
                     {supervisorRoles.includes(currentUser?.role) ? "Personnalisé" : "Ma\xA0structure"}
                   </span>
                   <Switch
                     checked={scopeFilter && scopeFilter.isNational}
                     onChange={toggleScopeFilter}
-                    onColor="#cd92d7"
+                    onColor="#CD73D4"
                     onHandleColor="#9c27b0"
                     offColor="#b0cdfc"
-                    offHandleColor="#307df6"
+                    offHandleColor="#2E73E2"
                     handleDiameter={20}
                     uncheckedIcon={false}
                     checkedIcon={false}
@@ -236,6 +236,8 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
                 isSearchable={true}
                 styles={customStyles}
                 aria-labelledby="hospitalsLabel"
+                ariaLiveMessages={ariaLiveMessagesFR}
+                theme={reactSelectCustomTheme}
               />
             </div>
           )}
@@ -254,13 +256,12 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           labels={["Global", "Vivant", "Thanato"]}
           colorScheme={scopeFilter && scopeFilter.isNational ? "violet" : "blue"}
           callback={setType}
-          ariaLabel="Choix de la catégorie"
+          legend="Choix du filtre d'affichage des résultats"
         />
 
         <div
-          className={`d-flex w-100 justify-content-center justify-content-md-end mr-5 mt-2 mb-3 ${
-            type === "Vivant" ? "visible" : "invisible"
-          }`}
+          className={`d-flex w-100 justify-content-center justify-content-md-end mr-5 mt-2 mb-3 
+            ${type === "Vivant" ? "visible" : "invisible display-none"}`}
         >
           <Select
             options={profileChoices}
@@ -271,7 +272,9 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
             isSearchable={true}
             styles={customStylesProfiles}
             id="selectCategorie"
-            aria-label="Profil"
+            aria-label="Choix du profil"
+            ariaLiveMessages={ariaLiveMessagesFR}
+            theme={reactSelectCustomTheme}
           />
         </div>
         {type === "Global" && (
@@ -378,6 +381,9 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
           display: flex;
           flex-wrap: wrap;
           align-content: flex-start;
+        }
+        .display-none {
+          display: none !important;
         }
       `}</style>
     </Layout>
