@@ -36,22 +36,8 @@ import { logDebug, logError } from "../../../../../utils/logger"
 import { isEmpty } from "../../../../../utils/misc"
 import { ADMIN } from "../../../../../utils/roles"
 
-const genericError = (
-  <div>
-    Oups, il y a des erreurs.{" "}
-    <span role="img" aria-hidden="true">
-      😕
-    </span>
-  </div>
-)
-const alreadyPresentError = (
-  <div>
-    Il existe déjà des ETP de référence pour ce mois.{" "}
-    <span role="img" aria-hidden="true">
-      😬
-    </span>
-  </div>
-)
+const genericError = <div role="alert">Oups, il y a des erreurs.</div>
+const alreadyPresentError = <div role="alert">Il existe déjà des ETP de référence pour ce mois.</div>
 
 const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
   const router = useRouter()
@@ -211,7 +197,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
               {"Mois d'effet "}
             </Label>
             <Col sm={9}>
-              <Controller as={MonthPicker} control={control} name="startMonth" />
+              <Controller render={({ field }) => <MonthPicker {...field} />} control={control} name="startMonth" />
             </Col>
           </FormGroup>
           <FormGroup row>
