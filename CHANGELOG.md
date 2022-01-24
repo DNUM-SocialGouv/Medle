@@ -1,3 +1,19 @@
+## [1.14.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.13.0...v1.14.0) (2022-01-24)
+
+
+### Bug Fixes
+* **accessibility:** corrections accessibilité suite audit
+* **ci:** mise à jour templates Docker
+* administration : correction affichage page Paramètres ETP
+
+## [1.13.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.12.2...v1.13.0) (2021-10-08)
+
+
+### Features
+* **accessibility:** chantier accessibilité
+* **tech:** upgrade stack technique
+* **ci:** mise à jour configurations CI et templates Docker
+
 ## [1.12.2](https://github.com/SocialGouv/medle/compare/v1.12.1...v1.12.2) (2021-06-24)
 
 
