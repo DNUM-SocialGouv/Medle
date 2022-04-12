@@ -5,10 +5,12 @@ import { version } from "../../../package.json"
 import knex from "../../knex/knex"
 import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
 import { FORMAT_DATE } from "../../utils/date"
-import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../utils/http"
+import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../utils/http"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
 
   try {
     switch (req.method) {

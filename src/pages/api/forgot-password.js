@@ -9,6 +9,7 @@ import {
   STATUS_200_OK,
   STATUS_404_NOT_FOUND,
   STATUS_500_INTERNAL_SERVER_ERROR,
+  CORS_ALLOW_ORIGIN
 } from "../../utils/http"
 import { generateToken } from "../../utils/jwt"
 
@@ -40,6 +41,9 @@ function buildHtml({ token }) {
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
+
   const to = req?.body.email
   try {
     switch (req.method) {
