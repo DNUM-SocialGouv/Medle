@@ -14,7 +14,7 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_PATCH: {
-        const { id, password, loginToken } = req.body
+        const { id, lastPassword, password, loginToken } = req.body
         let modified
 
         // Usage by inputs id/password for admin.
@@ -22,7 +22,7 @@ const handler = async (req, res) => {
           const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
           logDebug("Password reset by user ", currentUser)
 
-          modified = await resetFromId({ id, password })
+          modified = await resetFromId({ id, lastPassword, password })
         } else {
           // Usage by inputs loginToken/password for user which wants to change its own password.
           const user = checkToken(loginToken)
