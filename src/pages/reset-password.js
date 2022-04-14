@@ -6,6 +6,7 @@ import { Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } f
 
 import { resetPassword } from "../clients/users"
 import Layout from "../components/Layout"
+import { PasswordForce } from "../components/PasswordForce"
 import StatusAlert from "../components/StatusAlert"
 import { Title1 } from "../components/StyledComponents"
 import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
@@ -22,6 +23,8 @@ const UserReset = () => {
   const router = useRouter()
   const { loginToken } = router.query
   const [showForm, setShowForm] = React.useState(true)
+
+  const [password, setPassword] = React.useState("")
 
   const onSubmit = async (data) => {
     setStatus({ type: "pending" })
@@ -45,7 +48,7 @@ const UserReset = () => {
 
   const { ref: firstValueRef, ...firstValueReg } = register("firstValue", {
     pattern: {
-      value: /^[a-zA-Z0-9]{8,30}$/,
+      value: /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
     },
     required: true,
   })
@@ -55,6 +58,10 @@ const UserReset = () => {
       return value === watch("firstValue")
     },
   })
+
+  const handleChangeFirstValue = (e) => {
+    setPassword(e.target.value)
+  }
 
   return (
     <Layout>
@@ -75,9 +82,14 @@ const UserReset = () => {
                   innerRef={firstValueRef}
                   invalid={!!formErrors.firstValue}
                   aria-required="true"
+                  onChange={e => {
+                    firstValueReg.onChange(e)
+                    handleChangeFirstValue(e);
+                  }}
                 />
+                <PasswordForce password={password}></PasswordForce>
                 <FormFeedback>
-                  {formErrors.firstValue && "Mot de passe invalide (8 à 30 caractères avec lettres ou chiffres)."}
+                  {formErrors.firstValue && "Mot de passe invalide. Le mot de passe doit être composé d'au moins 12 caractères dont: 1 lettre minuscule, 1 lettre majuscule, 1 chiffre et 1 caractère spécial."}
                 </FormFeedback>
               </Col>
             </FormGroup>

@@ -9,6 +9,7 @@ import { Alert, Button, Col, Container, Form, FormFeedback, FormGroup, Input, La
 import { resetPasswordByAdmin } from "../../../../clients/users"
 import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"
+import { PasswordForce } from "../../../../components/PasswordForce"
 import { withAuthentication } from "../../../../utils/auth"
 import { STATUS_403_FORBIDDEN } from "../../../../utils/http"
 import { logDebug } from "../../../../utils/logger"
@@ -28,6 +29,7 @@ const UserReset = ({ currentUser }) => {
   const router = useRouter()
   const { id } = router.query
   
+  const [password, setPassword] = useState("")
   const [lastPasswordError, setLastPasswordError] = useState(false)
 
   const onSubmit = async (data) => {
@@ -55,7 +57,7 @@ const UserReset = ({ currentUser }) => {
   })
   const { ref: firstValueRef, ...firstValueReg } = register("firstValue", {
     pattern: {
-      value: /^[a-zA-Z0-9]{8,30}$/,
+      value: /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
     },
     required: true,
   })
@@ -70,7 +72,11 @@ const UserReset = ({ currentUser }) => {
     if (lastPasswordError) {
       setLastPasswordError(false)
     }
-   }
+  }
+
+  const handleChangeFirstValue = (e) => {
+    setPassword(e.target.value)
+  }
 
   return (
     <Layout currentUser={currentUser} admin={true}>
@@ -128,10 +134,15 @@ const UserReset = ({ currentUser }) => {
                 {...firstValueReg}
                 innerRef={firstValueRef}
                 invalid={!!formErrors.firstValue}
+                onChange={e => {
+                  firstValueReg.onChange(e)
+                  handleChangeFirstValue(e);
+                }}
                 aria-required="true"
               />
+              <PasswordForce password={password}></PasswordForce>
               <FormFeedback>
-                {formErrors.firstValue && "Mot de passe invalide (8 à 30 caractères avec lettres ou chiffres)."}
+                {formErrors.firstValue && "Mot de passe invalide. Le mot de passe doit être composé d'au moins 12 caractères dont: 1 lettre minuscule, 1 lettre majuscule, 1 chiffre et 1 caractère spécial."}
               </FormFeedback>
             </Col>
           </FormGroup>
