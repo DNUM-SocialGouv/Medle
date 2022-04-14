@@ -8,13 +8,14 @@ import { EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../../../../../.
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  const { year, month, hospitalId } = req.query
 
   try {
     switch (req.method) {
       case METHOD_GET: {
         checkValidUserWithPrivilege(EMPLOYMENT_CONSULTATION, req, res)
 
-        const dataMonth = await find(req.query)
+        const dataMonth = await find({ year, month, hospitalId })
 
         return res.status(STATUS_200_OK).json(dataMonth)
       }
@@ -22,7 +23,7 @@ const handler = async (req, res) => {
         checkValidUserWithPrivilege(EMPLOYMENT_MANAGEMENT, req, res)
 
         const data = req.body
-        const result = await update({ ...req.query, data })
+        const result = await update({ year, month, hospitalId, data })
 
         return result ? res.status(STATUS_200_OK).json(result) : sendNotFoundError(res)
       }

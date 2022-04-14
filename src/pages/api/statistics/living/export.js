@@ -13,13 +13,14 @@ import { STATS_GLOBAL } from "../../../../utils/roles"
  */
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  const { startDate, endDate, scopeFilter, profile } = req.query
 
   try {
     switch (req.method) {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-        const workbook = await exportLivingStatistics(req.query, currentUser)
+        const workbook = await exportLivingStatistics({ startDate, endDate, scopeFilter, profile }, currentUser)
 
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx")

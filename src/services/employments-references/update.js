@@ -2,6 +2,7 @@ import knex from "../../knex/knex"
 import { untransform, validate } from "../../models/employments-references"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
+import { isETPValid } from "./common"
 
 export const update = async ({ hid, rid }, data) => {
   // Check if query and body are consistent
@@ -21,6 +22,23 @@ export const update = async ({ hid, rid }, data) => {
   }
 
   await validate(data)
+
+  const { ides, others, doctors, nursings, executives, secretaries, auditoriumAgents } = data
+
+  if (
+    !isETPValid(ides) ||
+    !isETPValid(others) ||
+    !isETPValid(doctors) ||
+    !isETPValid(nursings) ||
+    !isETPValid(executives) ||
+    !isETPValid(secretaries) ||
+    !isETPValid(auditoriumAgents)
+  ) {
+    throw new APIError({
+      message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
+    })
+  }
 
   const { id } = data
 

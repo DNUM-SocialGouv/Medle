@@ -8,13 +8,14 @@ import { ACT_CONSULTATION, ADMIN } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  const { id } = req.query
 
   try {
     switch (req.method) {
       case METHOD_GET: {
         checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
-        const attack = await find(req.query)
+        const attack = await find({ id })
 
         if (attack) return res.status(STATUS_200_OK).json(attack)
 
@@ -25,7 +26,7 @@ const handler = async (req, res) => {
 
         checkIsSuperAdmin(currentUser)
 
-        const deleted = await del(req.query)
+        const deleted = await del({ id })
 
         if (!deleted) return sendNotFoundError(res)
 
@@ -36,7 +37,7 @@ const handler = async (req, res) => {
 
         checkIsSuperAdmin(currentUser)
 
-        const updated = await update(req.query, req.body)
+        const updated = await update({ id }, req.body)
 
         if (!updated) return sendNotFoundError(res)
 

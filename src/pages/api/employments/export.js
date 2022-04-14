@@ -9,13 +9,14 @@ import { EMPLOYMENT_CONSULTATION } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  const { hospitals, year } = req.query
 
   try {
     switch (req.method) {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(EMPLOYMENT_CONSULTATION, req, res)
 
-        const workbook = await exportEmployments(req.query, currentUser)
+        const workbook = await exportEmployments({ hospitals, year }, currentUser)
 
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx")

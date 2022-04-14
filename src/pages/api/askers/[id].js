@@ -8,13 +8,14 @@ import { ACT_MANAGEMENT, ADMIN } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  const { id } = req.query
 
   try {
     switch (req.method) {
       case METHOD_GET: {
         checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-        const asker = await find(req.query)
+        const asker = await find({ id })
 
         if (asker) return res.status(STATUS_200_OK).json(asker)
 
@@ -25,7 +26,7 @@ const handler = async (req, res) => {
 
         checkIsSuperAdmin(currentUser)
 
-        const deleted = await del(req.query, currentUser)
+        const deleted = await del({ id }, currentUser)
 
         if (!deleted) return sendNotFoundError(res)
 
@@ -36,7 +37,7 @@ const handler = async (req, res) => {
 
         checkIsSuperAdmin(currentUser)
 
-        const updated = await update(req.query, req.body)
+        const updated = await update({ id }, req.body)
 
         if (!updated) return sendNotFoundError(res)
 

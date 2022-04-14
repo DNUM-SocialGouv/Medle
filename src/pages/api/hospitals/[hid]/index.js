@@ -8,13 +8,14 @@ import { ADMIN, NO_PRIVILEGE_REQUIRED } from "../../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  const { hid } = req.query
 
   try {
     switch (req.method) {
       case METHOD_GET: {
         checkValidUserWithPrivilege(NO_PRIVILEGE_REQUIRED, req, res)
 
-        const hospital = await find(req.query)
+        const hospital = await find({ hid })
 
         return hospital ? res.status(STATUS_200_OK).json(hospital) : sendNotFoundError(res)
       }
@@ -23,7 +24,7 @@ const handler = async (req, res) => {
 
         checkIsSuperAdmin(currentUser)
 
-        const deleted = await del(req.query, currentUser)
+        const deleted = await del({ hid }, currentUser)
 
         if (!deleted) return sendNotFoundError(res)
 
@@ -34,7 +35,7 @@ const handler = async (req, res) => {
 
         checkIsSuperAdmin(currentUser)
 
-        const updated = await update(req.query, req.body)
+        const updated = await update({ hid }, req.body)
 
         if (!updated) return sendNotFoundError(res)
 

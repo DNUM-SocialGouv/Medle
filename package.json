@@ -17,7 +17,8 @@
         "migrate:list": "node -r dotenv/config ./node_modules/knex/bin/cli migrate:list",
         "seed:make": "node -r dotenv/config ./node_modules/knex/bin/cli seed:make name_seed",
         "seed:run:dev": "node -r dotenv/config ./node_modules/knex/bin/cli seed:run --env development",
-        "seed:run:staging": "node -r dotenv/config ./node_modules/knex/bin/cli seed:run --env staging"
+        "seed:run:staging": "node -r dotenv/config ./node_modules/knex/bin/cli seed:run --env staging",
+        "fresh-install": "rm -rf node_modules/ .next/ && yarn"
     },
     "dependencies": {
         "@hookform/resolvers": "^2.8.0",

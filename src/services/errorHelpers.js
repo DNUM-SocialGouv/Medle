@@ -1,11 +1,16 @@
+import getConfig from "next/config"
+
 import { APIError, InternalError, stringifyError } from "../utils/errors"
 import {
   STATUS_400_BAD_REQUEST,
+  STATUS_403_FORBIDDEN,
   STATUS_404_NOT_FOUND,
   STATUS_405_METHOD_NOT_ALLOWED,
   STATUS_500_INTERNAL_SERVER_ERROR,
 } from "../utils/http"
 import { logError } from "../utils/logger"
+
+const { publicRuntimeConfig } = getConfig() || {}
 
 export const sendAPIError = (error, res) => {
   logError(error)
@@ -15,7 +20,16 @@ export const sendAPIError = (error, res) => {
   }
 
   // fallback error
-  return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json(stringifyError(new InternalError({ detail: error.message })))
+  return res.status(STATUS_500_INTERNAL_SERVER_ERROR).json(
+    stringifyError(
+      new InternalError({
+        detail:
+          publicRuntimeConfig && publicRuntimeConfig.DEBUG_MODE && publicRuntimeConfig.DEBUG_MODE === "true"
+            ? error.message
+            : "Internal server error",
+      }),
+    ),
+  )
 }
 
 export const sendMethodNotAllowedError = (res) =>
@@ -24,7 +38,7 @@ export const sendMethodNotAllowedError = (res) =>
       status: STATUS_405_METHOD_NOT_ALLOWED,
       message: "Method not allowed",
     }),
-    res
+    res,
   )
 
 export const sendNotFoundError = (res) =>
@@ -33,7 +47,16 @@ export const sendNotFoundError = (res) =>
       status: STATUS_404_NOT_FOUND,
       message: "Resource not found",
     }),
-    res
+    res,
+  )
+
+export const sendForbiddenError = (res) =>
+  sendAPIError(
+    new APIError({
+      status: STATUS_403_FORBIDDEN,
+      message: "Forbidden",
+    }),
+    res,
   )
 
 export const sendBadRequestError = (res) =>
@@ -42,5 +65,5 @@ export const sendBadRequestError = (res) =>
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
     }),
-    res
+    res,
   )

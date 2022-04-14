@@ -16,13 +16,14 @@ import { ACT_CONSULTATION, ACT_MANAGEMENT } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  const { id } = req.query
 
   try {
     switch (req.method) {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(ACT_CONSULTATION, req, res)
 
-        const act = await find(req.query, currentUser)
+        const act = await find({ id }, currentUser)
 
         if (!act) {
           throw new APIError({
@@ -36,14 +37,14 @@ const handler = async (req, res) => {
       case METHOD_DELETE: {
         const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-        const deleted = await del(req.query, currentUser)
+        const deleted = await del({ id }, currentUser)
 
         return res.status(STATUS_200_OK).json({ deleted })
       }
       case METHOD_PUT: {
         const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
-        const updated = await update(req.query, req.body, currentUser)
+        const updated = await update({ id }, req.body, currentUser)
 
         return res.status(STATUS_200_OK).json({ updated })
       }
