@@ -58,10 +58,15 @@ const Header = ({ currentUser }) => {
       <Navbar expand="md" light>
         <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
           <img
+            src={"/images/Republique_Francaise_RVB.svg"}
+            alt="Logo de la République Française"
+            height="120"
+          />
+          <img
             src={"/images/logo.png"}
             alt="Retour à l'accueil de Medlé"
-            width="100"
-            style={{ cursor: "pointer" }}
+            width="120"
+            style={{ cursor: "pointer", marginLeft: "20px" }}
             id="header"
           />
         </NavbarBrand>
