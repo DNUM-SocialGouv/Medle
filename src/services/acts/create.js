@@ -21,6 +21,13 @@ export const create = async (data, currentUser) => {
     })
   }
 
+  if (!currentUser?.id || data.addedBy !== currentUser.id) {
+    throw new APIError({
+      status: STATUS_401_UNAUTHORIZED,
+      message: "Not authorized",
+    })
+  }
+
   if (!currentUser?.hospital || data.hospitalId !== currentUser.hospital.id) {
     throw new APIError({
       status: STATUS_401_UNAUTHORIZED,

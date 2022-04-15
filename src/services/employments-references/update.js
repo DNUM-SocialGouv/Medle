@@ -1,8 +1,8 @@
 import knex from "../../knex/knex"
 import { untransform, validate } from "../../models/employments-references"
+import { isEmployementValid } from "../../utils/employments"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { isETPValid } from "./common"
 
 export const update = async ({ hid, rid }, data) => {
   // Check if query and body are consistent
@@ -26,13 +26,13 @@ export const update = async ({ hid, rid }, data) => {
   const { ides, others, doctors, nursings, executives, secretaries, auditoriumAgents } = data
 
   if (
-    !isETPValid(ides) ||
-    !isETPValid(others) ||
-    !isETPValid(doctors) ||
-    !isETPValid(nursings) ||
-    !isETPValid(executives) ||
-    !isETPValid(secretaries) ||
-    !isETPValid(auditoriumAgents)
+    !isEmployementValid(ides) ||
+    !isEmployementValid(others) ||
+    !isEmployementValid(doctors) ||
+    !isEmployementValid(nursings) ||
+    !isEmployementValid(executives) ||
+    !isEmployementValid(secretaries) ||
+    !isEmployementValid(auditoriumAgents)
   ) {
     throw new APIError({
       message: "Bad request",

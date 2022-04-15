@@ -1,12 +1,12 @@
 import upsert from "knex-upsert"
 
 import knex from "../../knex/knex"
+import { isEmployementValid, isMonthValid, isValid, isYearValid } from "../../utils/employments"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { isETPValid, isMonthValid, isValid, isYearValid } from "./common"
 
 export const update = async ({ year, month, hospitalId, data }) => {
-  if (!isValid({ hospitalId, month, year }) || !data)
+  if (!isValid({ hospitalId, month, year }) || !data || !isYearValid(year) || !isMonthValid(month))
     throw new APIError({
       message: "Bad request",
       status: STATUS_400_BAD_REQUEST,
@@ -15,15 +15,13 @@ export const update = async ({ year, month, hospitalId, data }) => {
   const { ides, others, doctors, nursings, executives, secretaries, auditoriumAgents } = data
 
   if (
-    !isYearValid(year) ||
-    !isMonthValid(month) ||
-    !isETPValid(ides) ||
-    !isETPValid(others) ||
-    !isETPValid(doctors) ||
-    !isETPValid(nursings) ||
-    !isETPValid(executives) ||
-    !isETPValid(secretaries) ||
-    !isETPValid(auditoriumAgents)
+    !isEmployementValid(ides) ||
+    !isEmployementValid(others) ||
+    !isEmployementValid(doctors) ||
+    !isEmployementValid(nursings) ||
+    !isEmployementValid(executives) ||
+    !isEmployementValid(secretaries) ||
+    !isEmployementValid(auditoriumAgents)
   ) {
     throw new APIError({
       message: "Bad request",
@@ -42,6 +40,5 @@ export const update = async ({ year, month, hospitalId, data }) => {
     },
     table: "employments",
   })
-
   return result
 }
