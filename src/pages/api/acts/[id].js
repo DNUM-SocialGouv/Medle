@@ -11,11 +11,14 @@ import {
   METHOD_PUT,
   STATUS_200_OK,
   STATUS_404_NOT_FOUND,
+  CORS_ALLOW_ORIGIN
 } from "../../../utils/http"
 import { ACT_CONSULTATION, ACT_MANAGEMENT } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
 
   try {
     switch (req.method) {

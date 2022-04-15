@@ -3,10 +3,12 @@ import Cors from "micro-cors"
 import { timeout } from "../../config"
 import { authenticate } from "../../services/authentication"
 import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
-import { METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../utils/http"
+import { METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../utils/http"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
 
   try {
     switch (req.method) {

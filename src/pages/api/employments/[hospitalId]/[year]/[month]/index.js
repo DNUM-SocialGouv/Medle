@@ -3,11 +3,13 @@ import Cors from "micro-cors"
 import { find, update } from "../../../../../../services/employments"
 import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../../../../utils/auth"
-import { METHOD_GET, METHOD_OPTIONS, METHOD_PUT, STATUS_200_OK } from "../../../../../../utils/http"
+import { METHOD_GET, METHOD_OPTIONS, METHOD_PUT, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../../../utils/http"
 import { EMPLOYMENT_CONSULTATION, EMPLOYMENT_MANAGEMENT } from "../../../../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
 
   try {
     switch (req.method) {
