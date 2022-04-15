@@ -8,9 +8,9 @@ export const LIMIT_EXPORT = 10000
 
 // Timeout config : keep this timeout values in sync
 export const timeout = {
-  cookie: 9 * 60 * 60,
-  jwt: "9h",
-  session: { hours: 9 },
+  cookie: 30 * 60,
+  jwt: "30m",
+  session: { minutes: 30 },
 }
 
 export const API_URL = publicRuntimeConfig ? publicRuntimeConfig.API_URL : "http://localhost:3000/api"
