@@ -1,11 +1,12 @@
 import Cors from "micro-cors"
 
-import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
+import { sendAPIError, sendForbiddenError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
 import { exportLivingStatistics } from "../../../../services/statistics/living"
 import { checkValidUserWithPrivilege } from "../../../../utils/auth"
 import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../../../utils/http"
 import { logDebug } from "../../../../utils/logger"
 import { STATS_GLOBAL } from "../../../../utils/roles"
+import { isAllowedHospitals } from "../../../../utils/scope"
 
 /**
  * API endpoint for living statistics export.
@@ -19,6 +20,9 @@ const handler = async (req, res) => {
     switch (req.method) {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
+
+        if (scopeFilter && scopeFilter.length > 0 && !isAllowedHospitals(currentUser, scopeFilter))
+          return sendForbiddenError(res)
 
         const workbook = await exportLivingStatistics({ startDate, endDate, scopeFilter, profile }, currentUser)
 

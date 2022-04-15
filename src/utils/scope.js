@@ -68,7 +68,9 @@ export const isAllowedHospitals = (currentUser, hospitalsQuery) => {
 }
 
 const checkScopeFromQuery = (currentUser, hospitalsQuery) => {
-  const hospitals = hospitalsQuery.split(",").map(Number)
+  if (!hospitalsQuery || hospitalsQuery.length === 0) return false
+
+  const hospitals = !Array.isArray(hospitalsQuery) ? hospitalsQuery.split(",").map(Number) : hospitalsQuery
   const scope = buildScope(currentUser)
 
   /**
