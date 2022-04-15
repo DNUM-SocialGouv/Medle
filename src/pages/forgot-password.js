@@ -33,7 +33,7 @@ const ForgotPasswordPage = () => {
         trackEvent(CATEGORY.auth, ACTION.auth.oubliMdp, `${email} : Error (${error?.status})`)
 
         setStatus({
-          message: error.status === 404 ? "Le courriel ne semble pas exister." : "Erreur lors de l'envoi du courriel",
+          message: `Erreur lors de l'envoi du courriel`,
           type: "error",
         })
       }

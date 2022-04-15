@@ -5,6 +5,7 @@ import { sendAPIError, sendMethodNotAllowedError } from "../../../services/error
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { APIError } from "../../../utils/errors"
 import {
+  CORS_ALLOW_ORIGIN,
   METHOD_DELETE,
   METHOD_GET,
   METHOD_OPTIONS,
@@ -16,6 +17,9 @@ import { ACT_CONSULTATION, ACT_MANAGEMENT } from "../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
+
   const { id } = req.query
 
   try {

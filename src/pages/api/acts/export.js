@@ -3,13 +3,16 @@ import Cors from "micro-cors"
 import { exportActs } from "../../../services/acts"
 import { sendAPIError, sendForbiddenError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
-import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
+import { CORS_ALLOW_ORIGIN, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
 import { logDebug } from "../../../utils/logger"
 import { ACT_CONSULTATION } from "../../../utils/roles"
 import { isAllowedHospitals } from "../../../utils/scope"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
+
   const { hospitals } = req.query
 
   try {

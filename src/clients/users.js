@@ -53,9 +53,9 @@ export const deleteUser = async ({ id, headers }) => {
  * @param {string} payload.password    - New password to apply.
  * @param {Object} payload.headers     - Headers including authorization token.
  */
-export const resetPasswordByAdmin = async ({ id, password, headers }) => {
+export const resetPasswordByAdmin = async ({ id, lastPassword, password, headers }) => {
   const response = await fetch(`${API_URL}${RESET_PWD_ENDPOINT}`, {
-    body: JSON.stringify({ id, password }),
+    body: JSON.stringify({ id, lastPassword, password }),
     headers: { ...headers, "Content-Type": "application/json" },
     method: METHOD_PATCH,
   })
