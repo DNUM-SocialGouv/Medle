@@ -13,6 +13,7 @@ exports.seed = function (knex) {
           password: "$2a$10$u3FoG3RQkIR8fZ8ymhl3s.FnmWF9u5h.gGmH0w.45GEfakd2NLv22",
           hospital_id: null,
           scope: null,
+          reset_password: true
         },
         {
           id: 2,
@@ -23,6 +24,7 @@ exports.seed = function (knex) {
           role: "OPERATOR_ACT",
           hospital_id: 1,
           scope: null,
+          reset_password: true
         },
         {
           id: 3,
@@ -33,6 +35,7 @@ exports.seed = function (knex) {
           role: "OPERATOR_EMPLOYMENT",
           hospital_id: 1,
           scope: null,
+          reset_password: true
         },
         {
           id: 4,
@@ -43,6 +46,7 @@ exports.seed = function (knex) {
           role: "OPERATOR_ACT",
           hospital_id: 3,
           scope: null,
+          reset_password: true
         },
         {
           id: 5,
@@ -53,6 +57,7 @@ exports.seed = function (knex) {
           role: "ADMIN_HOSPITAL",
           hospital_id: 1,
           scope: null,
+          reset_password: true
         },
         {
           id: 6,
@@ -63,6 +68,7 @@ exports.seed = function (knex) {
           role: "REGIONAL_SUPERVISOR",
           hospital_id: null,
           scope: JSON.stringify([1, 2]),
+          reset_password: true
         },
         {
           id: 7,
@@ -73,6 +79,7 @@ exports.seed = function (knex) {
           role: "PUBLIC_SUPERVISOR",
           hospital_id: null,
           scope: null,
+          reset_password: true
         },
         {
           id: 8,
@@ -84,6 +91,7 @@ exports.seed = function (knex) {
           role: "OPERATOR_ACT",
           hospital_id: 1,
           scope: null,
+          reset_password: true
         },
         {
           id: 9,
@@ -94,6 +102,7 @@ exports.seed = function (knex) {
           role: "OPERATOR_ACT",
           hospital_id: 4,
           scope: null,
+          reset_password: true
         },
         {
           id: 10,
@@ -104,6 +113,7 @@ exports.seed = function (knex) {
           role: "OPERATOR_EMPLOYMENT",
           hospital_id: 4,
           scope: null,
+          reset_password: true
         },
       ])
     })

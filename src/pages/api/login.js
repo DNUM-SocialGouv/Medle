@@ -16,7 +16,7 @@ const handler = async (req, res) => {
 
         res.setHeader("Set-Cookie", `token=${token}; Path=/; HttpOnly; Max-Age=${timeout.cookie}`)
 
-        return res.status(STATUS_200_OK).json(user)
+        return res.status(STATUS_200_OK).json(JSON.stringify({ user, token }))
       }
       default:
         if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)

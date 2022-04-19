@@ -29,6 +29,7 @@ export const find = async ({ id, currentUser }) => {
       "users.hospital_id",
       "hospitals.name as hospital_name",
       "users.scope",
+      "users.reset_password"
     )
 
   user = transform(user)

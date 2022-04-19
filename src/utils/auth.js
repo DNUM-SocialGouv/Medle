@@ -31,11 +31,14 @@ export const logout = async () => {
   await Router.push("/")
 }
 
-export const registerAndRedirectUser = (user) => {
-  fetchReferenceData()
-  sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
-
-  Router.push(startPageForRole(user.role))
+export const registerAndRedirectUser = (user, token) => {
+  if (user.resetPassword) {
+    Router.push(`/reset-password?loginToken=${token}`)
+  } else {
+    fetchReferenceData()
+    sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
+    Router.push(startPageForRole(user.role))
+  }
 }
 
 export const getCurrentUser = (ctx) => {

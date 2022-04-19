@@ -33,12 +33,13 @@ export const authenticate = async (email, password) => {
       "users.hospital_id",
       "hospitals.name as hospital_name",
       "hospitals.extra_data as hospital_extra_data",
-      "users.scope"
+      "users.scope",
+      "users.reset_password"
     )
 
   if (dbUser && (await compareWithHash(password, dbUser.password))) {
     const user = transform(dbUser)
-    const token = generateToken(user)
+    const token = user.resetPassword ? generateToken(user, { timeout: "5m" }) : generateToken(user)
     return { user, token }
   } else {
     // Unauthorized path

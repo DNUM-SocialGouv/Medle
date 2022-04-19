@@ -110,7 +110,7 @@ const UserReset = () => {
               </Col>
             </FormGroup>
             <div className="justify-content-center d-flex">
-              <Link href="/administration/users">
+              <Link href="/">
                 <Button className="px-4 mt-5 mr-3" outline color="primary">
                   Annuler
                 </Button>
