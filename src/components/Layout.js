@@ -179,7 +179,7 @@ export const Footer = () => (
             </li>
             <li className="mb-2">
               {/* <Link> */}
-              <a href="mailto:contact.medle@fabrique.social.gouv.fr">Contactez&#8209;nous</a>
+              <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
               {/* </Link> */}
             </li>
           </ul>
