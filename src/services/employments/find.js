@@ -1,8 +1,8 @@
 import knex from "../../knex/knex"
 import { extractMonthYear } from "../../utils/date"
+import { isValid } from "../../utils/employments"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
-import { isValid } from "./common"
 
 export const find = async ({ year, month, hospitalId }) => {
   if (!isValid({ hospitalId, month, year }))
