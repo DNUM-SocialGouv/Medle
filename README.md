@@ -79,6 +79,8 @@ The variables are :
 - MAIL_USERNAME username of SMTP server account
 - MAIL_PASSWORD password of SMTP server account
 - MAIL_FROM string used in from email
+- LOGIN_DELAY_ATTEMPTS number of attempts to start the login delay
+- LOGIN_DELAY_SECONDS duration of the login delay
 
 Besides, in some cases you may want to set :
 
