@@ -3,13 +3,15 @@ import Cors from "micro-cors"
 import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
 import { resetFromEmail, resetFromId } from "../../services/users/reset-password"
 import { checkValidUserWithPrivilege } from "../../utils/auth"
-import { METHOD_OPTIONS, METHOD_PATCH, STATUS_200_OK } from "../../utils/http"
+import { METHOD_OPTIONS, METHOD_PATCH, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../utils/http"
 import { checkToken } from "../../utils/jwt"
 import { logDebug } from "../../utils/logger"
 import { ADMIN } from "../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
 
   try {
     switch (req.method) {

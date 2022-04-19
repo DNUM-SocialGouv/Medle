@@ -4,7 +4,7 @@ import knex from "../../knex/knex"
 import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
 import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../utils/auth"
 import { ISO_DATE, now } from "../../utils/date"
-import { METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../utils/http"
+import { METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../utils/http"
 import { ADMIN } from "../../utils/roles"
 
 const ADMIN_METHODS = [METHOD_DELETE, METHOD_POST]
@@ -23,6 +23,8 @@ const handler = async (req, res) => {
     checkAdminAccess(req, res)
   }
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
 
   const today = now().format(ISO_DATE)
   const { queryAll } = req.query

@@ -3,7 +3,7 @@ import Cors from "micro-cors"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
 import { exportGlobalStatistics } from "../../../../services/statistics/global"
 import { checkValidUserWithPrivilege } from "../../../../utils/auth"
-import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../../../utils/http"
+import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../utils/http"
 import { logDebug } from "../../../../utils/logger"
 import { STATS_GLOBAL } from "../../../../utils/roles"
 
@@ -19,6 +19,8 @@ import { STATS_GLOBAL } from "../../../../utils/roles"
  */
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
 
   try {
     switch (req.method) {

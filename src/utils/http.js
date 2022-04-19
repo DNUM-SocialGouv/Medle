@@ -11,6 +11,7 @@ export const STATUS_404_NOT_FOUND = 404
 export const STATUS_405_METHOD_NOT_ALLOWED = 405
 export const STATUS_406_NOT_ACCEPTABLE = 406 // pas de match avec le header Accept-*
 export const STATUS_410_GONE = 410
+export const STATUS_429_TOO_MANY_REQUESTS = 429
 export const STATUS_500_INTERNAL_SERVER_ERROR = 500
 export const STATUS_501_NOT_IMPLEMENTED = 501
 export const STATUS_503_SERVICE_UNAVAILABLE = 503
@@ -21,3 +22,5 @@ export const METHOD_OPTIONS = "OPTIONS"
 export const METHOD_PUT = "PUT"
 export const METHOD_PATCH = "PATCH"
 export const METHOD_DELETE = "DELETE"
+
+export const CORS_ALLOW_ORIGIN = process.env.APP_BASE_URL || "*"

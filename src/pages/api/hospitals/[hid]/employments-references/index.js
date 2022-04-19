@@ -3,11 +3,13 @@ import Cors from "micro-cors"
 import { create, findAll, searchByMonth } from "../../../../../services/employments-references"
 import { sendAPIError, sendMethodNotAllowedError } from "../../../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../../../utils/auth"
-import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../../../utils/http"
+import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../../utils/http"
 import { ADMIN, EMPLOYMENT_CONSULTATION } from "../../../../../utils/roles"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
+  res.setHeader("Access-Control-Allow-Credentials", "false")
 
   const { type, hid } = req.query
 
