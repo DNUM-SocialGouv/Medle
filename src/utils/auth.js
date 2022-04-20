@@ -32,11 +32,11 @@ export const logout = async () => {
 }
 
 export const registerAndRedirectUser = (user, token) => {
+  sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
   if (user.resetPassword) {
     Router.push(`/reset-password?loginToken=${token}`)
   } else {
     fetchReferenceData()
-    sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
     Router.push(startPageForRole(user.role))
   }
 }
@@ -127,6 +127,12 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege, { redire
       if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
         logError("Rôle incorrect. Redirection sur page permissionError")
         isomorphicRedirect(ctx, "/permissionError")
+        return {}
+      }
+
+      if (currentUser.resetPassword) {
+        logError("L'utilisateur doit changer de mot de passe avant d'accéder au site. Redirection sur index")
+        isomorphicRedirect(ctx, "/?sessionTimeout=1")
         return {}
       }
     }
