@@ -8,7 +8,7 @@ import { resetPassword } from "../clients/users"
 import Layout from "../components/Layout"
 import { PasswordForce } from "../components/PasswordForce"
 import StatusAlert from "../components/StatusAlert"
-import { Title1 } from "../components/StyledComponents"
+import { Title1, Title2 } from "../components/StyledComponents"
 import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
 import { isEmpty } from "../utils/misc"
 
@@ -67,6 +67,7 @@ const UserReset = () => {
     <Layout>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <Title1>{"Changement de mot de passe"}</Title1>
+        <Title2>{"Merci de changer votre mot de passe pour accéder de nouveau à l'application"}</Title2>
         {status?.message && <StatusAlert {...status} />}
         {showForm ? (
           <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
