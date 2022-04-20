@@ -39,7 +39,10 @@ export const create = async (user, currentUser) => {
     })
   }
 
-  const [newId] = await knex("users").insert(untransform(user), "id")
+  let untransformedUser = untransform(user)
+  untransformedUser = { ...untransformedUser, reset_password: true }
+
+  const [newId] = await knex("users").insert(untransformedUser, "id")
 
   return newId
 }

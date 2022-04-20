@@ -22,6 +22,7 @@ export const transform = (knexData) => {
               name: knexData.hospital_name || "",
               ...knexData.hospital_extra_data,
             },
+        resetPassword: knexData.reset_password
       }
 }
 
@@ -36,6 +37,7 @@ export const untransform = (model) => {
     role: model.role,
     scope: !model.scope?.length ? null : JSON.stringify(model.scope.map((curr) => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
     hospital_id: (model.hospital && model.hospital.id) || null,
+    reset_password: model.resetPassword
   }
 
   // Pas d'id pour une création de user
@@ -64,6 +66,7 @@ const schema = yup.object().shape({
       name: yup.string(),
     })
     .nullable(),
+    resetPassword: yup.bool(),
 })
 
 const configValidate = {

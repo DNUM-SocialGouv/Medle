@@ -66,7 +66,7 @@ const Header = ({ currentUser }) => {
           />
         </NavbarBrand>
         <NavbarToggler onClick={toggle} aria-label="Afficher ou masquer le menu" />
-        {currentUser && (
+        {currentUser && !currentUser.resetPassword && (
           <Collapse isOpen={isOpen} navbar>
             <Nav
               className="pt-2 mt-2 ml-auto d-flex justify-content-end align-items-md-center align-items-start pt-md-0"
@@ -212,7 +212,7 @@ export const Footer = () => (
 )
 
 const Sidebar = ({ page, currentUser }) => {
-  if (!currentUser) return ""
+  if (!currentUser || currentUser.resetPassword) return ""
   return (
     <>
       <nav aria-label="Navigation latérale" className="text-center list-group list-group-flush" role="navigation">

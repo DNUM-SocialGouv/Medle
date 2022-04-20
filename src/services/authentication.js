@@ -35,6 +35,7 @@ export const authenticate = async (email, password) => {
       "hospitals.name as hospital_name",
       "hospitals.extra_data as hospital_extra_data",
       "users.scope",
+      "users.reset_password",
       "users.login_attempts as loginAttempts",
       "users.login_last_attempt_at as loginLastAttemptAt",
     )
@@ -48,8 +49,7 @@ export const authenticate = async (email, password) => {
     if (loginDelayConfig && !(await userCanLogin(dbUser, loginDelayConfig))) notifyDelay(loginDelayConfig)
 
     const user = transform(dbUser)
-    const token = generateToken(user)
-
+    const token = user.resetPassword ? generateToken(user, { timeout: "5m" }) : generateToken(user)
     return { user, token }
   } else {
     /**
