@@ -1,3 +1,20 @@
+## [1.15.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.14.0...v1.15.0) (2022-04-20)
+
+
+### Features
+* MED-9 : Sécuriser les mots de passe
+* MED-10 : Augmenter le temps de rejeu
+* MED-11 : Revoir le cloisonnement
+* MED-12 : Invalider la session à la déconnexion
+* MED-13 : Demander l'ancien mot de passe en plus du nouveau dans la fenêtre de changement de mot de passe
+* MED-14 : Revoir les messages d'erreur
+* MED-15 : Revoir l'en-tête de retour du serveur
+* MED-16 : Revoir l'absence de contrôles dans les formulaires
+* MED-17 : Ne pas indiquer quand un mail est inconnu
+* MED-18 : Supprimer le numéro de PV dans l'export Excel
+* MED-19 : Ajouter la barre de force dans la fenêtre de changement de mot de passe 
+* MED-20 : Mise à jour de l'email de contact
+
 ## [1.14.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.13.0...v1.14.0) (2022-01-24)
 
 
