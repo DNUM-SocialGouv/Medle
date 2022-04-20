@@ -212,7 +212,7 @@ export const Footer = () => (
 )
 
 const Sidebar = ({ page, currentUser }) => {
-  if (!currentUser) return ""
+  if (!currentUser || currentUser.resetPassword) return ""
   return (
     <>
       <nav aria-label="Navigation latérale" className="text-center list-group list-group-flush" role="navigation">
