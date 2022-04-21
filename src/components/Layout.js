@@ -8,6 +8,7 @@ import EqualizerIcon from "@material-ui/icons/Equalizer"
 import FaceIcon from "@material-ui/icons/Face"
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
 import GroupIcon from "@material-ui/icons/Group"
+import ImageIcon from '@material-ui/icons/Image';
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import PhoneIcon from "@material-ui/icons/Phone"
@@ -34,6 +35,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap"
 
+import Logo from "./Logo"
 import { isOpenFeature } from "../config"
 import { colors } from "../theme"
 import { logout } from "../utils/auth"
@@ -56,17 +58,13 @@ const Header = ({ currentUser }) => {
   return (
     <header className="border-bottom" role="banner">
       <Navbar expand="md" light>
+        <Logo currentUser={currentUser} />
         <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
-          <img
-            src={"/images/Republique_Francaise_RVB.svg"}
-            alt="Logo de la République Française"
-            height="120"
-          />
           <img
             src={"/images/logo.png"}
             alt="Retour à l'accueil de Medlé"
-            width="120"
-            style={{ cursor: "pointer", marginLeft: "20px" }}
+            width="160"
+            style={{ cursor: "pointer", marginLeft: "10px" }}
             id="header"
           />
         </NavbarBrand>
@@ -421,6 +419,17 @@ const SidebarAdmin = ({ page, currentUser }) => {
             </a>
           </Link>
         )}
+        {currentUser.role === SUPER_ADMIN && (
+          <Link href="/administration/logo">
+            <a
+              className={"list-group-item list-group-item-action " + (page === "logo" ? "selected" : "unselected")}
+              aria-current={page === "logo" ? "true" : "false"}
+            >
+              <ImageIcon width={30} /> <br />
+              {"Logo"}
+            </a>
+          </Link>
+        )}
         <Link href={startPageForRole(currentUser.role)}>
           <a className="list-group-item list-group-item-action">
             <ArrowBackIcon width={30} /> <br />
@@ -517,6 +526,7 @@ const SkipLinks = () => {
 }
 
 const Layout = ({ children, page, currentUser, admin = false }) => {
+
   return (
     <>
       <div className="d-flex flex-column justifiy-content-between min-vh-100">
@@ -558,7 +568,7 @@ Layout.propTypes = {
   admin: PropTypes.bool,
   children: PropTypes.node,
   currentUser: PropTypes.object,
-  page: PropTypes.string,
+  page: PropTypes.string
 }
 
 export default Layout

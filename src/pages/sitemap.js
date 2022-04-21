@@ -109,6 +109,11 @@ const SiteMapPage = () => {
                         <a href="/administration/messages">Administration des messages</a>
                       </li>
                     )}
+                    {currentUser.role === SUPER_ADMIN && (
+                      <li>
+                        <a href="/administration/logo">Administration du logo</a>
+                      </li>
+                    )}
                   </ul>
                 )}
               </li>
