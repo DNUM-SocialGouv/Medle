@@ -26,32 +26,47 @@ const Logo = ({ currentUser }) => {
     useEffect(() => {
         fetchLogo()
     }, [])
-
+    
     return (
-        <div>
-            <NavbarBrand onClick={() => router.push("/administration/logo")} tabIndex="0" aria-label="Changer le logo du ministère">
-                {currentUser.role === SUPER_ADMIN &&
+        <>
+            { currentUser && 
+                <>
+                    <NavbarBrand onClick={() => router.push("/administration/logo")} tabIndex="0" aria-label="Changer le logo du ministère">
+                        {currentUser.role === SUPER_ADMIN &&
+                            <img
+                                src={logo}
+                                alt="Logo de la République Française"
+                                height="120"
+                                width="180"
+                                style={{ cursor: "pointer"}}
+                            />
+                        }
+                    </NavbarBrand>
+                    <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
+                        {currentUser.role !== SUPER_ADMIN &&
+                            <img
+                                src={logo}
+                                alt="Logo de la République Française"
+                                height="120"
+                                width="180"
+                                style={{ cursor: "pointer"}}
+                            />
+                        }
+                    </NavbarBrand>
+                </>
+            }
+            { !currentUser && 
+                <NavbarBrand onClick={() => router.push("/")} tabIndex="0">
                     <img
-                    src={logo}
-                    alt="Logo de la République Française"
-                    height="120"
-                    width="180"
-                    style={{ cursor: "pointer"}}
+                        src={logo}
+                        alt="Logo de la République Française"
+                        height="120"
+                        width="180"
+                        style={{ cursor: "pointer"}}
                     />
-                }
-            </NavbarBrand>
-            <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
-                {currentUser.role !== SUPER_ADMIN &&
-                    <img
-                    src={logo}
-                    alt="Logo de la République Française"
-                    height="120"
-                    width="180"
-                    style={{ cursor: "pointer"}}
-                    />
-                }
-            </NavbarBrand>
-        </div>
+                </NavbarBrand>
+            }
+        </>
     )
 }
 

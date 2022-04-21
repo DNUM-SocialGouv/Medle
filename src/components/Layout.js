@@ -49,7 +49,7 @@ import {
   SUPER_ADMIN,
 } from "../utils/roles"
 
-const Header = ({ currentUser }) => {
+export const Header = ({ currentUser }) => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -112,49 +112,35 @@ Header.propTypes = {
 }
 
 export const Footer = () => (
-  <footer className="pt-4 pb-5 m-0" role="contentinfo">
-    <Container>
+  <footer className="pt-4 pb-5" role="contentinfo">
       <Row>
-        <Col className="mr-5">
-          <p className="service-title">Medle.fabrique.social.gouv.fr</p>
-          Un service proposé par la{" "}
-          <b>
-            <a
-              target="_blank"
-              rel="noreferrer noopener"
-              id="footer"
-              href="https://solidarites-sante.gouv.fr/ministere/organisation/organisation-des-directions-et-services/article/organisation-de-la-direction-generale-de-l-offre-de-soins-dgos"
-              aria-label="DGOS (nouvelle fenêtre)"
-            >
-              DGOS
+        <Logo />
+        <ul className="list-unstyled inline extern">
+          <li>
+            <a id="legifrance" href="https://www.legifrance.gouv.fr" target="_blank" rel="noreferrer noopener">
+              legifrance.gouv.fr
             </a>
-          </b>{" "}
-          (ministère de la santé) et{" "}
-          <b>
-            <a
-              target="_blank"
-              href="https://www.fabrique.social.gouv.fr/"
-              rel="noopener noreferrer"
-              aria-label="Fabrique numérique des ministères sociaux (nouvelle fenêtre)"
-            >
-              {"la fabrique numérique des ministères sociaux"}
+          </li>
+          <li>
+            <a id="gouvernement" href="https://www.gouvernement.fr" target="_blank" rel="noreferrer noopener">
+              gouvernement.fr
             </a>
-          </b>{" "}
-          (
-          <b>
-            <a
-              target="_blank"
-              href="https://beta.gouv.fr/"
-              rel="noopener noreferrer"
-              aria-label="beta.gouv.fr (nouvelle fenêtre)"
-            >
-              beta.gouv.fr
+          </li>
+          <li>
+            <a id="service-public" href="https://www.service-public.fr" target="_blank" rel="noreferrer noopener">
+              service-public.fr
             </a>
-          </b>
-          )
-        </Col>
-        <Col className="mt-4 mt-md-0">
-          <ul className="pl-0 list-unstyled">
+          </li>
+          <li>
+            <a id="data-gouv" href="https://www.data.gouv.fr" target="_blank" rel="noreferrer noopener">
+              data.gouv.fr
+            </a>
+          </li>
+        </ul>
+      </Row>
+      <hr></hr>
+      <Row>
+          <ul className="pl-0 list-unstyled inline intern">
             <li className="mb-2">
               <Link href={"/mentions"}>
                 <a>{"Mentions légales"}</a>
@@ -186,30 +172,38 @@ export const Footer = () => (
               {/* </Link> */}
             </li>
           </ul>
-        </Col>
       </Row>
-    </Container>
+      <Row>
+        <span>Sauf mention contraire, tous les contenus de ce site sont sous <a href="https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf" target="_blank" rel="noreferrer noopener">licence etalab-2.0<i class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
+      </Row>
     <style jsx>{`
-      footer {
-        background-color: ${colors.footer.background};
-        color: ${colors.footer.color};
-      }
-      footer a {
-        color: ${colors.footer.color};
-      }
-      footer a:hover {
-        color: ${colors.footerHover.color};
-      }
-      footer b {
-        text-decoration: underline dotted;
-      }
-      .service-title {
-        font-size: 1.75rem;
-        margin-bottom: 0.5rem;
-        font-family: Evolventa, "Trebuchet MS", sans-serif;
-        font-weight: 700;
-        line-height: 1.2;
-      }
+    footer {
+      border-top: 1px solid light-grey;
+      width: 95%;
+      margin: auto;
+    }
+    .inline li{
+      display: inline-block;
+    }
+    .extern {
+      font-weight: bold;
+      margin-left: auto;
+      margin-top: 40px;
+    }
+    .intern {
+      margin: 20px 0 30px 30px;
+    }
+    .extern a, .intern a {
+      color: #181818;
+      padding: 0px 15px;
+    }
+    .intern li:not(:last-child)::after {
+      color: #181818;
+      content: ' | ';
+    }
+    hr {
+      border-top: 1px solid light-grey;
+    }
     `}</style>
   </footer>
 )

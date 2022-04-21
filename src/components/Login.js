@@ -30,12 +30,6 @@ const Login = ({ authentication, error }) => {
   return (
     <>
       <main role="main">
-        <img
-          src={"/images/logo.png"}
-          alt="Logo Medlé plateforme médecine légale"
-          className="my-5"
-          style={{ maxHeight: "6.5rem" }}
-        />
         <div>
           <div className="encadre shadow border mx-4 px-3 py-4 rounded">
             <Form onSubmit={onSubmit} data-testid="authent-form" method="post">
