@@ -8,7 +8,7 @@ import EqualizerIcon from "@material-ui/icons/Equalizer"
 import FaceIcon from "@material-ui/icons/Face"
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
 import GroupIcon from "@material-ui/icons/Group"
-import ImageIcon from '@material-ui/icons/Image';
+import ImageIcon from "@material-ui/icons/Image"
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import PhoneIcon from "@material-ui/icons/Phone"
@@ -20,9 +20,7 @@ import { useRouter } from "next/router"
 import PropTypes from "prop-types"
 import React, { useState } from "react"
 import {
-  Col,
   Collapse,
-  Container,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -35,9 +33,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap"
 
-import Logo from "./Logo"
 import { isOpenFeature } from "../config"
-import { colors } from "../theme"
 import { logout } from "../utils/auth"
 import {
   ACT_CONSULTATION,
@@ -48,6 +44,7 @@ import {
   startPageForRole,
   SUPER_ADMIN,
 } from "../utils/roles"
+import Logo from "./Logo"
 
 export const Header = ({ currentUser }) => {
   const router = useRouter()
@@ -59,15 +56,26 @@ export const Header = ({ currentUser }) => {
     <header className="border-bottom" role="banner">
       <Navbar expand="md" light>
         <Logo currentUser={currentUser} />
-        <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
-          <img
-            src={"/images/logo.png"}
-            alt="Retour à l'accueil de Medlé"
-            width="160"
-            style={{ cursor: "pointer", marginLeft: "10px" }}
-            id="header"
-          />
-        </NavbarBrand>
+        {currentUser && !currentUser.resetPassword && (
+          <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
+            <img
+              src={"/images/logo-medle.png"}
+              alt="Retour à l'accueil de Medlé"
+              width="160"
+              style={{ cursor: "pointer", marginLeft: "10px" }}
+            />
+          </NavbarBrand>
+        )}
+        {!currentUser && (
+          <NavbarBrand onClick={() => router.push("/")} tabIndex="0">
+            <img
+              src={"/images/logo-medle.png"}
+              alt="Retour à l'accueil de Medlé"
+              width="160"
+              style={{ cursor: "pointer", marginLeft: "10px" }}
+            />
+          </NavbarBrand>
+        )}
         <NavbarToggler onClick={toggle} aria-label="Afficher ou masquer le menu" />
         {currentUser && !currentUser.resetPassword && (
           <Collapse isOpen={isOpen} navbar>
@@ -113,97 +121,108 @@ Header.propTypes = {
 
 export const Footer = () => (
   <footer className="pt-4 pb-5" role="contentinfo">
-      <Row>
-        <Logo />
-        <ul className="list-unstyled inline extern">
-          <li>
-            <a id="legifrance" href="https://www.legifrance.gouv.fr" target="_blank" rel="noreferrer noopener">
-              legifrance.gouv.fr
-            </a>
+    <Row>
+      <Logo />
+      <ul className="list-unstyled inline extern">
+        <li>
+          <a id="legifrance" href="https://www.legifrance.gouv.fr" target="_blank" rel="noreferrer noopener">
+            legifrance.gouv.fr
+          </a>
+        </li>
+        <li>
+          <a id="gouvernement" href="https://www.gouvernement.fr" target="_blank" rel="noreferrer noopener">
+            gouvernement.fr
+          </a>
+        </li>
+        <li>
+          <a id="service-public" href="https://www.service-public.fr" target="_blank" rel="noreferrer noopener">
+            service-public.fr
+          </a>
+        </li>
+        <li>
+          <a id="data-gouv" href="https://www.data.gouv.fr" target="_blank" rel="noreferrer noopener">
+            data.gouv.fr
+          </a>
+        </li>
+      </ul>
+    </Row>
+    <hr />
+    <Row>
+      <ul className="pl-0 list-unstyled inline intern">
+        <li className="mb-2">
+          <Link href={"/mentions"}>
+            <a>{"Mentions légales"}</a>
+          </Link>
+        </li>
+        <li className="mb-2">
+          <Link href={"/politique-confidentialite"}>
+            <a>{"Politique de confidentialité"}</a>
+          </Link>
+        </li>
+        <li className="mb-2">
+          <Link href={"/cgu"}>
+            <a>{"Conditions générales d'utilisation"}</a>
+          </Link>
+        </li>
+        <li className="mb-2">
+          <Link href={"/faq"}>
+            <a>Foire aux questions</a>
+          </Link>
+        </li>
+        <li className="mb-2">
+          <Link href={"/sitemap"}>
+            <a>Plan du site</a>
+          </Link>
+        </li>
+        {process.env.MAIL_CONTACT && (
+          <li className="mb-2">
+            <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
           </li>
-          <li>
-            <a id="gouvernement" href="https://www.gouvernement.fr" target="_blank" rel="noreferrer noopener">
-              gouvernement.fr
-            </a>
-          </li>
-          <li>
-            <a id="service-public" href="https://www.service-public.fr" target="_blank" rel="noreferrer noopener">
-              service-public.fr
-            </a>
-          </li>
-          <li>
-            <a id="data-gouv" href="https://www.data.gouv.fr" target="_blank" rel="noreferrer noopener">
-              data.gouv.fr
-            </a>
-          </li>
-        </ul>
-      </Row>
-      <hr></hr>
-      <Row>
-          <ul className="pl-0 list-unstyled inline intern">
-            <li className="mb-2">
-              <Link href={"/mentions"}>
-                <a>{"Mentions légales"}</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link href={"/politique-confidentialite"}>
-                <a>{"Politique de confidentialité"}</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link href={"/cgu"}>
-                <a>{"Conditions générales d'utilisation"}</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link href={"/faq"}>
-                <a>Foire aux questions</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link href={"/sitemap"}>
-                <a>Plan du site</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              {/* <Link> */}
-              <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
-              {/* </Link> */}
-            </li>
-          </ul>
-      </Row>
-      <Row>
-        <span>Sauf mention contraire, tous les contenus de ce site sont sous <a href="https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf" target="_blank" rel="noreferrer noopener">licence etalab-2.0<i class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
-      </Row>
+        )}
+      </ul>
+    </Row>
+    <Row>
+      <span>
+        Sauf mention contraire, tous les contenus de ce site sont sous{" "}
+        <a
+          href="https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          licence etalab-2.0
+          <i className="fa-solid fa-arrow-up-right-from-square" />
+        </a>
+      </span>
+    </Row>
     <style jsx>{`
-    footer {
-      border-top: 1px solid light-grey;
-      width: 95%;
-      margin: auto;
-    }
-    .inline li{
-      display: inline-block;
-    }
-    .extern {
-      font-weight: bold;
-      margin-left: auto;
-      margin-top: 40px;
-    }
-    .intern {
-      margin: 20px 0 30px 30px;
-    }
-    .extern a, .intern a {
-      color: #181818;
-      padding: 0px 15px;
-    }
-    .intern li:not(:last-child)::after {
-      color: #181818;
-      content: ' | ';
-    }
-    hr {
-      border-top: 1px solid light-grey;
-    }
+      footer {
+        border-top: 1px solid light-grey;
+        width: 95%;
+        margin: auto;
+      }
+      .inline li {
+        display: inline-block;
+      }
+      .extern {
+        font-weight: bold;
+        margin-left: auto;
+        margin-top: 40px;
+      }
+      .intern {
+        margin: 20px 0 30px 30px;
+      }
+      .extern a,
+      .intern a {
+        color: #181818;
+        padding: 0px 15px;
+      }
+      .intern li:not(:last-child)::after {
+        color: #181818;
+        content: " | ";
+      }
+      hr {
+        border-top: 1px solid light-grey;
+      }
     `}</style>
   </footer>
 )
@@ -414,13 +433,13 @@ const SidebarAdmin = ({ page, currentUser }) => {
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/logo">
+          <Link href="/administration/logos">
             <a
-              className={"list-group-item list-group-item-action " + (page === "logo" ? "selected" : "unselected")}
-              aria-current={page === "logo" ? "true" : "false"}
+              className={"list-group-item list-group-item-action " + (page === "logos" ? "selected" : "unselected")}
+              aria-current={page === "logos" ? "true" : "false"}
             >
               <ImageIcon width={30} /> <br />
-              {"Logo"}
+              {"Logos"}
             </a>
           </Link>
         )}
@@ -520,7 +539,6 @@ const SkipLinks = () => {
 }
 
 const Layout = ({ children, page, currentUser, admin = false }) => {
-
   return (
     <>
       <div className="d-flex flex-column justifiy-content-between min-vh-100">
@@ -562,7 +580,7 @@ Layout.propTypes = {
   admin: PropTypes.bool,
   children: PropTypes.node,
   currentUser: PropTypes.object,
-  page: PropTypes.string
+  page: PropTypes.string,
 }
 
 export default Layout

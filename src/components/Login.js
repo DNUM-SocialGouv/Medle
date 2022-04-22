@@ -117,15 +117,6 @@ const Login = ({ authentication, error }) => {
             /* Microsoft Edge */
             color: #767676;
           }
-          img[alt="logo"] {
-            max-width: 300px;
-            object-fit: contain;
-          }
-          @media screen and (max-width: 768px) {
-            img[alt="logo"] {
-              width: 100%;
-            }
-          }
         `}</style>
       </main>
     </>

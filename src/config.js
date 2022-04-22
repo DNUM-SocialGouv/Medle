@@ -38,4 +38,4 @@ export const DEACEASED_STATISTICS_ENDPOINT = "/statistics/deceased"
 
 export const MESSAGES_ENDPOINT = "/messages"
 
-export const LOGO_ENDPOINT = "/logo"
+export const LOGOS_ENDPOINT = "/logos"

@@ -16,7 +16,7 @@ exports[`should renders UserDetail unchanged 1`] = `
       >
         <img
           alt="Logo Medlé plateforme médecine légale"
-          src="/images/logo.png"
+          src="/images/logo-medle.png"
           title="Logo"
           width="100"
         />
@@ -721,7 +721,7 @@ exports[`should renders UserDetail unchanged 1`] = `
             >
               <a
                 className="jsx-1982338225"
-                href="mailto:contact.medle@fabrique.social.gouv.fr"
+                href="mailto:contact-medle@sante.gouv.fr"
               >
                 Contactez‑nous
               </a>

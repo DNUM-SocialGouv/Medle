@@ -81,6 +81,7 @@ The variables are :
 - MAIL_FROM string used in from email
 - LOGIN_DELAY_ATTEMPTS number of attempts to start the login delay
 - LOGIN_DELAY_SECONDS duration of the login delay
+- DOCUMENTS_FS_PATH documents path on the file system
 
 Besides, in some cases you may want to set :
 
