@@ -34,30 +34,30 @@ const SiteMapPage = () => {
             <li>
               <a href="/forgot-password">Mot de passe oublié</a>
             </li>
-            {currentUser && isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
+            {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
               <li>
                 <a href="/acts/declaration">Ajout d&apos;acte</a>
               </li>
             )}
-            {currentUser && isAllowed(currentUser.role, ACT_CONSULTATION) && (
+            {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, ACT_CONSULTATION) && (
               <li>
                 <a href="/acts">Tous les actes</a>
               </li>
             )}
-            {currentUser && isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
+            {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
               <li>
                 <a href="/employments">Personnel</a>
               </li>
             )}
-            {currentUser && (
+            {currentUser && !currentUser.resetPassword && (
               <li>
                 <a href="/statistics">Statistiques</a>
               </li>
             )}
-            {currentUser && isOpenFeature("administration") && isAllowed(currentUser.role, ADMIN) && (
+            {currentUser && !currentUser.resetPassword && isOpenFeature("administration") && isAllowed(currentUser.role, ADMIN) && (
               <li>
                 Administration
-                {currentUser && isAllowed(currentUser.role, ADMIN) && (
+                {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, ADMIN) && (
                   <ul>
                     {(currentUser.role === SUPER_ADMIN || currentUser.role === ADMIN_HOSPITAL) && (
                       <li>

@@ -1,11 +1,12 @@
 import Cors from "micro-cors"
 
-import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
+import { sendAPIError, sendForbiddenError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
 import { exportGlobalStatistics } from "../../../../services/statistics/global"
 import { checkValidUserWithPrivilege } from "../../../../utils/auth"
-import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../utils/http"
+import { CORS_ALLOW_ORIGIN, METHOD_GET, METHOD_OPTIONS, STATUS_200_OK } from "../../../../utils/http"
 import { logDebug } from "../../../../utils/logger"
 import { STATS_GLOBAL } from "../../../../utils/roles"
+import { isAllowedHospitals } from "../../../../utils/scope"
 
 /**
  * API endpoint for global statistics export.
@@ -22,12 +23,17 @@ const handler = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
   res.setHeader("Access-Control-Allow-Credentials", "false")
 
+  const { startDate, endDate, scopeFilter } = req.query
+
   try {
     switch (req.method) {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-        const workbook = await exportGlobalStatistics(req.query, currentUser)
+        if (scopeFilter && scopeFilter.length > 0 && !isAllowedHospitals(currentUser, scopeFilter))
+          return sendForbiddenError(res)
+
+        const workbook = await exportGlobalStatistics({ startDate, endDate, scopeFilter }, currentUser)
 
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx")

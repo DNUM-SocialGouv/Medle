@@ -16,7 +16,6 @@ export const exportActs = async (params, currentUser) => {
   worksheet.columns = [
     { header: "ID", key: "id", width: 10 },
     { header: "Numéro interne", key: "internalNumber", width: 20 },
-    { header: "Numéro réquisition", key: "pvNumber", width: 20 },
     { header: "Demandeur", key: "asker", width: 40 },
     { header: "Profil", key: "profile", width: 20 },
     { header: "Date d'examen", key: "examinationDate", width: 20 },

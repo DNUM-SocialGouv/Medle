@@ -6,8 +6,9 @@ import { Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } f
 
 import { resetPassword } from "../clients/users"
 import Layout from "../components/Layout"
+import { PasswordForce } from "../components/PasswordForce"
 import StatusAlert from "../components/StatusAlert"
-import { Title1 } from "../components/StyledComponents"
+import { Title1, Title2 } from "../components/StyledComponents"
 import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
 import { isEmpty } from "../utils/misc"
 
@@ -22,6 +23,8 @@ const UserReset = () => {
   const router = useRouter()
   const { loginToken } = router.query
   const [showForm, setShowForm] = React.useState(true)
+
+  const [password, setPassword] = React.useState("")
 
   const onSubmit = async (data) => {
     setStatus({ type: "pending" })
@@ -45,7 +48,7 @@ const UserReset = () => {
 
   const { ref: firstValueRef, ...firstValueReg } = register("firstValue", {
     pattern: {
-      value: /^[a-zA-Z0-9]{8,30}$/,
+      value: /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
     },
     required: true,
   })
@@ -56,10 +59,15 @@ const UserReset = () => {
     },
   })
 
+  const handleChangeFirstValue = (e) => {
+    setPassword(e.target.value)
+  }
+
   return (
     <Layout>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <Title1>{"Changement de mot de passe"}</Title1>
+        <Title2>{"Merci de changer votre mot de passe pour accéder de nouveau à l'application"}</Title2>
         {status?.message && <StatusAlert {...status} />}
         {showForm ? (
           <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
@@ -75,9 +83,14 @@ const UserReset = () => {
                   innerRef={firstValueRef}
                   invalid={!!formErrors.firstValue}
                   aria-required="true"
+                  onChange={e => {
+                    firstValueReg.onChange(e)
+                    handleChangeFirstValue(e);
+                  }}
                 />
+                <PasswordForce password={password}></PasswordForce>
                 <FormFeedback>
-                  {formErrors.firstValue && "Mot de passe invalide (8 à 30 caractères avec lettres ou chiffres)."}
+                  {formErrors.firstValue && "Mot de passe invalide. Le mot de passe doit être composé d'au moins 12 caractères dont: 1 lettre minuscule, 1 lettre majuscule, 1 chiffre et 1 caractère spécial."}
                 </FormFeedback>
               </Col>
             </FormGroup>
@@ -98,7 +111,7 @@ const UserReset = () => {
               </Col>
             </FormGroup>
             <div className="justify-content-center d-flex">
-              <Link href="/administration/users">
+              <Link href="/">
                 <Button className="px-4 mt-5 mr-3" outline color="primary">
                   Annuler
                 </Button>

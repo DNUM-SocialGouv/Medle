@@ -1,5 +1,6 @@
 import knex from "../../knex/knex"
 import { untransform } from "../../models/acts"
+import { isSubmittedActCorrect } from "../../utils/actsConstants"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../../utils/http"
 
@@ -10,6 +11,20 @@ export const create = async (data, currentUser) => {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
+    })
+  }
+
+  if (!isSubmittedActCorrect(data)) {
+    throw new APIError({
+      status: STATUS_400_BAD_REQUEST,
+      message: "Bad request",
+    })
+  }
+
+  if (!currentUser?.id || data.addedBy !== currentUser.id) {
+    throw new APIError({
+      status: STATUS_401_UNAUTHORIZED,
+      message: "Not authorized",
     })
   }
 

@@ -1,5 +1,6 @@
 import knex from "../../knex/knex"
 import { untransform } from "../../models/acts"
+import { isSubmittedActCorrect } from "../../utils/actsConstants"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../../utils/http"
 import { buildScope } from "../../utils/scope"
@@ -9,6 +10,13 @@ export const update = async ({ id }, data, currentUser) => {
     throw new APIError({
       message: "Bad request",
       status: STATUS_400_BAD_REQUEST,
+    })
+  }
+
+  if (!isSubmittedActCorrect(data)) {
+    throw new APIError({
+      status: STATUS_400_BAD_REQUEST,
+      message: "Bad request",
     })
   }
 

@@ -27,10 +27,11 @@ export const resetFromId = async ({ id, lastPassword, password }) => {
   .whereNull("users.deleted_at")
   .select(
     "users.id",
-    "users.password"
+    "users.password",
+    "users.reset_password"
   )
 
-  if (!dbUser || !(await compareWithHash(lastPassword, dbUser.password))) {
+  if (!dbUser || (!dbUser.reset_password && !await compareWithHash(lastPassword, dbUser.password))) {
     throw new APIError({
       status: STATUS_403_FORBIDDEN,
       message: "Password invalid",
@@ -38,6 +39,7 @@ export const resetFromId = async ({ id, lastPassword, password }) => {
   } else {
     const modified = await knex("users").where("id", id).whereNull("users.deleted_at").update({
       password,
+      reset_password: false
     })
   
     return modified
@@ -65,6 +67,7 @@ export const resetFromEmail = async ({ email, password }) => {
 
   const modified = await knex("users").where("email", email).whereNull("users.deleted_at").update({
     password,
+    reset_password: false
   })
 
   return modified

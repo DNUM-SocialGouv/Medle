@@ -17,7 +17,7 @@ export const search = async ({ fuzzy } = {}) => {
 }
 
 /**
- * Get available hospitals of user (version for sever side)
+ * Get available hospitals of user (version for server side)
  *
  * @param {User} user
  * @returns Hospitals[]

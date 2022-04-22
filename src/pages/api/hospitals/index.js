@@ -1,7 +1,7 @@
 import Cors from "micro-cors"
 
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
-import { create, search } from "../../../services/hospitals"
+import { create, hospitalsOfUser } from "../../../services/hospitals"
 import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
 import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../utils/http"
 import { ADMIN, STATS_GLOBAL } from "../../../utils/roles"
@@ -14,9 +14,9 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_GET: {
-        checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
+        const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-        const hospitals = await search(req.query)
+        const hospitals = await hospitalsOfUser(currentUser)
 
         return res.status(STATUS_200_OK).json(hospitals)
       }

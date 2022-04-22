@@ -1,10 +1,11 @@
 import Cors from "micro-cors"
 
-import { sendAPIError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
+import { sendAPIError, sendForbiddenError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
 import { buildLivingStatistics } from "../../../../services/statistics/living"
 import { checkValidUserWithPrivilege } from "../../../../utils/auth"
 import { METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../utils/http"
 import { STATS_GLOBAL } from "../../../../utils/roles"
+import { isAllowedHospitals } from "../../../../utils/scope"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -16,15 +17,13 @@ const handler = async (req, res) => {
       case METHOD_POST: {
         const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-        const {
-          inputs,
-          globalCount,
-          averageCount,
-          actsWithPv,
-          actTypes,
-          hours,
-          examinations,
-        } = await buildLivingStatistics(req.body, currentUser)
+        const { scopeFilter } = req.body
+
+        if (scopeFilter && scopeFilter.length > 0 && !isAllowedHospitals(currentUser, scopeFilter))
+          return sendForbiddenError(res)
+
+        const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } =
+          await buildLivingStatistics(req.body, currentUser)
 
         return res.status(STATUS_200_OK).json({
           inputs,

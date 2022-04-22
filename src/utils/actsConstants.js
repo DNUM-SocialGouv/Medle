@@ -130,3 +130,172 @@ const getSituationDate = (dateStr) => {
 }
 
 export { getSituationDate, periodOfDayValues }
+
+export const isSubmittedActCorrect = (data) => {
+  let actIsCorrect = true
+
+  // Vérification des champs attendus
+  for (const field in data) {
+    if (!actFields.includes(field)) {
+      actIsCorrect = false
+    }
+  }
+
+  // Vérification des champs correspondant à une colonne en base
+  if (data.id && !Number.isInteger(data.id)) actIsCorrect = false
+  if (data.userId && !Number.isInteger(data.userId)) actIsCorrect = false
+  if (data.addedBy && !Number.isInteger(data.addedBy)) actIsCorrect = false
+  if (data.askerId && !Number.isInteger(data.askerId)) actIsCorrect = false
+  if (data.examinationDate && !moment(data.examinationDate, "YYYY-MM-DD", true).isValid()) actIsCorrect = false
+  if (data.hospitalId && !Number.isInteger(data.hospitalId)) actIsCorrect = false
+
+  // Vérification des valeurs attendues pour chaque champ de la colonne extra_data en base
+  if (data.deathCause && !actDeathCauses.includes(data.deathCause)) actIsCorrect = false
+  if (data.distance && !actDistances.includes(data.distance)) actIsCorrect = false
+  if (data.duration && !actDurations.includes(data.duration)) actIsCorrect = false
+  if (data.examinations) {
+    if (!data.examinations.length > 0) actIsCorrect = false
+    data.examinations.forEach((examination) => {
+      if (!actExaminations.includes(examination)) actIsCorrect = false
+    })
+  }
+  if (data.examinationTypes) {
+    if (!data.examinationTypes.length > 0) actIsCorrect = false
+    data.examinationTypes.forEach((types) => {
+      if (!actExaminationTypes.includes(types)) actIsCorrect = false
+    })
+  }
+  if (data.honoredMeeting && !actHonoredMeetings.includes(data.honoredMeeting)) actIsCorrect = false
+  if (data.location && !actLocations.includes(data.location)) actIsCorrect = false
+  if (data.periodOfDay && !actPeriodOfDays.includes(data.periodOfDay)) actIsCorrect = false
+  if (data.personAgeTag && !actPersonAgeTags.includes(data.personAgeTag)) actIsCorrect = false
+  if (data.personGender && !actPersonGenders.includes(data.personGender)) actIsCorrect = false
+  if (data.personIsPresent && !actPersonIsPresents.includes(data.personIsPresent)) actIsCorrect = false
+  if (data.profile && !actProfiles.includes(data.profile)) actIsCorrect = false
+  if (data.violenceContexts) {
+    if (!data.violenceContexts.length > 0) actIsCorrect = false
+    data.violenceContexts.forEach((context) => {
+      if (!actViolenceContexts.includes(context)) actIsCorrect = false
+    })
+  }
+  if (data.violenceNatures) {
+    if (!data.violenceNatures.length > 0) actIsCorrect = false
+    data.violenceNatures.forEach((nature) => {
+      if (!actViolenceNatures.includes(nature)) actIsCorrect = false
+    })
+  }
+
+  return actIsCorrect
+}
+
+export const actFields = [
+  "addedBy",
+  "askerId",
+  "deathCause",
+  "distance",
+  "duration",
+  "examinationDate",
+  "examinations",
+  "examinationTypes",
+  "honoredMeeting",
+  "hospitalId",
+  "id",
+  "internalNumber",
+  "location",
+  "periodOfDay",
+  "personAgeTag",
+  "personGender",
+  "personIsPresent",
+  "profile",
+  "pvNumber",
+  "userId",
+  "violenceContexts",
+  "violenceNatures",
+]
+
+export const actDeathCauses = ["Suicide", "Suicide probable", "Autre"]
+
+export const actDistances = ["En visio", "- de 50 km", "50 à 150 km", "+ de 150 km"]
+
+export const actDurations = ["- de 4 heures", "4 à 8 heures", "+ de 8 heures"]
+
+export const actExaminations = [
+  "Anapath",
+  "Autres",
+  "Biologie",
+  "Génétique",
+  "Imagerie",
+  "Panoramique dentaire",
+  "Radiographie",
+  "Scanner",
+  "Toxicologie",
+]
+
+export const actExaminationTypes = [
+  "Anthropologie",
+  "Autopsie",
+  "Examen externe",
+  "Levée de corps",
+  "Odontologie",
+  "Psychiatrique",
+  "Somatique",
+]
+
+export const actHonoredMeetings = ["Oui", "Non"]
+
+export const actLocations = [
+  "Centre de rétention",
+  "Commissariat",
+  "Établissement pénitentiaire",
+  "Gendarmerie",
+  "Lieu de contrôle",
+  "Locaux douaniers",
+  "Maison de retraite",
+  "Service d'hosp. privé",
+  "Service d'hosp. public",
+  "Service hosp. public",
+  "Tribunal",
+  "UMJ",
+]
+
+export const actPeriodOfDays = ["Nuit profonde", "Journée", "Matin", "Après-midi", "Soirée"]
+
+export const actPersonAgeTags = ["Mineur", "Majeur", "0-2 ans", "3-6 ans", "7-17 ans", "+ de 18 ans", "Non déterminé"]
+
+export const actPersonGenders = ["Féminin", "Masculin", "Autre genre", "Non déterminé"]
+
+export const actPersonIsPresents = ["Oui", "Non"]
+
+export const actProfiles = [
+  "Autre activité/Assises",
+  "Autre activité/Examen lié à la route",
+  "Autre activité/IPM",
+  "Autre activité/Personne retenue",
+  "Autre activité/Reconstitution",
+  "Autre activité/Étude de dossier",
+  "Examen pour OFPRA",
+  "Gardé.e à vue",
+  "Personne décédée",
+  "Personne pour âge osseux (hors GAV)",
+  "Victime (vivante)",
+]
+
+export const actViolenceContexts = [
+  "Conjugale",
+  "Infra-familiale (hors conjugale)",
+  "Travail",
+  "Voie publique",
+  "Autre type/Institution",
+  "Autre type/Scolaire",
+  "Autre type/Autre",
+]
+
+export const actViolenceNatures = [
+  "Coups blessures",
+  "Sexuelle",
+  "Maltraitance",
+  "Violence psychologique",
+  "Accident/Collectif",
+  "Accident/Non collectif",
+  "Attentat",
+]

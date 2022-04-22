@@ -6,17 +6,18 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Alert, Button, Col, Container, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap"
 
-import { resetPasswordByAdmin } from "../../../../clients/users"
+import { findUser, resetPasswordByAdmin } from "../../../../clients/users"
 import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"
-import { withAuthentication } from "../../../../utils/auth"
+import { PasswordForce } from "../../../../components/PasswordForce"
+import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../../utils/auth"
 import { STATUS_403_FORBIDDEN } from "../../../../utils/http"
-import { logDebug } from "../../../../utils/logger"
+import { logDebug, logError } from "../../../../utils/logger"
 import { isEmpty } from "../../../../utils/misc"
 import { ADMIN } from "../../../../utils/roles"
 
 
-const UserReset = ({ currentUser }) => {
+const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
   const {
     handleSubmit,
     register,
@@ -28,12 +29,14 @@ const UserReset = ({ currentUser }) => {
   const router = useRouter()
   const { id } = router.query
   
+  const [password, setPassword] = useState("")
   const [lastPasswordError, setLastPasswordError] = useState(false)
+
+  const [resetPassword, setResetPassword] = useState(initialUser.resetPassword)
 
   const onSubmit = async (data) => {
     setLastPasswordError(false)
     setError("")
-
     try {
       if (isEmpty(formErrors)) {
         const { modified } = await resetPasswordByAdmin({ id, lastPassword: data.lastPassword, password: data.firstValue })
@@ -51,11 +54,11 @@ const UserReset = ({ currentUser }) => {
 
   
   const { ref: lastPasswordRef, ...lastPasswordReg } = register("lastPassword", {
-    required: true,
+    required: resetPassword ? false : true,
   })
   const { ref: firstValueRef, ...firstValueReg } = register("firstValue", {
     pattern: {
-      value: /^[a-zA-Z0-9]{8,30}$/,
+      value: /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
     },
     required: true,
   })
@@ -70,7 +73,11 @@ const UserReset = ({ currentUser }) => {
     if (lastPasswordError) {
       setLastPasswordError(false)
     }
-   }
+  }
+
+  const handleChangeFirstValue = (e) => {
+    setPassword(e.target.value)
+  }
 
   return (
     <Layout currentUser={currentUser} admin={true}>
@@ -94,29 +101,31 @@ const UserReset = ({ currentUser }) => {
         )}
 
         <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-          <FormGroup row>
-            <Label for="lastPassword" sm={4}>
-              Mot de passe actuel
-            </Label>
-            <Col sm={8}>
-              <Input
-                type="password"
-                id="lastPassword"
-                {...lastPasswordReg}
-                innerRef={lastPasswordRef}
-                invalid={!!formErrors.lastPassword || lastPasswordError}
-                onChange={e => {
-                  lastPasswordReg.onChange(e)
-                  handleChangeLastPassword();
-                }}
-                aria-required="true"
-              />
-              <FormFeedback>
-                {formErrors.lastPassword && "Mot de passe requis."}
-                {lastPasswordError && "Mot de passe incorrect."}
-              </FormFeedback>
-            </Col>
-          </FormGroup>
+          { !resetPassword &&
+            <FormGroup row>
+              <Label for="lastPassword" sm={4}>
+                Mot de passe actuel
+              </Label>
+              <Col sm={8}>
+                <Input
+                  type="password"
+                  id="lastPassword"
+                  {...lastPasswordReg}
+                  innerRef={lastPasswordRef}
+                  invalid={!!formErrors.lastPassword || lastPasswordError}
+                  onChange={e => {
+                    lastPasswordReg.onChange(e)
+                    handleChangeLastPassword();
+                  }}
+                  aria-required="true"
+                />
+                <FormFeedback>
+                  {formErrors.lastPassword && "Mot de passe requis."}
+                  {lastPasswordError && "Mot de passe incorrect."}
+                </FormFeedback>
+              </Col>
+            </FormGroup>
+          }
           <FormGroup row>
             <Label for="firstValue" sm={4}>
               Nouveau mot de passe
@@ -128,10 +137,15 @@ const UserReset = ({ currentUser }) => {
                 {...firstValueReg}
                 innerRef={firstValueRef}
                 invalid={!!formErrors.firstValue}
+                onChange={e => {
+                  firstValueReg.onChange(e)
+                  handleChangeFirstValue(e);
+                }}
                 aria-required="true"
               />
+              <PasswordForce password={password}></PasswordForce>
               <FormFeedback>
-                {formErrors.firstValue && "Mot de passe invalide (8 à 30 caractères avec lettres ou chiffres)."}
+                {formErrors.firstValue && "Mot de passe invalide. Le mot de passe doit être composé d'au moins 12 caractères dont: 1 lettre minuscule, 1 lettre majuscule, 1 chiffre et 1 caractère spécial."}
               </FormFeedback>
             </Col>
           </FormGroup>
@@ -165,6 +179,26 @@ const UserReset = ({ currentUser }) => {
       </Container>
     </Layout>
   )
+}
+
+UserReset.getInitialProps = async (ctx) => {
+  const headers = buildAuthHeaders(ctx)
+
+  const { id } = ctx.query
+
+  // Initialise key prop with a fresh new value, to make possible to have a new blank page
+  // see https://kentcdodds.com/blog/understanding-reacts-key-prop
+  if (!id || isNaN(id)) return { initialUser: {}, key: Number(new Date()) }
+
+  try {
+    const user = await findUser({ id, headers })
+    return { initialUser: user }
+  } catch (error) {
+    logError(error)
+    redirectIfUnauthorized(error, ctx)
+
+    return { error: "Erreur serveur" }
+  }
 }
 
 UserReset.propTypes = {

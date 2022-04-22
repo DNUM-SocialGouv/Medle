@@ -1,10 +1,11 @@
 import Cors from "micro-cors"
 
 import { findLastEdit } from "../../../../../services/employments"
-import { sendAPIError, sendMethodNotAllowedError } from "../../../../../services/errorHelpers"
+import { sendAPIError, sendForbiddenError, sendMethodNotAllowedError } from "../../../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../../../utils/auth"
 import { METHOD_GET, METHOD_OPTIONS, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../../utils/http"
 import { EMPLOYMENT_CONSULTATION } from "../../../../../utils/roles"
+import { isAllowedHospitals } from "../../../../../utils/scope"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -14,9 +15,12 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_GET: {
-        checkValidUserWithPrivilege(EMPLOYMENT_CONSULTATION, req, res)
+        const currentUser = checkValidUserWithPrivilege(EMPLOYMENT_CONSULTATION, req, res)
 
         const { hospitalId } = await req.query
+
+        if (!isAllowedHospitals(currentUser, hospitalId)) return sendForbiddenError(res)
+
         const data = await findLastEdit(hospitalId)
 
         return res.status(STATUS_200_OK).json(data)

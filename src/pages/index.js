@@ -9,6 +9,7 @@ import Login from "../components/Login"
 import WelcomeMessage from "../components/WelcomeMessage"
 import { registerAndRedirectUser } from "../utils/auth"
 import { ValidationError } from "../utils/errors"
+import { STATUS_429_TOO_MANY_REQUESTS } from "../utils/http"
 import { logError } from "../utils/logger"
 import { ACTION, CATEGORY, trackEvent } from "../utils/matomo"
 
@@ -31,14 +32,18 @@ const LoginPage = ({ message, welcomeMessage }) => {
         try {
           checkUserData(userData)
 
-          const { user } = await authenticate(email, password)
+          const { user, token } = await authenticate(email, password)
 
-          registerAndRedirectUser(user)
+          registerAndRedirectUser(user, token)
           trackEvent(CATEGORY.auth, ACTION.auth.connection)
           resolve("OK")
         } catch (error) {
           logError(error)
-          setError("L'authentification est incorrecte")
+          if (STATUS_429_TOO_MANY_REQUESTS === error.status) {
+            setError(error.message)
+          } else {
+            setError("L'authentification est incorrecte")
+          }
           trackEvent(CATEGORY.auth, ACTION.auth.error, (userData && userData.email) || "no email")
           resolve("KO")
         }

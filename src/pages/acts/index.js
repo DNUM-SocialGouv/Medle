@@ -148,7 +148,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   }
 
   async function onExport() {
-    if (paginatedData.totalCount < LIMIT_EXPORT) {
+    if (paginatedData.totalCount > LIMIT_EXPORT) {
       setErrorExport(`Le nombre d'éléments dépasse ${LIMIT_EXPORT}. Veuillez filtrer votre recherche, s'il vous plaît.`)
     }
     await fetchExport(getValues())
