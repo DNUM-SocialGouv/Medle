@@ -47,9 +47,18 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case METHOD_GET: {
-        const footerLinks = await knex("documents").select("*").where("type", "ilike", "footer-document-%")
+        const type = req.query.type
 
-        return res.status(STATUS_200_OK).json(footerLinks)
+        if (!type) {
+          throw new APIError({
+            status: STATUS_400_BAD_REQUEST,
+            message: "Bad request",
+          })
+        }
+
+        const footerDocument = await knex("documents").select("*").where("type", type)
+
+        return res.status(STATUS_200_OK).json(footerDocument)
       }
       case METHOD_POST: {
         const bb = busboy({ headers: req.headers })
@@ -95,11 +104,11 @@ const handler = async (req, res) => {
             .where("type", type)
         }
 
-        fs.rm(PATH_FOOTER_LINKS, { recursive: true, force: true }, (errDelDir) => {
+        fs.rm(PATH_FOOTER_LINKS + "/" + type, { recursive: true, force: true }, (errDelDir) => {
           if (errDelDir) throw errDelDir
-          fs.mkdir(PATH_FOOTER_LINKS, { recursive: true }, (errDir) => {
+          fs.mkdir(PATH_FOOTER_LINKS + "/" + type, { recursive: true }, (errDir) => {
             if (errDir) throw errDir
-            fs.writeFile(PATH_FOOTER_LINKS + "/" + filename, filedata, function (errFile) {
+            fs.writeFile(PATH_FOOTER_LINKS + "/" + type + "/" + filename, filedata, function (errFile) {
               if (errFile) throw errFile
             })
           })

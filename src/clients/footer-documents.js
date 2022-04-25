@@ -5,8 +5,8 @@ import { handleAPIBytesResponse, handleAPIResponse2 } from "../utils/errors"
 import { METHOD_POST } from "../utils/http"
 import { buildUrlWithParams } from "../utils/url"
 
-export const findAllFooterDocuments = async () => {
-  const response = await fetch(`${API_URL}${FOOTER_DOCUMENTS_ENDPOINT}`)
+export const getFooterDocument = async (type) => {
+  const response = fetch(buildUrlWithParams(`${API_URL}${FOOTER_DOCUMENTS_ENDPOINT}`, { type }))
   return handleAPIBytesResponse(response)
 }
 

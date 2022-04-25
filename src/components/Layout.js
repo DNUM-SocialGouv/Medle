@@ -21,6 +21,7 @@ import { useRouter } from "next/router"
 import PropTypes from "prop-types"
 import React, { useState } from "react"
 import {
+  Button,
   Collapse,
   DropdownItem,
   DropdownMenu,
@@ -34,8 +35,10 @@ import {
   UncontrolledDropdown,
 } from "reactstrap"
 
+import { getFooterDocument } from "../clients/footer-documents"
 import { isOpenFeature } from "../config"
 import { logout } from "../utils/auth"
+import { footerDocumentAccessibilite } from "../utils/documentsConstants"
 import {
   ACT_CONSULTATION,
   ACT_MANAGEMENT,
@@ -120,113 +123,116 @@ Header.propTypes = {
   currentUser: PropTypes.object,
 }
 
-export const Footer = () => (
-  <footer className="pt-4 pb-5" role="contentinfo">
-    <Row>
-      <Logo />
-      <ul className="list-unstyled inline extern">
-        <li>
-          <a id="legifrance" href="https://www.legifrance.gouv.fr" target="_blank" rel="noreferrer noopener">
-            legifrance.gouv.fr
-          </a>
-        </li>
-        <li>
-          <a id="gouvernement" href="https://www.gouvernement.fr" target="_blank" rel="noreferrer noopener">
-            gouvernement.fr
-          </a>
-        </li>
-        <li>
-          <a id="service-public" href="https://www.service-public.fr" target="_blank" rel="noreferrer noopener">
-            service-public.fr
-          </a>
-        </li>
-        <li>
-          <a id="data-gouv" href="https://www.data.gouv.fr" target="_blank" rel="noreferrer noopener">
-            data.gouv.fr
-          </a>
-        </li>
-      </ul>
-    </Row>
-    <hr />
-    <Row>
-      <ul className="pl-0 list-unstyled inline intern">
-        <li className="mb-2">
-          <Link href={"/mentions"}>
-            <a>{"Mentions légales"}</a>
-          </Link>
-        </li>
-        <li className="mb-2">
-          <Link href={"/politique-confidentialite"}>
-            <a>{"Politique de confidentialité"}</a>
-          </Link>
-        </li>
-        <li className="mb-2">
-          <Link href={"/cgu"}>
-            <a>{"Conditions générales d'utilisation"}</a>
-          </Link>
-        </li>
-        <li className="mb-2">
-          <Link href={"/faq"}>
-            <a>Foire aux questions</a>
-          </Link>
-        </li>
-        <li className="mb-2">
-          <Link href={"/sitemap"}>
-            <a>Plan du site</a>
-          </Link>
-        </li>
-        {process.env.MAIL_CONTACT && (
-          <li className="mb-2">
-            <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
+export const Footer = () => {
+  return (
+    <footer className="pt-4 pb-5" role="contentinfo">
+      <Row>
+        <Logo />
+        <ul className="list-unstyled inline extern">
+          <li>
+            <a id="legifrance" href="https://www.legifrance.gouv.fr" target="_blank" rel="noreferrer noopener">
+              legifrance.gouv.fr
+            </a>
           </li>
-        )}
-      </ul>
-    </Row>
-    <Row>
-      <span>
-        Sauf mention contraire, tous les contenus de ce site sont sous{" "}
-        <a
-          href="https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          licence etalab-2.0
-          <i className="fa-solid fa-arrow-up-right-from-square" />
-        </a>
-      </span>
-    </Row>
-    <style jsx>{`
-      footer {
-        border-top: 1px solid light-grey;
-        width: 95%;
-        margin: auto;
-      }
-      .inline li {
-        display: inline-block;
-      }
-      .extern {
-        font-weight: bold;
-        margin-left: auto;
-        margin-top: 40px;
-      }
-      .intern {
-        margin: 20px 0 30px 30px;
-      }
-      .extern a,
-      .intern a {
-        color: #181818;
-        padding: 0px 15px;
-      }
-      .intern li:not(:last-child)::after {
-        color: #181818;
-        content: " | ";
-      }
-      hr {
-        border-top: 1px solid light-grey;
-      }
-    `}</style>
-  </footer>
-)
+          <li>
+            <a id="gouvernement" href="https://www.gouvernement.fr" target="_blank" rel="noreferrer noopener">
+              gouvernement.fr
+            </a>
+          </li>
+          <li>
+            <a id="service-public" href="https://www.service-public.fr" target="_blank" rel="noreferrer noopener">
+              service-public.fr
+            </a>
+          </li>
+          <li>
+            <a id="data-gouv" href="https://www.data.gouv.fr" target="_blank" rel="noreferrer noopener">
+              data.gouv.fr
+            </a>
+          </li>
+        </ul>
+      </Row>
+      <hr />
+      <Row>
+        <ul className="pl-0 list-unstyled inline intern">
+          <li className="mb-2">
+            <Link href={"/sitemap"}>
+              <a>{"Plan du site"}</a>
+            </Link>
+          </li>
+          <li className="mb-2">
+            <Button
+              className="px-4 mt-5 "
+              color="primary"
+              onClick={() => getFooterDocument(footerDocumentAccessibilite)}
+            >
+              {"Accessibilité (partiellement conforme)"}
+            </Button>
+          </li>
+          <li className="mb-2">
+            <a>{"Mentions légales"}</a>
+          </li>
+          <li className="mb-2">
+            <a>{"Données personnelles"}</a>
+          </li>
+          <li className="mb-2">
+            <a>{"Gestion des cookies"}</a>
+          </li>
+          <li className="mb-2">
+            <a>{"Foire aux questions"}</a>
+          </li>
+          {process.env.MAIL_CONTACT && (
+            <li className="mb-2">
+              <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
+            </li>
+          )}
+        </ul>
+      </Row>
+      <Row>
+        <span>
+          Sauf mention contraire, tous les contenus de ce site sont sous{" "}
+          <a
+            href="https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            licence etalab-2.0
+            <i className="fa-solid fa-arrow-up-right-from-square" />
+          </a>
+        </span>
+      </Row>
+      <style jsx>{`
+        footer {
+          border-top: 1px solid light-grey;
+          width: 95%;
+          margin: auto;
+        }
+        .inline li {
+          display: inline-block;
+        }
+        .extern {
+          font-weight: bold;
+          margin-left: auto;
+          margin-top: 40px;
+        }
+        .intern {
+          margin: 20px 0 30px 30px;
+        }
+        .extern a,
+        .intern a {
+          color: #181818;
+          padding: 0px 15px;
+        }
+        .intern li:not(:last-child)::after {
+          color: #181818;
+          content: " | ";
+        }
+        hr {
+          border-top: 1px solid light-grey;
+        }
+      `}</style>
+    </footer>
+  )
+}
 
 const Sidebar = ({ page, currentUser }) => {
   if (!currentUser || currentUser.resetPassword) return ""
