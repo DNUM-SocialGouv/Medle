@@ -9,6 +9,7 @@ import FaceIcon from "@material-ui/icons/Face"
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
 import GroupIcon from "@material-ui/icons/Group"
 import ImageIcon from "@material-ui/icons/Image"
+import LinkRoundedIcon from "@material-ui/icons/LinkRounded"
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import PhoneIcon from "@material-ui/icons/Phone"
@@ -440,6 +441,19 @@ const SidebarAdmin = ({ page, currentUser }) => {
             >
               <ImageIcon width={30} /> <br />
               {"Logos"}
+            </a>
+          </Link>
+        )}
+        {currentUser.role === SUPER_ADMIN && (
+          <Link href="/administration/footer-documents">
+            <a
+              className={
+                "list-group-item list-group-item-action " + (page === "footer-documents" ? "selected" : "unselected")
+              }
+              aria-current={page === "footer-documents" ? "true" : "false"}
+            >
+              <LinkRoundedIcon width={30} /> <br />
+              {"Documents du pied de page"}
             </a>
           </Link>
         )}
