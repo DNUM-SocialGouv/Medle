@@ -33,6 +33,8 @@ logInfo("TEST_CURRENT_DATE", publicRuntimeConfig.TEST_CURRENT_DATE)
 logInfo("POSTGRES_SSL", process.env.POSTGRES_SSL)
 logInfo("DATABASE_URL", process.env.DATABASE_URL)
 
+logInfo("MAIL_CONTACT", publicRuntimeConfig.MAIL_CONTACT)
+
 logInfo("-----------------------------------------")
 
 Sentry.init({

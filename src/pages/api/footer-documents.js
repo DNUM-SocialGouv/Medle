@@ -14,6 +14,7 @@ import {
   METHOD_POST,
   STATUS_200_OK,
   STATUS_400_BAD_REQUEST,
+  STATUS_404_NOT_FOUND,
 } from "../../utils/http"
 import { ADMIN } from "../../utils/roles"
 
@@ -56,9 +57,24 @@ const handler = async (req, res) => {
           })
         }
 
-        const footerDocument = await knex("documents").select("*").where("type", type)
+        const [footerDocument] = await knex("documents").select("*").where("type", type)
 
-        return res.status(STATUS_200_OK).json(footerDocument)
+        if (!footerDocument) {
+          throw new APIError({
+            status: STATUS_404_NOT_FOUND,
+            message: "Not found",
+          })
+        }
+        try {
+          const content = fs.readFileSync(PATH_FOOTER_LINKS + "/" + type + "/" + footerDocument.name)
+          res.setHeader("Content-Type", footerDocument.type_mime)
+          return res.status(STATUS_200_OK).send(content)
+        } catch (err) {
+          throw new APIError({
+            status: STATUS_404_NOT_FOUND,
+            message: "Not found",
+          })
+        }
       }
       case METHOD_POST: {
         const bb = busboy({ headers: req.headers })

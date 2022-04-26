@@ -16,12 +16,12 @@ import PhoneIcon from "@material-ui/icons/Phone"
 import ReceiptIcon from "@material-ui/icons/Receipt"
 import SettingsIcon from "@material-ui/icons/Settings"
 import WhatshotIcon from "@material-ui/icons/Whatshot"
+import getConfig from "next/config"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
 import React, { useState } from "react"
 import {
-  Button,
   Collapse,
   DropdownItem,
   DropdownMenu,
@@ -35,10 +35,15 @@ import {
   UncontrolledDropdown,
 } from "reactstrap"
 
-import { getFooterDocument } from "../clients/footer-documents"
 import { isOpenFeature } from "../config"
 import { logout } from "../utils/auth"
-import { footerDocumentAccessibilite } from "../utils/documentsConstants"
+import {
+  footerDocumentAccessibilite,
+  footerDocumentDonneesPersonnelles,
+  footerDocumentFAQ,
+  footerDocumentGestionCookies,
+  footerDocumentMentionsLegales,
+} from "../utils/documentsConstants"
 import {
   ACT_CONSULTATION,
   ACT_MANAGEMENT,
@@ -48,7 +53,10 @@ import {
   startPageForRole,
   SUPER_ADMIN,
 } from "../utils/roles"
+import FooterDocument from "./FooterDocument"
 import Logo from "./Logo"
+
+const { publicRuntimeConfig } = getConfig() || {}
 
 export const Header = ({ currentUser }) => {
   const router = useRouter()
@@ -130,22 +138,46 @@ export const Footer = () => {
         <Logo />
         <ul className="list-unstyled inline extern">
           <li>
-            <a id="legifrance" href="https://www.legifrance.gouv.fr" target="_blank" rel="noreferrer noopener">
+            <a
+              id="legifrance"
+              aria-label="legifrance.gouv.fr (nouvelle fenêtre)"
+              href="https://www.legifrance.gouv.fr"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               legifrance.gouv.fr
             </a>
           </li>
           <li>
-            <a id="gouvernement" href="https://www.gouvernement.fr" target="_blank" rel="noreferrer noopener">
+            <a
+              id="gouvernement"
+              aria-label="gouvernement.fr (nouvelle fenêtre)"
+              href="https://www.gouvernement.fr"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               gouvernement.fr
             </a>
           </li>
           <li>
-            <a id="service-public" href="https://www.service-public.fr" target="_blank" rel="noreferrer noopener">
+            <a
+              id="service-public"
+              aria-label="service-public.fr (nouvelle fenêtre)"
+              href="https://www.service-public.fr"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               service-public.fr
             </a>
           </li>
           <li>
-            <a id="data-gouv" href="https://www.data.gouv.fr" target="_blank" rel="noreferrer noopener">
+            <a
+              id="data-gouv"
+              aria-label="data.gouv.fr (nouvelle fenêtre)"
+              href="https://www.data.gouv.fr"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               data.gouv.fr
             </a>
           </li>
@@ -160,29 +192,23 @@ export const Footer = () => {
             </Link>
           </li>
           <li className="mb-2">
-            <Button
-              className="px-4 mt-5 "
-              color="primary"
-              onClick={() => getFooterDocument(footerDocumentAccessibilite)}
-            >
-              {"Accessibilité (partiellement conforme)"}
-            </Button>
+            <FooterDocument type={footerDocumentAccessibilite} label={"Accessibilité : Partiellement conforme"} />
           </li>
           <li className="mb-2">
-            <a>{"Mentions légales"}</a>
+            <FooterDocument type={footerDocumentMentionsLegales} label={"Mentions légales"} />
           </li>
           <li className="mb-2">
-            <a>{"Données personnelles"}</a>
+            <FooterDocument type={footerDocumentDonneesPersonnelles} label={"Données personnelles"} />
           </li>
           <li className="mb-2">
-            <a>{"Gestion des cookies"}</a>
+            <FooterDocument type={footerDocumentGestionCookies} label={"Gestion des cookies"} />
           </li>
           <li className="mb-2">
-            <a>{"Foire aux questions"}</a>
+            <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
           </li>
-          {process.env.MAIL_CONTACT && (
+          {publicRuntimeConfig && publicRuntimeConfig.MAIL_CONTACT && (
             <li className="mb-2">
-              <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
+              <a href={`mailto:${publicRuntimeConfig.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
             </li>
           )}
         </ul>
@@ -191,12 +217,12 @@ export const Footer = () => {
         <span>
           Sauf mention contraire, tous les contenus de ce site sont sous{" "}
           <a
+            aria-label="licence etalab-2.0 (nouvelle fenêtre)"
             href="https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf"
             target="_blank"
             rel="noreferrer noopener"
           >
             licence etalab-2.0
-            <i className="fa-solid fa-arrow-up-right-from-square" />
           </a>
         </span>
       </Row>
