@@ -80,13 +80,14 @@ const Login = ({ authentication, error }) => {
                         type="button"
                         className="button-eye"
                         onClick={handleClick}
-                        aria-label="Afficher ou masquer le mot de passe"
+                        aria-label={`Afficher ou masquer le mot de passe : ${hidden ? "non activé" : "activé"}`}
                       >
                         <InputGroupText
                           style={{
                             backgroundColor: "#f0f0f0",
                             borderColor: "#f0f0f0",
                           }}
+                          aria-label={hidden ? "non activé" : "activé"}
                           className={hidden ? "" : "text-primary"}
                         >
                           <RemoveRedEyeIcon width={24} focusable="true" style={{ cursor: "pointer" }} />
@@ -99,7 +100,17 @@ const Login = ({ authentication, error }) => {
               <Col sm="4">
                 <button className="button-connexion">
                   Connexion&nbsp;
-                  {isLoading ? <Spinner size="sm" className="ml-2 mb-1" color="light" data-testid="loading" /> : " "}
+                  {isLoading ? (
+                    <Spinner
+                      aria-label="Chargement en cours..."
+                      size="sm"
+                      className="ml-2 mb-1"
+                      color="light"
+                      data-testid="loading"
+                    />
+                  ) : (
+                    " "
+                  )}
                 </button>
               </Col>
             </Row>
@@ -146,8 +157,8 @@ const Login = ({ authentication, error }) => {
             border: none;
             background-color: #000091;
             color: #ffffff;
-            padding: 0.4em 1.4em 0.4em 1.4em;
-            margin-top: 2.4em;
+            padding: 0.25em 1.4em 0.25em 1.4em;
+            margin-top: 1.8em;
           }
           .button-connexion:focus {
             background-color: #1212ff;
