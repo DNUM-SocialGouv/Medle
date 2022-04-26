@@ -218,7 +218,7 @@ export const Footer = () => {
           Sauf mention contraire, tous les contenus de ce site sont sous{" "}
           <a
             aria-label="licence etalab-2.0 (nouvelle fenêtre)"
-            href="https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf"
+            href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
             target="_blank"
             rel="noreferrer noopener"
           >

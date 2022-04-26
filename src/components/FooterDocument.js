@@ -18,6 +18,7 @@ const FooterDocument = ({ label, type }) => {
   return (
     <>
       <button
+        type="button"
         className="footer-document-button"
         aria-label={`${label} (nouvelle fenêtre)`}
         onClick={() => downloadFooterDocument(type)}
