@@ -37,3 +37,5 @@ export const LIVING_STATISTICS_ENDPOINT = "/statistics/living"
 export const DEACEASED_STATISTICS_ENDPOINT = "/statistics/deceased"
 
 export const MESSAGES_ENDPOINT = "/messages"
+export const LOGOS_ENDPOINT = "/logos"
+export const FOOTER_DOCUMENTS_ENDPOINT = "/footer-documents"

@@ -4,7 +4,7 @@ import React, { useState } from "react"
 
 import { authenticate } from "../clients/authentication"
 import { findAllActiveMessages } from "../clients/messages"
-import { Footer } from "../components/Layout"
+import { Header, Footer } from "../components/Layout"
 import Login from "../components/Login"
 import WelcomeMessage from "../components/WelcomeMessage"
 import { registerAndRedirectUser } from "../utils/auth"
@@ -57,6 +57,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
         <title>Connexion - Medlé</title>
       </Head>
 
+      <Header />
       <div
         className="d-flex flex-column justify-content-center align-items-center min-vh-100 container"
         style={{ maxWidth: 800 }}

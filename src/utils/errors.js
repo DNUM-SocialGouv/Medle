@@ -61,6 +61,20 @@ export const handleAPIResponse2 = async (response) => {
   return response.json()
 }
 
+export const handleAPIBytesResponse = async (response) => {
+  if (!response.ok) {
+    const json = await response.json()
+
+    const { message, detail, status } = json
+
+    const error = new Error(message)
+    error.detail = detail
+    error.status = status
+    throw error
+  }
+  return response.arrayBuffer()
+}
+
 export const stringifyError = (error) => {
   // eslint-disable-next-line no-unused-vars
   const [stack, ...keys] = Object.getOwnPropertyNames(error)

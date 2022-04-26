@@ -32,6 +32,7 @@ const nextConfig = {
     MATOMO_SITE_ID: process.env.MATOMO_SITE_ID,
     MATOMO_URL: process.env.MATOMO_URL,
     SENTRY_DSN: process.env.SENTRY_DSN,
+    MAIL_CONTACT: process.env.MAIL_CONTACT,
     TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
   },
   serverRuntimeConfig: {

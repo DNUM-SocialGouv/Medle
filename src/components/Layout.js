@@ -8,20 +8,21 @@ import EqualizerIcon from "@material-ui/icons/Equalizer"
 import FaceIcon from "@material-ui/icons/Face"
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
 import GroupIcon from "@material-ui/icons/Group"
+import ImageIcon from "@material-ui/icons/Image"
+import LinkRoundedIcon from "@material-ui/icons/LinkRounded"
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import PhoneIcon from "@material-ui/icons/Phone"
 import ReceiptIcon from "@material-ui/icons/Receipt"
 import SettingsIcon from "@material-ui/icons/Settings"
 import WhatshotIcon from "@material-ui/icons/Whatshot"
+import getConfig from "next/config"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
 import React, { useState } from "react"
 import {
-  Col,
   Collapse,
-  Container,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -35,8 +36,14 @@ import {
 } from "reactstrap"
 
 import { isOpenFeature } from "../config"
-import { colors } from "../theme"
 import { logout } from "../utils/auth"
+import {
+  footerDocumentAccessibilite,
+  footerDocumentDonneesPersonnelles,
+  footerDocumentFAQ,
+  footerDocumentGestionCookies,
+  footerDocumentMentionsLegales,
+} from "../utils/documentsConstants"
 import {
   ACT_CONSULTATION,
   ACT_MANAGEMENT,
@@ -46,8 +53,12 @@ import {
   startPageForRole,
   SUPER_ADMIN,
 } from "../utils/roles"
+import FooterDocument from "./FooterDocument"
+import Logo from "./Logo"
 
-const Header = ({ currentUser }) => {
+const { publicRuntimeConfig } = getConfig() || {}
+
+export const Header = ({ currentUser }) => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -56,15 +67,27 @@ const Header = ({ currentUser }) => {
   return (
     <header className="border-bottom" role="banner">
       <Navbar expand="md" light>
-        <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
-          <img
-            src={"/images/logo.png"}
-            alt="Retour à l'accueil de Medlé"
-            width="100"
-            style={{ cursor: "pointer" }}
-            id="header"
-          />
-        </NavbarBrand>
+        <Logo currentUser={currentUser} />
+        {currentUser && !currentUser.resetPassword && (
+          <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
+            <img
+              src={"/images/logo-medle.png"}
+              alt="Retour à l'accueil de Medlé"
+              width="160"
+              style={{ cursor: "pointer", marginLeft: "10px" }}
+            />
+          </NavbarBrand>
+        )}
+        {!currentUser && (
+          <NavbarBrand onClick={() => router.push("/")} tabIndex="0">
+            <img
+              src={"/images/logo-medle.png"}
+              alt="Retour à l'accueil de Medlé"
+              width="160"
+              style={{ cursor: "pointer", marginLeft: "10px" }}
+            />
+          </NavbarBrand>
+        )}
         <NavbarToggler onClick={toggle} aria-label="Afficher ou masquer le menu" />
         {currentUser && !currentUser.resetPassword && (
           <Collapse isOpen={isOpen} navbar>
@@ -108,108 +131,134 @@ Header.propTypes = {
   currentUser: PropTypes.object,
 }
 
-export const Footer = () => (
-  <footer className="pt-4 pb-5 m-0" role="contentinfo">
-    <Container>
+export const Footer = () => {
+  return (
+    <footer className="pt-4 pb-5" role="contentinfo">
       <Row>
-        <Col className="mr-5">
-          <p className="service-title">Medle.fabrique.social.gouv.fr</p>
-          Un service proposé par la{" "}
-          <b>
+        <Logo />
+        <ul className="list-unstyled inline extern">
+          <li>
             <a
+              id="legifrance"
+              aria-label="legifrance.gouv.fr (nouvelle fenêtre)"
+              href="https://www.legifrance.gouv.fr"
               target="_blank"
               rel="noreferrer noopener"
-              id="footer"
-              href="https://solidarites-sante.gouv.fr/ministere/organisation/organisation-des-directions-et-services/article/organisation-de-la-direction-generale-de-l-offre-de-soins-dgos"
-              aria-label="DGOS (nouvelle fenêtre)"
             >
-              DGOS
+              legifrance.gouv.fr
             </a>
-          </b>{" "}
-          (ministère de la santé) et{" "}
-          <b>
+          </li>
+          <li>
             <a
+              id="gouvernement"
+              aria-label="gouvernement.fr (nouvelle fenêtre)"
+              href="https://www.gouvernement.fr"
               target="_blank"
-              href="https://www.fabrique.social.gouv.fr/"
-              rel="noopener noreferrer"
-              aria-label="Fabrique numérique des ministères sociaux (nouvelle fenêtre)"
+              rel="noreferrer noopener"
             >
-              {"la fabrique numérique des ministères sociaux"}
+              gouvernement.fr
             </a>
-          </b>{" "}
-          (
-          <b>
+          </li>
+          <li>
             <a
+              id="service-public"
+              aria-label="service-public.fr (nouvelle fenêtre)"
+              href="https://www.service-public.fr"
               target="_blank"
-              href="https://beta.gouv.fr/"
-              rel="noopener noreferrer"
-              aria-label="beta.gouv.fr (nouvelle fenêtre)"
+              rel="noreferrer noopener"
             >
-              beta.gouv.fr
+              service-public.fr
             </a>
-          </b>
-          )
-        </Col>
-        <Col className="mt-4 mt-md-0">
-          <ul className="pl-0 list-unstyled">
-            <li className="mb-2">
-              <Link href={"/mentions"}>
-                <a>{"Mentions légales"}</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link href={"/politique-confidentialite"}>
-                <a>{"Politique de confidentialité"}</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link href={"/cgu"}>
-                <a>{"Conditions générales d'utilisation"}</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link href={"/faq"}>
-                <a>Foire aux questions</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link href={"/sitemap"}>
-                <a>Plan du site</a>
-              </Link>
-            </li>
-            <li className="mb-2">
-              {/* <Link> */}
-              <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
-              {/* </Link> */}
-            </li>
-          </ul>
-        </Col>
+          </li>
+          <li>
+            <a
+              id="data-gouv"
+              aria-label="data.gouv.fr (nouvelle fenêtre)"
+              href="https://www.data.gouv.fr"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              data.gouv.fr
+            </a>
+          </li>
+        </ul>
       </Row>
-    </Container>
-    <style jsx>{`
-      footer {
-        background-color: ${colors.footer.background};
-        color: ${colors.footer.color};
-      }
-      footer a {
-        color: ${colors.footer.color};
-      }
-      footer a:hover {
-        color: ${colors.footerHover.color};
-      }
-      footer b {
-        text-decoration: underline dotted;
-      }
-      .service-title {
-        font-size: 1.75rem;
-        margin-bottom: 0.5rem;
-        font-family: Evolventa, "Trebuchet MS", sans-serif;
-        font-weight: 700;
-        line-height: 1.2;
-      }
-    `}</style>
-  </footer>
-)
+      <hr />
+      <Row>
+        <ul className="pl-0 list-unstyled inline intern">
+          <li className="mb-2">
+            <Link href={"/sitemap"}>
+              <a>{"Plan du site"}</a>
+            </Link>
+          </li>
+          <li className="mb-2">
+            <FooterDocument type={footerDocumentAccessibilite} label={"Accessibilité : Partiellement conforme"} />
+          </li>
+          <li className="mb-2">
+            <FooterDocument type={footerDocumentMentionsLegales} label={"Mentions légales"} />
+          </li>
+          <li className="mb-2">
+            <FooterDocument type={footerDocumentDonneesPersonnelles} label={"Données personnelles"} />
+          </li>
+          <li className="mb-2">
+            <FooterDocument type={footerDocumentGestionCookies} label={"Gestion des cookies"} />
+          </li>
+          <li className="mb-2">
+            <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
+          </li>
+          {publicRuntimeConfig && publicRuntimeConfig.MAIL_CONTACT && (
+            <li className="mb-2">
+              <a href={`mailto:${publicRuntimeConfig.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
+            </li>
+          )}
+        </ul>
+      </Row>
+      <Row>
+        <span>
+          Sauf mention contraire, tous les contenus de ce site sont sous{" "}
+          <a
+            aria-label="licence etalab-2.0 (nouvelle fenêtre)"
+            href="https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            licence etalab-2.0
+          </a>
+        </span>
+      </Row>
+      <style jsx>{`
+        footer {
+          border-top: 1px solid light-grey;
+          width: 95%;
+          margin: auto;
+        }
+        .inline li {
+          display: inline-block;
+        }
+        .extern {
+          font-weight: bold;
+          margin-left: auto;
+          margin-top: 40px;
+        }
+        .intern {
+          margin: 20px 0 30px 30px;
+        }
+        .extern a,
+        .intern a {
+          color: #181818;
+          padding: 0px 15px;
+        }
+        .intern li:not(:last-child)::after {
+          color: #181818;
+          content: " | ";
+        }
+        hr {
+          border-top: 1px solid light-grey;
+        }
+      `}</style>
+    </footer>
+  )
+}
 
 const Sidebar = ({ page, currentUser }) => {
   if (!currentUser || currentUser.resetPassword) return ""
@@ -413,6 +462,30 @@ const SidebarAdmin = ({ page, currentUser }) => {
             >
               <AnnouncementIcon width={30} /> <br />
               {"Messages"}
+            </a>
+          </Link>
+        )}
+        {currentUser.role === SUPER_ADMIN && (
+          <Link href="/administration/logos">
+            <a
+              className={"list-group-item list-group-item-action " + (page === "logos" ? "selected" : "unselected")}
+              aria-current={page === "logos" ? "true" : "false"}
+            >
+              <ImageIcon width={30} /> <br />
+              {"Logos"}
+            </a>
+          </Link>
+        )}
+        {currentUser.role === SUPER_ADMIN && (
+          <Link href="/administration/footer-documents">
+            <a
+              className={
+                "list-group-item list-group-item-action " + (page === "footer-documents" ? "selected" : "unselected")
+              }
+              aria-current={page === "footer-documents" ? "true" : "false"}
+            >
+              <LinkRoundedIcon width={30} /> <br />
+              {"Documents du pied de page"}
             </a>
           </Link>
         )}

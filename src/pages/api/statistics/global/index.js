@@ -3,7 +3,7 @@ import Cors from "micro-cors"
 import { sendAPIError, sendForbiddenError, sendMethodNotAllowedError } from "../../../../services/errorHelpers"
 import { buildGlobalStatistics } from "../../../../services/statistics/global"
 import { checkValidUserWithPrivilege } from "../../../../utils/auth"
-import { METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../utils/http"
+import { CORS_ALLOW_ORIGIN, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../../utils/http"
 import { STATS_GLOBAL } from "../../../../utils/roles"
 import { isAllowedHospitals } from "../../../../utils/scope"
 
@@ -26,8 +26,6 @@ const handler = async (req, res) => {
     switch (req.method) {
       case METHOD_POST: {
         const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
-
-        console.log(req.body)
 
         const { scopeFilter } = req.body
 

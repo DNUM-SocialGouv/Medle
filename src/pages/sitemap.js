@@ -34,11 +34,14 @@ const SiteMapPage = () => {
             <li>
               <a href="/forgot-password">Mot de passe oublié</a>
             </li>
-            {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
-              <li>
-                <a href="/acts/declaration">Ajout d&apos;acte</a>
-              </li>
-            )}
+            {currentUser &&
+              !currentUser.resetPassword &&
+              isAllowed(currentUser.role, ACT_MANAGEMENT) &&
+              currentUser.role !== SUPER_ADMIN && (
+                <li>
+                  <a href="/acts/declaration">Ajout d&apos;acte</a>
+                </li>
+              )}
             {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, ACT_CONSULTATION) && (
               <li>
                 <a href="/acts">Tous les actes</a>
@@ -54,65 +57,78 @@ const SiteMapPage = () => {
                 <a href="/statistics">Statistiques</a>
               </li>
             )}
-            {currentUser && !currentUser.resetPassword && isOpenFeature("administration") && isAllowed(currentUser.role, ADMIN) && (
-              <li>
-                Administration
-                {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, ADMIN) && (
-                  <ul>
-                    {(currentUser.role === SUPER_ADMIN || currentUser.role === ADMIN_HOSPITAL) && (
-                      <li>
-                        <a href="/administration/users">Administration des utilisateurs</a>
-                        <ul>
-                          <li>
-                            <a href="/administration/users/new">Ajout d&apos;un utilisateur</a>
-                          </li>
-                        </ul>
-                      </li>
-                    )}
-                    {currentUser.role === SUPER_ADMIN && (
-                      <li>
-                        <a href="/administration/hospitals">Administration des établissements</a>
-                        <ul>
-                          <li>
-                            <a href="/administration/hospitals/new">Ajout d&apos;un établissement</a>
-                          </li>
-                        </ul>
-                      </li>
-                    )}
-                    {currentUser.role === SUPER_ADMIN && (
-                      <li>
-                        <a href="/administration/askers">Administration des demandeurs</a>
-                        <ul>
-                          <li>
-                            <a href="/administration/askers/new">Ajout d&apos;un demandeur</a>
-                          </li>
-                        </ul>
-                      </li>
-                    )}
-                    {currentUser.role === SUPER_ADMIN && (
-                      <li>
-                        <a href="/administration/attacks">Administration des attentats</a>
-                        <ul>
-                          <li>
-                            <a href="/administration/attacks/new">Ajout d&apos;un attentat</a>
-                          </li>
-                        </ul>
-                      </li>
-                    )}
-                    {currentUser.role === SUPER_ADMIN && (
-                      <li>
-                        <a href="/administration/acts">Administration des actes</a>
-                      </li>
-                    )}
-                    {currentUser.role === SUPER_ADMIN && (
-                      <li>
-                        <a href="/administration/messages">Administration des messages</a>
-                      </li>
-                    )}
-                  </ul>
-                )}
-              </li>
-            )}
+            {currentUser &&
+              !currentUser.resetPassword &&
+              isOpenFeature("administration") &&
+              isAllowed(currentUser.role, ADMIN) && (
+                <li>
+                  Administration
+                  {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, ADMIN) && (
+                    <ul>
+                      {(currentUser.role === SUPER_ADMIN || currentUser.role === ADMIN_HOSPITAL) && (
+                        <li>
+                          <a href="/administration/users">Administration des utilisateurs</a>
+                          <ul>
+                            <li>
+                              <a href="/administration/users/new">Ajout d&apos;un utilisateur</a>
+                            </li>
+                          </ul>
+                        </li>
+                      )}
+                      {currentUser.role === SUPER_ADMIN && (
+                        <li>
+                          <a href="/administration/hospitals">Administration des établissements</a>
+                          <ul>
+                            <li>
+                              <a href="/administration/hospitals/new">Ajout d&apos;un établissement</a>
+                            </li>
+                          </ul>
+                        </li>
+                      )}
+                      {currentUser.role === SUPER_ADMIN && (
+                        <li>
+                          <a href="/administration/askers">Administration des demandeurs</a>
+                          <ul>
+                            <li>
+                              <a href="/administration/askers/new">Ajout d&apos;un demandeur</a>
+                            </li>
+                          </ul>
+                        </li>
+                      )}
+                      {currentUser.role === SUPER_ADMIN && (
+                        <li>
+                          <a href="/administration/attacks">Administration des attentats</a>
+                          <ul>
+                            <li>
+                              <a href="/administration/attacks/new">Ajout d&apos;un attentat</a>
+                            </li>
+                          </ul>
+                        </li>
+                      )}
+                      {currentUser.role === SUPER_ADMIN && (
+                        <li>
+                          <a href="/administration/acts">Administration des actes</a>
+                        </li>
+                      )}
+                      {currentUser.role === SUPER_ADMIN && (
+                        <li>
+                          <a href="/administration/messages">Administration des messages</a>
+                        </li>
+                      )}
+                      {currentUser.role === SUPER_ADMIN && (
+                        <li>
+                          <a href="/administration/logos">Administration des logos</a>
+                        </li>
+                      )}
+                      {currentUser.role === SUPER_ADMIN && (
+                        <li>
+                          <a href="/administration/footer-documents">Administration des documents du pied de page</a>
+                        </li>
+                      )}
+                    </ul>
+                  )}
+                </li>
+              )}
           </ul>
         </div>
       </Layout>

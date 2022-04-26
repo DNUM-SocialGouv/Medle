@@ -30,12 +30,6 @@ const Login = ({ authentication, error }) => {
   return (
     <>
       <main role="main">
-        <img
-          src={"/images/logo.png"}
-          alt="Logo Medlé plateforme médecine légale"
-          className="my-5"
-          style={{ maxHeight: "6.5rem" }}
-        />
         <div>
           <div className="encadre shadow border mx-4 px-3 py-4 rounded">
             <Form onSubmit={onSubmit} data-testid="authent-form" method="post">
@@ -122,15 +116,6 @@ const Login = ({ authentication, error }) => {
           ::-ms-input-placeholder {
             /* Microsoft Edge */
             color: #767676;
-          }
-          img[alt="logo"] {
-            max-width: 300px;
-            object-fit: contain;
-          }
-          @media screen and (max-width: 768px) {
-            img[alt="logo"] {
-              width: 100%;
-            }
           }
         `}</style>
       </main>
