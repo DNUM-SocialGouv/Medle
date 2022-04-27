@@ -1,3 +1,13 @@
+## [1.15.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.0...v1.15.1) (2022-04-27)
+
+### Bug Fixes
+* MED-20 : Correction récupération du courriel de contact
+
+### Features
+* MED-21 : Refonte en-tête avec logo ministère administrable
+* MED-22 : Refonte écran de connexion
+* MED-23 : Refonte pied de page avec liens administrables
+
 ## [1.15.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.14.0...v1.15.0) (2022-04-20)
 
 
