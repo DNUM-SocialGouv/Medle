@@ -1,3 +1,11 @@
+## [1.15.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.1...v1.15.2) (2022-05-04)
+
+### Bug Fixes
+* MED-30 : Recherche établissement appartenance
+
+### Features
+* MED-19 : Ajout message niveau de force du mot de passe 
+
 ## [1.15.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.0...v1.15.1) (2022-04-27)
 
 ### Bug Fixes
