@@ -4,15 +4,20 @@ import { CommonWords, Frequences } from "../utils/passwordConstants"
 export const PasswordForce = ({ password }) => {
   
     return (
-      <div
-        id="progress"
-        class={`c-progress strength-${ScorePassword(password)}`}
-        style={{
-            marginTop: "4px",
-            width: "1%",
-            height: "5px"
-        }}>
-      </div>
+        <>
+            <div
+                id="progress"
+                class={`c-progress strength-${ScorePassword(password)}`}
+                style={{
+                    marginTop: "4px",
+                    width: "1%",
+                    height: "5px"
+                }}
+            ></div>
+            <div>
+                <span id="message-score"></span>
+            </div>
+        </>
     )
 }
 
@@ -20,6 +25,12 @@ function SetComplexity(s, color) {
     const e = document.getElementById("progress");
     e.style.width = Math.min(s, 100)+"%";
     e.style.backgroundColor = color;
+}
+
+function SetText(s, color) {
+    const e = document.getElementById("message-score");
+    e.innerHTML = s;
+    e.style.color = color;
 }
 
 function ScorePassword(password) {
@@ -39,8 +50,11 @@ function ScorePassword(password) {
         } else {
             score = "A";
         }
+
+        const color = GetColorFromScore(score);
     
-        SetComplexity(bits, GetColorFromScore(score));
+        SetComplexity(bits, color);
+        SetText(GetMessageFromScore(score), color);
         return bits;
     })
 }
@@ -230,5 +244,22 @@ function GetColorFromScore(score) {
             return "#e2001a";
         default:
             return "#666666";
+    }
+}
+
+function GetMessageFromScore(score) {
+    switch (score) {
+        case "A":
+            return "Mot de passe fort.";
+        case "B":
+            return "Mot de passe solide.";
+        case "C":
+            return "Mot de passe moyen.";
+        case "D":
+            return "Mot de passe faible.";
+        case "E":
+            return "Mot de passe très faible.";
+        default:
+            return "-";
     }
 }

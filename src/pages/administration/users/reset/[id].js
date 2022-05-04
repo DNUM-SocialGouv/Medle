@@ -143,7 +143,10 @@ const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
                 }}
                 aria-required="true"
               />
-              <PasswordForce password={password}></PasswordForce>
+              {
+                  password != "" &&
+                  <PasswordForce password={password}></PasswordForce>
+              }
               <FormFeedback>
                 {formErrors.firstValue && "Mot de passe invalide. Le mot de passe doit être composé d'au moins 12 caractères dont: 1 lettre minuscule, 1 lettre majuscule, 1 chiffre et 1 caractère spécial."}
               </FormFeedback>
