@@ -16,7 +16,7 @@ const handler = async (req, res) => {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(STATS_GLOBAL, req, res)
 
-        const hospitals = await hospitalsOfUser(currentUser)
+        const hospitals = await hospitalsOfUser(currentUser, req.query)
 
         return res.status(STATUS_200_OK).json(hospitals)
       }
