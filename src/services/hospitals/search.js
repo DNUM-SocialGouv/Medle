@@ -3,7 +3,7 @@ import { transformAll } from "../../models/hospitals"
 import { canAccessAllHospitals } from "../../utils/roles"
 import { buildScope } from "../../utils/scope"
 
-export const search = async ({ fuzzy } = {}) => {
+export const search = async (fuzzy) => {
   const hospitals = await knex("hospitals")
     .whereNull("deleted_at")
     .where((builder) => {
@@ -22,8 +22,8 @@ export const search = async ({ fuzzy } = {}) => {
  * @param {User} user
  * @returns Hospitals[]
  */
-export async function hospitalsOfUser(user) {
-  const allHospitals = await search()
+export async function hospitalsOfUser(user, { fuzzy } = {}) {
+  const allHospitals = await search(fuzzy)
   const scopeUser = buildScope(user)
   const hospitals = canAccessAllHospitals(user)
     ? allHospitals
