@@ -11,11 +11,9 @@ import Layout from "../../../../components/Layout"
 import { Title1 } from "../../../../components/StyledComponents"
 import { PasswordForce } from "../../../../components/PasswordForce"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../../utils/auth"
-import { STATUS_403_FORBIDDEN } from "../../../../utils/http"
 import { logDebug, logError } from "../../../../utils/logger"
 import { isEmpty } from "../../../../utils/misc"
 import { ADMIN } from "../../../../utils/roles"
-
 
 const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
   const {
@@ -30,32 +28,20 @@ const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
   const { id } = router.query
   
   const [password, setPassword] = useState("")
-  const [lastPasswordError, setLastPasswordError] = useState(false)
-
-  const [resetPassword, setResetPassword] = useState(initialUser.resetPassword)
 
   const onSubmit = async (data) => {
-    setLastPasswordError(false)
     setError("")
     try {
       if (isEmpty(formErrors)) {
-        const { modified } = await resetPasswordByAdmin({ id, lastPassword: data.lastPassword, password: data.firstValue })
+        const { modified } = await resetPasswordByAdmin({ id, password: data.firstValue })
         logDebug(`Nb modified rows: ${modified}`)
         setsuccess("Mot de passe mis à jour.")
       }
     } catch (error) {
-      if (error.status === STATUS_403_FORBIDDEN) {
-        setLastPasswordError(true)
-      } else {
         setError("Erreur serveur")
-      }
     }
   }
 
-  
-  const { ref: lastPasswordRef, ...lastPasswordReg } = register("lastPassword", {
-    required: resetPassword ? false : true,
-  })
   const { ref: firstValueRef, ...firstValueReg } = register("firstValue", {
     pattern: {
       value: /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
@@ -68,12 +54,6 @@ const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
       return value === watch("firstValue")
     },
   })
-
-  const handleChangeLastPassword = () => {
-    if (lastPasswordError) {
-      setLastPasswordError(false)
-    }
-  }
 
   const handleChangeFirstValue = (e) => {
     setPassword(e.target.value)
@@ -101,34 +81,9 @@ const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
         )}
 
         <Form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-          { !resetPassword &&
-            <FormGroup row>
-              <Label for="lastPassword" sm={4}>
-                Mot de passe actuel
-              </Label>
-              <Col sm={8}>
-                <Input
-                  type="password"
-                  id="lastPassword"
-                  {...lastPasswordReg}
-                  innerRef={lastPasswordRef}
-                  invalid={!!formErrors.lastPassword || lastPasswordError}
-                  onChange={e => {
-                    lastPasswordReg.onChange(e)
-                    handleChangeLastPassword();
-                  }}
-                  aria-required="true"
-                />
-                <FormFeedback>
-                  {formErrors.lastPassword && "Mot de passe requis."}
-                  {lastPasswordError && "Mot de passe incorrect."}
-                </FormFeedback>
-              </Col>
-            </FormGroup>
-          }
           <FormGroup row>
             <Label for="firstValue" sm={4}>
-              Nouveau mot de passe
+              Mot de passe
             </Label>
             <Col sm={8}>
               <Input

@@ -53,9 +53,9 @@ export const deleteUser = async ({ id, headers }) => {
  * @param {string} payload.password    - New password to apply.
  * @param {Object} payload.headers     - Headers including authorization token.
  */
-export const resetPasswordByAdmin = async ({ id, lastPassword, password, headers }) => {
+export const resetPasswordByAdmin = async ({ id, password, headers }) => {
   const response = await fetch(`${API_URL}${RESET_PWD_ENDPOINT}`, {
-    body: JSON.stringify({ id, lastPassword, password }),
+    body: JSON.stringify({ id, password }),
     headers: { ...headers, "Content-Type": "application/json" },
     method: METHOD_PATCH,
   })
@@ -86,6 +86,20 @@ export const resetPassword = async ({ loginToken, password }) => {
 export const forgotPassword = async (email) => {
   const response = await fetch(`${API_URL}${FORGOT_PWD_ENDPOINT}`, {
     body: JSON.stringify({ email }),
+    headers: { "Content-Type": "application/json" },
+    method: METHOD_POST,
+  })
+  return handleAPIResponse2(response)
+}
+
+/**
+ * Send an email to user in case of reset the password by admin.
+ *
+ * @param {integer} id - id of user to send magic link.
+ */
+ export const resetUserPasswordByAdmin = async (id) => {
+  const response = await fetch(`${API_URL}${RESET_PWD_ENDPOINT}`, {
+    body: JSON.stringify({ id }),
     headers: { "Content-Type": "application/json" },
     method: METHOD_POST,
   })

@@ -23,7 +23,7 @@ import {
 } from "reactstrap"
 
 import { searchHospitalsFuzzy } from "../../../clients/hospitals"
-import { createUser, deleteUser, findUser, updateUser } from "../../../clients/users"
+import { createUser, deleteUser, findUser, updateUser, resetUserPasswordByAdmin } from "../../../clients/users"
 import Layout from "../../../components/Layout"
 import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
@@ -102,9 +102,11 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   // Fields errors, for those not managed by useForm
   const [errors, setErrors] = useState({})
   const [success, setsuccess] = useState("")
-  const [modal, setModal] = useState(false)
+  const [modalResetPassword, setModalResetPassword] = useState(false)
+  const [modalDelete, setModalDelete] = useState(false)
 
-  const toggle = () => setModal(!modal)
+  const toggleResetPassword = () => setModalResetPassword(!modalResetPassword)
+  const toggleDelete = () => setModalDelete(!modalDelete)
 
   const availableRoles = availableRolesForUser(currentUser)
   const roles = availableRoles.map((role) => ({
@@ -130,8 +132,23 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
 
   const rules = { ...rulesOfRoles(role?.value), ...customRulesAdminHospital, ...customRuleOwnRecord }
 
+  const onResetPasswordUser = () => {
+    toggleResetPassword()
+
+    const res = async (id) => {
+      try {
+        const res = await resetUserPasswordByAdmin({ id })
+        console.log(res)
+      } catch (error) {
+        setError(error.message || "Erreur serveur.")
+      }
+    }
+
+    res(id)
+  }
+
   const onDeleteUser = () => {
-    toggle()
+    toggleDelete()
 
     const del = async (id) => {
       try {
@@ -478,17 +495,13 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               <Title1 className="mb-4 mt-2">Zone dangereuse</Title1>
               <div className="d-flex justify-content-between align-items-center">
                 Je réinitialise le mot de passe de cet utilisateur
-                <Link href="/administration/users/reset/[id]" as={`/administration/users/reset/${formId}`}>
-                  <a>
-                    <Button color="warning" style={{ minWidth: 150 }}>
-                      Réinitialiser
-                    </Button>
-                  </a>
-                </Link>
+                  <Button color="warning" onClick={toggleResetPassword} style={{ minWidth: 150 }}>
+                    Réinitialiser
+                  </Button>
               </div>
               <div className="d-flex justify-content-between align-items-center mt-3">
                 Je supprime cet utilisateur
-                <Button color="danger" outline onClick={toggle} style={{ minWidth: 150 }}>
+                <Button color="danger" outline onClick={toggleDelete} style={{ minWidth: 150 }}>
                   Supprimer
                 </Button>
               </div>
@@ -496,14 +509,29 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
           )}
         </Form>
         <div>
-          <Modal isOpen={modal} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Voulez-vous vraiment supprimer cet utilisateur?</ModalHeader>
+          <Modal isOpen={modalResetPassword} toggle={toggleResetPassword}>
+            <ModalHeader toggle={toggleResetPassword}>Voulez-vous vraiment réinitialiser le mot de passe de cet utilisateur?</ModalHeader>
+            <ModalBody>
+              Un lien de réinitialisation de mot de passe valable 1H sera envoyé à l'utilisateur par email.
+              Merci de confirmer votre choix.
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" outline onClick={toggleResetPassword}>
+                Annuler
+              </Button>
+              <Button color="danger" onClick={onResetPasswordUser}>
+                Confirmer
+              </Button>
+            </ModalFooter>
+          </Modal>
+          <Modal isOpen={modalDelete} toggle={toggleDelete}>
+            <ModalHeader toggle={toggleDelete}>Voulez-vous vraiment supprimer cet utilisateur?</ModalHeader>
             <ModalBody>
               Si vous supprimez cet utilisateur, il ne serait plus visible ni modifiable dans la liste des utilisateurs.
               Merci de confirmer votre choix.
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" outline onClick={toggle}>
+              <Button color="primary" outline onClick={toggleDelete}>
                 Annuler
               </Button>
               <Button color="danger" onClick={onDeleteUser}>
