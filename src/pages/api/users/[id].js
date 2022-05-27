@@ -38,7 +38,7 @@ const handler = async (req, res) => {
 
         checkIsSuperAdmin(currentUser)
 
-        const deleted = await del({ id }, currentUser)
+        const deleted = await del({ id, currentUser })
 
         if (!deleted) return sendNotFoundError(res)
 
