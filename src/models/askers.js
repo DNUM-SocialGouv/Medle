@@ -12,7 +12,7 @@ const JStoDBKeys = {
 const schema = yup.object().shape({
   id: yup.number().positive().integer().nullable(),
   name: yup.string(),
-  depCode: yup.string().matches(/^$|[0-9]{2,3}/),
+  depCode: yup.string().matches(/^$|[0-9]{2,3}/).nullable(),
   type: yup.string(),
 })
 
