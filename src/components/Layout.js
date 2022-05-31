@@ -211,6 +211,12 @@ export const Footer = () => {
               <a href={`mailto:${publicRuntimeConfig.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
             </li>
           )}
+          <li className="mb-2">
+            <span
+              className="version"
+              aria-label={`Version actuelle de Medlé : ${publicRuntimeConfig.MEDLE_VERSION}`}
+            >{`Version ${publicRuntimeConfig.MEDLE_VERSION}`}</span>
+          </li>
         </ul>
       </Row>
       <Row>
@@ -254,6 +260,9 @@ export const Footer = () => {
         }
         hr {
           border-top: 1px solid light-grey;
+        }
+        .version {
+          padding: 0px 15px;
         }
       `}</style>
     </footer>

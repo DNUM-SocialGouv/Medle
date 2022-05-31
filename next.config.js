@@ -34,6 +34,7 @@ const nextConfig = {
     SENTRY_DSN: process.env.SENTRY_DSN,
     MAIL_CONTACT: process.env.MAIL_CONTACT,
     TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
+    MEDLE_VERSION: JSON.stringify(process.env.npm_package_version).split('"').join(""),
   },
   serverRuntimeConfig: {
     DATABASE_URL: process.env.DB_URI || process.env.DATABASE_URL,
