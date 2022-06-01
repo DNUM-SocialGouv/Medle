@@ -84,7 +84,7 @@ function buildHtml({ token }) {
   const html = `
     Bonjour,
 
-    <p>Nous avons reçu une demande de réinitialisation de mot de passe de l'administrateur pour votre compte.</p>
+    <p>Une demande de réinitialisation du mot de passe de votre compte a été effectuée par l'administrateur.</p>
 
     <p>Modifiez-le en cliquant sur ce lien (valide pendant 1 heure) :</p>
 
