@@ -20,6 +20,8 @@ const theme = {
 
 logInfo("----------- MEDLE configuration --------")
 
+logInfo("MEDLE_VERSION", publicRuntimeConfig.MEDLE_VERSION)
+
 logInfo("NODE_ENV", process.env.NODE_ENV)
 logInfo("DEBUG_MODE", publicRuntimeConfig.DEBUG_MODE)
 
