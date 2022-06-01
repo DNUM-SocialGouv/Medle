@@ -43,7 +43,6 @@ const handler = async (req, res) => {
         checkValidUserWithPrivilege(ADMIN, req, res)
         
         const { id } = req?.body.id
-        console.debug(id)
 
         try {
           const user = await findById(id)
@@ -63,7 +62,6 @@ const handler = async (req, res) => {
             to: user.email,
           })
 
-          console.debug(info)
           return res.status(STATUS_200_OK).json({})
         } catch (error) {
           console.error("SEND_VERIFICATION_EMAIL_ERROR", id, error)

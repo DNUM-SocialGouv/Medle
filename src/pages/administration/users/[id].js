@@ -138,7 +138,6 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
     const res = async (id) => {
       try {
         const res = await resetUserPasswordByAdmin({ id })
-        console.log(res)
       } catch (error) {
         setError(error.message || "Erreur serveur.")
       }
