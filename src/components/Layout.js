@@ -236,7 +236,7 @@ export const Footer = () => {
         footer {
           border-top: 1px solid light-grey;
           width: 95%;
-          margin: auto;
+          margin: 20px auto 0 auto;
         }
         .inline li {
           display: inline-block;
@@ -614,7 +614,6 @@ const Layout = ({ children, page, currentUser, admin = false }) => {
       </div>
       <style jsx>{`
         #sidebar-wrapper {
-          min-height: 100vh;
           width: 140px;
         }
 
