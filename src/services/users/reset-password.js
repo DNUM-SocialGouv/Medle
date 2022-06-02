@@ -1,7 +1,7 @@
 import knex from "../../knex/knex"
-import { hashPassword, compareWithHash } from "../../utils/bcrypt"
+import { hashPassword } from "../../utils/bcrypt"
 import { APIError } from "../../utils/errors"
-import { STATUS_400_BAD_REQUEST, STATUS_403_FORBIDDEN } from "../../utils/http"
+import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 /**
  * Update the user's password based by id.
@@ -12,7 +12,7 @@ import { STATUS_400_BAD_REQUEST, STATUS_403_FORBIDDEN } from "../../utils/http"
  *
  * @returns {Object} Modified user.
  */
-export const resetFromId = async ({ id, lastPassword, password }) => {
+export const resetFromId = async ({ id, password }) => {
   if (!id || isNaN(id)) {
     throw new APIError({
       message: "Bad request",
@@ -22,28 +22,11 @@ export const resetFromId = async ({ id, lastPassword, password }) => {
 
   password = await hashPassword(password)
 
-  const [dbUser] = await knex("users")
-  .where('id', id)
-  .whereNull("users.deleted_at")
-  .select(
-    "users.id",
-    "users.password",
-    "users.reset_password"
-  )
+  const modified = await knex("users").where("id", id).whereNull("users.deleted_at").update({
+    password,
+  })
 
-  if (!dbUser || (!dbUser.reset_password && !await compareWithHash(lastPassword, dbUser.password))) {
-    throw new APIError({
-      status: STATUS_403_FORBIDDEN,
-      message: "Password invalid",
-    })
-  } else {
-    const modified = await knex("users").where("id", id).whereNull("users.deleted_at").update({
-      password,
-      reset_password: false
-    })
-  
-    return modified
-  }
+  return modified
 }
 
 /**

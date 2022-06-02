@@ -69,3 +69,30 @@ export const findByEmail = async (email) => {
 
   return user
 }
+
+export const findById = async (id) => {
+  if (!id) {
+    throw new APIError({
+      message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
+    })
+  }
+
+  let [user] = await knex("users")
+    .where("users.id", id)
+    .whereNull("deleted_at")
+    .select(
+      "users.id",
+      "users.first_name",
+      "users.last_name",
+      "users.email",
+      "users.password",
+      "users.role",
+      "users.hospital_id",
+      "users.scope",
+    )
+
+  user = transform(user)
+
+  return user
+}
