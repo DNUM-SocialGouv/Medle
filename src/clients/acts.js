@@ -2,12 +2,12 @@ import { saveAs } from "file-saver"
 import fetch from "isomorphic-unfetch"
 
 import { ACTS_ENDPOINT, API_URL } from "../config"
-import { handleAPIResponse } from "../utils/errors"
+import { handleAPIResponse2 } from "../utils/errors"
 import { METHOD_DELETE, METHOD_POST, METHOD_PUT } from "../utils/http"
 
 export const findAct = async ({ id, headers }) => {
   const response = await fetch(API_URL + ACTS_ENDPOINT + "/" + id, { headers })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const searchActsByKey = async ({ key, value, headers }) => {
@@ -15,7 +15,7 @@ export const searchActsByKey = async ({ key, value, headers }) => {
     headers: { ...headers, "Content-Type": "application/json" },
   })
 
-  const { elements } = await handleAPIResponse(response)
+  const { elements } = await handleAPIResponse2(response)
   return elements
 }
 
@@ -54,7 +54,7 @@ export const searchActs = async (params) => {
 
   const response = await fetch(`${API_URL}${ACTS_ENDPOINT}${queryParams}`, { headers })
 
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const createAct = async ({ act, headers }) => {
@@ -63,7 +63,7 @@ export const createAct = async ({ act, headers }) => {
     headers: { ...headers, "Content-Type": "application/json" },
     body: JSON.stringify(act),
   })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const updateAct = async ({ act, headers }) => {
@@ -72,12 +72,12 @@ export const updateAct = async ({ act, headers }) => {
     headers: { ...headers, "Content-Type": "application/json" },
     body: JSON.stringify(act),
   })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const deleteAct = async ({ id, headers }) => {
   const response = await fetch(`${API_URL}${ACTS_ENDPOINT}/${id}`, { method: METHOD_DELETE, headers })
-  return handleAPIResponse(response)
+  return handleAPIResponse2(response)
 }
 
 export const fetchExport = async (params) => {

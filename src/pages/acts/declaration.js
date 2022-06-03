@@ -223,13 +223,12 @@ const ActDeclaration = ({ act, currentUser }) => {
       setErrors(errors)
       return
     }
-
+    
     try {
       if (!state.id) {
-        const { id } = createAct({ act: state })
+        const { id } = await createAct({ act: state })
 
         logDebug("Created act id: ", id)
-
         return Router.push({
           pathname: "/acts/confirmation",
           query: {
@@ -238,7 +237,7 @@ const ActDeclaration = ({ act, currentUser }) => {
           },
         })
       } else {
-        const { updated } = updateAct({ act: state })
+        const { updated } = await updateAct({ act: state })
 
         logDebug("Nb updated rows: ", updated)
 
