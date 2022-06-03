@@ -12,28 +12,40 @@ export const update = async ({ year, month, hospitalId, data }) => {
       status: STATUS_400_BAD_REQUEST,
     })
 
-  const { ides, others, doctors, nursings, executives, secretaries, auditoriumAgents } = data
+  let { ides, others, doctors, nursings, executives, secretaries, auditoriumAgents } = data
 
-  if (
-    !isEmployementValid(ides) ||
-    !isEmployementValid(others) ||
-    !isEmployementValid(doctors) ||
-    !isEmployementValid(nursings) ||
-    !isEmployementValid(executives) ||
-    !isEmployementValid(secretaries) ||
-    !isEmployementValid(auditoriumAgents)
-  ) {
-    throw new APIError({
-      message: "Bad request",
-      status: STATUS_400_BAD_REQUEST,
-    })
+  const employements = [ides, others, doctors, nursings, executives, secretaries, auditoriumAgents]
+
+  let index = 0;
+  for (let employement of employements) {
+    if (employement && !isEmployementValid(employement)) {
+      throw new APIError({
+        message: "Bad request",
+        status: STATUS_400_BAD_REQUEST,
+      })
+    }
+
+    if (!employement) {
+      employements[index] = 0
+    }
+    index++
+  }
+
+  const dataEmployements = {
+    ides: employements[0],
+    others: employements[1],
+    doctors: employements[2],
+    nursings: employements[3],
+    executives: employements[4],
+    secretaries: employements[5],
+    auditoriumAgents: employements[6],
   }
 
   const result = await upsert({
     db: knex,
     key: ["hospital_id", "year", "month"],
     object: {
-      data_month: { ides, others, doctors, nursings, executives, secretaries, auditoriumAgents },
+      data_month: dataEmployements,
       hospital_id: hospitalId,
       month,
       year,
