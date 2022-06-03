@@ -223,41 +223,48 @@ const ActDeclaration = ({ act, currentUser }) => {
       setErrors(errors)
       return
     }
-
-    try {
+    
       if (!state.id) {
-        const { id } = createAct({ act: state })
+        try {
+          const { id } = await createAct({ act: state })
 
-        logDebug("Created act id: ", id)
-
-        return Router.push({
-          pathname: "/acts/confirmation",
-          query: {
-            internalNumber: state.internalNumber,
-            pvNumber: state.pvNumber,
-          },
-        })
+          logDebug("Created act id: ", id)
+          return Router.push({
+            pathname: "/acts/confirmation",
+            query: {
+              internalNumber: state.internalNumber,
+              pvNumber: state.pvNumber,
+            },
+          })
+        } catch (error) {
+          logError(error)
+          setErrors((errors) => ({
+            ...errors,
+            general: error && error.message ? error.message : "Erreur serveur",
+          }))
+        }
       } else {
-        const { updated } = updateAct({ act: state })
+        try {
+          const { updated } = await updateAct({ act: state })
 
-        logDebug("Nb updated rows: ", updated)
+          logDebug("Nb updated rows: ", updated)
 
-        return Router.push({
-          pathname: "/acts/confirmation",
-          query: {
-            internalNumber: state.internalNumber,
-            pvNumber: state.pvNumber,
-            edit: true,
-          },
-        })
+          return Router.push({
+            pathname: "/acts/confirmation",
+            query: {
+              internalNumber: state.internalNumber,
+              pvNumber: state.pvNumber,
+              edit: true,
+            },
+          })
+        } catch (error) {
+          logError(error)
+          setErrors((errors) => ({
+            ...errors,
+            general: error && error.message ? error.message : "Erreur serveur",
+          }))
+        }
       }
-    } catch (error) {
-      logError(error)
-      setErrors((errors) => ({
-        ...errors,
-        general: error && error.message ? error.message : "Erreur serveur",
-      }))
-    }
   }
 
   const shouldDisplayProfile = () => {
