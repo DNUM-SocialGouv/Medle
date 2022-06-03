@@ -1,4 +1,4 @@
-import busboy from "busboy"
+import formidable from "formidable"
 import fs from "fs"
 import Cors from "micro-cors"
 
@@ -48,7 +48,7 @@ const handler = async (req, res) => {
     switch (req.method) {
       case METHOD_GET: {
         const [logo] = await knex("documents")
-          .where("type", "logo-ministere")
+          .where("type", "logoMinistere")
           .select("documents.id", "documents.name", "documents.size", "documents.type_mime", "documents.type")
 
         if (!logo) {
@@ -69,50 +69,49 @@ const handler = async (req, res) => {
         }
       }
       case METHOD_POST: {
-        const bb = busboy({ headers: req.headers })
 
-        let filename, mimeType, filedata
+        const form = new formidable.IncomingForm();
+        const uploadFolder = PATH_LOGOS;
+        form.maxFileSize = 50 * 1024 * 1024; // 5MB
+        form.uploadDir = uploadFolder;
 
-        bb.on("file", (name, file, info) => {
-          filename = info.filename
-          mimeType = info.mimeType
+        await fs.rmdirSync(PATH_LOGOS, { recursive: true });
+        await fs.mkdirSync(PATH_LOGOS);
 
-          file.on("data", (data) => {
-            filedata = data
-          })
-        })
-        req.pipe(bb)
+        form.on('file', function(field, file) {
+          fs.rename(file.filepath, form.uploadDir + "/" + file.originalFilename, function( error ) {});
+        });
 
-        const [isLogoPresent] = await knex("documents").where("type", "logo-ministere").count()
-
-        if (isLogoPresent.count < 1) {
-          await knex("documents").insert({
-            type: "logo-ministere",
-            name: filename,
-            type_mime: mimeType,
-            size: filedata.length,
-          })
-        } else {
-          await knex("documents")
-            .update({
-              name: filename,
-              type_mime: mimeType,
-              size: filedata.length,
-              updated_at: now().format(ISO_TIME),
+        form.parse(req, async (err, fields, files) => {
+          if (err) {
+            throw new APIError({
+              status: STATUS_400_BAD_REQUEST,
+              message: "Error while parsing file",
             })
-            .where("type", "logo-ministere")
-        }
+          }
 
-        fs.rm(PATH_LOGOS, { recursive: true, force: true }, (errDelDir) => {
-          if (errDelDir) throw errDelDir
-          fs.mkdir(PATH_LOGOS, { recursive: true }, (errDir) => {
-            if (errDir) throw errDir
-            fs.writeFile(PATH_LOGOS + "/" + filename, filedata, function (errFile) {
-              if (errFile) throw errFile
+          const [isLogoPresent] = await knex("documents").where("type", "logoMinistere").count()
+
+          if (isLogoPresent.count < 1) {
+            await knex("documents").insert({
+              type: "logoMinistere",
+              name: files.file.originalFilename,
+              type_mime: files.file.mimetype,
+              size: files.file.size,
             })
-          })
-        })
+          } else {
+            await knex("documents")
+              .update({
+                name: files.file.originalFilename,
+                type_mime: files.file.mimetype,
+                size: files.file.size,
+                updated_at: now().format(ISO_TIME),
+              })
+              .where("type", "logoMinistere")
+          }
+        });
 
+        
         res.setHeader("Content-Type", "application/json")
         return res.status(STATUS_200_OK).json({})
       }
