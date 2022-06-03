@@ -1,7 +1,7 @@
-export const footerDocument = "footer-document-"
+export const footerDocument = "footerDocument"
 
-export const footerDocumentAccessibilite = footerDocument + "accessibilite"
-export const footerDocumentMentionsLegales = footerDocument + "mentions-legales"
-export const footerDocumentDonneesPersonnelles = footerDocument + "donnees-personnelles"
-export const footerDocumentGestionCookies = footerDocument + "gestion-cookies"
-export const footerDocumentFAQ = footerDocument + "faq"
+export const footerDocumentAccessibilite = footerDocument + "Accessibilite"
+export const footerDocumentMentionsLegales = footerDocument + "MentionsLegales"
+export const footerDocumentDonneesPersonnelles = footerDocument + "DonneesPersonnelles"
+export const footerDocumentGestionCookies = footerDocument + "GestionCookies"
+export const footerDocumentFAQ = footerDocument + "FAQ"

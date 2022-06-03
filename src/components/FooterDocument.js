@@ -1,5 +1,7 @@
 import PropTypes from "prop-types"
 import React from "react"
+import { saveAs } from "file-saver"
+
 
 import { getFooterDocument } from "../clients/footer-documents"
 
@@ -7,8 +9,7 @@ const FooterDocument = ({ label, type }) => {
   const downloadFooterDocument = async (type) => {
     try {
       const documentData = await getFooterDocument(type)
-      const url = URL.createObjectURL(new Blob([documentData]))
-      window.open(url)
+      saveAs(new File([documentData], label + ".pdf", { type: 'application/pdf' }))
     } catch (error) {
       console.warn("Pas de document " + type + " trouvé !")
       window.open("/404")

@@ -23,7 +23,7 @@ const AdminLogoPage = ({ currentUser }) => {
   } = useForm()
   const [status, setStatus] = React.useState({ type: "idle" })
 
-  const { ref: logoRef, ...logoReg } = register("logo", {
+  const { ref: logoMinistereRef, ...logoMinistereReg } = register("logoMinistere", {
     required: true,
   })
 
@@ -31,7 +31,7 @@ const AdminLogoPage = ({ currentUser }) => {
     setStatus({ type: "pending" })
     try {
       if (isEmpty(formErrors)) {
-        await updateLogo({ logo: data.logo[0] })
+        await updateLogo({ logo: data.logoMinistere[0] })
         router.reload(window.location.pathname)
       }
     } catch (error) {
@@ -55,17 +55,17 @@ const AdminLogoPage = ({ currentUser }) => {
         {status?.message && <StatusAlert {...status} />}
 
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Label for="logo-ministere">Choix du logo ministère :</Label>
+          <Label for="logoMinistere">Choix du logo ministère :</Label>
           <Input
             type="file"
             accept="image/*"
-            {...logoReg}
-            innerRef={logoRef}
-            invalid={!!formErrors.logoReg}
-            name="logo-ministere"
-            id="logo-ministere"
+            {...logoMinistereReg}
+            innerRef={logoMinistereRef}
+            invalid={!!formErrors.logoMinistere}
+            name="logoMinistere"
+            id="logoMinistere"
           />
-          <FormFeedback>{formErrors.logo && "Une image est requise."}</FormFeedback>
+          <FormFeedback>{formErrors.logoMinistere && "Une image est requise."}</FormFeedback>
           <Button className="px-4 mt-5 " color="primary" onClick={handleSubmit(onSubmit)}>
             Appliquer
           </Button>
@@ -77,7 +77,7 @@ const AdminLogoPage = ({ currentUser }) => {
 
 AdminLogoPage.propTypes = {
   currentUser: PropTypes.object.isRequired,
-  logo: PropTypes.object,
+  logoMinistere: PropTypes.object,
 }
 AdminLogoPage.getInitialProps = async () => {
   return {}

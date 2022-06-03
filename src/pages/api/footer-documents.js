@@ -1,4 +1,4 @@
-import busboy from "busboy"
+import formidable from "formidable"
 import fs from "fs"
 import Cors from "micro-cors"
 
@@ -77,9 +77,13 @@ const handler = async (req, res) => {
         }
       }
       case METHOD_POST: {
-        const bb = busboy({ headers: req.headers })
 
         const type = req.query.type
+
+        const form = new formidable.IncomingForm();
+        const uploadFolder = PATH_FOOTER_LINKS;
+        form.maxFileSize = 50 * 1024 * 1024; // 5MB
+        form.uploadDir = uploadFolder + "/" + type;
 
         if (!type) {
           throw new APIError({
@@ -88,47 +92,41 @@ const handler = async (req, res) => {
           })
         }
 
-        let filename, mimeType, filedata
+        await fs.rmdirSync(PATH_FOOTER_LINKS + "/" + type, { recursive: true });
+        await fs.mkdirSync(PATH_FOOTER_LINKS + "/" + type);
 
-        bb.on("file", (name, file, info) => {
-          filename = info.filename
-          mimeType = info.mimeType
+        form.on('file', function(field, file) {
+              fs.rename(file.filepath, form.uploadDir + "/" + file.originalFilename, function( error ) {});
+        });
 
-          file.on("data", (data) => {
-            filedata = data
-          })
-        })
-        req.pipe(bb)
-
-        const [isDocumentPresent] = await knex("documents").where("type", type).count()
-
-        if (isDocumentPresent.count < 1) {
-          await knex("documents").insert({
-            type: type,
-            name: filename,
-            type_mime: mimeType,
-            size: filedata.length,
-          })
-        } else {
-          await knex("documents")
-            .update({
-              name: filename,
-              type_mime: mimeType,
-              size: filedata.length,
-              updated_at: now().format(ISO_TIME),
+        form.parse(req, async (err, fields, files) => {
+          if (err) {
+            throw new APIError({
+              status: STATUS_400_BAD_REQUEST,
+              message: "Error while parsing file",
             })
-            .where("type", type)
-        }
+          }
 
-        fs.rm(PATH_FOOTER_LINKS + "/" + type, { recursive: true, force: true }, (errDelDir) => {
-          if (errDelDir) throw errDelDir
-          fs.mkdir(PATH_FOOTER_LINKS + "/" + type, { recursive: true }, (errDir) => {
-            if (errDir) throw errDir
-            fs.writeFile(PATH_FOOTER_LINKS + "/" + type + "/" + filename, filedata, function (errFile) {
-              if (errFile) throw errFile
+          const [isDocumentPresent] = await knex("documents").where("type", type).count()
+
+          if (isDocumentPresent.count < 1) {
+            await knex("documents").insert({
+              type: type,
+              name: files.file.originalFilename,
+              type_mime: files.file.mimetype,
+              size: files.file.size,
             })
-          })
-        })
+          } else {
+            await knex("documents")
+              .update({
+                name: files.file.originalFilename,
+                type_mime: files.file.mimetype,
+                size: files.file.size,
+                updated_at: now().format(ISO_TIME),
+              })
+              .where("type", type)
+          }
+        });
 
         res.setHeader("Content-Type", "application/json")
         return res.status(STATUS_200_OK).json({})

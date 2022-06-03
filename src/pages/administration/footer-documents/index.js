@@ -53,7 +53,6 @@ const AdminFooterLinkPage = ({ currentUser }) => {
     try {
       if (isEmpty(formErrors)) {
         await updateFooterDocument({ footerDocument: data.footerDocumentAccessibilite[0] }, footerDocumentAccessibilite)
-        router.reload(window.location.pathname)
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -69,7 +68,6 @@ const AdminFooterLinkPage = ({ currentUser }) => {
           { footerDocument: data.footerDocumentMentionsLegales[0] },
           footerDocumentMentionsLegales,
         )
-        router.reload(window.location.pathname)
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -85,7 +83,6 @@ const AdminFooterLinkPage = ({ currentUser }) => {
           { footerDocument: data.footerDocumentDonneesPersonnelles[0] },
           footerDocumentDonneesPersonnelles,
         )
-        router.reload(window.location.pathname)
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -101,7 +98,6 @@ const AdminFooterLinkPage = ({ currentUser }) => {
           { footerDocument: data.footerDocumentGestionCookies[0] },
           footerDocumentGestionCookies,
         )
-        router.reload(window.location.pathname)
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -114,7 +110,6 @@ const AdminFooterLinkPage = ({ currentUser }) => {
     try {
       if (isEmpty(formErrors)) {
         await updateFooterDocument({ footerDocument: data.footerDocumentFAQ[0] }, footerDocumentFAQ)
-        router.reload(window.location.pathname)
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -151,7 +146,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
               id={footerDocumentAccessibilite}
               className="col-sm-4"
             />
-            <FormFeedback>{formErrors.documentAccessibilite && "Un document est requis."}</FormFeedback>
+            <FormFeedback>{formErrors.footerDocumentAccessibilite && "Un document est requis."}</FormFeedback>
             <Button
               className="px-4 mt-5 col-sm-4"
               color="primary"
@@ -176,7 +171,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
             id={footerDocumentMentionsLegales}
             className="col-sm-4"
           />
-          <FormFeedback>{formErrors.DocumentMentionsLegales && "Un document est requis."}</FormFeedback>
+          <FormFeedback>{formErrors.footerDocumentMentionsLegales && "Un document est requis."}</FormFeedback>
           <Button
             className="px-4 mt-5 col-sm-4"
             color="primary"
@@ -200,7 +195,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
             id={footerDocumentDonneesPersonnelles}
             className="col-sm-4"
           />
-          <FormFeedback>{formErrors.DocumentDonneesPersonnelles && "Un document est requis."}</FormFeedback>
+          <FormFeedback>{formErrors.footerDocumentDonneesPersonnelles && "Un document est requis."}</FormFeedback>
           <Button
             className="px-4 mt-5 col-sm-4"
             color="primary"
@@ -224,7 +219,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
             id={footerDocumentGestionCookies}
             className="col-sm-4"
           />
-          <FormFeedback>{formErrors.DocumentGestionCookies && "Un document est requis."}</FormFeedback>
+          <FormFeedback>{formErrors.footerDocumentGestionCookies && "Un document est requis."}</FormFeedback>
           <Button
             className="px-4 mt-5 col-sm-4"
             color="primary"
@@ -248,7 +243,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
             id={footerDocumentFAQ}
             className="col-sm-4"
           />
-          <FormFeedback>{formErrors.DocumentFAQ && "Un document est requis."}</FormFeedback>
+          <FormFeedback>{formErrors.footerDocumentFAQ && "Un document est requis."}</FormFeedback>
           <Button className="px-4 mt-5 col-sm-4" color="primary" onClick={handleSubmit(onSubmitFooterDocumentFAQ)}>
             {"Valider document 'Foire aux questions'"}
           </Button>
@@ -260,7 +255,11 @@ const AdminFooterLinkPage = ({ currentUser }) => {
 
 AdminFooterLinkPage.propTypes = {
   currentUser: PropTypes.object.isRequired,
-  documentAccessibilite: PropTypes.object,
+  footerDocumentAccessibilite: PropTypes.object,
+  footerDocumentMentionsLegales: PropTypes.object,
+  footerDocumentDonneesPersonnelles: PropTypes.object,
+  footerDocumentGestionCookies: PropTypes.object,
+  footerDocumentFAQ: PropTypes.object,
 }
 AdminFooterLinkPage.getInitialProps = async () => {
   return {}
