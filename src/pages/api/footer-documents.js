@@ -77,13 +77,12 @@ const handler = async (req, res) => {
         }
       }
       case METHOD_POST: {
-
         const type = req.query.type
 
-        const form = new formidable.IncomingForm();
-        const uploadFolder = PATH_FOOTER_LINKS;
-        form.maxFileSize = 50 * 1024 * 1024; // 5MB
-        form.uploadDir = uploadFolder + "/" + type;
+        const form = new formidable.IncomingForm()
+        const uploadFolder = PATH_FOOTER_LINKS
+        form.maxFileSize = 50 * 1024 * 1024 // 5MB
+        form.uploadDir = uploadFolder + "/" + type
 
         if (!type) {
           throw new APIError({
@@ -92,12 +91,14 @@ const handler = async (req, res) => {
           })
         }
 
-        await fs.rmdirSync(PATH_FOOTER_LINKS + "/" + type, { recursive: true });
-        await fs.mkdirSync(PATH_FOOTER_LINKS + "/" + type, { recursive: true });
+        if (fs.existsSync(PATH_FOOTER_LINKS + "/" + type)) {
+          await fs.rmdirSync(PATH_FOOTER_LINKS + "/" + type, { recursive: true })
+        }
+        await fs.mkdirSync(PATH_FOOTER_LINKS + "/" + type, { recursive: true })
 
-        form.on('file', function(field, file) {
-              fs.rename(file.filepath, form.uploadDir + "/" + file.originalFilename, function( error ) {});
-        });
+        form.on("file", function (field, file) {
+          fs.rename(file.filepath, form.uploadDir + "/" + file.originalFilename, function (error) {})
+        })
 
         form.parse(req, async (err, fields, files) => {
           if (err) {
@@ -126,7 +127,7 @@ const handler = async (req, res) => {
               })
               .where("type", type)
           }
-        });
+        })
 
         res.setHeader("Content-Type", "application/json")
         return res.status(STATUS_200_OK).json({})

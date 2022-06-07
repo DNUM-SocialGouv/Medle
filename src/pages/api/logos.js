@@ -13,6 +13,7 @@ import {
   METHOD_OPTIONS,
   METHOD_POST,
   STATUS_200_OK,
+  STATUS_400_BAD_REQUEST,
   STATUS_404_NOT_FOUND,
 } from "../../utils/http"
 import { ADMIN } from "../../utils/roles"
@@ -69,18 +70,20 @@ const handler = async (req, res) => {
         }
       }
       case METHOD_POST: {
+        const form = new formidable.IncomingForm()
+        const uploadFolder = PATH_LOGOS
+        form.maxFileSize = 50 * 1024 * 1024 // 5MB
+        form.uploadDir = uploadFolder
 
-        const form = new formidable.IncomingForm();
-        const uploadFolder = PATH_LOGOS;
-        form.maxFileSize = 50 * 1024 * 1024; // 5MB
-        form.uploadDir = uploadFolder;
+        if (fs.existsSync(PATH_LOGOS)) {
+          await fs.rmdirSync(PATH_LOGOS, { recursive: true })
+        }
 
-        await fs.rmdirSync(PATH_LOGOS, { recursive: true });
-        await fs.mkdirSync(PATH_LOGOS, { recursive: true });
+        await fs.mkdirSync(PATH_LOGOS, { recursive: true })
 
-        form.on('file', function(field, file) {
-          fs.rename(file.filepath, form.uploadDir + "/" + file.originalFilename, function( error ) {});
-        });
+        form.on("file", function (field, file) {
+          fs.rename(file.filepath, form.uploadDir + "/" + file.originalFilename, function (error) {})
+        })
 
         form.parse(req, async (err, fields, files) => {
           if (err) {
@@ -109,9 +112,8 @@ const handler = async (req, res) => {
               })
               .where("type", "logoMinistere")
           }
-        });
+        })
 
-        
         res.setHeader("Content-Type", "application/json")
         return res.status(STATUS_200_OK).json({})
       }
