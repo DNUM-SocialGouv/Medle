@@ -2,13 +2,14 @@ import knex from "../../knex/knex"
 import { transformAll } from "../../models/hospitals"
 import { canAccessAllHospitals } from "../../utils/roles"
 import { buildScope } from "../../utils/scope"
+import { normalizeKeepCase } from "normalize-diacritics-es"
 
 export const search = async (fuzzy) => {
   const hospitals = await knex("hospitals")
     .whereNull("deleted_at")
     .where((builder) => {
       if (fuzzy) {
-        builder.where("name", "ilike", `%${fuzzy}%`)
+        builder.whereRaw(`unaccent(name) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`])
       }
     })
     .orderBy("postal_code")

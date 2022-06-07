@@ -21,7 +21,7 @@ import { ADMIN } from "../../utils/roles"
 const ADMIN_METHODS = [METHOD_POST]
 
 const DOCUMENTS_FS_PATH = process.env.DOCUMENTS_FS_PATH || "./documents"
-const PATH_FOOTER_LINKS = DOCUMENTS_FS_PATH + "/footer-documents"
+const PATH_FOOTER_LINKS = DOCUMENTS_FS_PATH + "/footerDocuments"
 
 const requireAdminAccess = (req) => {
   return req.query.queryAll !== undefined || ADMIN_METHODS.includes(req.method)
@@ -93,7 +93,7 @@ const handler = async (req, res) => {
         }
 
         await fs.rmdirSync(PATH_FOOTER_LINKS + "/" + type, { recursive: true });
-        await fs.mkdirSync(PATH_FOOTER_LINKS + "/" + type);
+        await fs.mkdirSync(PATH_FOOTER_LINKS + "/" + type, { recursive: true });
 
         form.on('file', function(field, file) {
               fs.rename(file.filepath, form.uploadDir + "/" + file.originalFilename, function( error ) {});

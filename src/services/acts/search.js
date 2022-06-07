@@ -7,6 +7,7 @@ import { normalize } from "../../services/normalize"
 import { ISO_DATE, isValidIsoDate } from "../../utils/date"
 import { APIError } from "../../utils/errors"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
+import { normalizeKeepCase } from "normalize-diacritics-es"
 
 const LIMIT = 50
 
@@ -64,9 +65,9 @@ export const makeWhereClause = ({
 
   if (fuzzy) {
     builder.where(function () {
-      this.where("internal_number", "ilike", `%${fuzzy}%`)
-        .orWhere("pv_number", "ilike", `%${fuzzy}%`)
-        .orWhere("profile", "ilike", `%${fuzzy}%`)
+      this.whereRaw(`unaccent(internal_number) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`])
+        .orWhereRaw(`unaccent(pv_number) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`])
+        .orWhereRaw(`unaccent(profile) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`])
     })
   }
 }
