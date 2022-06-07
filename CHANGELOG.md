@@ -1,4 +1,20 @@
+## [1.15.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.2...v1.15.3) (2022-06-07)
+
+
+### Bug Fixes
+* MED-19 : Ajout d'un message sur le niveau de force du mot de passe
+* MED-23 : Corrections sur l'enregistrement des documents du pied de page et du logo ministère
+* MED-24 : Modifier les recherches (case sensitive + accents)
+* MED-26 : Rétablir la possibilité de modifier les demandeurs
+* MED-27 : Correction sur l'ajout d'un acte avec un numéro interne existant
+* MED-28 : Correction sur l'enregistrement des ETP
+* MED-29 : Correction sur la suppression des utilisateurs
+
+### Features
+* MED-13 : Changement du mot de passe par l'administrateur : envoi d'un email de réinitialisation à l'utilisateur
+
 ## [1.15.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.1...v1.15.2) (2022-05-04)
+
 
 ### Bug Fixes
 * MED-30 : Recherche établissement appartenance
@@ -7,6 +23,7 @@
 * MED-19 : Ajout message niveau de force du mot de passe 
 
 ## [1.15.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.0...v1.15.1) (2022-04-27)
+
 
 ### Bug Fixes
 * MED-20 : Correction récupération du courriel de contact
