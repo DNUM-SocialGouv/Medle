@@ -76,7 +76,7 @@ const handler = async (req, res) => {
         form.uploadDir = uploadFolder;
 
         await fs.rmdirSync(PATH_LOGOS, { recursive: true });
-        await fs.mkdirSync(PATH_LOGOS);
+        await fs.mkdirSync(PATH_LOGOS, { recursive: true });
 
         form.on('file', function(field, file) {
           fs.rename(file.filepath, form.uploadDir + "/" + file.originalFilename, function( error ) {});

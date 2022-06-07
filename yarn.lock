@@ -2634,9 +2634,9 @@
   "version" "1.0.0"
 
 "caniuse-lite@^1.0.30001202", "caniuse-lite@^1.0.30001219", "caniuse-lite@^1.0.30001228", "caniuse-lite@^1.0.30001248":
-  "integrity" "sha512-HOe1r+9VkU4TFmnU70z+r7OLmtR+/chB1rdcJUeQlAinjEeb0cKL20tlAtOagNZhbrtLnCvV19B4FmF1rgzl6A=="
-  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001251.tgz"
-  "version" "1.0.30001251"
+  "integrity" "sha512-VFaWW3jeo6DLU5rwdiasosxhYSduJgSGil4cSyX3/85fbctlE58pXAkWyuRmVA0r2RxsOSVYUTZcySJ8WpbTxw=="
+  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001349.tgz"
+  "version" "1.0.30001349"
 
 "ccount@^1.0.0":
   "integrity" "sha512-MOli1W+nfbPLlKEhInaxhRdp7KVLFxLN5ykwzHgLsLI3H3gs5jjFAK4Eoj3OzzcxCtumDaI8onoVDeQyWaNTkw=="
@@ -6352,6 +6352,11 @@
   "integrity" "sha512-faZFufgTMrphYoDjvyVpbpJcYzwyFnbAMmQtj1lVBYAUSm3SOy2fIdd9+Mr4UxPosBa0JRw9bJoIwQn+nswiew=="
   "resolved" "https://registry.npmjs.org/nodemailer/-/nodemailer-6.6.3.tgz"
   "version" "6.6.3"
+
+"normalize-diacritics-es@^1.0.8":
+  "integrity" "sha512-G0qEdchef6LmHs+uerxYY7P2x511AiM90IDitw142uK4lWdjyNaOUEn+dSY0ZA6Y+rAR7WtxE5GLdyr5UNnE6A=="
+  "resolved" "https://registry.npmjs.org/normalize-diacritics-es/-/normalize-diacritics-es-1.0.8.tgz"
+  "version" "1.0.8"
 
 "normalize-package-data@^2.3.2":
   "integrity" "sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA=="

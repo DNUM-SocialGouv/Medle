@@ -1,5 +1,6 @@
 import knex from "../../knex/knex"
 import { transformAll } from "../../models/attacks"
+import { normalizeKeepCase } from "normalize-diacritics-es"
 
 const LIMIT = 25
 
@@ -11,9 +12,9 @@ export const search = async ({ fuzzy, requestedPage }) => {
     .where((builder) => {
       if (fuzzy) {
         if (/^\d+$/.test(fuzzy)) {
-          builder.where("name", "ilike", `%${fuzzy}%`).orWhere("year", fuzzy)
+          builder.whereRaw(`unaccent(name) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`]).orWhere("year", fuzzy)
         } else {
-          builder.where("name", "ilike", `%${fuzzy}%`)
+          builder.whereRaw(`unaccent(name) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`])
         }
       }
     })
@@ -33,9 +34,9 @@ export const search = async ({ fuzzy, requestedPage }) => {
     .where((builder) => {
       if (fuzzy) {
         if (/^\d+$/.test(fuzzy)) {
-          builder.where("name", "ilike", `%${fuzzy}%`).orWhere("year", fuzzy)
+          builder.whereRaw(`unaccent(name) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`]).orWhere("year", fuzzy)
         } else {
-          builder.where("name", "ilike", `%${fuzzy}%`)
+          builder.whereRaw(`unaccent(name) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`])
         }
       }
     })

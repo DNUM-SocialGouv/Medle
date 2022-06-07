@@ -1,5 +1,6 @@
 import knex from "../../knex/knex"
 import { transformAll } from "../../models/askers"
+import { normalizeKeepCase } from "normalize-diacritics-es"
 
 const LIMIT = 50
 
@@ -10,7 +11,7 @@ export const search = async ({ fuzzy, requestedPage }) => {
     .whereNull("deleted_at")
     .where((builder) => {
       if (fuzzy) {
-        builder.where("name", "ilike", `%${fuzzy}%`)
+        builder.whereRaw(`unaccent(name) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`])
         // TODO: add this better query when all askers would have got a depCode
         //builder.where("name", "ilike", `%${fuzzy}%`).orWhere("dep_code", "like", `%${fuzzy}%`)
       }
@@ -30,7 +31,7 @@ export const search = async ({ fuzzy, requestedPage }) => {
     .whereNull("deleted_at")
     .where((builder) => {
       if (fuzzy) {
-        builder.where("name", "ilike", `%${fuzzy}%`)
+        builder.whereRaw(`unaccent(name) ILIKE ?`, [`%${normalizeKeepCase(fuzzy)}%`])
         // builder.where("name", "ilike", `%${fuzzy}%`).orWhere("dep_code", "like", `%${fuzzy}%`)
       }
     })

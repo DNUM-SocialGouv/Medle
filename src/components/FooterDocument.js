@@ -9,7 +9,8 @@ const FooterDocument = ({ label, type }) => {
   const downloadFooterDocument = async (type) => {
     try {
       const documentData = await getFooterDocument(type)
-      saveAs(new File([documentData], label + ".pdf", { type: 'application/pdf' }))
+      const url = URL.createObjectURL(new Blob([documentData], {type: 'application/pdf'}))
+      window.open(url)
     } catch (error) {
       console.warn("Pas de document " + type + " trouvé !")
       window.open("/404")

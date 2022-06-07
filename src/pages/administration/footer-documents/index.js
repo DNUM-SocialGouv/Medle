@@ -53,6 +53,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
     try {
       if (isEmpty(formErrors)) {
         await updateFooterDocument({ footerDocument: data.footerDocumentAccessibilite[0] }, footerDocumentAccessibilite)
+        setStatus({ message: "Document Accessibilité mis à jour.", type: "success" })
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -68,6 +69,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
           { footerDocument: data.footerDocumentMentionsLegales[0] },
           footerDocumentMentionsLegales,
         )
+        setStatus({ message: "Document Mentions légales mis à jour.", type: "success" })
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -83,6 +85,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
           { footerDocument: data.footerDocumentDonneesPersonnelles[0] },
           footerDocumentDonneesPersonnelles,
         )
+        setStatus({ message: "Document Données personnelles mis à jour.", type: "success" })
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -98,6 +101,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
           { footerDocument: data.footerDocumentGestionCookies[0] },
           footerDocumentGestionCookies,
         )
+        setStatus({ message: "Document Gestion des cookies mis à jour.", type: "success" })
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -110,6 +114,7 @@ const AdminFooterLinkPage = ({ currentUser }) => {
     try {
       if (isEmpty(formErrors)) {
         await updateFooterDocument({ footerDocument: data.footerDocumentFAQ[0] }, footerDocumentFAQ)
+        setStatus({ message: "Document FAQ mis à jour.", type: "success" })
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
