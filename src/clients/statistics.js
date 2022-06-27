@@ -60,8 +60,7 @@ export const memoizedFetchStatistics = moize({ maxAge: MAX_AGE, isDeepEqual: tru
 
 export const fetchExport = async ({ type, startDate, endDate, scopeFilter = [], profile }) => {
   saveAs(
-    `${API_URL}${endpoint(type)}/export?startDate=${startDate}&endDate=${endDate}&scopeFilter=${JSON.stringify(
-      scopeFilter
-    )}&profile=${profile}`
+    `${API_URL}${endpoint(type)}/export?startDate=${startDate}&endDate=${endDate}&scopeFilter=${
+      scopeFilter}&profile=${profile}`
   )
 }
