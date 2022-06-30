@@ -1,3 +1,13 @@
+## [1.15.4](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.3...v1.15.4) (2022-06-30)
+
+
+### Bug Fixes
+* MED-36 : Problème remplissage ETP de référence
+* MED-38 : Page accueil : Apparence
+* MED-39 : Modification des actes
+* MED-40 : Erreur export excel
+
+
 ## [1.15.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.2...v1.15.3) (2022-06-07)
 
 
