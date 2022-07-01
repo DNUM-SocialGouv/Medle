@@ -31,8 +31,12 @@ const AdminLogoPage = ({ currentUser }) => {
     setStatus({ type: "pending" })
     try {
       if (isEmpty(formErrors)) {
-        await updateLogo({ logo: data.logoMinistere[0] })
-        router.reload(window.location.pathname)
+        if (data.logoMinistere[0].size / 1024 > 300) {
+          setStatus({ message: "Le poids de l'image ne doit pas excéder 300 Ko.", type: "error" })
+        } else {
+          await updateLogo({ logo: data.logoMinistere[0] })
+          router.reload(window.location.pathname)
+        }
       }
     } catch (error) {
       console.error(`Error when trying to change logo`, error)

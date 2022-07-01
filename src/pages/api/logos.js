@@ -61,6 +61,7 @@ const handler = async (req, res) => {
         try {
           const content = fs.readFileSync(PATH_LOGOS + "/" + logo.name)
           res.setHeader("Content-Type", logo.type_mime)
+          res.setHeader('Cache-Control', 'public,max-age=300');
           return res.status(STATUS_200_OK).send(content)
         } catch (err) {
           throw new APIError({
