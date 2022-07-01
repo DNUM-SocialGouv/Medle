@@ -7,18 +7,28 @@ import { STATUS_400_BAD_REQUEST, STATUS_403_FORBIDDEN } from "../../utils/http"
 export const create = async (data) => {
   await validate(data)
 
-  const { hospitalId, year, month, ides, others, doctors, nursings, executives, secretaries, auditoriumAgents } = data
+  let { hospitalId, year, month, ides, others, doctors, nursings, executives, secretaries, auditoriumAgents } = data
+
+  const employements = [ides, others, doctors, nursings, executives, secretaries, auditoriumAgents]
+
+  let index = 0;
+  for (let employement of employements) {
+    if (employement && !isEmployementValid(employement)) {
+      throw new APIError({
+        message: "Bad request",
+        status: STATUS_400_BAD_REQUEST,
+      })
+    }
+
+    if (!employement) {
+      employements[index] = 0
+    }
+    index++
+  }
 
   if (
     !isYearValid(year) ||
-    !isMonthValid(month) ||
-    !isEmployementValid(ides) ||
-    !isEmployementValid(others) ||
-    !isEmployementValid(doctors) ||
-    !isEmployementValid(nursings) ||
-    !isEmployementValid(executives) ||
-    !isEmployementValid(secretaries) ||
-    !isEmployementValid(auditoriumAgents)
+    !isMonthValid(month)
   ) {
     throw new APIError({
       message: "Bad request",

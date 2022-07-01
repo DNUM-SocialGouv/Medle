@@ -59,7 +59,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
 
       <Header />
       <div
-        className="d-flex flex-column justify-content-center align-items-center min-vh-100 container"
+        className="d-flex flex-column justify-content-center align-items-center min-vh-50 container"
         style={{ maxWidth: 800 }}
       >
         {welcomeMessage && <WelcomeMessage message={welcomeMessage} />}
@@ -68,6 +68,11 @@ const LoginPage = ({ message, welcomeMessage }) => {
         </div>
       </div>
       <Footer />
+      <style jsx>
+        {`
+          .min-vh-50 { min-height: 50vh!important }
+        `}
+      </style>
     </>
   )
 }
