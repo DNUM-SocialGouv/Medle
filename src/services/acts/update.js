@@ -23,6 +23,7 @@ export const update = async ({ id }, data, currentUser) => {
   const [internalNumberExist] = await knex("acts")
     .whereNot("id", data.id)
     .where("internal_number", data.internalNumber)
+    .where("hospital_id", data.hospitalId)
     .whereNull("deleted_at")
     .select("*")
 
