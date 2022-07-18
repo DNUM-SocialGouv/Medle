@@ -19,7 +19,7 @@ const DrunkEdit = ({ dispatch, state, errors }) => {
         type="examinationTypes"
         title="Type(s) d'acte"
         values={["Somatique"]}
-        mode="toggle"
+        mode="toggleMultiple"
         dispatch={dispatch}
         state={state.examinationTypes || []}
         invalid={!!errors.examinationTypes}
