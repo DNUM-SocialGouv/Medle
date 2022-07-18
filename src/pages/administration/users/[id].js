@@ -194,7 +194,6 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
           const { id } = await createUser({ user })
           setValue("id", id || "")
           setsuccess("Utilisateur créé.")
-          window.location.replace("/administration/users/" + id);
         }
       }
     } catch (error) {
