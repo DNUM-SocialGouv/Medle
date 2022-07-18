@@ -23,6 +23,7 @@ export const create = async (data, currentUser) => {
 
   const [internalNumberExist] = await knex("acts")
     .where("internal_number", data.internalNumber)
+    .where("hospital_id", data.hospitalId)
     .whereNull("deleted_at")
     .select("*")
 
