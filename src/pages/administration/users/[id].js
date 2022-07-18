@@ -135,23 +135,23 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const onResetPasswordUser = () => {
     toggleResetPassword()
 
-    const res = async (id) => {
+    const res = async () => {
       try {
-        const res = await resetUserPasswordByAdmin({ id })
+        const res = await resetUserPasswordByAdmin({ id: formId })
       } catch (error) {
         setError(error.message || "Erreur serveur.")
       }
     }
 
-    res(id)
+    res()
   }
 
   const onDeleteUser = () => {
     toggleDelete()
 
-    const del = async (id) => {
+    const del = async () => {
       try {
-        const { deleted } = await deleteUser({ id })
+        const { deleted } = await deleteUser({ id: formId })
         logDebug(`Nb deleted rows: ${deleted}`)
         router.push("/administration/users")
       } catch (error) {
@@ -159,7 +159,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       }
     }
 
-    del(id)
+    del()
   }
 
   const onSubmit = async (user) => {
@@ -194,6 +194,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
           const { id } = await createUser({ user })
           setValue("id", id || "")
           setsuccess("Utilisateur créé.")
+          window.location.replace("/administration/users/" + id);
         }
       }
     } catch (error) {
