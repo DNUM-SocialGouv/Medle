@@ -43,7 +43,7 @@ const handler = async (req, res) => {
         checkValidUserWithPrivilege(ADMIN, req, res)
         
         const { id } = req?.body.id
-        console.debug(id)
+
         try {
           const user = await findById(id)
 
