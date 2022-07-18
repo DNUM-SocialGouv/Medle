@@ -189,6 +189,7 @@ export const isSubmittedActCorrect = (data) => {
 }
 
 export const actFields = [
+  "proofWithoutComplaint",
   "addedBy",
   "askerId",
   "deathCause",
