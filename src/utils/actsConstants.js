@@ -218,7 +218,7 @@ export const actDeathCauses = ["Suicide", "Suicide probable", "Autre"]
 
 export const actDistances = ["En visio", "- de 50 km", "50 à 150 km", "+ de 150 km"]
 
-export const actDurations = ["- de 4 heures", "4 à 8 heures", "+ de 8 heures"]
+export const actDurations = ["- de 2 heures", "2 à 4 heures", "- de 4 heures", "4 à 8 heures", "+ de 8 heures"]
 
 export const actExaminations = [
   "Anapath",
