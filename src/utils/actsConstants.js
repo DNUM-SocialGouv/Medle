@@ -138,8 +138,6 @@ export const isSubmittedActCorrect = (data) => {
   for (const field in data) {
     if (!actFields.includes(field)) {
       actIsCorrect = false
-
-      console.debug(field + " : " + actIsCorrect)
     }
   }
 
