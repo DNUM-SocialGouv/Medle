@@ -154,7 +154,6 @@ export const isSubmittedActCorrect = (data) => {
   if (data.distance && !actDistances.includes(data.distance)) actIsCorrect = false
   if (data.duration && !actDurations.includes(data.duration)) actIsCorrect = false
   if (data.examinations) {
-    if (!data.examinations.length > 0) actIsCorrect = false
     data.examinations.forEach((examination) => {
       if (!actExaminations.includes(examination)) actIsCorrect = false
     })
@@ -298,5 +297,11 @@ export const actViolenceNatures = [
   "Violence psychologique",
   "Accident/Collectif",
   "Accident/Non collectif",
-  "Attentat",
+  "Attentat/2020 Villejuif",
+  "Attentat/2016 Nice",
+  "Attentat/2015 Les terrasses Paris",
+  "Attentat/2015 Bataclan",
+  "Attentat/2015 Hyper Cacher",
+  "Attentat/2015 Charlie Hebdo",
+  "Attentat/2012 École Ozar Hatorah Toulouse",
 ]
