@@ -180,7 +180,7 @@ export const isSubmittedActCorrect = (data) => {
   if (data.violenceNatures) {
     if (!data.violenceNatures.length > 0) actIsCorrect = false
     data.violenceNatures.forEach((nature) => {
-      if (!actViolenceNatures.includes(nature)) actIsCorrect = false
+      if (!nature.startsWith("Attentat/") && !actViolenceNatures.includes(nature)) actIsCorrect = false
     })
   }
 
@@ -297,11 +297,4 @@ export const actViolenceNatures = [
   "Violence psychologique",
   "Accident/Collectif",
   "Accident/Non collectif",
-  "Attentat/2020 Villejuif",
-  "Attentat/2016 Nice",
-  "Attentat/2015 Les terrasses Paris",
-  "Attentat/2015 Bataclan",
-  "Attentat/2015 Hyper Cacher",
-  "Attentat/2015 Charlie Hebdo",
-  "Attentat/2012 École Ozar Hatorah Toulouse",
 ]
