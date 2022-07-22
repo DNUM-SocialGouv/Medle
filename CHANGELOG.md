@@ -1,3 +1,16 @@
+## [1.15.5](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.4...v1.15.5) (2022-07-22)
+
+
+### Bug Fixes
+* MED-37 : Logo en cache
+* MED-44 : Acte: numéro interne existant dans la structure
+* MED-42 : Acte: examen pour OFPRA
+* MED-43 : Acte: recueil preuves sans plainte
+* MED-45 : Acte: IPM
+* MED-45 : Acte: Etudes de dossier - durée
+* MED-41 : Réinitialisation du mot de passe après création utilisateur
+
+
 ## [1.15.4](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.3...v1.15.4) (2022-06-30)
 
 
