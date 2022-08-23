@@ -20,19 +20,20 @@ export const update = async ({ id }, data, currentUser) => {
     })
   }
 
-  const [internalNumberExist] = await knex("acts")
+  await knex("acts")
     .whereNot("id", data.id)
     .where("internal_number", data.internalNumber)
     .where("hospital_id", data.hospitalId)
     .whereNull("deleted_at")
     .select("*")
-
-  if(internalNumberExist) {
-    throw new APIError({
-      status: STATUS_400_BAD_REQUEST,
-      message: "Le numéro interne saisi existe déjà.",
+    .then(([internalNumberExist]) => {
+      if (internalNumberExist) {
+        throw new APIError({
+          status: STATUS_400_BAD_REQUEST,
+          message: "Le numéro interne saisi existe déjà.",
+        })
+      }
     })
-  }
 
   const reachableScope = buildScope(currentUser)
 

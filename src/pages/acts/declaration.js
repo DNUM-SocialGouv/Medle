@@ -135,6 +135,7 @@ const ActDeclaration = ({ act, currentUser }) => {
   const refPerson = useRef(null)
   const [errors, setErrors] = useState({})
   const [warnings, setWarnings] = useState({})
+  const [saving, setSaving] = useState(false)
 
   const { id: userId, hospital } = currentUser
 
@@ -209,6 +210,7 @@ const ActDeclaration = ({ act, currentUser }) => {
   }
 
   const validAndSubmitAct = async () => {
+    setSaving(true)
     setErrors({})
 
     let errors = hasErrors(state)
@@ -218,12 +220,13 @@ const ActDeclaration = ({ act, currentUser }) => {
     }
 
     if (!isEmpty(errors)) {
+      setSaving(false)
       logError(`State non valide`, state)
       logError(errors)
       setErrors(errors)
       return
     }
-    
+
     try {
       if (!state.id) {
         const { id } = await createAct({ act: state })
@@ -256,6 +259,8 @@ const ActDeclaration = ({ act, currentUser }) => {
         ...errors,
         general: error && error.message ? error.message : "Erreur serveur",
       }))
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -444,7 +449,7 @@ const ActDeclaration = ({ act, currentUser }) => {
         )}
 
         <div className="mt-5 text-center">
-          <ValidationButton color="primary" size="lg" className="center" onClick={validAndSubmitAct}>
+          <ValidationButton color="primary" size="lg" className="center" onClick={validAndSubmitAct} disabled={saving}>
             {state.id ? "Modifier" : "Valider"}
           </ValidationButton>
         </div>
