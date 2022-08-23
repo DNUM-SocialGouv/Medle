@@ -1,3 +1,12 @@
+## [1.15.6](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.5...v1.15.6) (2022-08-23)
+
+
+### Bug Fixes
+* MED-48 : Sauvegarde d'un acte - blocage du bouton Valider/Modifier + amélioration du code de vérification du numéro interne
+
+### Features
+* MED-47 : Externalisation du paramétrage de la durée de l'authentification (session + cookie + token)
+
 ## [1.15.5](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.4...v1.15.5) (2022-07-22)
 
 
@@ -10,7 +19,6 @@
 * MED-45 : Acte: Etudes de dossier - durée
 * MED-41 : Réinitialisation du mot de passe après création utilisateur
 
-
 ## [1.15.4](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.3...v1.15.4) (2022-06-30)
 
 
@@ -19,7 +27,6 @@
 * MED-38 : Page accueil : Apparence
 * MED-39 : Modification des actes
 * MED-40 : Erreur export excel
-
 
 ## [1.15.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.2...v1.15.3) (2022-06-07)
 
