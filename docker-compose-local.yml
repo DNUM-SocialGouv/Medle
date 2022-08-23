@@ -38,6 +38,7 @@ services:
         - MAIL_CONTACT=contact-medle@sante.gouv.fr
         - LOGIN_DELAY_ATTEMPTS=3
         - LOGIN_DELAY_SECONDS=60
+        - AUTHENTICATION_TTL=10800
         - DOCUMENTS_FS_PATH=./documents
     ports:
       - 3000:3000
