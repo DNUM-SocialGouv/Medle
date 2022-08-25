@@ -1,3 +1,9 @@
+## [1.15.7](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.6...v1.15.7) (2022-08-25)
+
+
+### Bug Fixes
+* MED-47 : correction sur l'obtention du paramètre AUTHENTICATION_TTL
+
 ## [1.15.6](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.5...v1.15.6) (2022-08-23)
 
 
