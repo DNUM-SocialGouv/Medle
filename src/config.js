@@ -7,20 +7,17 @@ export const START_YEAR_MEDLE = 2020
 export const LIMIT_EXPORT = 10000
 
 // Timeout (in seconds) config : keep this timeout values in sync (30 minutes by default)
-export const timeout =
-  publicRuntimeConfig &&
-  publicRuntimeConfig.AUTHENTICATION_TTL &&
-  Number.isInteger(publicRuntimeConfig.AUTHENTICATION_TTL)
-    ? {
-        cookie: Number(publicRuntimeConfig.AUTHENTICATION_TTL),
-        jwt: Number(publicRuntimeConfig.AUTHENTICATION_TTL),
-        session: { seconds: Number(publicRuntimeConfig.AUTHENTICATION_TTL) },
-      }
-    : {
-        cookie: 1800,
-        jwt: 1800,
-        session: { seconds: 1800 },
-      }
+export const timeout = Number.isInteger(Number.parseInt(process.env.AUTHENTICATION_TTL))
+  ? {
+      cookie: Number.parseInt(process.env.AUTHENTICATION_TTL),
+      jwt: Number.parseInt(process.env.AUTHENTICATION_TTL),
+      session: { seconds: Number.parseInt(process.env.AUTHENTICATION_TTL) },
+    }
+  : {
+      cookie: 1800,
+      jwt: 1800,
+      session: { seconds: 1800 },
+    }
 
 export const API_URL = publicRuntimeConfig ? publicRuntimeConfig.API_URL : "http://localhost:3000/api"
 
