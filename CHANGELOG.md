@@ -1,3 +1,9 @@
+## [1.15.8](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.7...v1.15.8) (2022-09-02)
+
+
+### Bug Fixes
+* MED-47 : correction obtention TTL sur le frontend
+
 ## [1.15.7](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.6...v1.15.7) (2022-08-25)
 
 
