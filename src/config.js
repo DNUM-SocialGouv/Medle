@@ -7,11 +7,11 @@ export const START_YEAR_MEDLE = 2020
 export const LIMIT_EXPORT = 10000
 
 // Timeout (in seconds) config : keep this timeout values in sync (30 minutes by default)
-export const timeout = Number.isInteger(Number.parseInt(process.env.AUTHENTICATION_TTL))
+export const timeout = Number.isInteger(Number.parseInt(publicRuntimeConfig.AUTHENTICATION_TTL))
   ? {
-      cookie: Number.parseInt(process.env.AUTHENTICATION_TTL),
-      jwt: Number.parseInt(process.env.AUTHENTICATION_TTL),
-      session: { seconds: Number.parseInt(process.env.AUTHENTICATION_TTL) },
+      cookie: Number.parseInt(publicRuntimeConfig.AUTHENTICATION_TTL),
+      jwt: Number.parseInt(publicRuntimeConfig.AUTHENTICATION_TTL),
+      session: { seconds: Number.parseInt(publicRuntimeConfig.AUTHENTICATION_TTL) },
     }
   : {
       cookie: 1800,
