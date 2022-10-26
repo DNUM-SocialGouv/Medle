@@ -7,17 +7,24 @@ export const START_YEAR_MEDLE = 2020
 export const LIMIT_EXPORT = 10000
 
 // Timeout (in seconds) config : keep this timeout values in sync (30 minutes by default)
-export const timeout = Number.isInteger(Number.parseInt(publicRuntimeConfig.AUTHENTICATION_TTL))
-  ? {
-      cookie: Number.parseInt(publicRuntimeConfig.AUTHENTICATION_TTL),
-      jwt: Number.parseInt(publicRuntimeConfig.AUTHENTICATION_TTL),
-      session: { seconds: Number.parseInt(publicRuntimeConfig.AUTHENTICATION_TTL) },
-    }
-  : {
-      cookie: 1800,
-      jwt: 1800,
-      session: { seconds: 1800 },
-    }
+export const timeoutConfig =
+  Number.isInteger(Number.parseInt(publicRuntimeConfig.AUTH_DURATION)) &&
+  Number.isInteger(Number.parseInt(publicRuntimeConfig.AUTH_REFRESH_START)) &&
+  Number.isInteger(Number.parseInt(publicRuntimeConfig.AUTH_MAX_DURATION))
+    ? {
+        cookie: Number.parseInt(publicRuntimeConfig.AUTH_DURATION),
+        jwt: Number.parseInt(publicRuntimeConfig.AUTH_DURATION),
+        session: { seconds: Number.parseInt(publicRuntimeConfig.AUTH_DURATION) },
+        authRefreshStart: { seconds: Number.parseInt(publicRuntimeConfig.AUTH_REFRESH_START) },
+        authMaxDuration: { seconds: Number.parseInt(publicRuntimeConfig.AUTH_MAX_DURATION) },
+      }
+    : {
+        cookie: 1800,
+        jwt: 1800,
+        session: { seconds: 1800 },
+        authRefreshStart: { seconds: 1500 },
+        authMaxDuration: { seconds: 18000 },
+      }
 
 export const API_URL = publicRuntimeConfig ? publicRuntimeConfig.API_URL : "http://localhost:3000/api"
 
@@ -28,6 +35,7 @@ export const isOpenFeature = (feature) => {
 
 export const LOGIN_ENDPOINT = "/login"
 export const LOGOUT_ENDPOINT = "/logout"
+export const REFRESH_TOKEN_ENDPOINT = "/refresh-token"
 export const RESET_PWD_ENDPOINT = "/reset-password"
 export const FORGOT_PWD_ENDPOINT = "/forgot-password"
 

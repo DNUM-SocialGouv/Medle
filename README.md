@@ -81,7 +81,9 @@ The variables are :
 - MAIL_FROM string used in from email
 - LOGIN_DELAY_ATTEMPTS number of attempts to start the login delay
 - LOGIN_DELAY_SECONDS duration of the login delay
-- AUTHENTICATION_TTL authentication TTL in seconds (session + cookie + token)
+- AUTH_DURATION authentication duration, in seconds
+- AUTH_REFRESH_START based on the previous duration, when to start refreshing the authentication, in seconds
+- AUTH_MAX_DURATION maximum duration of authentication, in seconds
 - DOCUMENTS_FS_PATH documents path on the file system
 
 Besides, in some cases you may want to set :

@@ -3,7 +3,8 @@ import moment from "moment"
 import Router from "next/router"
 import React from "react"
 
-import { API_URL, LOGOUT_ENDPOINT, timeout } from "../config"
+import { refreshToken } from "../clients/refresh-token"
+import { API_URL, LOGOUT_ENDPOINT, timeoutConfig } from "../config"
 import { APIError } from "./errors"
 import { STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "./http"
 import { clearReferenceData, fetchReferenceData } from "./init"
@@ -32,13 +33,17 @@ export const logout = async () => {
 }
 
 export const registerAndRedirectUser = (user, token) => {
-  sessionStorage.setItem("currentUser", JSON.stringify({ ...user, authentifiedAt: moment() }))
+  sessionStorage.setItem("currentUser", JSON.stringify(user))
   if (user.resetPassword) {
     Router.push(`/reset-password?loginToken=${token}`)
   } else {
     fetchReferenceData()
     Router.push(startPageForRole(user.role))
   }
+}
+
+export const afterRefreshToken = (user) => {
+  sessionStorage.setItem("currentUser", JSON.stringify(user))
 }
 
 export const getCurrentUser = (ctx) => {
@@ -106,7 +111,12 @@ export const isomorphicRedirect = (ctx, url) => {
 
 const sessionTooOld = (currentUser) => {
   if (!currentUser) return true
-  return currentUser.authentifiedAt && moment(currentUser.authentifiedAt).add(timeout.session) < moment()
+  return currentUser.authStartedAt && moment(currentUser.authStartedAt).add(timeoutConfig.session) < moment()
+}
+
+const haveToRefreshToken = (currentUser) => {
+  if (!currentUser) return true
+  return currentUser.authRefreshStart && moment(currentUser.authRefreshStart) < moment()
 }
 
 export const withAuthentication = (WrappedComponent, requiredPrivilege, { redirect = true } = {}) => {
@@ -132,6 +142,19 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege, { redire
 
       if (currentUser.resetPassword) {
         logError("L'utilisateur doit changer de mot de passe avant d'accéder au site. Redirection sur index")
+        isomorphicRedirect(ctx, "/?sessionTimeout=1")
+        return {}
+      }
+    }
+
+    // On vérifie si le token doit être renouvelé
+    if (haveToRefreshToken(currentUser)) {
+      logDebug("Le token va être actualisé côté serveur avant de poursuivre la navigation")
+      try {
+        const refreshedUser = await refreshToken()
+        afterRefreshToken(refreshedUser)
+      } catch {
+        logError("Le token n'a pas pu être réactualisé. Redirection sur index")
         isomorphicRedirect(ctx, "/?sessionTimeout=1")
         return {}
       }

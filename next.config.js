@@ -35,7 +35,9 @@ const nextConfig = {
     MAIL_CONTACT: process.env.MAIL_CONTACT,
     TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
     MEDLE_VERSION: JSON.stringify(process.env.npm_package_version).split('"').join(""),
-    AUTHENTICATION_TTL: process.env.AUTHENTICATION_TTL,
+    AUTH_DURATION: process.env.AUTH_DURATION,
+    AUTH_REFRESH_START: process.env.AUTH_REFRESH_START,
+    AUTH_MAX_DURATION: process.env.AUTH_MAX_DURATION,
   },
   serverRuntimeConfig: {
     DATABASE_URL: process.env.DB_URI || process.env.DATABASE_URL,
