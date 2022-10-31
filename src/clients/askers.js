@@ -27,7 +27,7 @@ export const findAsker = async ({ id, headers }) => {
 }
 
 export const memoizedSearchAskers = moize({ maxAge: MAX_AGE, isPromise: false })(searchAskersFuzzy)
-export const memoizedFindAsker = moize({ maxAge: MAX_AGE, isDeepEqual: true })(findAsker)
+export const memoizedFindAsker = moize({ maxAge: MAX_AGE, isDeepEqual: true, maxSize: 5 })(findAsker)
 
 export const createAsker = async ({ asker, headers }) => {
   const response = await fetch(`${API_URL}${ASKERS_ENDPOINT}`, {
