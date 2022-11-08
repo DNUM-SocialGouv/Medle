@@ -9,6 +9,7 @@ import { Alert, Col, Container, Form, FormGroup, Row, Table } from "reactstrap"
 
 import { exportEmployments, findLastEdit } from "../../clients/employments"
 import { CurrentMonthEmployments, PassedMonthEmployments } from "../../components/EmploymentMonthData"
+import FooterDocument from "../../components/FooterDocument"
 import { SearchButton } from "../../components/form/SearchButton"
 import Layout from "../../components/Layout"
 import { InputDarker, Title1, Title2 } from "../../components/StyledComponents"
@@ -16,6 +17,7 @@ import { START_YEAR_MEDLE } from "../../config"
 import { useDebounce } from "../../hooks/useDebounce"
 import { withAuthentication } from "../../utils/auth"
 import { extractMonthYear, isoToFr, NAME_MONTHS } from "../../utils/date"
+import { footerDocumentFAQ } from "../../utils/documentsConstants"
 import { getReferenceData } from "../../utils/init"
 import { castArrayInMap } from "../../utils/object"
 import { canAccessAllHospitals, EMPLOYMENT_CONSULTATION } from "../../utils/roles"
@@ -357,9 +359,11 @@ const EmploymentsHospital = ({ currentUser, hospitalId }) => {
             <p className="mb-5 text-center">
               <small>
                 Attention, un ETP est un Équivalent Temps Plein et non un poste.{" "}
-                <Link href={"/faq"}>
-                  <a style={{ color: "#376FE6" }}>{"+ d'informations dans la foire aux questions"}</a>
-                </Link>
+                <FooterDocument
+                  color="#376FE6"
+                  type={footerDocumentFAQ}
+                  label={"+ d'informations dans la foire aux questions"}
+                />
                 .
               </small>
             </p>
