@@ -20,5 +20,8 @@
         "preprocess": false
       }
     ]
-  ]
+  ],
+  "ignore": [
+    "node_modules"
+   ]
 }

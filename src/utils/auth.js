@@ -151,8 +151,8 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege, { redire
     if (haveToRefreshToken(currentUser)) {
       logDebug("Le token va être actualisé côté serveur avant de poursuivre la navigation")
       try {
-        const refreshedUser = await refreshToken()
-        afterRefreshToken(refreshedUser)
+        const { user } = await refreshToken()
+        afterRefreshToken(user)
       } catch {
         logError("Le token n'a pas pu être réactualisé. Redirection sur index")
         isomorphicRedirect(ctx, "/?sessionTimeout=1")

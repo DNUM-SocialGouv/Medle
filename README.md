@@ -86,6 +86,8 @@ The variables are :
 - AUTH_MAX_DURATION maximum duration of authentication, in seconds
 - DOCUMENTS_FS_PATH documents path on the file system
 
+**Note** : AUTH_REFRESH_START < AUTH_DURATION < AUTH_MAX_DURATION
+
 Besides, in some cases you may want to set :
 
 - DEBUG used to debug Knex (ex: knex:query to show SQL queries)
