@@ -1,14 +1,15 @@
 import * as jwt from "jsonwebtoken"
+import moment from "moment"
 import getConfig from "next/config"
 
-import { timeout } from "../config"
+import { timeoutConfig } from "../config"
 
 const { serverRuntimeConfig } = getConfig() || {}
 
 const jwtConfig = {
   options: {
     algorithm: "HS256",
-    expiresIn: timeout.jwt,
+    expiresIn: timeoutConfig.jwt,
   },
   // default value is only for development environment.
   secret: (serverRuntimeConfig && serverRuntimeConfig.JWT_SECRET) || "JHo$aY@2&o7m",
@@ -45,6 +46,29 @@ export const decodeToken = (token) => {
  */
 export const generateToken = (user, { timeout } = {}) => {
   const options = !timeout ? jwtConfig.options : { ...jwtConfig.options, expiresIn: timeout }
+
+  /*
+   * Dans le token, on ajoute le paramétrage pour son renouvelement et sa durée de vie maximale :
+   * - authStartedAt : Horodatage de création du token
+   * - authRefreshStart : Horodatage déclenchant l'actualisation du token
+   * - authMaxDuration : Horodatage indiquant la durée de vie maximale du token
+   */
+  const currentMoment = moment()
+
+  // Horodatage de création du token (nouveau ou renouvelé)
+  user.authStartedAt = currentMoment
+
+  // Horodatage déclenchant l'actualisation du token
+  // Mis à jour lors du renouvelement du token (voir /pages/api/refresh-token.js) sinon créé lors de la première authentification
+  if (!user.authRefreshStart) {
+    user.authRefreshStart = moment(currentMoment).add(timeoutConfig.authRefreshStart)
+  }
+
+  // Horodatage indiquant la durée de vie maximale du token
+  // Créé lors de la première authentification et ne doit pas être mis à jour
+  if (!user.authMaxDuration) {
+    user.authMaxDuration = moment(currentMoment).add(timeoutConfig.authMaxDuration)
+  }
 
   return jwt.sign(user, jwtConfig.secret, options)
 }
