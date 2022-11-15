@@ -1,3 +1,14 @@
+## [1.16.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.8...v1.16.0) (2022-11-15)
+
+
+### Bug Fixes
+* MED-31 : correction affichage des graphiques dans l'onglet "Statistiques"
+* MED-49 : correction demandeurs en "favoris"
+* MED-50 : correction lien vers la FAQ dans l'onglet "Personnel"
+
+### Features
+* MED-56 : mécanisme de refresh token
+
 ## [1.15.8](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.7...v1.15.8) (2022-09-02)
 
 
