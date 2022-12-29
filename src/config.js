@@ -4,7 +4,7 @@ const { publicRuntimeConfig } = getConfig() || {}
 
 export const START_YEAR_MEDLE = 2020
 
-export const LIMIT_EXPORT = 10000
+export const LIMIT_EXPORT = 150000
 
 // Timeout (in seconds) config : keep this timeout values in sync (30 minutes by default)
 export const timeoutConfig =
