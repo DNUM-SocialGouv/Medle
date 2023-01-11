@@ -1,3 +1,12 @@
+## [1.17.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.16.0...v1.17.0) (2023-01-11)
+
+
+### Bug Fixes
+* MED-35 : ajouter des lettres dans le département
+
+### Features
+* MED-51 : augmentation de la capacité d'export
+
 ## [1.16.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.8...v1.16.0) (2022-11-15)
 
 
