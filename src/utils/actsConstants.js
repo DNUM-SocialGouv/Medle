@@ -260,7 +260,16 @@ export const actLocations = [
 
 export const actPeriodOfDays = ["Nuit profonde", "Journée", "Matin", "Après-midi", "Soirée"]
 
-export const actPersonAgeTags = ["Mineur", "Majeur", "0-2 ans", "3-6 ans", "3-17 ans", "7-17 ans", "+ de 18 ans", "Non déterminé"]
+export const actPersonAgeTags = [
+  "Mineur",
+  "Majeur",
+  "0-2 ans",
+  "3-6 ans",
+  "3-17 ans",
+  "7-17 ans",
+  "+ de 18 ans",
+  "Non déterminé",
+]
 
 export const actPersonGenders = ["Féminin", "Masculin", "Autre genre", "Non déterminé"]
 
@@ -295,6 +304,7 @@ export const actViolenceNatures = [
   "Sexuelle",
   "Maltraitance",
   "Violence psychologique",
+  "Soumission chimique",
   "Accident/Collectif",
   "Accident/Non collectif",
 ]
