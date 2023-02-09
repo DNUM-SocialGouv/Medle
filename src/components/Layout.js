@@ -131,7 +131,7 @@ Header.propTypes = {
   currentUser: PropTypes.object,
 }
 
-export const Footer = () => {
+export const Footer = ({ currentUser }) => {
   return (
     <footer className="pt-4 pb-5" role="contentinfo">
       <Row>
@@ -203,9 +203,11 @@ export const Footer = () => {
           <li className="mb-2">
             <FooterDocument type={footerDocumentGestionCookies} label={"Gestion des cookies"} />
           </li>
-          <li className="mb-2">
-            <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
-          </li>
+          {currentUser && (
+            <li className="mb-2">
+              <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
+            </li>
+          )}
           {publicRuntimeConfig && publicRuntimeConfig.MAIL_CONTACT && (
             <li className="mb-2">
               <a href={`mailto:${publicRuntimeConfig.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
@@ -267,6 +269,10 @@ export const Footer = () => {
       `}</style>
     </footer>
   )
+}
+
+Footer.propTypes = {
+  currentUser: PropTypes.object,
 }
 
 const Sidebar = ({ page, currentUser }) => {
@@ -610,7 +616,7 @@ const Layout = ({ children, page, currentUser, admin = false }) => {
             </main>
           </div>
         </div>
-        <Footer />
+        <Footer currentUser={currentUser} />
       </div>
       <style jsx>{`
         #sidebar-wrapper {
