@@ -39,9 +39,6 @@ export const config = {
 }
 
 const handler = async (req, res) => {
-  if (requireAdminAccess(req)) {
-    checkAdminAccess(req, res)
-  }
   res.setHeader("Access-Control-Allow-Origin", CORS_ALLOW_ORIGIN)
   res.setHeader("Access-Control-Allow-Credentials", "false")
 
@@ -77,6 +74,9 @@ const handler = async (req, res) => {
         }
       }
       case METHOD_POST: {
+        if (requireAdminAccess(req)) {
+          checkAdminAccess(req, res)
+        }
         const type = req.query.type
 
         const form = new formidable.IncomingForm()
