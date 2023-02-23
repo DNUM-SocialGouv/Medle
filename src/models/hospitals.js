@@ -22,7 +22,7 @@ const schema = yup.object().shape({
   addr1: yup.string(),
   addr2: yup.string(),
   town: yup.string(),
-  depCode: yup.string().matches(/[0-9]{2,3}/),
+  depCode: yup.string().matches(/^2A|2B|[0-9]{2,3}$/i),
   postalCode: yup.string().matches(/^$|[0-9]{5}/),
 })
 
