@@ -6,16 +6,18 @@ import { buildScope } from "../../utils/scope"
 import { findList as findListHospitals } from "../hospitals"
 import { addCellTitle, intervalDays, normalizeInputs } from "./common"
 
-const makeWhereClause = ({ startDate, endDate, scopeFilter = [] }) => (builder) => {
-  builder
-    .whereNull("deleted_at")
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+const makeWhereClause =
+  ({ startDate, endDate, scopeFilter = [] }) =>
+  (builder) => {
+    builder
+      .whereNull("deleted_at")
+      .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+      .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
 
-  if (scopeFilter.length) {
-    builder.whereIn("hospital_id", scopeFilter)
+    if (scopeFilter.length) {
+      builder.whereIn("hospital_id", scopeFilter)
+    }
   }
-}
 
 /**
  * Request and format the global statistics.
@@ -103,16 +105,10 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
   // export is called by GET method and GET method doesn't have Content-type = "application/json" by design,
   // so in this case we have to explicitly parse the params
-  scopeFilter = !Array.isArray(scopeFilter) ? scopeFilter.split(",").map(Number) : scopeFilter
+  scopeFilter = scopeFilter && JSON.parse(scopeFilter)
 
-  const {
-    inputs,
-    globalCount,
-    averageCount,
-    profilesDistribution,
-    actsWithSamePV,
-    averageWithSamePV,
-  } = await buildGlobalStatistics({ endDate, scopeFilter, startDate }, currentUser)
+  const { inputs, globalCount, averageCount, profilesDistribution, actsWithSamePV, averageWithSamePV } =
+    await buildGlobalStatistics({ endDate, scopeFilter, startDate }, currentUser)
 
   const hospitals = await findListHospitals(scopeFilter)
 
