@@ -128,6 +128,18 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     setValue("search", text)
   }
 
+  function onStartDateChange(e) {
+    const startDate = e?.target?.value || ""
+    setValue("startDate", startDate)
+    onChange()
+  }
+
+  function onEndDateChange(e) {
+    const endDate = e?.target?.value || ""
+    setValue("endDate", endDate)
+    onChange()
+  }
+
   async function loadAskers(search) {
     const askers = await memoizedSearchAskers({ search })
 
@@ -211,7 +223,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           placeholder="Date de début"
                           {...startDateReg}
                           innerRef={startDateRef}
-                          onChange={onChange}
+                          onChange={onStartDateChange}
                         />
                       </Col>
                       <Col sm="3">
@@ -224,7 +236,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                           placeholder="Date de fin"
                           {...endDateReg}
                           innerRef={endDateRef}
-                          onChange={onChange}
+                          onChange={onEndDateChange}
                         />
                       </Col>
                     </Row>

@@ -4,12 +4,12 @@ import { sendMail } from "../../services/email"
 import { sendAPIError, sendMethodNotAllowedError } from "../../services/errorHelpers"
 import { findByEmail } from "../../services/users/find"
 import {
+  CORS_ALLOW_ORIGIN,
   METHOD_OPTIONS,
   METHOD_POST,
   STATUS_200_OK,
   STATUS_404_NOT_FOUND,
   STATUS_500_INTERNAL_SERVER_ERROR,
-  CORS_ALLOW_ORIGIN
 } from "../../utils/http"
 import { generateToken } from "../../utils/jwt"
 
@@ -33,7 +33,7 @@ function buildHtml({ token }) {
 
     <p>A bientôt sur Medlé,</p>
 
-    <p>Des questions sur Medlé? La réponse se trouve peut-être dans la <a href="${APP_URL}/faq">foire aux questions</a>.</p>
+    <p>Des questions sur Medlé? La réponse se trouve peut-être dans la <a href="${APP_URL}/api/footer-documents?type=footerDocumentFAQ">foire aux questions</a>.</p>
     `
 
   return html

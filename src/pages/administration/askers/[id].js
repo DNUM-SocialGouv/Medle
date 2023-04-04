@@ -103,7 +103,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
   const { ref: depCodeRef, ...depCodeReg } = register("depCode", {
     required: false,
     pattern: {
-      value: /^[0-9]{2,3}$/i,
+      value: /^2A|2B|[0-9]{2,3}$/i,
     },
   })
 

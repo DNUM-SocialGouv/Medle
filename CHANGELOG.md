@@ -1,3 +1,22 @@
+## [1.18.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.17.0...v1.18.0) (2023-02-23)
+
+
+### Bug Fixes
+* MED-58 : Problème export onglet "statistiques"
+* MED-59 : Mettre à jour le lien vers la FAQ dans le mail de réinitialisation de mot de passe
+* MED-60 : Outils de recherche onglet "Tous les actes"
+* MED-61 : Possibilité d'ajouter lettre dans le département pour l'ajout d'un établissement de santé
+
+
+## [1.17.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.16.0...v1.17.0) (2023-01-11)
+
+
+### Bug Fixes
+* MED-35 : ajouter des lettres dans le département
+
+### Features
+* MED-51 : augmentation de la capacité d'export
+
 ## [1.16.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.15.8...v1.16.0) (2022-11-15)
 
 
