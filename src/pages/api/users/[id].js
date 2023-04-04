@@ -2,7 +2,7 @@ import Cors from "micro-cors"
 
 import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../../../services/errorHelpers"
 import { del, find, update } from "../../../services/users"
-import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
+import { checkIsAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
 import {
   CORS_ALLOW_ORIGIN,
   METHOD_DELETE,
@@ -25,9 +25,9 @@ const handler = async (req, res) => {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
-        checkIsSuperAdmin(currentUser)
+        checkIsAdmin(currentUser)
 
-        const user = await find({ id }, currentUser)
+        const user = await find({ id, currentUser })
 
         if (!user) return sendNotFoundError(res)
 
@@ -36,7 +36,7 @@ const handler = async (req, res) => {
       case METHOD_DELETE: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
-        checkIsSuperAdmin(currentUser)
+        checkIsAdmin(currentUser)
 
         const deleted = await del({ id, currentUser })
 
@@ -47,7 +47,7 @@ const handler = async (req, res) => {
       case METHOD_PUT: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
-        checkIsSuperAdmin(currentUser)
+        checkIsAdmin(currentUser)
 
         const updated = await update({ id }, req.body, currentUser)
 
