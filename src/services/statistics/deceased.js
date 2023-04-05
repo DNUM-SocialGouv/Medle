@@ -115,7 +115,7 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 }
 
 export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
-  scopeFilter = scopeFilter && JSON.parse(scopeFilter)
+  scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
 
   const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } =
     await buildDeceasedStatistics({ endDate, scopeFilter, startDate }, currentUser)

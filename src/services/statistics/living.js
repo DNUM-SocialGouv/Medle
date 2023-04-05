@@ -134,7 +134,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
 }
 
 export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter, profile }, currentUser) => {
-  scopeFilter = scopeFilter && JSON.parse(scopeFilter)
+  scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
   const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } = await buildLivingStatistics(
     { endDate, profile, scopeFilter, startDate },
     currentUser,
