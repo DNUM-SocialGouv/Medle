@@ -32,7 +32,10 @@ exports.exportPilo = async () => {
 
     const startDate = dateParam.value && new Date(dateParam.value)
     const endDate = new Date(currentDate)
-
+    const dirPath = "./exports"
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath)
+    }
     const promises = tables.map(async (table) => {
       const tableData = await queryBuilder(table, startDate).where("created_at", "<=", endDate).select("*")
 
