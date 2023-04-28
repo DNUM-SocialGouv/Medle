@@ -3,7 +3,7 @@ require("dotenv").config()
 const next = require("next")
 const express = require("express")
 
-const crons = require("../src/crons/crons")
+const crons = require("../src/cron/init-cron")
 const pack = require("../package.json")
 
 const port = parseInt(process.env.PORT, 10) || 3000
