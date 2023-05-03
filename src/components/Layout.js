@@ -205,12 +205,14 @@ export const Footer = ({ currentUser }) => {
             <FooterDocument type={footerDocumentGestionCookies} label={"Gestion des cookies"} />
           </li>
           {currentUser && (
-            <li className="mb-2">
-              <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
-            </li>
-            <li className="mb-2">
-              <FooterDocument type={footerDocumentUserGuide} label={"Guide utilisateurs"} />
-            </li>
+            <>
+              <li className="mb-2">
+                <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
+              </li>
+              <li className="mb-2">
+                <FooterDocument type={footerDocumentUserGuide} label={"Guide utilisateurs"} />
+              </li>
+            </>
           )}
           {publicRuntimeConfig && publicRuntimeConfig.MAIL_CONTACT && (
             <li className="mb-2">
