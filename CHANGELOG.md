@@ -1,6 +1,8 @@
+## [1.18.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.18.0...v1.18.1) (2023-04-05)
+### Bug Fixes
+* MED-58 (fix retour): Corriger les donnés lors de l'export 
+
 ## [1.18.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.17.0...v1.18.0) (2023-02-23)
-
-
 ### Bug Fixes
 * MED-58 : Problème export onglet "statistiques"
 * MED-59 : Mettre à jour le lien vers la FAQ dans le mail de réinitialisation de mot de passe
