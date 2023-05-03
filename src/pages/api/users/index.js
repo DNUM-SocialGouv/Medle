@@ -2,8 +2,9 @@ import Cors from "micro-cors"
 
 import { sendAPIError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { create, search } from "../../../services/users"
-import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
-import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../utils/http"
+import sendWelcomeMail from "../../../services/users/send-mail"
+import { checkIsAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
+import { CORS_ALLOW_ORIGIN, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
 import { ADMIN } from "../../../utils/roles"
 
 const handler = async (req, res) => {
@@ -16,7 +17,7 @@ const handler = async (req, res) => {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
-        checkIsSuperAdmin(currentUser)
+        checkIsAdmin(currentUser)
 
         const { users, totalCount, currentPage, maxPage, byPage } = await search({ ...req.query, currentUser })
 
@@ -25,9 +26,11 @@ const handler = async (req, res) => {
       case METHOD_POST: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
-        checkIsSuperAdmin(currentUser)
+        checkIsAdmin(currentUser)
 
         const id = await create(req.body, currentUser)
+
+        sendWelcomeMail(req.body.email)
 
         return res.status(STATUS_200_OK).json({ id })
       }

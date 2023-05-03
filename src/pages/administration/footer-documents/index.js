@@ -15,6 +15,7 @@ import {
   footerDocumentFAQ,
   footerDocumentGestionCookies,
   footerDocumentMentionsLegales,
+  footerDocumentUserGuide,
 } from "../../../utils/documentsConstants"
 import { isEmpty } from "../../../utils/misc"
 import { ADMIN } from "../../../utils/roles"
@@ -44,6 +45,8 @@ const AdminFooterLinkPage = ({ currentUser }) => {
     register("footerDocumentGestionCookies")
 
   const { ref: footerDocumentFAQRef, ...footerDocumentFAQReg } = register("footerDocumentFAQ")
+
+  const { ref: footerDocumentUserGuideRef, ...footerDocumentUserGuideReg } = register("footerDocumentUserGuide")
 
   const onSubmitFooterDocumentAccessibilite = async (data) => {
     setStatus({ type: "pending" })
@@ -112,6 +115,19 @@ const AdminFooterLinkPage = ({ currentUser }) => {
       if (isEmpty(formErrors)) {
         await updateFooterDocument({ footerDocument: data.footerDocumentFAQ[0] }, footerDocumentFAQ)
         setStatus({ message: "Document 'Foire aux questions' mis à jour.", type: "success" })
+      }
+    } catch (error) {
+      console.error(`Error when trying to change document`, error)
+      setStatus({ message: messageStatusError, type: "error" })
+    }
+  }
+
+  const onSubmitFooterDocumentUserGuide = async (data) => {
+    setStatus({ type: "pending" })
+    try {
+      if (isEmpty(formErrors)) {
+        await updateFooterDocument({ footerDocument: data.footerDocumentUserGuide[0] }, footerDocumentUserGuide)
+        setStatus({ message: "Document 'Guide utilisateurs' mis à jour.", type: "success" })
       }
     } catch (error) {
       console.error(`Error when trying to change document`, error)
@@ -250,6 +266,30 @@ const AdminFooterLinkPage = ({ currentUser }) => {
             {"Valider document 'Foire aux questions'"}
           </Button>
         </Form>
+
+        <Form onSubmit={handleSubmit(onSubmitFooterDocumentUserGuide)} className="align-items-baseline row">
+          <Label for={footerDocumentUserGuide} className="col-sm-4">
+            Guide Utilisateurs :
+          </Label>
+          <Input
+            type="file"
+            accept="application/pdf"
+            {...footerDocumentUserGuideReg}
+            innerRef={footerDocumentUserGuideRef}
+            invalid={!!formErrors.footerDocumentUserGuide}
+            name={footerDocumentUserGuide}
+            id={footerDocumentUserGuide}
+            className="col-sm-4"
+          />
+          <FormFeedback>{formErrors.footerDocumentUserGuide && "Un document est requis."}</FormFeedback>
+          <Button
+            className="px-4 mt-5 col-sm-4"
+            color="primary"
+            onClick={handleSubmit(onSubmitFooterDocumentUserGuide)}
+          >
+            {"Valider document 'Guide Utilisateurs'"}
+          </Button>
+        </Form>
       </Container>
     </Layout>
   )
@@ -262,6 +302,7 @@ AdminFooterLinkPage.propTypes = {
   footerDocumentDonneesPersonnelles: PropTypes.object,
   footerDocumentGestionCookies: PropTypes.object,
   footerDocumentFAQ: PropTypes.object,
+  footerDocumentUserGuide: PropTypes.object,
 }
 AdminFooterLinkPage.getInitialProps = async () => {
   return {}
