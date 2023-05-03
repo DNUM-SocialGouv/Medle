@@ -71,6 +71,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
               "Sexuelle",
               "Maltraitance",
               "Violence psychologique",
+              "Soumission chimique",
               { title: "Accident", subValues: ["Collectif", "Non collectif"] },
               { title: "Attentat", subValues: getReferenceData("attacks").map((elt) => elt.year + " " + elt.name) },
             ]}
