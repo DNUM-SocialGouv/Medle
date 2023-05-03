@@ -204,10 +204,10 @@ export const Footer = ({ currentUser }) => {
           <li className="mb-2">
             <FooterDocument type={footerDocumentGestionCookies} label={"Gestion des cookies"} />
           </li>
-          <li className="mb-2">
-            <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
-          </li>
           {currentUser && (
+            <li className="mb-2">
+              <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
+            </li>
             <li className="mb-2">
               <FooterDocument type={footerDocumentUserGuide} label={"Guide utilisateurs"} />
             </li>
