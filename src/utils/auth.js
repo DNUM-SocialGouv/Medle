@@ -10,7 +10,7 @@ import { STATUS_401_UNAUTHORIZED, STATUS_403_FORBIDDEN } from "./http"
 import { clearReferenceData, fetchReferenceData } from "./init"
 import { checkToken, decodeToken } from "./jwt"
 import { logDebug, logError } from "./logger"
-import { isAllowed, startPageForRole, SUPER_ADMIN } from "./roles"
+import { ADMIN_HOSPITAL, isAllowed, startPageForRole, SUPER_ADMIN } from "./roles"
 
 /**
  * Remarks on cookie & session storage:
@@ -176,6 +176,15 @@ export const redirectIfUnauthorized = (error, ctx) => {
 
 export const checkIsSuperAdmin = (currentUser) => {
   if (currentUser?.role !== SUPER_ADMIN) {
+    throw new APIError({
+      message: `Not allowed role (${currentUser.email ? currentUser.email : "unknown user"})`,
+      status: STATUS_403_FORBIDDEN,
+    })
+  }
+}
+
+export const checkIsAdmin = (currentUser) => {
+  if (currentUser?.role !== ADMIN_HOSPITAL && currentUser?.role !== SUPER_ADMIN) {
     throw new APIError({
       message: `Not allowed role (${currentUser.email ? currentUser.email : "unknown user"})`,
       status: STATUS_403_FORBIDDEN,

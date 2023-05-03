@@ -23,13 +23,20 @@ import {
 } from "reactstrap"
 
 import { searchHospitalsFuzzy } from "../../../clients/hospitals"
-import { createUser, deleteUser, findUser, updateUser, resetUserPasswordByAdmin } from "../../../clients/users"
+import { createUser, deleteUser, findUser, resetUserPasswordByAdmin, updateUser } from "../../../clients/users"
 import Layout from "../../../components/Layout"
 import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logDebug, logError } from "../../../utils/logger"
 import { isEmpty } from "../../../utils/misc"
-import { ADMIN, ADMIN_HOSPITAL, availableRolesForUser, ROLES_DESCRIPTION, rulesOfRoles } from "../../../utils/roles"
+import {
+  ADMIN,
+  ADMIN_HOSPITAL,
+  availableRolesForUser,
+  ROLES_DESCRIPTION,
+  rulesOfRoles,
+  SUPER_ADMIN,
+} from "../../../utils/roles"
 import { ariaLiveMessagesFR, mapArrayForSelect, mapForSelect, reactSelectCustomTheme } from "../../../utils/select"
 
 const MandatorySign = () => (
@@ -41,7 +48,6 @@ const MandatorySign = () => (
 // React component : only available for ADMIN or ADMIN_HOSPITAL
 const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const router = useRouter()
-  const { id } = router.query
 
   const {
     handleSubmit,
@@ -57,7 +63,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       email: initialUser.email,
       role: initialUser.role,
       scope: initialUser.scope,
-      hospital: initialUser.hospital || currentUser?.hospital, // use ADMIN_HOSPITAL's hospital for creation
+      hospital: initialUser.role !== SUPER_ADMIN ? initialUser.hospital || currentUser?.hospital : null, // use ADMIN_HOSPITAL's hospital for creation
     },
   })
 
@@ -137,7 +143,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
 
     const res = async () => {
       try {
-        const res = await resetUserPasswordByAdmin({ id: formId })
+        await resetUserPasswordByAdmin({ id: formId })
       } catch (error) {
         setError(error.message || "Erreur serveur.")
       }
@@ -479,24 +485,26 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
               </Col>
             </FormGroup>
           )}
-          <div className="justify-content-center d-flex">
-            <Link href="/administration/users">
-              <Button className="px-4 mt-3 mr-3" outline color="primary">
-                Annuler
+          {!error && (
+            <div className="justify-content-center d-flex">
+              <Link href="/administration/users">
+                <Button className="px-4 mt-3 mr-3" outline color="primary">
+                  Annuler
+                </Button>
+              </Link>
+              <Button className="px-4 mt-3" color="primary">
+                {formId ? "Modifier" : "Ajouter"}
               </Button>
-            </Link>
-            <Button className="px-4 mt-3" color="primary">
-              {formId ? "Modifier" : "Ajouter"}
-            </Button>
-          </div>
+            </div>
+          )}
           {formId && (
             <div style={{ border: "1px solid #EE0700" }} className="px-4 pt-3 pb-4 mt-5 rounded">
               <Title1 className="mb-4 mt-2">Zone dangereuse</Title1>
               <div className="d-flex justify-content-between align-items-center">
                 Je réinitialise le mot de passe de cet utilisateur
-                  <Button color="warning" onClick={toggleResetPassword} style={{ minWidth: 150 }}>
-                    Réinitialiser
-                  </Button>
+                <Button color="warning" onClick={toggleResetPassword} style={{ minWidth: 150 }}>
+                  Réinitialiser
+                </Button>
               </div>
               <div className="d-flex justify-content-between align-items-center mt-3">
                 Je supprime cet utilisateur
@@ -509,10 +517,12 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
         </Form>
         <div>
           <Modal isOpen={modalResetPassword} toggle={toggleResetPassword}>
-            <ModalHeader toggle={toggleResetPassword}>Voulez-vous vraiment réinitialiser le mot de passe de cet utilisateur?</ModalHeader>
+            <ModalHeader toggle={toggleResetPassword}>
+              Voulez-vous vraiment réinitialiser le mot de passe de cet utilisateur?
+            </ModalHeader>
             <ModalBody>
-              Un lien de réinitialisation de mot de passe valable 1H sera envoyé à l'utilisateur par email.
-              Merci de confirmer votre choix.
+              Un lien de réinitialisation de mot de passe valable 1H sera envoyé à l&apos;utilisateur par email. Merci
+              de confirmer votre choix.
             </ModalBody>
             <ModalFooter>
               <Button color="primary" outline onClick={toggleResetPassword}>

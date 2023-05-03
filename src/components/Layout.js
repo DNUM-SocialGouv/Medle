@@ -43,6 +43,7 @@ import {
   footerDocumentFAQ,
   footerDocumentGestionCookies,
   footerDocumentMentionsLegales,
+  footerDocumentUserGuide,
 } from "../utils/documentsConstants"
 import {
   ACT_CONSULTATION,
@@ -206,6 +207,9 @@ export const Footer = ({ currentUser }) => {
           {currentUser && (
             <li className="mb-2">
               <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
+            </li>
+            <li className="mb-2">
+              <FooterDocument type={footerDocumentUserGuide} label={"Guide utilisateurs"} />
             </li>
           )}
           {publicRuntimeConfig && publicRuntimeConfig.MAIL_CONTACT && (

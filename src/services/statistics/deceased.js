@@ -6,17 +6,19 @@ import { buildScope } from "../../utils/scope"
 import { findList as findListHospitals } from "../hospitals"
 import { addCellTitle, intervalDays, normalizeInputs } from "./common"
 
-const makeWhereClause = ({ startDate, endDate, scopeFilter = [] }) => (builder) => {
-  builder
-    .whereNull("deleted_at")
-    .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-    .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
-    .where("profile", "Personne décédée")
+const makeWhereClause =
+  ({ startDate, endDate, scopeFilter = [] }) =>
+  (builder) => {
+    builder
+      .whereNull("deleted_at")
+      .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+      .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+      .where("profile", "Personne décédée")
 
-  if (scopeFilter.length) {
-    builder.whereIn("hospital_id", scopeFilter)
+    if (scopeFilter.length) {
+      builder.whereIn("hospital_id", scopeFilter)
+    }
   }
-}
 
 /**
  * Request and format the deceased statistics.
@@ -113,17 +115,10 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 }
 
 export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
-  scopeFilter = !Array.isArray(scopeFilter) ? scopeFilter.split(",").map(Number) : scopeFilter
+  scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
 
-  const {
-    inputs,
-    globalCount,
-    averageCount,
-    actsWithPv,
-    actTypes,
-    hours,
-    examinations,
-  } = await buildDeceasedStatistics({ endDate, scopeFilter, startDate }, currentUser)
+  const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } =
+    await buildDeceasedStatistics({ endDate, scopeFilter, startDate }, currentUser)
 
   const hospitals = await findListHospitals(scopeFilter)
 

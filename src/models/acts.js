@@ -1,4 +1,3 @@
-import formatISO from "date-fns/formatISO"
 import moment from "moment"
 
 import { ISO_DATE } from "../utils/date"
@@ -30,7 +29,9 @@ export const transformForExport = (knexData) => {
     ? null
     : {
         asker: knexData.asker_name,
-        examinationDate: formatISO(knexData.examination_date, { representation: "date" }),
+        examinationDate: knexData.examination_date
+          ? new Date(knexData.examination_date).toISOString().split("T")[0]
+          : null,
         hospital: knexData.hospital_name,
         id: knexData.id,
         internalNumber: knexData.internal_number,
