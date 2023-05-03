@@ -103,9 +103,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 }
 
 export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
-  // export is called by GET method and GET method doesn't have Content-type = "application/json" by design,
-  // so in this case we have to explicitly parse the params
-  scopeFilter = scopeFilter && JSON.parse(scopeFilter)
+  scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
 
   const { inputs, globalCount, averageCount, profilesDistribution, actsWithSamePV, averageWithSamePV } =
     await buildGlobalStatistics({ endDate, scopeFilter, startDate }, currentUser)
