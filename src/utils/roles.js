@@ -108,7 +108,7 @@ export const availableRolesForUser = (user) => {
         "SUPER_ADMIN",
       ]
     case "ADMIN_HOSPITAL":
-      return ["OPERATOR_ACT", "OPERATOR_EMPLOYMENT", "GUEST_HOSPITAL", "OPERATOR_GENERIC"]
+      return ["OPERATOR_ACT", "OPERATOR_EMPLOYMENT", "OPERATOR_GENERIC"]
 
     default:
       throw Error("This case is not expected to happen.")
