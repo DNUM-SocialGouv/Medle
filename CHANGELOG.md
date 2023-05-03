@@ -1,3 +1,11 @@
+## [1.19.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.18.1...v1.19.0) (2023-05-03)
+### Features
+* MED-52 : augmentation de la taille des messages 500 -> 1000
+* MED-32 : voir faq que lorsqu'on est connecté
+* MED-54 : ajout d'un champ soumission chimique
+* MED-53 : ajout de la fonctionnalité pour les users admin hopital + ajout de mail
+* MED-64 : Pilo + compression de fichiers csv  
+
 ## [1.18.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.18.0...v1.18.1) (2023-04-05)
 ### Bug Fixes
 * MED-58 (fix retour): Corriger les donnés lors de l'export 
