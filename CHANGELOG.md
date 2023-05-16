@@ -1,3 +1,7 @@
+## [1.19.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.0...v1.19.1) (2023-05-16)
+### Features
+* MED-53 : changer l'objet du mail
+
 ## [1.19.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.18.1...v1.19.0) (2023-05-03)
 ### Features
 * MED-52 : augmentation de la taille des messages 500 -> 1000
