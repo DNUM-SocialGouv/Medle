@@ -61,7 +61,7 @@ function buildHtml() {
 async function sendWelcomeMail(email) {
   const info = await sendMail({
     html: buildHtml(),
-    subject: "Demande de réinitialisation de mot de passe Medlé",
+    subject: "Création de votre compte MedLé",
     to: email,
   })
 
