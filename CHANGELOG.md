@@ -1,3 +1,7 @@
+## [1.19.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.1...v1.19.2) (2023-05-25)
+### Features
+* MED-53 (retour): fix delete and wording
+
 ## [1.19.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.0...v1.19.1) (2023-05-16)
 ### Features
 * MED-53 : changer l'objet du mail
