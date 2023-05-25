@@ -13,7 +13,7 @@ function buildHtml() {
     identifiant. Vous devez configurer votre mot de passe en cliquant sur « J'ai oublié mon mot de passe ? » sur 
     la page d'accueil.</p>
     
-    <p>Pour toute questions, vous pouvez consulter 
+    <p>Pour toutes questions, vous pouvez consulter 
     <a href="${APP_URL}/api/footer-documents?type=footerDocumentUserGuide">le guide utilisateurs</a>, 
     <a href="${APP_URL}/api/footer-documents?type=footerDocumentFAQ">la foire aux questions</a>,
     ou contacter l'équipe MedLé à l'adresse contact-medle@sante.gouv.fr.</p>
