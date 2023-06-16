@@ -114,11 +114,10 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
       </Head>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
-          <Link href="/administration/askers">
-            <a style={{ color: "#376FE6" }}>
+          <Link href="/administration/askers"
+            style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour à la liste
-            </a>
           </Link>
           <Title1>{asker?.id ? "Détails du demandeur " + asker?.name : "Ajouter un demandeur"}</Title1>
           <span>&nbsp;</span>
@@ -132,12 +131,12 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
             <div>
               <Link href="/administration/askers">
                 <Button className="mr-3" color="primary">
-                  <a>Retour à la liste</a>
+                  Retour à la liste
                 </Button>
               </Link>
               <Link href="/administration/askers/[id]" as={`/administration/askers/new`}>
                 <Button color="primary">
-                  <a>Ajouter</a>
+                  Ajouter
                 </Button>
               </Link>
             </div>

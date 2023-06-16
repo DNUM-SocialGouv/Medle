@@ -33,6 +33,7 @@ export const logout = async () => {
 }
 
 export const registerAndRedirectUser = (user, token) => {
+  console.log ("ABE DEBUG +++ DEBUT registerAndRedirectUser" )
   sessionStorage.setItem("currentUser", JSON.stringify(user))
   if (user.resetPassword) {
     Router.push(`/reset-password?loginToken=${token}`)
@@ -40,6 +41,8 @@ export const registerAndRedirectUser = (user, token) => {
     fetchReferenceData()
     Router.push(startPageForRole(user.role))
   }
+  console.log ("ABE DEBUG +++ FIN registerAndRedirectUser" )
+
 }
 
 export const afterRefreshToken = (user) => {

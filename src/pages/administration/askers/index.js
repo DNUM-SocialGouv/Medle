@@ -39,12 +39,10 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
       >
         <Title1 className="">{"Administration des demandeurs"}</Title1>
         <Link href="/administration/askers/[id]" as={`/administration/askers/new`}>
-          <a>
             <SearchButton className="btn-outline-primary">
               <AddIcon />
               &nbsp; Ajouter
             </SearchButton>
-          </a>
         </Link>
       </Container>
 
@@ -99,10 +97,9 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
                       </td>
                       <td>{asker.depCode}</td>
                       <td>
-                        <Link href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}>
-                          <a className="text-decoration-none" aria-label={"Voir le demandeur " + asker.name}>
+                        <Link href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}
+                           className="text-decoration-none" aria-label={"Voir le demandeur " + asker.name}>
                             Voir
-                          </a>
                         </Link>
                       </td>
                     </tr>

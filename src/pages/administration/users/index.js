@@ -39,12 +39,10 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
       >
         <Title1 className="">{"Administration des utilisateurs"}</Title1>
         <Link href="/administration/users/[id]" as={`/administration/users/new`}>
-          <a>
             <SearchButton className="btn-outline-primary">
               <AddIcon />
               &nbsp; Ajouter
             </SearchButton>
-          </a>
         </Link>
       </Container>
 
@@ -102,13 +100,11 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
                       <td>{user.role && ROLES_DESCRIPTION[user.role]}</td>
                       <td>{user.hospital && user.hospital.name}</td>
                       <td>
-                        <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
-                          <a
+                        <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}
                             className="text-decoration-none"
                             aria-label={"Voir l'utilisateur " + user.firstName + " " + user.lastName}
                           >
                             Voir
-                          </a>
                         </Link>
                       </td>
                     </tr>

@@ -60,10 +60,8 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
       <Container style={{ maxWidth: 780 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
           <Link href="/acts">
-            <a>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour à la liste
-            </a>
           </Link>
           <Title1 aria-label={`Acte numéro ${(act && act.internalNumber) || ""}`}>{`Acte n° ${
             (act && act.internalNumber) || ""

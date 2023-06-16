@@ -46,12 +46,10 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
       >
         <Title1 className="">{"Administration des établissements"}</Title1>
         <Link href="/administration/hospitals/[id]" as={`/administration/hospitals/new`}>
-          <a>
             <SearchButton className="btn-outline-primary">
               <AddIcon />
               &nbsp; Ajouter
             </SearchButton>
-          </a>
         </Link>
       </Container>
 
@@ -113,10 +111,9 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                       <td>{hospital.town}</td>
                       <td>{hospital.postalCode}</td>
                       <td>
-                        <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hospital.id}`}>
-                          <a className="text-decoration-none" aria-label={"Voir l'établissement " + hospital.name}>
+                        <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hospital.id}`}
+                           className="text-decoration-none" aria-label={"Voir l'établissement " + hospital.name}>
                             Voir
-                          </a>
                         </Link>
                       </td>
                     </tr>

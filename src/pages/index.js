@@ -31,12 +31,16 @@ const LoginPage = ({ message, welcomeMessage }) => {
 
         try {
           checkUserData(userData)
-
+          console.log("ABE DEBUG +++++" + userData )
           const { user, token } = await authenticate(email, password)
-
+          console.log("ABE DEBUG +++++ user" + user + "token "+ token )
           registerAndRedirectUser(user, token)
           trackEvent(CATEGORY.auth, ACTION.auth.connection)
+          console.log("ABE DEBUG +++++ FIN trackEvent" )
+
           resolve("OK")
+          console.log("ABE DEBUG +++++ FIN resolve(OK)" )
+
         } catch (error) {
           logError(error)
           if (STATUS_429_TOO_MANY_REQUESTS === error.status) {

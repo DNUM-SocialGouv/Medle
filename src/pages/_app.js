@@ -17,9 +17,11 @@ const theme = {
   },
 }
 
+/*
 Sentry.init({
   dsn: publicRuntimeConfig.SENTRY_DSN,
 })
+*/
 
 export default class MyApp extends App {
   componentDidMount() {

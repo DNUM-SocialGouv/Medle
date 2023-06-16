@@ -148,11 +148,11 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
         <div className="d-flex justify-content-between">
-          <Link href="/administration/hospitals">
-            <a style={{ color: "#376FE6" }}>
+          <Link href="/administration/hospitals"
+            style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour à la liste
-            </a>
+            
           </Link>
         </div>
 
@@ -161,7 +161,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
         {id ? (
           <Link href="/administration/hospitals/[hid]/employments" as={`/administration/hospitals/${id}/employments`}>
             <Button outline color="primary">
-              <a>Gérer les ETP de référence</a>
+              Gérer les ETP de référence
             </Button>
           </Link>
         ) : (
@@ -178,12 +178,12 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
             <div>
               <Link href="/administration/hospitals">
                 <Button className="mr-3" color="primary">
-                  <a>Retour à la liste</a>
+                 Retour à la liste
                 </Button>
               </Link>
               <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/new`}>
                 <Button color="primary">
-                  <a>Ajouter</a>
+                  Ajouter
                 </Button>
               </Link>
             </div>

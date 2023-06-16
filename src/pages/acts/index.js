@@ -358,10 +358,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                       <td>{act.profile}</td>
                       <td>{act.examinationTypes && <VerticalList content={act.examinationTypes} />}</td>
                       <td className="text-decoration">
-                        <Link href="/acts/[id]" as={`/acts/${act.id}`}>
-                          <a className="text-decoration-none" aria-label={"Voir l'acte numéro " + act.internalNumber}>
+                        <Link href="/acts/[id]" as={`/acts/${act.id}`}
+                           className="text-decoration-none" aria-label={"Voir l'acte numéro " + act.internalNumber}>
                             Voir
-                          </a>
                         </Link>
                       </td>
                     </tr>

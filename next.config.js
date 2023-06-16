@@ -1,5 +1,5 @@
-const withPlugins = require("next-compose-plugins")
-const withTM = require("next-transpile-modules")(["d3-scale", "d3-array"])
+// a enlever sinon le serveur ne demarre pas
+//const withTM = require("next-transpile-modules")(["d3-scale", "d3-array"])
 const images = require("remark-images")
 const emoji = require("remark-emoji")
 
@@ -11,12 +11,12 @@ const withMDX = require("@next/mdx")({
 })
 
 const nextConfig = {
-  future: {
+  /* future: {
     webpack5: true,
   },
   cssLoaderOptions: {
     url: false,
-  },
+  },*/
   publicRuntimeConfig: {
     // Will be available on both server and client. Needs getInitialProps on page to be available
     // APP_BASE_URL variable is available on the deployment environment only
@@ -64,15 +64,5 @@ const nextConfig = {
   },
 }
 
-module.exports = withPlugins(
-  [
-    [withTM],
-    [
-      withMDX,
-      {
-        pageExtensions: ["js", "jsx", "md", "mdx"],
-      },
-    ],
-  ],
-  nextConfig,
-)
+const plugins = [withMDX ]
+module.exports = () => plugins.reduce((acc, next) => next(acc), nextConfig)

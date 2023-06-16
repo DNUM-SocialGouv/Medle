@@ -261,10 +261,9 @@ const ListEmploymentsHospital = ({ currentUser }) => {
                   <td>{lastEdits[hospital.id]?.lastAddedMonth}</td>
                   <td>{lastEdits[hospital.id]?.lastUpdated}</td>
                   <td>
-                    <Link href="/employments/[[...hid]]" as={`/employments/${hospital?.id}`}>
-                      <a className="text-decoration-none" aria-label={"Voir la déclaration de " + hospital.name}>
+                    <Link href="/employments/[[...hid]]" as={`/employments/${hospital?.id}`}
+                     className="text-decoration-none" aria-label={"Voir la déclaration de " + hospital.name}>
                         Voir<span aria-hidden="true">&nbsp;&gt;</span>
-                      </a>
                     </Link>
                   </td>
                 </tr>
