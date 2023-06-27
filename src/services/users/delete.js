@@ -13,7 +13,7 @@ const makeWhereClause = (currentUser) => (builder) => {
 
   // ADMIN_HOSPITAL can only delete user of his own hospital
   if (currentUser.role === ADMIN_HOSPITAL) {
-    builder.where("hospital_id", currentUser.hospitalId)
+    builder.where("hospital_id", currentUser.hospital.id)
   }
 }
 

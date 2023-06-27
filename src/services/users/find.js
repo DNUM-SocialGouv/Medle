@@ -2,6 +2,7 @@ import knex from "../../knex/knex"
 import { transform } from "../../models/users"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
+import { ADMIN_HOSPITAL } from "../../utils/roles"
 import { buildScope } from "../../utils/scope"
 import { makeWhereClause } from "./common"
 
@@ -14,23 +15,27 @@ export const find = async ({ id, currentUser }) => {
   }
 
   const scope = buildScope(currentUser)
-
-  let [user] = await knex("users")
+  let query = knex("users")
     .leftJoin("hospitals", "users.hospital_id", "hospitals.id")
     .where("users.id", id)
     .where(makeWhereClause({ scope }))
-    .select(
-      "users.id",
-      "users.first_name",
-      "users.last_name",
-      "users.email",
-      "users.password",
-      "users.role",
-      "users.hospital_id",
-      "hospitals.name as hospital_name",
-      "users.scope",
-      "users.reset_password"
-    )
+
+  if (currentUser.role === ADMIN_HOSPITAL) {
+    query = query.where("users.hospital_id", currentUser?.hospital?.id)
+  }
+
+  let [user] = await query.select(
+    "users.id",
+    "users.first_name",
+    "users.last_name",
+    "users.email",
+    "users.password",
+    "users.role",
+    "users.hospital_id",
+    "hospitals.name as hospital_name",
+    "users.scope",
+    "users.reset_password",
+  )
 
   user = transform(user)
 
