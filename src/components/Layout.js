@@ -188,8 +188,8 @@ export const Footer = ({ currentUser }) => {
       <Row>
         <ul className="pl-0 list-unstyled inline intern">
           <li className="mb-2">
-            <Link href={"/sitemap"}>
-              <a>{"Plan du site"}</a>
+            <Link style={{color: "black", padding: "0 15px"}} href={"/sitemap"}>
+              Plan du site
             </Link>
           </li>
           <li className="mb-2">
@@ -289,60 +289,54 @@ const Sidebar = ({ page, currentUser }) => {
         <ul>
           {isAllowed(currentUser.role, ACT_MANAGEMENT) && currentUser.role !== SUPER_ADMIN && (
             <li>
-              <Link href="/acts/declaration">
-                <a
-                  className={
-                    "list-group-item list-group-item-action " + (page === "declaration" ? "selected" : "unselected")
-                  }
+              <Link href="/acts/declaration" 
+                className={
+                  "list-group-item list-group-item-action " + (page === "declaration" ? "selected" : "unselected")
+                }
                   aria-current={page === "declaration" ? "true" : "false"}
-                >
-                  <AddCircleOutlineIcon width={30} />
-                  <br />
-                  {"Ajout d'acte"}
-                </a>
+                > 
+                <AddCircleOutlineIcon width={30} /> 
+                <br />
+                Ajout d'acte
               </Link>
+              
             </li>
           )}
           {isAllowed(currentUser.role, ACT_CONSULTATION) && (
             <li>
-              <Link href="/acts">
-                <a
+              <Link href="/acts"
+                
                   className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}
                   id="navigation"
                   aria-current={page === "acts" ? "true" : "false"}
                 >
                   <FormatListBulletedIcon width={30} /> <br />
-                  {"Tous les actes"}
-                </a>
+                  Tous les actes
               </Link>
             </li>
           )}
           {isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
             <li>
-              <Link href="/employments">
-                <a
+              <Link href="/employments"
                   className={
                     "list-group-item list-group-item-action " + (page === "employments" ? "selected" : "unselected")
                   }
                   aria-current={page === "employments" ? "true" : "false"}
                 >
                   <GroupIcon width={30} /> <br />
-                  {"Personnel"}
-                </a>
+                  Personnel
               </Link>
             </li>
           )}
           <li>
-            <Link href="/statistics">
-              <a
+            <Link href="/statistics"
                 className={
                   "list-group-item list-group-item-action " + (page === "statistics" ? "selected" : "unselected")
                 }
                 aria-current={page === "statistics" ? "true" : "false"}
               >
                 <EqualizerIcon width={30} /> <br />
-                {"Statistiques"}
-              </a>
+                Statistiques
             </Link>
           </li>
           {/* <Link href="/_error"> */}
@@ -364,11 +358,10 @@ const Sidebar = ({ page, currentUser }) => {
           {/* <Link href="/_error"> */}
           {isOpenFeature("administration") && isAllowed(currentUser.role, ADMIN) && (
             <li>
-              <Link href="/administration/users">
-                <a className="list-group-item list-group-item-action">
+              <Link href="/administration/users"
+                 className="list-group-item list-group-item-action">
                   <SettingsIcon width={30} /> <br />
-                  {"Administration"}
-                </a>
+                  Administration
               </Link>
             </li>
           )}{" "}
@@ -418,103 +411,85 @@ const SidebarAdmin = ({ page, currentUser }) => {
         className="text-center list-group list-group-flush"
       >
         {isAllowed(currentUser.role, ADMIN) && (
-          <Link href="/administration/users">
-            <a
+          <Link href="/administration/users"
               className={"list-group-item list-group-item-action " + (page === "users" ? "selected" : "unselected")}
               id="adminNavigation"
               aria-current={page === "users" ? "true" : "false"}
             >
               <FaceIcon width={30} />
-
               <br />
-              {"Utilisateurs"}
-            </a>
+              Utilisateurs
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/hospitals">
-            <a
+          <Link href="/administration/hospitals"
               className={"list-group-item list-group-item-action " + (page === "hospitals" ? "selected" : "unselected")}
               aria-current={page === "hospitals" ? "true" : "false"}
             >
               <ApartmentIcon width={30} /> <br />
-              {"Établissements"}
-            </a>
+              Établissements
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/askers">
-            <a
+          <Link href="/administration/askers"
               className={"list-group-item list-group-item-action " + (page === "askers" ? "selected" : "unselected")}
               aria-current={page === "askers" ? "true" : "false"}
             >
               <AccountBalanceIcon width={30} /> <br />
-              {"Demandeurs"}
-            </a>
+              Demandeurs
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/attacks">
-            <a
+          <Link href="/administration/attacks"
               className={"list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")}
               aria-current={page === "attacks" ? "true" : "false"}
             >
               <WhatshotIcon width={30} /> <br />
-              {"Attentats"}
-            </a>
+              Attentats
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/acts">
-            <a
+          <Link href="/administration/acts"
               className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}
               aria-current={page === "acts" ? "true" : "false"}
             >
               <ReceiptIcon width={30} /> <br />
-              {"Actes"}
-            </a>
+              Actes
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/messages">
-            <a
+          <Link href="/administration/messages"
               className={"list-group-item list-group-item-action " + (page === "messages" ? "selected" : "unselected")}
               aria-current={page === "messages" ? "true" : "false"}
             >
               <AnnouncementIcon width={30} /> <br />
-              {"Messages"}
-            </a>
+              Messages
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/logos">
-            <a
+          <Link href="/administration/logos"
               className={"list-group-item list-group-item-action " + (page === "logos" ? "selected" : "unselected")}
               aria-current={page === "logos" ? "true" : "false"}
             >
               <ImageIcon width={30} /> <br />
-              {"Logos"}
-            </a>
+              Logos
           </Link>
         )}
         {currentUser.role === SUPER_ADMIN && (
-          <Link href="/administration/footer-documents">
-            <a
+          <Link href="/administration/footer-documents"
               className={
                 "list-group-item list-group-item-action " + (page === "footer-documents" ? "selected" : "unselected")
               }
               aria-current={page === "footer-documents" ? "true" : "false"}
             >
               <LinkRoundedIcon width={30} /> <br />
-              {"Documents du pied de page"}
-            </a>
+              Documents du pied de page
           </Link>
         )}
-        <Link href={startPageForRole(currentUser.role)}>
-          <a className="list-group-item list-group-item-action">
+        <Link href={startPageForRole(currentUser.role)}
+           className="list-group-item list-group-item-action">
             <ArrowBackIcon width={30} /> <br />
-            {"Retour"}
-          </a>
+            Retour
         </Link>
       </nav>
       <style jsx>{`

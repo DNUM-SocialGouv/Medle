@@ -114,11 +114,10 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
       </Head>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
-          <Link href="/administration/attacks">
-            <a style={{ color: "#376FE6" }}>
+          <Link href="/administration/attacks"
+            style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour à la liste
-            </a>
           </Link>
           <Title1>{attack?.id ? "Détails de l'attentat " + attack?.name : "Ajouter un attentat"}</Title1>
           <span>&nbsp;</span>
@@ -132,12 +131,12 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
             <div>
               <Link href="/administration/attacks">
                 <Button className="mr-3" color="primary">
-                  <a>Retour à la liste</a>
+                  Retour à la liste
                 </Button>
               </Link>
               <Link href="/administration/attacks/[id]" as={`/administration/attacks/new`}>
                 <Button color="primary">
-                  <a>Ajouter</a>
+                  Ajouter
                 </Button>
               </Link>
             </div>

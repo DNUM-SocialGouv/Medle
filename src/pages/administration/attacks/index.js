@@ -2,6 +2,7 @@ import AddIcon from "@material-ui/icons/Add"
 import Head from "next/head"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
+import { useRouter } from "next/router"
 import React, { useState } from "react"
 import { Alert, Col, Container, Form, FormGroup, Spinner, Table } from "reactstrap"
 
@@ -16,6 +17,7 @@ import { logError } from "../../../utils/logger"
 import { ADMIN } from "../../../utils/roles"
 
 const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
+  const router = useRouter()
   const [search, setSearch] = useState("")
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchAttacksFuzzy, initialPaginatedData)
 
@@ -39,12 +41,10 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
       >
         <Title1 className="">{"Administration des attentats"}</Title1>
         <Link href="/administration/attacks/[id]" as={`/administration/attacks/new`}>
-          <a>
             <SearchButton className="btn-outline-primary">
               <AddIcon />
               &nbsp; Ajouter
             </SearchButton>
-          </a>
         </Link>
       </Container>
 
@@ -92,8 +92,7 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
               </thead>
               <tbody>
                 {paginatedData.elements.map((attack) => (
-                  <Link key={attack.id} href="/administration/attacks/[id]" as={`/administration/attacks/${attack.id}`}>
-                    <tr style={{ cursor: "pointer" }}>
+                    <tr style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/attacks/${attack.id}`)}>
                       <td>
                         <b>{`${attack.name}`}</b>
                       </td>
@@ -101,14 +100,12 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
                         <b>{attack.year}</b>
                       </td>
                       <td>
-                        <Link href="/administration/attacks/[id]" as={`/administration/attacks/${attack.id}`}>
-                          <a className="text-decoration-none" aria-label={"Voir l'attentat " + attack.name}>
+                        <Link href="/administration/attacks/[id]" as={`/administration/attacks/${attack.id}`}
+                         className="text-decoration-none" aria-label={"Voir l'attentat " + attack.name}>
                             Voir
-                          </a>
                         </Link>
                       </td>
                     </tr>
-                  </Link>
                 ))}
               </tbody>
             </Table>

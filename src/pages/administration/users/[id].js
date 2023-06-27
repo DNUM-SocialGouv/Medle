@@ -312,11 +312,10 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       </Head>
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
-          <Link href="/administration/users">
-            <a style={{ color: "#376FE6" }}>
+          <Link href="/administration/users"
+             style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour à la liste
-            </a>
           </Link>
           <Title1>
             {initialUser?.id
@@ -334,12 +333,12 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
             <div>
               <Link href="/administration/users">
                 <Button className="mr-3" color="primary">
-                  <a>Retour à la liste</a>
+                  Retour à la liste
                 </Button>
               </Link>
               <Link href="/administration/users/[id]" as={`/administration/users/new`}>
                 <Button color="primary">
-                  <a>Ajouter</a>
+                  Ajouter
                 </Button>
               </Link>
             </div>

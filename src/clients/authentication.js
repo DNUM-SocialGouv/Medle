@@ -10,10 +10,10 @@ export const authenticate = async (email, password) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   })
-  
-  const tokenCookie = response.headers.get("Set-Cookie") // may be null in CSR mode or because of CORS or secure cookie. OK in SSR and good for us for testing purpose.
 
-  const { user, token } = await handleAPIResponse2(response)
+  const tokenCookie = response.headers.get("Set-Cookie") // may be null in CSR mode or because of CORS or secure cookie. OK in SSR and good for us for testing purpose.
+  
+  const { user, token } = JSON.parse(await handleAPIResponse2(response))
   
   if (!user) {
     throw new Error("Authentication failed")

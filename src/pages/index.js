@@ -31,9 +31,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
 
         try {
           checkUserData(userData)
-
           const { user, token } = await authenticate(email, password)
-
           registerAndRedirectUser(user, token)
           trackEvent(CATEGORY.auth, ACTION.auth.connection)
           resolve("OK")
