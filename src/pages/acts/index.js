@@ -28,12 +28,14 @@ import { logError } from "../../utils/logger"
 import { ACT_CONSULTATION } from "../../utils/roles"
 import { buildScope } from "../../utils/scope"
 import { ariaLiveMessagesFR, mapArrayForSelect, reactSelectCustomTheme } from "../../utils/select"
+import { useRouter } from "next/router"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   // const renderCount = React.useRef(0)
   // renderCount.current++
 
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchActs, initialPaginatedData)
+  const router = useRouter()
   const [isOpenedFilters, setOpenedFilters] = useState(false)
   const { register, unregister, handleSubmit, setValue, getValues } = useForm({})
   const [hospitals, setHospitals] = useState([])
@@ -348,8 +350,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
               </thead>
               <tbody>
                 {paginatedData.elements.map((act) => (
-                  <Link key={act.id} href="/acts/[id]" as={`/acts/${act.id}`}>
-                    <tr key={act.id} style={{ cursor: "pointer" }}>
+                    <tr key={act.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/acts/${act.id}`)}>
                       <td>
                         <b>{act.internalNumber}</b>
                       </td>
@@ -364,7 +365,6 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                         </Link>
                       </td>
                     </tr>
-                  </Link>
                 ))}
               </tbody>
             </Table>

@@ -188,7 +188,7 @@ export const Footer = ({ currentUser }) => {
       <Row>
         <ul className="pl-0 list-unstyled inline intern">
           <li className="mb-2">
-            <Link href={"/sitemap"}>
+            <Link style={{color: "black", padding: "0 15px"}} href={"/sitemap"}>
               Plan du site
             </Link>
           </li>

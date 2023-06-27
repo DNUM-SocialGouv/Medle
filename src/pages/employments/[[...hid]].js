@@ -122,6 +122,7 @@ function computeYearsOptions(currentYear) {
  * Composant lisant les établissements de son périmètre, pour voir les ETP
  */
 const ListEmploymentsHospital = ({ currentUser }) => {
+  const router = useRouter()
   const { year: currentYear } = extractMonthYear()
   const [selectedYear, setSelectedYear] = React.useState(currentYear)
 
@@ -246,8 +247,7 @@ const ListEmploymentsHospital = ({ currentUser }) => {
           </thead>
           <tbody>
             {hospitals.map((hospital) => (
-              <Link key={hospital.id} href="/employments/[[...hid]]" as={`/employments/${hospital?.id}`}>
-                <tr key={hospital.id} style={{ cursor: "pointer" }}>
+                <tr key={hospital.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/employments/${hospital?.id}`)}>
                   <td>
                     <span>{hospital.name}</span>
                   </td>
@@ -267,7 +267,6 @@ const ListEmploymentsHospital = ({ currentUser }) => {
                     </Link>
                   </td>
                 </tr>
-              </Link>
             ))}
           </tbody>
         </Table>

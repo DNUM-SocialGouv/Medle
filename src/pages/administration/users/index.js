@@ -3,6 +3,7 @@ import Head from "next/head"
 import Link from "next/link"
 import { PropTypes } from "prop-types"
 import React, { useState } from "react"
+import { useRouter } from "next/router"
 import { Alert, Col, Container, Form, FormGroup, Spinner, Table } from "reactstrap"
 
 import { searchUsersFuzzy } from "../../../clients/users"
@@ -16,6 +17,7 @@ import { logError } from "../../../utils/logger"
 import { ADMIN, ROLES_DESCRIPTION } from "../../../utils/roles"
 
 const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
+  const router = useRouter()
   const [search, setSearch] = useState("")
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchUsersFuzzy, initialPaginatedData)
 
@@ -39,10 +41,10 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
       >
         <Title1 className="">{"Administration des utilisateurs"}</Title1>
         <Link href="/administration/users/[id]" as={`/administration/users/new`}>
-            <SearchButton className="btn-outline-primary">
-              <AddIcon />
-              &nbsp; Ajouter
-            </SearchButton>
+          <SearchButton className="btn-outline-primary">
+            <AddIcon />
+            &nbsp; Ajouter
+          </SearchButton>
         </Link>
       </Container>
 
@@ -91,24 +93,22 @@ const AdminUserPage = ({ paginatedData: initialPaginatedData, currentUser }) => 
               </thead>
               <tbody>
                 {paginatedData.elements.map((user) => (
-                  <Link key={user.id} href="/administration/users/[id]" as={`/administration/users/${user.id}`}>
-                    <tr style={{ cursor: "pointer" }}>
-                      <td>
-                        <b>{`${user.firstName} ${user.lastName}`}</b>
-                      </td>
-                      <td>{user.email}</td>
-                      <td>{user.role && ROLES_DESCRIPTION[user.role]}</td>
-                      <td>{user.hospital && user.hospital.name}</td>
-                      <td>
-                        <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}
-                            className="text-decoration-none"
-                            aria-label={"Voir l'utilisateur " + user.firstName + " " + user.lastName}
-                          >
-                            Voir
-                        </Link>
-                      </td>
-                    </tr>
-                  </Link>
+                  <tr key={user.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/users/${user.id}`)}>
+                    <td>
+                      <b>{`${user.firstName} ${user.lastName}`}</b>
+                    </td>
+                    <td>{user.email}</td>
+                    <td>{user.role && ROLES_DESCRIPTION[user.role]}</td>
+                    <td>{user.hospital && user.hospital.name}</td>
+                    <td>
+                      <Link href="/administration/users/[id]" as={`/administration/users/${user.id}`}
+                        className="text-decoration-none"
+                        aria-label={"Voir l'utilisateur " + user.firstName + " " + user.lastName}
+                      >
+                        Voir
+                      </Link>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </Table>

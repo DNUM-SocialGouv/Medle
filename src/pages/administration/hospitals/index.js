@@ -12,8 +12,10 @@ import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
 import { ADMIN } from "../../../utils/roles"
+import { useRouter } from "next/router"
 
 const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
+  const router = useRouter()
   const [hospitals, setHospitals] = useState(initialHospitals)
   const [search, setSearch] = useState("")
   const [error, setError] = useState("")
@@ -98,12 +100,10 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
               </thead>
               <tbody>
                 {hospitals.map((hospital) => (
-                  <Link
+                    <tr 
                     key={hospital.id}
-                    href="/administration/hospitals/[hid]"
-                    as={`/administration/hospitals/${hospital.id}`}
-                  >
-                    <tr style={{ cursor: "pointer" }}>
+                    style={{ cursor: "pointer" }}
+                    onClick={() => router.push(`/administration/hospitals/${hospital.id}`)}>
                       <td>
                         <b>{`${hospital.name}`}</b>
                       </td>
@@ -117,7 +117,6 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                         </Link>
                       </td>
                     </tr>
-                  </Link>
                 ))}
               </tbody>
             </Table>
