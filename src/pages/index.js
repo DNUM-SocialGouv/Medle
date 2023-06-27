@@ -34,9 +34,7 @@ const LoginPage = ({ message, welcomeMessage }) => {
           const { user, token } = await authenticate(email, password)
           registerAndRedirectUser(user, token)
           trackEvent(CATEGORY.auth, ACTION.auth.connection)
-
           resolve("OK")
-
         } catch (error) {
           logError(error)
           if (STATUS_429_TOO_MANY_REQUESTS === error.status) {
