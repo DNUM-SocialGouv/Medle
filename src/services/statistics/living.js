@@ -71,7 +71,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
         `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as "Biologie",` +
           `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as "Imagerie",` +
           `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as "Toxicologie",` +
-          `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
+        //  `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
           `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as "Génétique",` +
           `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`,
       ),
@@ -181,7 +181,7 @@ export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter, 
   actsWorksheet.addRow({ name: "Nb actes mentionnant biologie", value: examinations?.["Biologie"] })
   actsWorksheet.addRow({ name: "Nb actes mentionnant imagerie", value: examinations?.["Imagerie"] })
   actsWorksheet.addRow({ name: "Nb actes mentionnant toxicologie", value: examinations?.["Toxicologie"] })
-  actsWorksheet.addRow({ name: "Nb actes mentionnant anapath", value: examinations?.["Anapath"] })
+ // actsWorksheet.addRow({ name: "Nb actes mentionnant anapath", value: examinations?.["Anapath"] })
   actsWorksheet.addRow({ name: "Nb actes mentionnant génétique", value: examinations?.["Génétique"] })
   actsWorksheet.addRow({ name: "Nb actes mentionnant autres", value: examinations?.["Autres"] })
 
