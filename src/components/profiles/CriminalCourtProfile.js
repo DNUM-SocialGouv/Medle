@@ -67,8 +67,10 @@ const CriminalCourtRead = (act) => {
   )
 }
 
-export default {
+const CriminalCourt = {
   edit: CriminalCourtEdit,
   read: CriminalCourtRead,
   hasErrors,
 }
+
+export default CriminalCourt

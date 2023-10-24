@@ -124,9 +124,10 @@ AsylumSeekerEdit.propTypes = {
   state: PropTypes.object.isRequired,
   errors: PropTypes.object,
 }
-
-export default {
+const AsylumSeeker = {
   edit: AsylumSeekerEdit,
   read: AsylumSeekerRead,
   hasErrors,
 }
+
+export default AsylumSeeker

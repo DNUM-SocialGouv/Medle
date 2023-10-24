@@ -91,8 +91,8 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
                 </tr>
               </thead>
               <tbody>
-                {paginatedData.elements.map((attack) => (
-                    <tr style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/attacks/${attack.id}`)}>
+                {paginatedData.elements.map((attack, index) => (
+                    <tr key={index} style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/attacks/${attack.id}`)}>
                       <td>
                         <b>{`${attack.name}`}</b>
                       </td>

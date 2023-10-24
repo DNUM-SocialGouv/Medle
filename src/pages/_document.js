@@ -1,4 +1,6 @@
 import Document, { Head, Html, Main, NextScript } from "next/document"
+import Script from 'next/script'
+
 import React from "react"
 
 class MyDocument extends Document {
@@ -6,7 +8,7 @@ class MyDocument extends Document {
     return (
       <Html lang="fr">
         <Head>
-          <script src="/polyfill.js" />
+          <Script src="/polyfill.js" />
           {/* <script type="text/javascript" src="/tarteaucitron/tarteaucitron.js" />
           <script type="text/javascript" src="/tarteaucitron/initTarteaucitron.js" /> */}
         </Head>

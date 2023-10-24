@@ -194,8 +194,10 @@ CustodyEdit.propTypes = {
   errors: PropTypes.object,
 }
 
-export default {
+const Custody = {
   edit: CustodyEdit,
   read: CustodyRead,
   hasErrors,
 }
+
+export default Custody

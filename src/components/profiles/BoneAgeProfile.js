@@ -113,8 +113,10 @@ BoneAgeEdit.propTypes = {
   errors: PropTypes.object,
 }
 
-export default {
+const BoneAge = {
   edit: BoneAgeEdit,
   read: BoneAgeRead,
   hasErrors,
 }
+
+export default BoneAge

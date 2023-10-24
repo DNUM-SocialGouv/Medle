@@ -257,8 +257,10 @@ VictimEdit.propTypes = {
   errors: PropTypes.object,
 }
 
-export default {
+const Victim = {
   edit: VictimEdit,
   read: VictimRead,
   hasErrors,
 }
+
+export default Victim 
