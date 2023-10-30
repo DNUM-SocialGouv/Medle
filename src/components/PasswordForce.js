@@ -7,7 +7,7 @@ export const PasswordForce = ({ password }) => {
         <>
             <div
                 id="progress"
-                class={`c-progress strength-${ScorePassword(password)}`}
+                className={`c-progress strength-${ScorePassword(password)}`}
                 style={{
                     marginTop: "4px",
                     width: "1%",
@@ -55,7 +55,7 @@ function ScorePassword(password) {
     
         SetComplexity(bits, color);
         SetText(GetMessageFromScore(score), color);
-        return bits;
+        
     })
 }
 

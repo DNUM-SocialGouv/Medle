@@ -36,10 +36,8 @@ const EmploymentsPage = ({ currentUser, references }) => {
       >
         <div className="d-flex justify-content-between">
           <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hid}`}>
-            <a>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour aux détails
-            </a>
           </Link>
         </div>
         <Title1>Hôpital {hospital?.name}</Title1>
@@ -47,12 +45,10 @@ const EmploymentsPage = ({ currentUser, references }) => {
           href={`/administration/hospitals/[hid]/employments/[rid]`}
           as={`/administration/hospitals/${hid}/employments/new`}
         >
-          <a>
             <SearchButton className="btn-outline-primary">
               <AddIcon />
               &nbsp; Ajouter
             </SearchButton>
-          </a>
         </Link>
       </Container>
 
@@ -91,15 +87,12 @@ const EmploymentsPage = ({ currentUser, references }) => {
                         <Link
                           href={`/administration/hospitals/[hid]/employments/[rid]`}
                           as={`/administration/hospitals/${hid}/employments/${reference.id}`}
-                        >
-                          <a
                             className="text-decoration-none"
                             aria-label={
                               "Voir ou modifier la référence " + NAME_MONTHS[reference.month] + " " + reference.year
                             }
                           >
                             Voir / Modifier
-                          </a>
                         </Link>
                       </td>
                     </tr>

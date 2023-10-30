@@ -1,3 +1,11 @@
+## [1.20.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.2...v1.20.1) (2023-07-20)
+### Bug Fixes
+* MED-65 : Supprimer Anapath des statistiques des vivants et de l'export également
+
+## [1.20.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.2...v1.20.0) (2023-06-27)
+### Tech
+* MED-64 : upgrade next, react versions
+
 ## [1.19.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.1...v1.19.2) (2023-05-25)
 ### Features
 * MED-53 (retour): fix delete and wording

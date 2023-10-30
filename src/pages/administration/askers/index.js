@@ -1,6 +1,7 @@
 import AddIcon from "@material-ui/icons/Add"
 import Head from "next/head"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { PropTypes } from "prop-types"
 import React, { useState } from "react"
 import { Alert, Col, Container, Form, FormGroup, Spinner, Table } from "reactstrap"
@@ -16,6 +17,7 @@ import { logError } from "../../../utils/logger"
 import { ADMIN } from "../../../utils/roles"
 
 const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
+  const router = useRouter()
   const [search, setSearch] = useState("")
   const [paginatedData, error, loading, fetchPage] = usePaginatedData(searchAskersFuzzy, initialPaginatedData)
 
@@ -39,12 +41,10 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
       >
         <Title1 className="">{"Administration des demandeurs"}</Title1>
         <Link href="/administration/askers/[id]" as={`/administration/askers/new`}>
-          <a>
             <SearchButton className="btn-outline-primary">
               <AddIcon />
               &nbsp; Ajouter
             </SearchButton>
-          </a>
         </Link>
       </Container>
 
@@ -92,21 +92,18 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
               </thead>
               <tbody>
                 {paginatedData.elements.map((asker) => (
-                  <Link key={asker.id} href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}>
-                    <tr style={{ cursor: "pointer" }}>
+                    <tr key={asker.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/askers/${asker.id}`)}>
                       <td>
                         <b>{`${asker.name}`}</b>
                       </td>
                       <td>{asker.depCode}</td>
                       <td>
-                        <Link href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}>
-                          <a className="text-decoration-none" aria-label={"Voir le demandeur " + asker.name}>
+                        <Link href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}
+                           className="text-decoration-none" aria-label={"Voir le demandeur " + asker.name}>
                             Voir
-                          </a>
                         </Link>
                       </td>
                     </tr>
-                  </Link>
                 ))}
               </tbody>
             </Table>

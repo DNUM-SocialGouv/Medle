@@ -150,11 +150,10 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
         <div className="d-flex justify-content-between">
-          <Link href="/administration/hospitals/[hid]/employments" as={`/administration/hospitals/${hid}/employments`}>
-            <a style={{ color: "#376FE6" }}>
+          <Link href="/administration/hospitals/[hid]/employments" as={`/administration/hospitals/${hid}/employments`}
+            style={{ color: "#376FE6" }}>
               <ArrowBackIosIcon width={30} style={{ width: 15 }} />
               Retour
-            </a>
           </Link>
         </div>
 
@@ -176,7 +175,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
                 as={`/administration/hospitals/${hid}/employments`}
               >
                 <Button className="mr-3" color="primary">
-                  <a>Retour à la liste</a>
+                  Retour à la liste
                 </Button>
               </Link>
               <Link
@@ -184,7 +183,7 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
                 as={`/administration/hospitals/${hid}/employments/new`}
               >
                 <Button color="primary">
-                  <a>Ajouter</a>
+                  Ajouter
                 </Button>
               </Link>
             </div>

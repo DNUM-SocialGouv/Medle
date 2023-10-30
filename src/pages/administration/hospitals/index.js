@@ -12,8 +12,10 @@ import { InputDarker, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
 import { ADMIN } from "../../../utils/roles"
+import { useRouter } from "next/router"
 
 const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
+  const router = useRouter()
   const [hospitals, setHospitals] = useState(initialHospitals)
   const [search, setSearch] = useState("")
   const [error, setError] = useState("")
@@ -46,12 +48,10 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
       >
         <Title1 className="">{"Administration des établissements"}</Title1>
         <Link href="/administration/hospitals/[id]" as={`/administration/hospitals/new`}>
-          <a>
             <SearchButton className="btn-outline-primary">
               <AddIcon />
               &nbsp; Ajouter
             </SearchButton>
-          </a>
         </Link>
       </Container>
 
@@ -100,12 +100,10 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
               </thead>
               <tbody>
                 {hospitals.map((hospital) => (
-                  <Link
+                    <tr 
                     key={hospital.id}
-                    href="/administration/hospitals/[hid]"
-                    as={`/administration/hospitals/${hospital.id}`}
-                  >
-                    <tr style={{ cursor: "pointer" }}>
+                    style={{ cursor: "pointer" }}
+                    onClick={() => router.push(`/administration/hospitals/${hospital.id}`)}>
                       <td>
                         <b>{`${hospital.name}`}</b>
                       </td>
@@ -113,14 +111,12 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
                       <td>{hospital.town}</td>
                       <td>{hospital.postalCode}</td>
                       <td>
-                        <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hospital.id}`}>
-                          <a className="text-decoration-none" aria-label={"Voir l'établissement " + hospital.name}>
+                        <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hospital.id}`}
+                           className="text-decoration-none" aria-label={"Voir l'établissement " + hospital.name}>
                             Voir
-                          </a>
                         </Link>
                       </td>
                     </tr>
-                  </Link>
                 ))}
               </tbody>
             </Table>
