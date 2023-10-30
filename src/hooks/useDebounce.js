@@ -8,7 +8,7 @@ import React from "react"
  * @param {*} deps array of dependancies
  */
 export const useDebounce = (fn, delay, deps) => {
-  const cb = React.useCallback(fn, deps)
+  const cb = React.useCallback(fn, [...deps, fn])
 
   React.useEffect(() => {
     const id = setTimeout(() => cb(), delay)

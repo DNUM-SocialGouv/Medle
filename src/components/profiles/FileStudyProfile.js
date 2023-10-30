@@ -48,8 +48,10 @@ FileStudyEdit.propTypes = {
   state: PropTypes.object.isRequired,
 }
 
-export default {
+const FileStudy = {
   edit: FileStudyEdit,
   hasErrors,
   read: FileStudyRead,
 }
+
+export default FileStudy 

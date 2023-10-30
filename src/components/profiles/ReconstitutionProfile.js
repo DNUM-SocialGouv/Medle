@@ -68,8 +68,10 @@ ReconstitutionEdit.propTypes = {
   errors: PropTypes.object,
 }
 
-export default {
+const Reconstitution = {
   edit: ReconstitutionEdit,
   read: ReconstitutionRead,
   hasErrors,
 }
+
+export default Reconstitution 

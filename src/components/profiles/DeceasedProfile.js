@@ -157,8 +157,10 @@ DeceasedEdit.propTypes = {
   state: PropTypes.object.isRequired,
 }
 
-export default {
+const Deceased = {
   edit: DeceasedEdit,
   hasErrors,
   read: DeceasedRead,
 }
+
+export default Deceased 

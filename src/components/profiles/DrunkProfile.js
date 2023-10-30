@@ -140,8 +140,10 @@ DrunkEdit.propTypes = {
   errors: PropTypes.object,
 }
 
-export default {
+const Drunk = {
   edit: DrunkEdit,
   read: DrunkRead,
   hasErrors,
 }
+
+export default Drunk 

@@ -144,9 +144,10 @@ RestrainedEdit.propTypes = {
   state: PropTypes.object.isRequired,
   errors: PropTypes.object,
 }
-
-export default {
+const Restrained = {
   edit: RestrainedEdit,
   read: RestrainedRead,
   hasErrors,
 }
+
+export default Restrained

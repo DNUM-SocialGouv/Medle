@@ -5,6 +5,7 @@ import { NavbarBrand } from "reactstrap"
 
 import { findLogo } from "../clients/logos"
 import { SUPER_ADMIN } from "../utils/roles"
+import Image from "next/image"
 
 const Logo = ({ currentUser }) => {
   const router = useRouter()
@@ -32,17 +33,17 @@ const Logo = ({ currentUser }) => {
           aria-label="Changer le logo du ministère"
           tabIndex="0"
         >
-          <img src={logo} alt="Logo ministère" height="120" style={{ cursor: "pointer" }} id="header" />
+          <Image src={logo} alt="Logo ministère" width={211} height="120" style={{ cursor: "pointer" }} id="header" />
         </NavbarBrand>
       )}
       {currentUser && !currentUser.resetPassword && currentUser.role !== SUPER_ADMIN && (
         <NavbarBrand onClick={() => router.push("/statistics")} tabIndex="0">
-          <img src={logo} alt="Logo ministère" height="120" style={{ cursor: "pointer" }} id="header" />
+          <Image src={logo} alt="Logo ministère" width={211} height="120" style={{ cursor: "pointer" }} id="header" />
         </NavbarBrand>
       )}
       {!currentUser && (
         <NavbarBrand onClick={() => router.push("/")} tabIndex="0">
-          <img src={logo} alt="Logo ministère" height="120" style={{ cursor: "pointer" }} id="header" />
+          <Image src={logo} width={211} alt="Logo ministère" height="120" style={{ cursor: "pointer" }} id="header" />
         </NavbarBrand>
       )}
     </>

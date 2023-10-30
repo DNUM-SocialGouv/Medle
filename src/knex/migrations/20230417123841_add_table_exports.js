@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
