@@ -28,20 +28,20 @@ const monthsOfYear = [
   "Décembre",
 ]
 const dataRessources = [
-  ["Employee 1", 20, 18, 22, 21, 19, 20, 23, 20, 21, 20, 22, 18],
-  ["Employee 2", 22, 19, 20, 23, 21, 22, 20, 21, 19, 24, 18, 23],
-  ["Employee 3", 21, 23, 18, 19, 22, 20, 21, 23, 22, 20, 24, 19],
-  ["Capacité à fournir", 63, 60, 60, 63, 62, 62, 64, 64, 62, 64, 64, 60],
+  ["Médecin 1", 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+  ["Médecin 2", 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+  ["Médecin 3", '', '', '', '', '', 20, 20, 20, 20, 20, 20, 20],
+  ["Capacité à fournir", 40, 40, 40, 40, 40, 60, 60, 60, 60, 60, 60, 60],
 ]
 
 const Actes = [
   ["Actes type 1", 15, 17, 18, 20, 21, 19, 22, 16, 18, 17, 16, 15],
   ["Actes type 2", 19, 21, 20, 22, 23, 20, 18, 19, 21, 20, 23, 22],
   ["Actes type 3", 16, 18, 19, 21, 17, 20, 22, 21, 18, 19, 20, 18],
-  ["Activité", 50, 56, 57, 63, 61, 59, 62, 56, 57, 56, 59, 55],
+  ["Total du temps médical nécessaire", 50, 56, 57, 63, 61, 59, 62, 56, 57, 56, 59, 55],
 ]
 
-const calcTotal = ["Synthèse", 13, 4, -2, 0, 1, 3, 2, 8, 5, 8, 5, -3]
+const calcTotal = ["Adéquation de la charge et de la capacité de travail (en jours)", 13, 4, -2, 0, 1, 3, 2, 8, 5, 8, 5, -3]
 
 const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
   const [hospitals, setHospitals] = useState(initialHospitals)
@@ -77,7 +77,7 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
               <thead>
                 <tr className="table-light">
                   <th scope="col" style={cellsStyle}>
-                    Personnel médical
+                    {"Personnel médical (en jours travaillés)"}
                   </th>
                   {monthsOfYear.map((month, index) => (
                     <th key={index} style={cellsStyle} scope="col">
@@ -103,7 +103,7 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
               <thead>
                 <tr className="table-light">
                   <th style={cellsStyle} scope="col">
-                    Actes réalisés
+                    {"Actes réalisés (en jours)"}
                   </th>
                   {monthsOfYear.map((month, index) => (
                     <th key={index} style={cellsStyle} scope="col">
