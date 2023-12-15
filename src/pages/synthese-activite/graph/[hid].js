@@ -137,7 +137,7 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
         </Container>
         <div className="mt-5 d-flex justify-content-center">
           <Button onClick={() => router.push(`/synthese-activite/${hid}`)} className="btn-outline-primary">
-            <ListAltIcon /> Graph de synthèse
+            <ListAltIcon /> Synthèse d&apos;activité
           </Button>
         </div>
       </Container>

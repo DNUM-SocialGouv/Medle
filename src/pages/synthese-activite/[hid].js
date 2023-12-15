@@ -5,12 +5,13 @@ import { PropTypes } from "prop-types"
 import React, { useState } from "react"
 import { Alert, Container, Table } from "reactstrap"
 
-import { searchHospitalsFuzzy } from "../../clients/hospitals"
 import Layout from "../../components/Layout"
 import { Button, Title1 } from "../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { logError } from "../../utils/logger"
 import { ACTIVITY_CONSULTATION } from "../../utils/roles"
+import { findSummaryByHospital } from "../../clients/acts-summary"
+import { findEmploymentsByHospitalId } from "../../clients/employments"
 
 
 const monthsOfYear = [
@@ -21,7 +22,7 @@ const monthsOfYear = [
   "Mai",
   "Juin",
   "Juillet",
-  "Aout",
+  "Août",
   "Septembre",
   "Octobre",
   "Novembre",
@@ -34,24 +35,44 @@ const dataRessources = [
   ["Capacité à fournir", 40, 40, 40, 40, 40, 60, 60, 60, 60, 60, 60, 60],
 ]
 
-const Actes = [
-  ["Actes type 1", 15, 17, 18, 20, 21, 19, 22, 16, 18, 17, 16, 15],
-  ["Actes type 2", 19, 21, 20, 22, 23, 20, 18, 19, 21, 20, 23, 22],
-  ["Actes type 3", 16, 18, 19, 21, 17, 20, 22, 21, 18, 19, 20, 18],
-  ["Total du temps médical nécessaire", 50, 56, 57, 63, 61, 59, 62, 56, 57, 56, 59, 55],
-]
 
 const calcTotal = ["Adéquation de la charge et de la capacité de travail (en jours)", 13, 4, -2, 0, 1, 3, 2, 8, 5, 8, 5, -3]
 
-const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
-  const [hospitals, setHospitals] = useState(initialHospitals)
-  const [error, setError] = useState("")
+function extractYearsFromArray(array) {
+  const yearsSet = new Set();
+  array.forEach(item => {
+    const summary = item.summary;
+    if (summary) {
+      const itemYears = Object.keys(summary);
+      itemYears.forEach(year => {
+        yearsSet.add(year);
+      });
+    }
+  });
+
+  const uniqueYears = Array.from(yearsSet);
+  return uniqueYears;
+}
+
+const SummaryPage = ({ hospitalSummary, currentUser, medicalSummary }) => {
   const router = useRouter()
   const { hid } = router.query
 
+
+  // const [hospitals, setHospitals] = useState(initialHospitals)
+  const [error, setError] = useState("")
+  const [selectedYear, setSelectedYear] = useState(String(new Date().getFullYear()));
+
+  const handleChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
+
+
+  const years = extractYearsFromArray(hospitalSummary)
+
   const cellsStyle = { minWidth: "90px", textAlign: "center" }
   return (
-    <Layout page="hospitals" currentUser={currentUser} admin={false}>
+    <Layout page="synthese-activite" currentUser={currentUser} admin={false}>
       <Head>
         <title>Synthèse de l&apos;activité - Medlé</title>
       </Head>
@@ -59,8 +80,12 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
-        <Title1 className="">{"Synthèse de l'établissement CHU Marseille"}</Title1>
-        <span>Date de dernière mise à jour : 23/10/2023</span>
+        <Title1>{"Synthèse de l'établissement CHU Marseille"}</Title1>
+        <select defaultValue={selectedYear} value={selectedYear} onChange={handleChange}>
+          {years.map((year, index) => (
+            <option key={index} value={year}>{year}</option>
+          ))}
+        </select>
       </Container>
 
       <Container style={{ maxWidth: 1300, minWidth: 740 }}>
@@ -69,9 +94,9 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
             {error}
           </Alert>
         )}
-        {!error && !hospitals.length && <div className="text-center">{"Aucun établissement trouvé."}</div>}
+        {!hospitalSummary.length && <div className="text-center">{"Aucune synthèse trouvé."}</div>}
 
-        {!error && !!hospitals.length && (
+        {!!hospitalSummary.length && (
           <>
             <Table responsive className="table-hover">
               <thead>
@@ -87,15 +112,16 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
                 </tr>
               </thead>
               <tbody>
-                {dataRessources.map((charge, i) => (
-                  <tr key={i} className={charge[0] === "Capacité à fournir" ? "table-info" : ""}>
-                    {charge.map((c, index) => (
-                      <td key={index} style={cellsStyle}>
-                        {c}
-                      </td>
-                    ))}
-                  </tr>
+                <td style={cellsStyle}>
+                  Capacité à fournir
+                </td>
+                {monthsOfYear.map((month, index) => (
+                  <td key={index} style={cellsStyle}>
+
+                    {medicalSummary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)]}
+                  </td>
                 ))}
+
               </tbody>
             </Table>
 
@@ -113,11 +139,14 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
                 </tr>
               </thead>
               <tbody>
-                {Actes.map((charge, index) => (
-                  <tr key={index} className={charge[0] === "Activité" ? "table-info" : ""}>
-                    {charge.map((c, i) => (
-                      <td key={i} style={cellsStyle}>
-                        {c}
+                {hospitalSummary.map((activity, index) => (
+                  <tr key={index} className={activity[0] === "Activité" ? "table-info" : ""}>
+                    <td style={cellsStyle}>
+                      {activity.category}
+                    </td>
+                    {monthsOfYear.map((month, index) => (
+                      <td key={index} style={cellsStyle}>
+                        {activity.summary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)]}
                       </td>
                     ))}
                   </tr>
@@ -167,20 +196,26 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
 
 SummaryPage.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
+  const { hid: hospitalId } = ctx.query
 
   try {
-    const hospitals = await searchHospitalsFuzzy({ headers })
-    return { hospitals }
-  } catch (error) {
-    logError("APP error", error)
+    const hospitalSummary = await findSummaryByHospital({ hospitalId, headers })
 
+    const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
+    console.log(medicalSummary, hospitalSummary);
+    return { hospitalSummary, medicalSummary }
+  } catch (error) {
+    logError(error)
     redirectIfUnauthorized(error, ctx)
+
+    const message = error.status && error.status === 404 ? "La synthèse n'a pu être trouvé." : "Erreur serveur."
+
+    return { error: message }
   }
-  return {}
 }
 
 SummaryPage.propTypes = {
-  hospitals: PropTypes.array,
+  hospitalSummary: PropTypes.array,
   currentUser: PropTypes.object.isRequired,
 }
 

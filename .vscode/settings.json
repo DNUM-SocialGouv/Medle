@@ -10,8 +10,9 @@
   },
   "css.lint.emptyRules": "ignore",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": false,
-  "editor.lineNumbers": "relative"
+  "editor.lineNumbers": "relative",
+  "audioCues.volume": 0
 }
