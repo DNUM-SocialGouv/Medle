@@ -1,3 +1,11 @@
+## [1.21.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.0...v1.21.1) (2023-11-14)
+### Features
+* MED-5: change some texts in summary pages
+
+## [1.21.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.20.1...v1.21.0) (2023-10-31)
+### Features
+* MED-5: add summary page and add roles for who will see the page
+
 ## [1.20.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.2...v1.20.1) (2023-07-20)
 ### Bug Fixes
 * MED-65 : Supprimer Anapath des statistiques des vivants et de l'export également

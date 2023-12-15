@@ -336,18 +336,6 @@ const Sidebar = ({ page, currentUser }) => {
               </Link>
             </li>
           )}
-          {[SUPER_ADMIN, PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, GUEST_HOSPITAL].includes(currentUser.role) && (
-            <li>
-              <Link
-                href="/synthese-activite"
-                className={"list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")}
-                aria-current={page === "attacks" ? "true" : "false"}
-              >
-                <TableChartIcon width={30} /> <br />
-                Synthèse de l&apos;activité
-              </Link>
-            </li>
-          )}
           <li>
             <Link
               href="/statistics"
@@ -360,6 +348,18 @@ const Sidebar = ({ page, currentUser }) => {
               Statistiques
             </Link>
           </li>
+          {[SUPER_ADMIN, PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, GUEST_HOSPITAL].includes(currentUser.role) && (
+            <li>
+              <Link
+                href="/synthese-activite"
+                className={"list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")}
+                aria-current={page === "attacks" ? "true" : "false"}
+              >
+                <TableChartIcon width={30} /> <br />
+                Synthèse de l&apos;activité
+              </Link>
+            </li>
+          )}
           {/* <Link href="/_error"> */}
           {isOpenFeature("directory") && (
             <a className="list-group-item list-group-item-action">
