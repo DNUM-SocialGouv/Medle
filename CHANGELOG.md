@@ -1,3 +1,7 @@
+## [1.21.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.1...v1.21.2) (2023-12-15)
+### Features
+* MED-5: add apis and init summary into database
+
 ## [1.21.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.0...v1.21.1) (2023-11-14)
 ### Features
 * MED-5: change some texts in summary pages
