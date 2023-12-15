@@ -5,7 +5,6 @@ import { PropTypes } from "prop-types"
 import React, { useState } from "react"
 import { Alert, Container, Table } from "reactstrap"
 
-import { searchHospitalsFuzzy } from "../../clients/hospitals"
 import Layout from "../../components/Layout"
 import { Button, Title1 } from "../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
@@ -147,7 +146,7 @@ const SummaryPage = ({ hospitalSummary, currentUser, medicalSummary }) => {
                     </td>
                     {monthsOfYear.map((month, index) => (
                       <td key={index} style={cellsStyle}>
-                        {activity.summary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)]?.toFixed(2)}
+                        {activity.summary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)]}
                       </td>
                     ))}
                   </tr>
