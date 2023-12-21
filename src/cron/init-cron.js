@@ -12,13 +12,10 @@ exports.initCrons = async () => {
       console.log("Export finished")
     })
     .start()
-   initPreSummaryActivity().then(() => initSummaryActivity())
-  // cron
-  //   .schedule(process.env.PILO_CRON || "0 0 1 * *", () => {
-  //     console.log("Begin export")
-  //     initPreSummaryActivity().then(() => initSummaryActivity())
-  //     console.log("Export finished")
-  //   })
-  //   .start()
-  // initSummaryActivityy();
+
+    try {
+      initPreSummaryActivity().then(() => initSummaryActivity())      
+    } catch (error) {
+      console.log('Error', error)
+    }
 }

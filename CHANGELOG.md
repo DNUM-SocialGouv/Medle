@@ -1,3 +1,7 @@
+## [1.21.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.2...v1.21.3) (2023-12-21)
+### Bug
+* fix bug in ac summary when deployed
+
 ## [1.21.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.1...v1.21.2) (2023-12-15)
 ### Features
 * MED-5: add apis and init summary into database
