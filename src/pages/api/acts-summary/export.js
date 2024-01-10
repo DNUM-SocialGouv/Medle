@@ -1,11 +1,13 @@
 import Cors from "micro-cors"
 
-import { search } from "../../../services/acts-summary/search"
 import { sendAPIError, sendForbiddenError, sendMethodNotAllowedError } from "../../../services/errorHelpers"
 import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { CORS_ALLOW_ORIGIN, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
+import { logDebug } from "../../../utils/logger"
 import { ACTIVITY_CONSULTATION } from "../../../utils/roles"
 import { isAllowedHospitals } from "../../../utils/scope"
+import { exportSummary } from "../../../services/acts-summary/export"
+import { findHospital } from "../../../clients/hospitals"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -21,17 +23,17 @@ const handler = async (req, res) => {
 
         if (hospitals && !isAllowedHospitals(currentUser, [hospitals])) return sendForbiddenError(res)
 
-        const {
-          totalCount,
-          currentPage: requestedPage,
-          maxPage,
-          byPage: LIMIT,
-          elements: summaries,
-        } = await search(req.query, currentUser)
+        const workbook = await exportSummary(req.query, currentUser, req.headers)
+        const hospital = await findHospital({ id: hospitals, headers: req.headers })
 
-        return res
-          .status(STATUS_200_OK)
-          .json({ totalCount, currentPage: requestedPage, maxPage, byPage: LIMIT, elements: summaries })
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        res.setHeader("Content-Disposition", "attachment; filename=" + "Synthèse de l'établissement " + hospital.name + ".xlsx")
+
+        await workbook.xlsx.write(res)
+
+        logDebug("Export fichier XLSX")
+
+        return res.status(STATUS_200_OK).end()
       }
       default:
         if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)

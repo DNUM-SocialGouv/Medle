@@ -9,3 +9,7 @@ export const findSummaryByHospital = async ({  hospitalId, headers }) => {
     const { elements } = await handleAPIResponse2(response)
     return elements
   }
+
+  export const fetchExport = async (selectedYear, hospitalId, headers) => {
+    saveAs(`${API_URL}${ACTS_SUMMARY_ENDPOINT}/export?hospitals=${hospitalId}&year=${selectedYear}`, { ...headers })
+  }

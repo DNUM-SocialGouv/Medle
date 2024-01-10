@@ -6,104 +6,118 @@ import React, { useState } from "react"
 import { Alert, Container } from "reactstrap"
 import { Bar, BarChart, CartesianGrid, Legend, Rectangle, Tooltip, XAxis, YAxis } from "recharts"
 
-import { searchHospitalsFuzzy } from "../../../clients/hospitals"
+import { findHospital, searchHospitalsFuzzy } from "../../../clients/hospitals"
 import Layout from "../../../components/Layout"
 import { Button, Title1 } from "../../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../../utils/auth"
 import { logError } from "../../../utils/logger"
 import { ACTIVITY_CONSULTATION } from "../../../utils/roles"
+import { findSummaryByHospital } from "../../../clients/acts-summary"
+import { findEmploymentsByHospitalId } from "../../../clients/employments"
 
 const data = [
   {
     name: "Janvier",
     "Capacité à fournir": 63,
     Activité: 50,
-    amt: 2400,
   },
   {
     name: "Février",
     "Capacité à fournir": 60,
     Activité: 56,
-    amt: 2210,
   },
   {
     name: "Mars",
     "Capacité à fournir": 60,
     Activité: 57,
-    amt: 2290,
   },
   {
     name: "Avril",
     "Capacité à fournir": 63,
     Activité: 63,
-    amt: 2000,
   },
   {
     name: "Mai",
     "Capacité à fournir": 62,
     Activité: 61,
-    amt: 2181,
   },
   {
     name: "Juin",
     "Capacité à fournir": 62,
     Activité: 59,
-    amt: 2500,
   },
   {
     name: "Juillet",
     "Capacité à fournir": 62,
     Activité: 64,
-    amt: 2100,
   },
   {
     name: "Aout",
     "Capacité à fournir": 56,
     Activité: 64,
-    amt: 2400,
   },
   {
     name: "Septembre",
     "Capacité à fournir": 57,
     Activité: 62,
-    amt: 2210,
   },
   {
     name: "Octobre",
     "Capacité à fournir": 56,
-    Activité: 64,
-    amt: 2290,
   },
   {
     name: "Novembre",
     "Capacité à fournir": 59,
     Activité: 64,
-    amt: 2000,
   },
   {
     name: "Décembre",
     "Capacité à fournir": 55,
     Activité: 60,
-    amt: 2181,
   },
 ]
 
-const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
-  const [hospitals, setHospitals] = useState(initialHospitals)
-  const [error, setError] = useState("")
+const monthsOfYear = [
+  "Janvier",
+  "Février",
+  "Mars",
+  "Avril",
+  "Mai",
+  "Juin",
+  "Juillet",
+  "Août",
+  "Septembre",
+  "Octobre",
+  "Novembre",
+  "Décembre",
+]
+
+const SummaryGraphPage = ({ currentUser, formattedGraphData, hospital }) => {
+  const [error] = useState("")
   const router = useRouter()
+  const years = Object.keys(formattedGraphData)
+  const [selectedYear, setSelectedYear] = useState(String(years[years.length - 1]));
   const { hid } = router.query
+  
+  const handleChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
 
   return (
-    <Layout page="hospitals" currentUser={currentUser} admin={false}>
+    <Layout page="synthese-activite" currentUser={currentUser} admin={false}>
       <Head>
-        <title>Graph de synthèse de l&apos;activité - Medlé</title>
+        <title>Graphe de synthèse de l&apos;activité - Medlé</title>
       </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
-        <Title1 className="">{"Graph de synthèse de l'établissement CHU Marseille"}</Title1>
+        <Title1 className="">{`Graphe de synthèse de l'établissement ${hospital.name}`}</Title1>
+        <select defaultValue={selectedYear} value={selectedYear} onChange={handleChange}>
+          {years.map((year, index) => (
+            <option key={index} value={year}>{year}</option>
+          ))}
+        </select>
       </Container>
 
       <Container style={{ maxWidth: 1300, minWidth: 740 }}>
@@ -112,13 +126,13 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
             {error}
           </Alert>
         )}
-        {!error && !hospitals.length && <div className="text-center">{"Aucun établissement trouvé."}</div>}
+        {/* {!error && !hospitals.length && <div className="text-center">{"Aucun établissement trouvé."}</div>} */}
 
         <Container className="d-flex justify-content-center" style={{ maxWidth: 1300, minWidth: 740 }}>
           <BarChart
             width={1100}
             height={500}
-            data={data}
+            data={formattedGraphData[selectedYear]}
             margin={{
               top: 5,
               right: 30,
@@ -137,7 +151,7 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
         </Container>
         <div className="mt-5 d-flex justify-content-center">
           <Button onClick={() => router.push(`/synthese-activite/${hid}`)} className="btn-outline-primary">
-            <ListAltIcon /> Synthèse d&apos;activité
+            <ListAltIcon /> Synthèse de l&apos;activité
           </Button>
         </div>
       </Container>
@@ -145,12 +159,46 @@ const SummaryPage = ({ hospitals: initialHospitals, currentUser }) => {
   )
 }
 
-SummaryPage.getInitialProps = async (ctx) => {
+SummaryGraphPage.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
+  const { hid: hospitalId } = ctx.query
 
   try {
-    const hospitals = await searchHospitalsFuzzy({ headers })
-    return { hospitals }
+    const hospitalSummary = await findSummaryByHospital({ hospitalId, headers })
+    const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
+    const hospital = await findHospital({ id: hospitalId, headers })
+
+    function calculateSummaryValue(hospitalSummary, year, month) {
+      let sum = 0;
+
+      for (const obj of hospitalSummary) {
+        if (obj.summary && obj.summary[year] && obj.summary[year][month] !== undefined) {
+          sum += parseFloat(obj.summary[year][month]) || 0;
+        }
+      }
+
+      return sum;
+    }
+
+    function getFormattedData(medicalSummary, hospitalSummary) {
+      const result = {};
+
+      for (const year in medicalSummary) {
+        const valuesByYear = monthsOfYear
+          .map((month) => month.charAt(0).toLowerCase() + month.slice(1))
+          .map((month) => {
+            const medicalSummaryByMonth = parseFloat(medicalSummary[year][month]) || 0;
+            const hospitalSummaryBymonth = calculateSummaryValue(hospitalSummary, year, month);
+            return {name: month,  "Capacité à fournir": Math.round(medicalSummaryByMonth), "Activité": hospitalSummaryBymonth}
+          });
+          result[year] = valuesByYear
+      }
+      return result;
+    }
+
+    const formattedGraphData = getFormattedData(medicalSummary, hospitalSummary)
+
+    return { formattedGraphData, hospital }
   } catch (error) {
     logError("APP error", error)
 
@@ -159,9 +207,9 @@ SummaryPage.getInitialProps = async (ctx) => {
   return {}
 }
 
-SummaryPage.propTypes = {
+SummaryGraphPage.propTypes = {
   hospitals: PropTypes.array,
   currentUser: PropTypes.object.isRequired,
 }
 
-export default withAuthentication(SummaryPage, ACTIVITY_CONSULTATION)
+export default withAuthentication(SummaryGraphPage, ACTIVITY_CONSULTATION)

@@ -336,18 +336,6 @@ const Sidebar = ({ page, currentUser }) => {
               </Link>
             </li>
           )}
-          {[SUPER_ADMIN, PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, GUEST_HOSPITAL].includes(currentUser.role) && (
-            <li>
-              <Link
-                href="/synthese-activite"
-                className={"list-group-item list-group-item-action " + (page === "synthese-activite" ? "selected" : "unselected")}
-                aria-current={page === "synthese-activite" ? "true" : "false"}
-              >
-                <TableChartIcon width={30} /> <br />
-                Synthèse de l&apos;activité
-              </Link>
-            </li>
-          )}
           <li>
             <Link
               href="/statistics"
