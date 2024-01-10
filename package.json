@@ -1,6 +1,6 @@
 {
     "name": "medle",
-    "version": "1.21.2",
+    "version": "1.21.3",
     "private": true,
     "scripts": {
         "seal-secrets": "sre-secrets --to=./.socialgouv",

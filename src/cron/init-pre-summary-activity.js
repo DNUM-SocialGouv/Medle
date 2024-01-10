@@ -21,15 +21,18 @@ exports.initPreSummaryActivity = async () => {
             ).stream()
 
         let rowsToInsert = [];
-        const batchSize = 5000;
+        const batchSize = 2000;
         let count = 0;
 
         const summaryActParameters = await knex("act_summary_parameters").select('*')
 
         stream.on('data', function (act) {
             const examined = act.examined;
-            const actType = act.act_type?.match(/"(.*?)"/)[1] || '';
-            const violenceType = act.violence_type?.match(/"(.*?)"/)[1] || '';
+            const actTypeMatch = act.act_type?.match(/"(.*?)"/);
+            const actType = actTypeMatch ? actTypeMatch[1] || '' : '';
+
+            const violenceTypeMatch = act.violence_type?.match(/"(.*?)"/);
+            const violenceType = violenceTypeMatch ? violenceTypeMatch[1] || '' : '';
             const age = act.age;
             const location = act.location;
 
