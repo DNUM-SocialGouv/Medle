@@ -6,8 +6,24 @@ import { transformAll, transformAllForExport } from "../../models/acts"
 import { normalize } from "../normalize"
 import { APIError } from "../../utils/errors"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
+import { findEmploymentsByHospitalId } from "../../clients/employments"
 
 const LIMIT = 50
+
+const monthsOfYear = [
+  "Janvier",
+  "Février",
+  "Mars",
+  "Avril",
+  "Mai",
+  "Juin",
+  "Juillet",
+  "Août",
+  "Septembre",
+  "Octobre",
+  "Novembre",
+  "Décembre",
+]
 
 export const makeWhereClause = ({
   scope,
@@ -73,40 +89,115 @@ export const search = async (params, currentUser) => {
     .offset(offset)
     .select("*")
 
-  return { byPage: LIMIT, currentPage: requestedPage, elements: actsSummary, maxPage, totalCount }
+  const filteredArray = actsSummary
+    .map((item) => {
+      const { summary } = item;
+      const filteredSummary = Object.fromEntries(
+        Object.entries(summary).filter(([year, months]) =>
+          Object.values(months).some((value) => value !== 0)
+        )
+      );
+      return { ...item, summary: filteredSummary };
+    })
+    .filter((item) => {
+      const { summary } = item;
+      return Object.values(summary).some((months) =>
+        Object.values(months).some((value) => value !== 0)
+      );
+    });
+
+  return { byPage: LIMIT, currentPage: requestedPage, elements: filteredArray, maxPage, totalCount }
 }
 
-// export const searchForExport = async (params, currentUser) => {
-//   params = await normalizeParams(params, currentUser)
+export const searchForExport = async (params, currentUser, headers) => {
+  params = await normalizeParams(params, currentUser)
 
-//   const [actsCount] = await knex("acts").where(makeWhereClause(params)).count()
+  const medicalSummary = await findEmploymentsByHospitalId({ hospitalId: params.hospitals, headers })
 
-//   const count = actsCount?.count
+  const [actsCount] = await knex("act_summary").where(makeWhereClause(params)).count()
 
-//   // Limit the number of lines in export feature for security reason.
-//   if (count && count > LIMIT_EXPORT)
-//     throw new APIError({
-//       message: `Too many rows (limit is ${LIMIT_EXPORT})`,
-//       status: STATUS_406_NOT_ACCEPTABLE,
-//     })
+  const count = actsCount?.count
 
-//   // SQL query
-//   const acts = await knex("acts")
-//     .leftJoin("askers", "acts.asker_id", "askers.id")
-//     .join("hospitals", "acts.hospital_id", "hospitals.id")
-//     .join("users", "acts.added_by", "users.id")
-//     .where(makeWhereClause(params))
-//     .orderByRaw(
-//       "acts.examination_date desc, case when (acts.updated_at is not null) then acts.updated_at else acts.created_at end desc",
-//     )
-//     .select([
-//       "acts.*",
-//       "askers.name as asker_name",
-//       "hospitals.name as hospital_name",
-//       "users.email as user_email",
-//       "users.first_name as user_first_name",
-//       "users.last_name as user_last_name",
-//     ])
+  // Limit the number of lines in export feature for security reason.
+  if (count && count > LIMIT_EXPORT)
+    throw new APIError({
+      message: `Too many rows (limit is ${LIMIT_EXPORT})`,
+      status: STATUS_406_NOT_ACCEPTABLE,
+    })
+  const actsSummary = await knex("act_summary")
+    .where(makeWhereClause(params))
+    .limit(LIMIT)
+    .select("*")
 
-//   return { elements: transformAllForExport(acts), totalCount: count }
-// }
+  const hospitalSummary = actsSummary
+    .map((item) => {
+      const { summary } = item;
+      const filteredSummary = Object.fromEntries(
+        Object.entries(summary).filter(([year, months]) =>
+          Object.values(months).some((value) => value !== 0)
+        )
+      );
+      return { ...item, summary: filteredSummary };
+    })
+    .filter((item) => {
+      const { summary } = item;
+      return Object.values(summary).some((months) =>
+        Object.values(months).some((value) => value !== 0)
+      );
+    });
+
+  function calculateSummaryValue(hospitalSummary, year, month) {
+    let sum = 0;
+
+    for (const obj of hospitalSummary) {
+      if (obj.summary && obj.summary[year] && obj.summary[year][month] !== undefined) {
+        sum += parseFloat(obj.summary[year][month]) || 0;
+      }
+    }
+
+    return sum;
+  }
+  function calculateDifferencesByYearOrdered(medicalSummary, hospitalSummary) {
+    const result = {};
+    const totalSummaryAct = {};
+    const formattedMedicalSummary = {};
+
+    const differencesByMonth = monthsOfYear.map((month) => month.charAt(0).toLowerCase() + month.slice(1)).map((month) => {
+      const medicalSummaryByMonth = Math.round(medicalSummary[params.year][month]) || 0;
+      const hospitalSummaryBymonth = calculateSummaryValue(hospitalSummary, params.year, month);
+
+      if (!totalSummaryAct[params.year]) {
+        totalSummaryAct[params.year] = {};
+      }
+      if (!formattedMedicalSummary[params.year]) {
+        formattedMedicalSummary[params.year] = {};
+      }
+      totalSummaryAct[params.year][month] = hospitalSummaryBymonth;
+      formattedMedicalSummary[params.year][month] = medicalSummaryByMonth;
+      const difference = medicalSummaryByMonth - hospitalSummaryBymonth;
+      return { month, difference };
+    });
+
+    result[params.year] = differencesByMonth.reduce((acc, curr) => {
+      acc[curr.month] = Math.round(curr.difference);
+      return acc;
+    }, {});
+
+    return { result, totalSummaryAct, formattedMedicalSummary };
+  }
+
+  const hospitalSummaryByYear = hospitalSummary.map(({ category, summary }) => ({ category, summary: summary[params.year] }))
+    .filter((item) => item.summary)
+
+  hospitalSummaryByYear.forEach(entry => {
+    entry.summary = monthsOfYear.reduce((result, month) => {
+      const formattedMonth = month.charAt(0).toLowerCase() + month.slice(1);
+      result[formattedMonth] = entry.summary[formattedMonth] || 0;
+      return result;
+    }, {});
+  });
+
+  const { result: differences, totalSummaryAct, formattedMedicalSummary } = calculateDifferencesByYearOrdered(medicalSummary, hospitalSummary);
+
+  return { elements: { differences, medicalSummaryByYear: formattedMedicalSummary, hospitalSummaryByYear, totalSummaryAct }, totalCount: count }
+}

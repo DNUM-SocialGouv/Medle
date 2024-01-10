@@ -37,7 +37,7 @@ const HospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
   }
 
   return (
-    <Layout page="hospitals" currentUser={currentUser} admin={false}>
+    <Layout page="synthese-activite" currentUser={currentUser} admin={false}>
       <Head>
         <title>Sythèse de l&apos;activité - Medlé</title>
       </Head>
