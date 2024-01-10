@@ -40,7 +40,7 @@ const calcTotal = ["Adéquation de la charge et de la capacité de travail (en j
 
 function extractYearsFromArray(array) {
   const yearsSet = new Set();
-  array.forEach(item => {
+  array?.forEach(item => {
     const summary = item.summary;
     if (summary) {
       const itemYears = Object.keys(summary);
@@ -54,7 +54,7 @@ function extractYearsFromArray(array) {
   return uniqueYears;
 }
 
-const SummaryPage = ({ hospitalSummary, currentUser, medicalSummary }) => {
+const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary }) => {
   const router = useRouter()
   const { hid } = router.query
 
@@ -81,6 +81,7 @@ const SummaryPage = ({ hospitalSummary, currentUser, medicalSummary }) => {
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
         <Title1>{"Synthèse de l'établissement CHU Marseille"}</Title1>
+        <span>Dernière date de mise à jour : {new Date().toLocaleDateString()}</span>
         <select defaultValue={selectedYear} value={selectedYear} onChange={handleChange}>
           {years.map((year, index) => (
             <option key={index} value={year}>{year}</option>
@@ -117,8 +118,8 @@ const SummaryPage = ({ hospitalSummary, currentUser, medicalSummary }) => {
                 </td>
                 {monthsOfYear.map((month, index) => (
                   <td key={index} style={cellsStyle}>
-
-                    {medicalSummary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)]}
+                    {medicalSummary[selectedYear] ?
+                      medicalSummary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)] : ""}
                   </td>
                 ))}
 
@@ -146,7 +147,7 @@ const SummaryPage = ({ hospitalSummary, currentUser, medicalSummary }) => {
                     </td>
                     {monthsOfYear.map((month, index) => (
                       <td key={index} style={cellsStyle}>
-                        {activity.summary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)]}
+                        {activity.summary[selectedYear] ? activity.summary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)] || 0 : 0}
                       </td>
                     ))}
                   </tr>
@@ -202,7 +203,7 @@ SummaryPage.getInitialProps = async (ctx) => {
     const hospitalSummary = await findSummaryByHospital({ hospitalId, headers })
 
     const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
-    console.log(medicalSummary, hospitalSummary);
+    
     return { hospitalSummary, medicalSummary }
   } catch (error) {
     logError(error)
