@@ -1,3 +1,7 @@
+## [1.22.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.3...v1.22.0) (2024-01-12)
+### Features
+* MED-5: Add export and final version of MED-5
+
 ## [1.21.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.2...v1.21.3) (2023-12-21)
 ### Bug
 * fix bug in ac summary when deployed
