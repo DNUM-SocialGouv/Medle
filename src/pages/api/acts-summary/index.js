@@ -6,6 +6,7 @@ import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { CORS_ALLOW_ORIGIN, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
 import { ACTIVITY_CONSULTATION } from "../../../utils/roles"
 import { isAllowedHospitals } from "../../../utils/scope"
+import { find } from "../../../services/hospitals"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -19,7 +20,9 @@ const handler = async (req, res) => {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(ACTIVITY_CONSULTATION, req, res)
 
-        if (hospitals && !isAllowedHospitals(currentUser, [hospitals])) return sendForbiddenError(res)
+        if (hospitals && !isAllowedHospitals(currentUser, [Number(hospitals)])) return sendForbiddenError(res)
+
+        const hospital = await find({ hid: hospitals })
 
         const {
           totalCount,
@@ -31,7 +34,7 @@ const handler = async (req, res) => {
 
         return res
           .status(STATUS_200_OK)
-          .json({ totalCount, currentPage: requestedPage, maxPage, byPage: LIMIT, elements: summaries })
+          .json({ totalCount, currentPage: requestedPage, maxPage, byPage: LIMIT, elements: summaries, hospital })
       }
       default:
         if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)

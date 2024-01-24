@@ -6,8 +6,8 @@ export const findSummaryByHospital = async ({  hospitalId, headers }) => {
       headers: { ...headers, "Content-Type": "application/json" },
     })
   
-    const { elements } = await handleAPIResponse2(response)
-    return elements
+    const { elements, hospital } = await handleAPIResponse2(response)
+    return {elements, hospital}
   }
 
   export const fetchExport = async (selectedYear, hospitalId, headers) => {
