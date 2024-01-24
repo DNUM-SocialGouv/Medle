@@ -10,6 +10,14 @@ export const findSummaryByHospital = async ({  hospitalId, headers }) => {
     return elements
   }
 
+  export const runSummary = async ({ headers }) => {
+    const response = await fetch(`${API_URL}${ACTS_SUMMARY_ENDPOINT}/run-summary`, {
+      headers: { ...headers, "Content-Type": "application/json" },
+    })
+  
+    return await handleAPIResponse2(response)
+  }
+
   export const fetchExport = async (selectedYear, hospitalId, headers) => {
     saveAs(`${API_URL}${ACTS_SUMMARY_ENDPOINT}/export?hospitals=${hospitalId}&year=${selectedYear}`, { ...headers })
   }
