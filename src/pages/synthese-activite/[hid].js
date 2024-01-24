@@ -179,7 +179,7 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
               </>
             )}
           <Button onClick={() => router.push(`/synthese-activite/graph/${hid}`)} className="btn-outline-primary">
-            <ListAltIcon /> Graph de synthèse
+            <ListAltIcon /> Graphique de synthèse
           </Button>
         </div>
       </Container>
@@ -192,9 +192,8 @@ SummaryPage.getInitialProps = async (ctx) => {
   const { hid: hospitalId } = ctx.query
   
   try {
-    const hospitalSummary = await findSummaryByHospital({ hospitalId, headers })
+    const {elements: hospitalSummary, hospital} = await findSummaryByHospital({ hospitalId, headers })
     const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
-    const hospital = await findHospital({ id: hospitalId, headers })
 
     function calculateSummaryValue(hospitalSummary, year, month) {
       let sum = 0;
