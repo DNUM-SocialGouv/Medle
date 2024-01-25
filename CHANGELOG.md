@@ -1,3 +1,9 @@
+## [1.22.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.0...v1.22.1) (2024-01-24)
+### Bug
+* MED-71: fix summary calculator
+* MED-72: fix profiles when accessing summary page
+* MED-73: fix wording graph
+
 ## [1.22.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.3...v1.22.0) (2024-01-12)
 ### Features
 * MED-5: Add export and final version of MED-5
