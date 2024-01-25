@@ -1,3 +1,7 @@
+## [1.22.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.1...v1.22.2) (2024-01-25)
+### Bug
+* MED-71: fix batch
+
 ## [1.22.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.0...v1.22.1) (2024-01-24)
 ### Bug
 * MED-71: fix summary calculator

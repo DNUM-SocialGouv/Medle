@@ -67,7 +67,7 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
       >
         <Title1>{`Synthèse de l'établissement ${hospital.name}`}</Title1>
         <span>Dernière date de mise à jour : {new Date().toLocaleDateString()}</span>
-        {(process.env.NEXT_PUBLIC_SUMMARY_RUN && currentUser.role === SUPER_ADMIN) && <button onClick={onUpdateData} disabled={loading}>{loading ? 'Chargement' : 'Mettre à jour'}</button>}
+        {(!!process.env.NEXT_PUBLIC_SUMMARY_RUN && currentUser.role === SUPER_ADMIN) && <button onClick={onUpdateData} disabled={loading}>{loading ? 'Chargement' : 'Mettre à jour'}</button>}
         <select defaultValue={selectedYear} value={selectedYear} onChange={handleChange}>
           {years.map((year, index) => (
             <option key={index} value={year}>{year}</option>
