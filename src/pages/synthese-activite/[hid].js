@@ -85,6 +85,8 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
 
         {!!hospitalSummary.length && (
           <>
+            {Object.keys(medicalSummary).length === 0 ? <span>L&apos;etp de cet établissement n&apos;est pas initialisé</span> :
+            <>
             <Table responsive className="table-hover">
               <thead>
                 <tr className="table-light">
@@ -135,6 +137,7 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
                 })}
               </tbody>
             </Table>
+            </>}
 
             <Table responsive className="table-hover" style={{ maxHeight: '600px' }}>
               <thead>

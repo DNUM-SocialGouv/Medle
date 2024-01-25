@@ -112,7 +112,7 @@ const SummaryGraphPage = ({ currentUser, formattedGraphData, hospital }) => {
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
-        <Title1 className="">{`Graphe de synthèse de l'établissement ${hospital.name}`}</Title1>
+        <Title1 className="">{`Graphique de synthèse de l'établissement ${hospital.name}`}</Title1>
         <select defaultValue={selectedYear} value={selectedYear} onChange={handleChange}>
           {years.map((year, index) => (
             <option key={index} value={year}>{year}</option>
