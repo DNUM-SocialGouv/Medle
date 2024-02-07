@@ -106,7 +106,7 @@ const SummaryGraphPage = ({ currentUser, formattedGraphData, hospital }) => {
   return (
     <Layout page="synthese-activite" currentUser={currentUser} admin={false}>
       <Head>
-        <title>Graphe de synthèse de l&apos;activité - Medlé</title>
+        <title>Graphique de synthèse de l&apos;activité - Medlé</title>
       </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
@@ -164,9 +164,8 @@ SummaryGraphPage.getInitialProps = async (ctx) => {
   const { hid: hospitalId } = ctx.query
 
   try {
-    const hospitalSummary = await findSummaryByHospital({ hospitalId, headers })
+    const {elements: hospitalSummary, hospital} = await findSummaryByHospital({ hospitalId, headers })
     const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
-    const hospital = await findHospital({ id: hospitalId, headers })
 
     function calculateSummaryValue(hospitalSummary, year, month) {
       let sum = 0;

@@ -34,6 +34,7 @@ export const findByHospitalId = async ({ hospitalId }) => {
       'month',
       knex.raw('SUM(CAST(data_month->>\'doctors\' AS NUMERIC) * 20) as total_doctors')
       )
+    .where("hospital_id", hospitalId)
     .groupBy('year', 'month')
     .then((result) => {
       const formattedResult = {};
