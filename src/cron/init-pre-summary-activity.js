@@ -93,6 +93,6 @@ exports.initPreSummaryActivity = async () => {
         });
     });
     } catch (e) {
-        console.error("Error Prisma Crons summary activity :", e)
+        console.error("Error Knex Crons summary activity :", e)
     }
 }

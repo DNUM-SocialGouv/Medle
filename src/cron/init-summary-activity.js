@@ -61,8 +61,5 @@ exports.initSummaryActivity = async () => {
         console.log('Act summary generation completed successfully.');
     } catch (error) {
         console.error('Error generating act summary:', error);
-    } finally {
-        // Close the database connection
-        await knex.destroy();
     }
 };

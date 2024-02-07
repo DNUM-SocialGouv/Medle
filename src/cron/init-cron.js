@@ -14,10 +14,16 @@ exports.initCrons = async () => {
     })
     .start()
 
-    // etpNotif()
+    cron
+    .schedule(process.env.ETP_NOTIF_CRON || "0 0 1 6,12 *", () => {
+      console.log("Begin export")
+      etpNotif()
+      console.log("Export finished")
+    })
+    .start()
 
     cron
-    .schedule(process.env.SUMMARY_CRON || "0 0 * * *", () => {
+    .schedule(process.env.SUMMARY_CRON || "0 2 1 * *", () => {
       console.log("Begin export")
       initPreSummaryActivity().then(() => initSummaryActivity())      
       console.log("Export finished")
