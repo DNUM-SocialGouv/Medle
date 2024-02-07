@@ -77,6 +77,6 @@ exports.etpNotif = async () => {
         }
         sendEmailRecursively(0)
     } catch (e) {
-        console.error("Error Knex Crons etp notif :", e)
+        console.error("Error Knex Cron etp notif :", e)
     }
 }
