@@ -9,8 +9,8 @@ import Layout from "../../components/Layout"
 import { Button, Title1 } from "../../components/StyledComponents"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
 import { logError } from "../../utils/logger"
-import { ACTIVITY_CONSULTATION } from "../../utils/roles"
-import { findSummaryByHospital } from "../../clients/acts-summary"
+import { ACTIVITY_CONSULTATION, SUPER_ADMIN } from "../../utils/roles"
+import { findSummaryByHospital, runSummary } from "../../clients/acts-summary"
 import { findEmploymentsByHospitalId } from "../../clients/employments"
 import { findHospital } from "../../clients/hospitals"
 import { isOpenFeature } from "../../config"
@@ -37,6 +37,7 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
   const years = Object.keys(medicalSummary)
 
   const [error] = useState("")
+  const [loading, setLoading] = useState(false)
   const [selectedYear, setSelectedYear] = useState(String(years[years.length - 1]));
   const handleChange = (event) => {
     setSelectedYear(event.target.value);
@@ -44,6 +45,13 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
 
   async function onExport() {
     await fetchExport(selectedYear, hid, headers)
+  }
+
+  async function onUpdateData() {
+    setLoading(true)
+    runSummary(headers).then(() => {
+      setLoading(false);
+    })
   }
 
   const cellsStyle = { minWidth: "90px", textAlign: "center" }
@@ -59,6 +67,7 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
       >
         <Title1>{`Synthèse de l'établissement ${hospital.name}`}</Title1>
         <span>Dernière date de mise à jour : {new Date().toLocaleDateString()}</span>
+        {(!!process.env.NEXT_PUBLIC_SUMMARY_RUN && currentUser.role === SUPER_ADMIN) && <button onClick={onUpdateData} disabled={loading}>{loading ? 'Chargement' : 'Mettre à jour'}</button>}
         <select defaultValue={selectedYear} value={selectedYear} onChange={handleChange}>
           {years.map((year, index) => (
             <option key={index} value={year}>{year}</option>
@@ -179,7 +188,7 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
               </>
             )}
           <Button onClick={() => router.push(`/synthese-activite/graph/${hid}`)} className="btn-outline-primary">
-            <ListAltIcon /> Graph de synthèse
+            <ListAltIcon /> Graphique de synthèse
           </Button>
         </div>
       </Container>
@@ -192,9 +201,8 @@ SummaryPage.getInitialProps = async (ctx) => {
   const { hid: hospitalId } = ctx.query
   
   try {
-    const hospitalSummary = await findSummaryByHospital({ hospitalId, headers })
+    const {elements: hospitalSummary, hospital} = await findSummaryByHospital({ hospitalId, headers })
     const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
-    const hospital = await findHospital({ id: hospitalId, headers })
 
     function calculateSummaryValue(hospitalSummary, year, month) {
       let sum = 0;

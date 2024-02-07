@@ -8,6 +8,7 @@ export const STATS_GLOBAL = "STATS_GLOBAL" // peut voir les stats publiques
 export const ADD_USER = "ADD_USER" // peut ajouter un utilisateur
 export const ADD_TYPE_VIOLENCE = "ADD_TYPE_VIOLENCE" // peut ajouter des types de violences occasionnellement (attentat, etc.)
 export const ACTIVITY_CONSULTATION = "ACTIVITY_CONSULTATION" // peut consulter synthèse d'activité
+export const ACTIVITY_RUN = "ACTIVITY_RUN" // peut lancer le batch
 export const NO_PRIVILEGE_REQUIRED = "NO_PRIVILEGE_REQUIRED"
 export const ADMIN = "ADMIN"
 
@@ -31,6 +32,7 @@ export const PRIVILEGES = [
   ADD_USER,
   ADD_TYPE_VIOLENCE,
   ACTIVITY_CONSULTATION,
+  ACTIVITY_RUN,
   NO_PRIVILEGE_REQUIRED,
   ADMIN,
 ]

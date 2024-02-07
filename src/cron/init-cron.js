@@ -25,7 +25,7 @@ exports.initCrons = async () => {
     cron
     .schedule(process.env.SUMMARY_CRON || "0 2 1 * *", () => {
       console.log("Begin export")
-      initPreSummaryActivity().then(() => initSummaryActivity())      
+      initPreSummaryActivity().then((knex) => initSummaryActivity(knex))      
       console.log("Export finished")
     })
     .start()
