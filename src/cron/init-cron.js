@@ -16,7 +16,7 @@ exports.initCrons = async () => {
 
     cron
     .schedule(process.env.ETP_NOTIF_CRON || "0 0 1 6,12 *", () => {
-      console.log("Begin export")
+      console.log("Begin exportt")
       etpNotif()
       console.log("Export finished")
     })
