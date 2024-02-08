@@ -85,7 +85,8 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
 
         {!!hospitalSummary.length && (
           <>
-            {Object.keys(medicalSummary).length === 0 ? <span>L&apos;etp de cet établissement n&apos;est pas initialisé</span> :
+            {Object.keys(medicalSummary).length === 0 ? 
+            <span>La synthèse ne peut pas s&apos;afficher car aucun ETP n&apos;a été renseigné dans cette structure pour l&apos;année choisie .</span> :
             <>
             <Table responsive className="table-hover">
               <thead>
