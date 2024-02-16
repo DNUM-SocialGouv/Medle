@@ -42,7 +42,7 @@ exports.initSummaryActivity = async (knex) => {
                             summary[year][month] = 0;
                         }
 
-                        summary[year][month] += act.act_duration / 1440;
+                        summary[year][month] += act.act_duration / 480;
                     }
                     function roundNumericValues(obj) {
                         const newObj = {};

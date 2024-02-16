@@ -4,6 +4,34 @@ const environment = process.env.NODE_ENV || "development"
 
 const knex = require("knex")(knexConfig[environment])
 
+function calculatePonderation({examined, actType, violenceType, age, location, duration, summaryActParameters}) {
+    let violenceTypeChecked = violenceType;
+
+    if(violenceType.includes("Accident")) {
+        violenceTypeChecked = "Accident"; 
+    } else if(violenceType.includes("Attentat")) {
+        violenceTypeChecked = "Attentat"
+    }
+
+    // Creating the category by concatenating fields
+    const category = `${examined} - ${actType} - ${violenceTypeChecked}`;
+
+    // Find corresponding summary act parameter for each act
+    const correspondingSummaryActParameter = summaryActParameters.find((param) => param.category === category)
+    let ponderation = 1
+    if (correspondingSummaryActParameter) {
+        if (Object.keys(correspondingSummaryActParameter.ponderation.age).length !== 0) {
+            ponderation = correspondingSummaryActParameter.ponderation.age[age]
+        } else if (Object.keys(correspondingSummaryActParameter.ponderation.location).length !== 0) {
+            ponderation = correspondingSummaryActParameter.ponderation.location[location]
+        } else if (Object.keys(correspondingSummaryActParameter.ponderation.duration).length !== 0) {
+            ponderation = correspondingSummaryActParameter.ponderation.duration[duration]
+        }
+    }
+
+    return { ponderation, correspondingSummaryActParameter, category };
+}
+
 exports.initPreSummaryActivity = async () => {
     try {
         return await new Promise(async (resolve, reject) => {
@@ -19,6 +47,8 @@ exports.initPreSummaryActivity = async () => {
                         knex.raw("extra_data->>'personAgeTag' as age"),
                         knex.raw("extra_data->>'violenceNatures' as violence_type"),
                         knex.raw("extra_data->>'location' as location"),
+                        knex.raw("extra_data->>'duration' as duration"),
+                        knex.raw("extra_data->>'examinations' as examinations"),
                     ).stream()
 
                 let rowsToInsert = [];
@@ -29,33 +59,41 @@ exports.initPreSummaryActivity = async () => {
 
                 stream.on('data', function (act) {
                     const examined = act.examined;
-                    const actTypeMatch = act.act_type?.match(/"(.*?)"/);
-                    const actType = actTypeMatch ? actTypeMatch[1] || '' : '';
+                    const actTypeMatch = act?.act_type ? act?.act_type.includes('[') ? JSON.parse(act.act_type) : [act.act_type] : '';
+                    const actType = actTypeMatch ? actTypeMatch[0] || '' : '';
 
-                    const violenceTypeMatch = act.violence_type?.match(/"(.*?)"/);
-                    const violenceType = violenceTypeMatch ? violenceTypeMatch[1] || '' : '';
+                    const violenceTypeMatch = act?.violence_type ? JSON.parse(act.violence_type) : '';
+                    const violenceType = violenceTypeMatch ? violenceTypeMatch[0] || '' : '';
+
                     const age = act.age;
                     const location = act.location;
+                    const duration = act.duration;
+                    const examinations = act?.examinations ? JSON.parse(act.examinations) || [] : []
 
-                    // Creating the category by concatenating fields
-                    const category = `${examined} - ${actType} - ${violenceType}`;
-
-                    // Find corresponding summary act parameter for each act
-                    const correspondingSummaryActParameter = summaryActParameters.find((param) => param.category === category)
-                    let ponderation = 1
-                    if (correspondingSummaryActParameter) {
-                        if (Object.keys(correspondingSummaryActParameter.ponderation.age) !== 0) {
-                            ponderation = correspondingSummaryActParameter.ponderation.age[age]
-                        } else if (Object.keys(correspondingSummaryActParameter.ponderation.location) !== 0) {
-                            ponderation = correspondingSummaryActParameter.ponderation.location[location]
-                        } else if (Object.keys(correspondingSummaryActParameter.ponderation.duration) !== 0) {
-                            ponderation = correspondingSummaryActParameter.ponderation.duration[duration]
+                    if (violenceTypeMatch.length > 1) {
+                        for (let index = 1; index < violenceTypeMatch.length; index++) {
+                            const violenceType = violenceTypeMatch[index];
+                            const { ponderation, correspondingSummaryActParameter, category } = calculatePonderation({examined, actType, violenceType, age, location, duration, summaryActParameters})
+                            delete act.duration;
+                            delete act.examinations;
+                            rowsToInsert.push({
+                                ...act,
+                                act_duration: correspondingSummaryActParameter?.act_duration * ponderation * 1.5 || 0,
+                                ponderation,
+                                category,
+                                act_type: actType,
+                                violence_type: violenceType
+                            })
                         }
                     }
-
+                    const { ponderation, correspondingSummaryActParameter, category } = calculatePonderation({examined, actType, violenceType, age, location, duration, summaryActParameters})
+                    
+                    delete act.duration;
+                    delete act.examinations;
+                    
                     rowsToInsert.push({
                         ...act,
-                        act_duration: correspondingSummaryActParameter?.act_duration * ponderation || 0,
+                        act_duration: correspondingSummaryActParameter?.act_duration * ponderation + examinations.length * 10 || 0,
                         ponderation,
                         category,
                         act_type: actType,
@@ -99,5 +137,5 @@ exports.initPreSummaryActivity = async () => {
         }).catch((error) => console.error("Error summary activity", error));
     } catch (e) {
         console.error("Error Prisma Crons summary activity :", e)
-    } 
+    }
 }
