@@ -1,3 +1,11 @@
+## [1.22.4](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.3...v1.22.4) (2024-02-16)
+### Features
+* MED-5: adjust calculator from 1440 to 480
+* MED-5: adjust wording when there's no etp
+### Bug
+* MED-74: add 10 minutes to acts when there's examinations
+* MED-5: reform code to adapt to multiple selections
+
 ## [1.22.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.2...v1.22.3) (2024-01-25)
 ### Bug
 * MED-72: fix medical summary
