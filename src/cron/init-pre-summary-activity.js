@@ -70,30 +70,14 @@ exports.initPreSummaryActivity = async () => {
                     const duration = act.duration;
                     const examinations = act?.examinations ? JSON.parse(act.examinations) || [] : []
 
-                    if (violenceTypeMatch.length > 1) {
-                        for (let index = 1; index < violenceTypeMatch.length; index++) {
-                            const violenceType = violenceTypeMatch[index];
-                            const { ponderation, correspondingSummaryActParameter, category } = calculatePonderation({examined, actType, violenceType, age, location, duration, summaryActParameters})
-                            delete act.duration;
-                            delete act.examinations;
-                            rowsToInsert.push({
-                                ...act,
-                                act_duration: correspondingSummaryActParameter?.act_duration * ponderation * 1.5 || 0,
-                                ponderation,
-                                category,
-                                act_type: actType,
-                                violence_type: violenceType
-                            })
-                        }
-                    }
                     const { ponderation, correspondingSummaryActParameter, category } = calculatePonderation({examined, actType, violenceType, age, location, duration, summaryActParameters})
-                    
+                    const multipleViolenceTypes = violenceTypeMatch.length > 1 ? 1.5 : 1
                     delete act.duration;
                     delete act.examinations;
                     
                     rowsToInsert.push({
                         ...act,
-                        act_duration: correspondingSummaryActParameter?.act_duration * ponderation + examinations.length * 10 || 0,
+                        act_duration: correspondingSummaryActParameter?.act_duration * ponderation * multipleViolenceTypes + examinations.length * 10 || 0,
                         ponderation,
                         category,
                         act_type: actType,
