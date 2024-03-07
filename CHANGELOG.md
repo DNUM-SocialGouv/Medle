@@ -1,3 +1,9 @@
+## [1.22.5](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.4...v1.22.5) (2024-03-07)
+### Feature
+* MED-5: remove duplicate acts 
+* MED-5: multiply by 1.5 when multiple violence types
+* MED-5: group by examined and act type
+
 ## [1.22.4](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.3...v1.22.4) (2024-02-16)
 ### Features
 * MED-5: adjust calculator from 1440 to 480
