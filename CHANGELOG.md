@@ -1,3 +1,11 @@
+## [1.22.6](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.5...v1.22.6) (2024-03-11)
+### Feature
+* MED-5: replace round by floor 
+### Bug
+* MED-5: remove update summary button
+* MED-76: fix wording
+
+
 ## [1.22.5](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.4...v1.22.5) (2024-03-07)
 ### Feature
 * MED-5: remove duplicate acts 
