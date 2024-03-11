@@ -15,9 +15,9 @@ exports.initSummaryActivity = async (knex) => {
                     )
                     .join(
                         knex.raw(
-                            `(SELECT act_pre_summary.hospital_id, act_pre_summary.id as id_act, act_pre_summary.category as act_category, act_pre_summary.examination_date, act_pre_summary.act_duration
-        FROM act_pre_summary
-        GROUP BY act_pre_summary.hospital_id, act_pre_summary.id, act_pre_summary.category
+                            `(SELECT act_pre_summary.hospital_id, act_pre_summary.id as id_act, act_pre_summary.examined || ' - ' || act_pre_summary.act_type as act_category, act_pre_summary.examination_date, act_pre_summary.act_duration
+                            FROM act_pre_summary
+                            GROUP BY act_pre_summary.hospital_id, act_pre_summary.id, act_pre_summary.examined, act_pre_summary.act_type
         ) as subquery`
                         ),
                         'hospitals.id',
