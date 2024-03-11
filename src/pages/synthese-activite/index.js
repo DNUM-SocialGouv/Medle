@@ -39,13 +39,13 @@ const HospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
   return (
     <Layout page="synthese-activite" currentUser={currentUser} admin={false}>
       <Head>
-        <title>Sythèse de l&apos;activité - Medlé</title>
+        <title>Synthèse de l&apos;activité - Medlé</title>
       </Head>
       <Container
         style={{ maxWidth: 980, minWidth: 740 }}
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
-        <Title1 className="">{"Choisir un établissement pour voir le synthèse de l'activité"}</Title1>
+        <Title1 className="">{"Choisir un établissement pour voir la synthèse de l'activité"}</Title1>
       </Container>
 
       <Container style={{ maxWidth: 980, minWidth: 740 }}>
