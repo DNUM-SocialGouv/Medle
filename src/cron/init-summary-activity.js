@@ -52,7 +52,7 @@ exports.initSummaryActivity = async (knex) => {
                                 newObj[key] = roundNumericValues(obj[key]);
                             } else if (typeof obj[key] === 'number') {
                                 // Round numeric values
-                                newObj[key] = Math.round(obj[key]);
+                                newObj[key] = Math.floor(obj[key]);
                             } else {
                                 newObj[key] = obj[key];
                             }
