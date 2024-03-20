@@ -7,7 +7,7 @@ import { logDebug } from "../../../utils/logger"
 import { ACTIVITY_CONSULTATION } from "../../../utils/roles"
 import { isAllowedHospitals } from "../../../utils/scope"
 import { exportSummary } from "../../../services/acts-summary/export"
-import { findHospital } from "../../../clients/hospitals"
+import { find } from "../../../services/hospitals"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -21,10 +21,10 @@ const handler = async (req, res) => {
       case METHOD_GET: {
         const currentUser = checkValidUserWithPrivilege(ACTIVITY_CONSULTATION, req, res)
 
-        if (hospitals && !isAllowedHospitals(currentUser, [hospitals])) return sendForbiddenError(res)
+        if (hospitals && !isAllowedHospitals(currentUser, [Number(hospitals)])) return sendForbiddenError(res)
 
         const workbook = await exportSummary(req.query, currentUser, req.headers)
-        const hospital = await findHospital({ id: hospitals, headers: req.headers })
+        const hospital = await find({ hid: hospitals })
 
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         res.setHeader("Content-Disposition", "attachment; filename=" + "Synthèse de l'établissement " + hospital.name + ".xlsx")
