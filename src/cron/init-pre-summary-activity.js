@@ -4,12 +4,12 @@ const environment = process.env.NODE_ENV || "development"
 
 const knex = require("knex")(knexConfig[environment])
 
-function calculatePonderation({examined, actType, violenceType, age, location, duration, summaryActParameters}) {
+function calculatePonderation({ examined, actType, violenceType, age, location, duration, summaryActParameters }) {
     let violenceTypeChecked = violenceType;
 
-    if(violenceType.includes("Accident")) {
-        violenceTypeChecked = "Accident"; 
-    } else if(violenceType.includes("Attentat")) {
+    if (violenceType.includes("Accident")) {
+        violenceTypeChecked = "Accident";
+    } else if (violenceType.includes("Attentat")) {
         violenceTypeChecked = "Attentat"
     }
 
@@ -20,13 +20,8 @@ function calculatePonderation({examined, actType, violenceType, age, location, d
     const correspondingSummaryActParameter = summaryActParameters.find((param) => param.category === category)
     let ponderation = 1
     if (correspondingSummaryActParameter) {
-        if (Object.keys(correspondingSummaryActParameter.ponderation.age).length !== 0) {
-            ponderation = correspondingSummaryActParameter.ponderation.age[age]
-        } else if (Object.keys(correspondingSummaryActParameter.ponderation.location).length !== 0) {
-            ponderation = correspondingSummaryActParameter.ponderation.location[location]
-        } else if (Object.keys(correspondingSummaryActParameter.ponderation.duration).length !== 0) {
-            ponderation = correspondingSummaryActParameter.ponderation.duration[duration]
-        }
+        const { age: agePonderation, location: locationPonderation, duration: durationPonderation } = correspondingSummaryActParameter.ponderation;
+        ponderation = agePonderation[age] || locationPonderation[location] || durationPonderation[duration] || 1;
     }
 
     return { ponderation, correspondingSummaryActParameter, category };
@@ -59,30 +54,45 @@ exports.initPreSummaryActivity = async () => {
 
                 stream.on('data', function (act) {
                     const examined = act.examined;
-                    const actTypeMatch = act?.act_type ? act?.act_type.includes('[') ? JSON.parse(act.act_type) : [act.act_type] : '';
-                    const actType = actTypeMatch ? actTypeMatch[0] || '' : '';
+                    const actTypeMatch = act?.act_type ? act?.act_type.includes('[') ? JSON.parse(act.act_type) : [act.act_type] : [''];
 
-                    const violenceTypeMatch = act?.violence_type ? JSON.parse(act.violence_type) : '';
+                    const violenceTypeMatch = act?.violence_type ? JSON.parse(act.violence_type) : [''];
                     const violenceType = violenceTypeMatch ? violenceTypeMatch[0] || '' : '';
 
                     const age = act.age;
                     const location = act.location;
                     const duration = act.duration;
                     const examinations = act?.examinations ? JSON.parse(act.examinations) || [] : []
-
-                    const { ponderation, correspondingSummaryActParameter, category } = calculatePonderation({examined, actType, violenceType, age, location, duration, summaryActParameters})
                     const multipleViolenceTypes = violenceTypeMatch.length > 1 ? 1.5 : 1
-                    delete act.duration;
-                    delete act.examinations;
+                    const parameters = {
+                        examined, violenceType, age, location, duration, summaryActParameters
+                    }
                     
-                    rowsToInsert.push({
-                        ...act,
-                        act_duration: correspondingSummaryActParameter?.act_duration * ponderation * multipleViolenceTypes + examinations.length * 10 || 0,
-                        ponderation,
-                        category,
-                        act_type: actType,
-                        violence_type: violenceType
-                    })
+                    function processAct(actType) {
+                        const { ponderation, correspondingSummaryActParameter, category } = calculatePonderation({actType, ...parameters});
+                        delete act.duration;
+                        delete act.examinations;
+
+                        rowsToInsert.push({
+                            ...act,
+                            act_duration: correspondingSummaryActParameter?.act_duration * ponderation * multipleViolenceTypes + examinations.length * 10 || 0,
+                            ponderation,
+                            category,
+                            act_type: actType,
+                            violence_type: violenceType
+                        });
+                    }
+
+                    if (examined === "Personne décédée") {
+                        actTypeMatch.forEach(actType => {
+                            processAct(actType, parameters);
+                        });
+                    } else {
+                        const actType = actTypeMatch ? actTypeMatch[0] || '' : '';
+                        processAct(actType, parameters);
+                    }
+
+
 
                     if (rowsToInsert.length >= batchSize) {
                         knex.batchInsert('act_pre_summary', rowsToInsert, batchSize)
