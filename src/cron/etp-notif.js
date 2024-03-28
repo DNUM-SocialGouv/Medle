@@ -17,26 +17,18 @@ exports.etpNotif = async () => {
                 .select('u.email')
                 .leftJoin('employments as e', function () {
                     this.on('u.hospital_id', '=', 'e.hospital_id')
-                        .andOn(knex.raw("e.hospital_id IS NULL OR e.data_month = ?::jsonb", [{
-                            ides: 0,
-                            others: 0,
-                            doctors: 0,
-                            nursings: 0,
-                            executives: 0,
-                            secretaries: 0,
-                            auditoriumAgents: 0
-                        }]));
+                        .andOnIn('e.month', [twoMonthsAgo.getMonth(), twoMonthsAgo.getMonth() + 1])
+                        .andOn('e.year', '=', twoMonthsAgo.getFullYear())
                 })
-                .whereIn('e.month', [twoMonthsAgo.getMonth(), twoMonthsAgo.getMonth() + 1])
-                .where('e.year', twoMonthsAgo.getFullYear())
-                .whereIn('u.role', ['ADMIN_HOSPITAL', 'OPERATOR_GENERIC', 'OPERATOR_EMPLOYMENT'])
-                .distinct('u.email');
+                .whereNull('e.hospital_id')
+                .andWhere(function () {
+                    this.whereIn('u.role', ['ADMIN_HOSPITAL', 'OPERATOR_GENERIC', 'OPERATOR_EMPLOYMENT'])
+                })
+                .distinct();
 
             return emails;
         };
-
         const emails = await getUsersForReminder();
-
         const html = `
               Bonjour,
           
@@ -70,8 +62,8 @@ exports.etpNotif = async () => {
             }
 
             sendMail(mailOptions).then(() => {
-                    // Send the next email recursively
-                    sendEmailRecursively(recipientIndex + 1);
+                // Send the next email recursively
+                sendEmailRecursively(recipientIndex + 1);
             }).catch((error) => console.log(`Error occurred while sending email to ${recipient}:`, error));
 
         }
