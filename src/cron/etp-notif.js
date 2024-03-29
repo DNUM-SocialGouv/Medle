@@ -17,7 +17,7 @@ exports.etpNotif = async () => {
                 .select('u.email')
                 .leftJoin('employments as e', function () {
                     this.on('u.hospital_id', '=', 'e.hospital_id')
-                        .andOnIn('e.month', [twoMonthsAgo.getMonth(), twoMonthsAgo.getMonth() + 1])
+                        .andOnIn('e.month', [""+twoMonthsAgo.getMonth() + 1, ""+twoMonthsAgo.getMonth() + 2])
                         .andOn('e.year', '=', twoMonthsAgo.getFullYear())
                 })
                 .whereNull('e.hospital_id')
