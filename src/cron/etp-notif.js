@@ -13,11 +13,12 @@ exports.etpNotif = async () => {
         const getUsersForReminder = async () => {
             const twoMonthsAgo = new Date();
             twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
-            const emails = await knex('users as u')
+            console.log(twoMonthsAgo.getMonth());
+            const emails = knex('users as u')
                 .select('u.email')
                 .leftJoin('employments as e', function () {
                     this.on('u.hospital_id', '=', 'e.hospital_id')
-                        .andOnIn('e.month', [""+twoMonthsAgo.getMonth() + 1, ""+twoMonthsAgo.getMonth() + 2])
+                        .andOnIn('e.month', [""+(twoMonthsAgo.getMonth() + 1), ""+(twoMonthsAgo.getMonth() + 2)])
                         .andOn('e.year', '=', twoMonthsAgo.getFullYear())
                 })
                 .whereNull('e.hospital_id')
@@ -25,10 +26,11 @@ exports.etpNotif = async () => {
                     this.whereIn('u.role', ['ADMIN_HOSPITAL', 'OPERATOR_GENERIC', 'OPERATOR_EMPLOYMENT'])
                 })
                 .distinct();
-
-            return emails;
+                console.log(emails.toString())
+            return await emails;
         };
         const emails = await getUsersForReminder();
+        console.log(JSON.stringify(emails), emails.find((e) => e.email === "naceurbenyahia1@gmail.com"));
         const html = `
               Bonjour,
           
