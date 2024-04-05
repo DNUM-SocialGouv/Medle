@@ -7,6 +7,8 @@ export const STATS_LOCAL = "STATS_LOCAL" // peut voir les stats pour un ou plusi
 export const STATS_GLOBAL = "STATS_GLOBAL" // peut voir les stats publiques
 export const ADD_USER = "ADD_USER" // peut ajouter un utilisateur
 export const ADD_TYPE_VIOLENCE = "ADD_TYPE_VIOLENCE" // peut ajouter des types de violences occasionnellement (attentat, etc.)
+export const ACTIVITY_CONSULTATION = "ACTIVITY_CONSULTATION" // peut consulter synthèse d'activité
+export const ACTIVITY_RUN = "ACTIVITY_RUN" // peut lancer le batch
 export const NO_PRIVILEGE_REQUIRED = "NO_PRIVILEGE_REQUIRED"
 export const ADMIN = "ADMIN"
 
@@ -29,6 +31,8 @@ export const PRIVILEGES = [
   STATS_GLOBAL,
   ADD_USER,
   ADD_TYPE_VIOLENCE,
+  ACTIVITY_CONSULTATION,
+  ACTIVITY_RUN,
   NO_PRIVILEGE_REQUIRED,
   ADMIN,
 ]
@@ -47,7 +51,7 @@ export const ROLES = {
     ADMIN,
   ],
   // un gestionnaire d'actes et d'ETP
-  GUEST_HOSPITAL: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
+  GUEST_HOSPITAL: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL, ACTIVITY_CONSULTATION],
 
   OPERATOR_ACT: [ACT_CONSULTATION, ACT_MANAGEMENT, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
   // un gestionnaire d'acte
@@ -63,11 +67,11 @@ export const ROLES = {
   ],
 
   // un ARS par exemple
-  PUBLIC_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
-
+  PUBLIC_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL, ACTIVITY_CONSULTATION],
+  // ex: un superviseur public, tel que ARS, Ministère de la justice
+  REGIONAL_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL, ACTIVITY_CONSULTATION],
   // le super admin qui a tous les privilèges
-  REGIONAL_SUPERVISOR: [ACT_CONSULTATION, EMPLOYMENT_CONSULTATION, STATS_LOCAL, STATS_GLOBAL],
-  SUPER_ADMIN: PRIVILEGES, // ex: un superviseur public, tel que ARS, Ministère de la justice
+  SUPER_ADMIN: PRIVILEGES,
 }
 
 export const ROLES_DESCRIPTION = {

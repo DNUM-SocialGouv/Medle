@@ -1,6 +1,6 @@
 import knex from "../../knex/knex"
 import { extractMonthYear } from "../../utils/date"
-import { isValid } from "../../utils/employments"
+import { isValid, isHospitalValid } from "../../utils/employments"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
@@ -19,6 +19,46 @@ export const find = async ({ year, month, hospitalId }) => {
     .select("data_month")
 
   return (results && results.data_month) || {}
+}
+
+export const findByHospitalId = async ({ hospitalId }) => {
+  if (!isHospitalValid({ hospitalId }))
+    throw new APIError({
+      message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
+    })
+
+    const results = await knex('employments')
+    .select(
+      'year',
+      'month',
+      knex.raw('SUM(CAST(data_month->>\'doctors\' AS NUMERIC) * 20) as total_doctors')
+      )
+    .where("hospital_id", hospitalId)
+    .groupBy('year', 'month')
+    .then((result) => {
+      const formattedResult = {};
+  
+      result.forEach((row) => {
+        const { year, month, total_doctors } = row;
+  
+        if (!formattedResult[year]) {
+          formattedResult[year] = {};
+        }
+  
+        const monthName = (() => {
+          const months = [
+            'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+          ];
+          return months[parseInt(month) - 1];
+        })();
+  
+        formattedResult[year][monthName] = total_doctors;
+      });
+      return formattedResult
+    })
+  return results || {}
 }
 
 export const findLastEdit = async (hospitalId) => {

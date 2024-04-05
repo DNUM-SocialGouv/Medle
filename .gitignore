@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# PILO files
+/exports
+
 # next.js
 /.next/
 /out/

@@ -14,6 +14,7 @@ import {
   isAllowed,
   SUPER_ADMIN,
 } from "../utils/roles"
+import Link from "next/link"
 
 const SiteMapPage = () => {
   const currentUser = useUser()
@@ -29,32 +30,32 @@ const SiteMapPage = () => {
         <div className="sitemapPage mt-5">
           <ul>
             <li>
-              <a href="/">Connexion</a>
+              <Link href="/">Connexion</Link>
             </li>
             <li>
-              <a href="/forgot-password">Mot de passe oublié</a>
+              <Link href="/forgot-password">Mot de passe oublié</Link>
             </li>
             {currentUser &&
               !currentUser.resetPassword &&
               isAllowed(currentUser.role, ACT_MANAGEMENT) &&
               currentUser.role !== SUPER_ADMIN && (
                 <li>
-                  <a href="/acts/declaration">Ajout d&apos;acte</a>
+                  <Link href="/acts/declaration">Ajout d&apos;acte</Link>
                 </li>
               )}
             {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, ACT_CONSULTATION) && (
               <li>
-                <a href="/acts">Tous les actes</a>
+                <Link href="/acts">Tous les actes</Link>
               </li>
             )}
             {currentUser && !currentUser.resetPassword && isAllowed(currentUser.role, EMPLOYMENT_CONSULTATION) && (
               <li>
-                <a href="/employments">Personnel</a>
+                <Link href="/employments">Personnel</Link>
               </li>
             )}
             {currentUser && !currentUser.resetPassword && (
               <li>
-                <a href="/statistics">Statistiques</a>
+                <Link href="/statistics">Statistiques</Link>
               </li>
             )}
             {currentUser &&
@@ -67,62 +68,62 @@ const SiteMapPage = () => {
                     <ul>
                       {(currentUser.role === SUPER_ADMIN || currentUser.role === ADMIN_HOSPITAL) && (
                         <li>
-                          <a href="/administration/users">Administration des utilisateurs</a>
+                          <Link href="/administration/users">Administration des utilisateurs</Link>
                           <ul>
                             <li>
-                              <a href="/administration/users/new">Ajout d&apos;un utilisateur</a>
+                              <Link href="/administration/users/new">Ajout d&apos;un utilisateur</Link>
                             </li>
                           </ul>
                         </li>
                       )}
                       {currentUser.role === SUPER_ADMIN && (
                         <li>
-                          <a href="/administration/hospitals">Administration des établissements</a>
+                          <Link href="/administration/hospitals">Administration des établissements</Link>
                           <ul>
                             <li>
-                              <a href="/administration/hospitals/new">Ajout d&apos;un établissement</a>
+                              <Link href="/administration/hospitals/new">Ajout d&apos;un établissement</Link>
                             </li>
                           </ul>
                         </li>
                       )}
                       {currentUser.role === SUPER_ADMIN && (
                         <li>
-                          <a href="/administration/askers">Administration des demandeurs</a>
+                          <Link href="/administration/askers">Administration des demandeurs</Link>
                           <ul>
                             <li>
-                              <a href="/administration/askers/new">Ajout d&apos;un demandeur</a>
+                              <Link href="/administration/askers/new">Ajout d&apos;un demandeur</Link>
                             </li>
                           </ul>
                         </li>
                       )}
                       {currentUser.role === SUPER_ADMIN && (
                         <li>
-                          <a href="/administration/attacks">Administration des attentats</a>
+                          <Link href="/administration/attacks">Administration des attentats</Link>
                           <ul>
                             <li>
-                              <a href="/administration/attacks/new">Ajout d&apos;un attentat</a>
+                              <Link href="/administration/attacks/new">Ajout d&apos;un attentat</Link>
                             </li>
                           </ul>
                         </li>
                       )}
                       {currentUser.role === SUPER_ADMIN && (
                         <li>
-                          <a href="/administration/acts">Administration des actes</a>
+                          <Link href="/administration/acts">Administration des actes</Link>
                         </li>
                       )}
                       {currentUser.role === SUPER_ADMIN && (
                         <li>
-                          <a href="/administration/messages">Administration des messages</a>
+                          <Link href="/administration/messages">Administration des messages</Link>
                         </li>
                       )}
                       {currentUser.role === SUPER_ADMIN && (
                         <li>
-                          <a href="/administration/logos">Administration des logos</a>
+                          <Link href="/administration/logos">Administration des logos</Link>
                         </li>
                       )}
                       {currentUser.role === SUPER_ADMIN && (
                         <li>
-                          <a href="/administration/footer-documents">Administration des documents du pied de page</a>
+                          <Link href="/administration/footer-documents">Administration des documents du pied de page</Link>
                         </li>
                       )}
                     </ul>

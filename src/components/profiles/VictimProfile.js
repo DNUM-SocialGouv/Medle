@@ -117,6 +117,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
               "Maison de retraite",
               "Commissariat",
               "Gendarmerie",
+              "Unité d'accueil enfants en danger (UAPED)",
             ]}
             mode="toggle"
             dispatch={dispatch}
@@ -257,8 +258,10 @@ VictimEdit.propTypes = {
   errors: PropTypes.object,
 }
 
-export default {
+const Victim = {
   edit: VictimEdit,
   read: VictimRead,
   hasErrors,
 }
+
+export default Victim 

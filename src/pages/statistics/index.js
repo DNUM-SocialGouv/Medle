@@ -75,7 +75,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 
   const scope = useMemo(() => buildScope(currentUser), [currentUser])
 
-  const hospitalsChoices = useCallback(
+  const hospitalsChoices = useMemo(() => 
     mapArrayForSelect(
       scope?.length === 0
         ? getReferenceData("hospitals")

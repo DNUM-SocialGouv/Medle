@@ -144,8 +144,10 @@ RoadRelatedExaminationEdit.propTypes = {
   errors: PropTypes.object,
 }
 
-export default {
+const RoadRelatedExamination = {
   edit: RoadRelatedExaminationEdit,
   read: RoadRelatedExaminationRead,
   hasErrors,
 }
+
+export default RoadRelatedExamination 

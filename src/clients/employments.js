@@ -13,6 +13,13 @@ export const findEmployment = async ({ hospitalId, year, month, headers }) => {
   return handleAPIResponse2(response)
 }
 
+export const findEmploymentsByHospitalId = async ({ hospitalId, headers }) => {
+  const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}`, {
+    headers: headers,
+  })
+  return handleAPIResponse2(response)
+}
+
 export const findLastEdit = async ({ hospitalId, headers }) => {
   const response = await fetch(API_URL + EMPLOYMENTS_ENDPOINT + `/${hospitalId}/last-edit`, {
     headers: headers,

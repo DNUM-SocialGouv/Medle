@@ -119,7 +119,7 @@ const Login = ({ authentication, error }) => {
                 <div className="float-left">
                   <Link href="/forgot-password"
                      style={{ color: "#000091" }}>
-                      J'ai oublié mon mot de passe
+                      J&apos;ai oublié mon mot de passe
                   </Link>
                 </div>
               </Col>
