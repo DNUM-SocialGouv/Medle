@@ -1,5 +1,5 @@
-const dotenv = require("dotenv")
-const { createTransport } = require("nodemailer")
+import dotenv from "dotenv"
+import { createTransport } from "nodemailer"
 
 dotenv.config()
 
@@ -12,7 +12,7 @@ const transportConfig = {
   port: process.env.MAIL_PORT,
 }
 
-exports.sendMail  = async ({ subject, text, html, attachments, to }) => {
+export const sendMail = async ({ subject, text, html, attachments, to }) => {
   const mailOptions = {
     attachments,
     from: process.env.MAIL_FROM,

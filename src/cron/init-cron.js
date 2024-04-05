@@ -3,7 +3,6 @@ const cron = require("node-cron")
 const { exportPilo } = require("./pilo")
 const { initPreSummaryActivity } = require("./init-pre-summary-activity")
 const { initSummaryActivity } = require("./init-summary-activity")
-const { etpNotif } = require("./etp-notif")
 
 exports.initCrons = async () => {
   cron
@@ -14,13 +13,13 @@ exports.initCrons = async () => {
     })
     .start()
 
-    // cron
-    // .schedule(process.env.ETP_NOTIF_CRON || "0 0 1 6,12 *", () => {
-    //   console.log("Begin export")
+    cron
+    .schedule(process.env.ETP_NOTIF_CRON || "0 0 1 6,12 *", () => {
+      console.log("Begin export")
       etpNotif()
-    //   console.log("Export finished")
-    // })
-    // .start()
+      console.log("Export finished")
+    })
+    .start()
 
     cron
     .schedule(process.env.SUMMARY_CRON || "0 2 1 * *", () => {

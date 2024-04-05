@@ -1,3 +1,40 @@
+## [1.22.6](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.5...v1.22.6) (2024-03-11)
+### Feature
+* MED-5: replace round by floor 
+### Bug
+* MED-5: remove update summary button
+* MED-76: fix wording
+
+
+## [1.22.5](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.4...v1.22.5) (2024-03-07)
+### Feature
+* MED-5: remove duplicate acts 
+* MED-5: multiply by 1.5 when multiple violence types
+* MED-5: group by examined and act type
+
+## [1.22.4](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.3...v1.22.4) (2024-02-16)
+### Features
+* MED-5: adjust calculator from 1440 to 480
+* MED-5: adjust wording when there's no etp
+### Bug
+* MED-74: add 10 minutes to acts when there's examinations
+* MED-5: reform code to adapt to multiple selections
+
+## [1.22.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.2...v1.22.3) (2024-01-25)
+### Bug
+* MED-72: fix medical summary
+* MED-73: fix wording
+
+## [1.22.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.1...v1.22.2) (2024-01-25)
+### Bug
+* MED-71: fix batch
+
+## [1.22.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.0...v1.22.1) (2024-01-24)
+### Bug
+* MED-71: fix summary calculator
+* MED-72: fix profiles when accessing summary page
+* MED-73: fix wording graph
+
 ## [1.22.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.3...v1.22.0) (2024-01-12)
 ### Features
 * MED-5: Add export and final version of MED-5

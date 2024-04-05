@@ -97,6 +97,6 @@ exports.exportPilo = async () => {
       .where("name", "last_date")
       .update({ value: [currentDate] })
   } catch (e) {
-    console.error("Error Knex Crons Pilo :", e)
+    console.error("Error Prisma Crons Pilo :", e)
   }
 }
