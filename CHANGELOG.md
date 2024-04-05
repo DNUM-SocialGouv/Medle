@@ -1,3 +1,9 @@
+## [1.22.7](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.6...v1.22.7) (2024-03-20)
+### Feature
+* MED-78: add deseased case to batch 
+### Bug
+* MED-5: fix bug when exporting with other roles than administrator
+
 ## [1.22.6](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.5...v1.22.6) (2024-03-11)
 ### Feature
 * MED-5: replace round by floor 
