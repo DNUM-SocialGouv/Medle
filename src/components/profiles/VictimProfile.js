@@ -117,7 +117,6 @@ const VictimEdit = ({ dispatch, state, errors }) => {
               "Maison de retraite",
               "Commissariat",
               "Gendarmerie",
-              "Unité d'accueil enfants en danger (UAPED)",
             ]}
             mode="toggle"
             dispatch={dispatch}

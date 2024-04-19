@@ -42,17 +42,6 @@ const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
         state={state.periodOfDay || ""}
         invalid={!!errors.periodOfDay}
       />
-      <ActBlock
-        type="location"
-        title="Lieu de l'examen"
-        values={[
-          "Unité d'accueil enfants en danger (UAPED)",
-        ]}
-        mode="toggle"
-        dispatch={dispatch}
-        state={state.location || ""}
-        invalid={!!errors.location}
-      />
       <Title2 className="mt-5 mb-2">{personTitle}</Title2>
 
       <ActBlock
