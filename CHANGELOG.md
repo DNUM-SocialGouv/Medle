@@ -1,3 +1,7 @@
+## [1.22.8](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.7...v1.22.8) (2024-04-19)
+### Feature
+* MED-: put role activity consultation only to admin medlé 
+
 ## [1.22.7](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.6...v1.22.7) (2024-03-20)
 ### Feature
 * MED-78: add deseased case to batch 
