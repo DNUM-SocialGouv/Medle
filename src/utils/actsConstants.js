@@ -256,7 +256,6 @@ export const actLocations = [
   "Service hosp. public",
   "Tribunal",
   "UMJ",
-  "Unité d'accueil enfants en danger (UAPED)"
 ]
 
 export const actPeriodOfDays = ["Nuit profonde", "Journée", "Matin", "Après-midi", "Soirée"]

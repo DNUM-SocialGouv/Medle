@@ -348,7 +348,7 @@ const Sidebar = ({ page, currentUser }) => {
               Statistiques
             </Link>
           </li>
-          {[SUPER_ADMIN, PUBLIC_SUPERVISOR, REGIONAL_SUPERVISOR, GUEST_HOSPITAL].includes(currentUser.role) && (
+          {[SUPER_ADMIN].includes(currentUser.role) && (
             <li>
               <Link
                 href="/synthese-activite"

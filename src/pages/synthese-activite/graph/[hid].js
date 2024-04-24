@@ -15,67 +15,6 @@ import { ACTIVITY_CONSULTATION } from "../../../utils/roles"
 import { findSummaryByHospital } from "../../../clients/acts-summary"
 import { findEmploymentsByHospitalId } from "../../../clients/employments"
 
-const data = [
-  {
-    name: "Janvier",
-    "Capacité à fournir": 63,
-    Activité: 50,
-  },
-  {
-    name: "Février",
-    "Capacité à fournir": 60,
-    Activité: 56,
-  },
-  {
-    name: "Mars",
-    "Capacité à fournir": 60,
-    Activité: 57,
-  },
-  {
-    name: "Avril",
-    "Capacité à fournir": 63,
-    Activité: 63,
-  },
-  {
-    name: "Mai",
-    "Capacité à fournir": 62,
-    Activité: 61,
-  },
-  {
-    name: "Juin",
-    "Capacité à fournir": 62,
-    Activité: 59,
-  },
-  {
-    name: "Juillet",
-    "Capacité à fournir": 62,
-    Activité: 64,
-  },
-  {
-    name: "Aout",
-    "Capacité à fournir": 56,
-    Activité: 64,
-  },
-  {
-    name: "Septembre",
-    "Capacité à fournir": 57,
-    Activité: 62,
-  },
-  {
-    name: "Octobre",
-    "Capacité à fournir": 56,
-  },
-  {
-    name: "Novembre",
-    "Capacité à fournir": 59,
-    Activité: 64,
-  },
-  {
-    name: "Décembre",
-    "Capacité à fournir": 55,
-    Activité: 60,
-  },
-]
 
 const monthsOfYear = [
   "Janvier",
