@@ -33,9 +33,7 @@ exports.etpNotif = async () => {
         const emails = await getUsersForReminder();
         const html = `
               Bonjour,
-          
-              <p>Une demande de réinitialisation du mot de passe de votre compte a été effectuée par l'administrateur.</p>
-          
+                    
               <p>Nous vous informons que les équivalents temps plein (ETP) du service de médecine légale n'ont pas été 
               renseignés dans MedLé depuis 2 mois ou plus. Pour rappel, ils doivent être enregistrés chaque mois, avant 
               le 5 du mois suivant.</p>
