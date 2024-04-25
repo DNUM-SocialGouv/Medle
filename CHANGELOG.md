@@ -1,19 +1,35 @@
-## [1.23.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.7...v1.23.0) (2024-04-05)
+## [1.23.4](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.23.3...release-1.23.4) (2024-04-25)
+### Bug
+* MED-55: fix wording for email etp notif 
+
+## [1.23.3](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.23.2...release-1.23.3) (2024-04-24)
+### Bug
+* MED-55: fix exports for email index services to be able to use it in cron 
+
+## [1.23.2](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.23.1...release-1.23.2) (2024-04-24)
+### Bug
+* MED-55: add etpnotif function path in initcron 
+
+## [1.23.1](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.23.0...release-1.23.1) (2024-04-24)
+### Bug
+* MED-55: add some logs to show env variables
+
+## [1.23.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.7...release-1.23.0) (2024-04-05)
 ### Feature
 * MED-66: add case (lieu) to 4 profiles 
 * MED-55: send emails for etp employes 
 
-## [1.22.8](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.7...v1.22.8) (2024-04-19)
+## [1.22.8](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.7...release-1.22.8) (2024-04-19)
 ### Feature
 * MED-82: put role activity consultation only to admin medlé 
 
-## [1.22.7](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.6...v1.22.7) (2024-03-20)
+## [1.22.7](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.6...release-1.22.7) (2024-03-20)
 ### Feature
 * MED-78: add deseased case to batch 
 ### Bug
 * MED-5: fix bug when exporting with other roles than administrator
 
-## [1.22.6](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.5...v1.22.6) (2024-03-11)
+## [1.22.6](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.5...release-1.22.6) (2024-03-11)
 ### Feature
 * MED-5: replace round by floor 
 ### Bug
@@ -21,13 +37,13 @@
 * MED-76: fix wording
 
 
-## [1.22.5](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.4...v1.22.5) (2024-03-07)
+## [1.22.5](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.4...release-1.22.5) (2024-03-07)
 ### Feature
 * MED-5: remove duplicate acts 
 * MED-5: multiply by 1.5 when multiple violence types
 * MED-5: group by examined and act type
 
-## [1.22.4](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.3...v1.22.4) (2024-02-16)
+## [1.22.4](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.3...release-1.22.4) (2024-02-16)
 ### Features
 * MED-5: adjust calculator from 1440 to 480
 * MED-5: adjust wording when there's no etp
@@ -35,58 +51,58 @@
 * MED-74: add 10 minutes to acts when there's examinations
 * MED-5: reform code to adapt to multiple selections
 
-## [1.22.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.2...v1.22.3) (2024-01-25)
+## [1.22.3](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.2...release-1.22.3) (2024-01-25)
 ### Bug
 * MED-72: fix medical summary
 * MED-73: fix wording
 
-## [1.22.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.1...v1.22.2) (2024-01-25)
+## [1.22.2](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.1...release-1.22.2) (2024-01-25)
 ### Bug
 * MED-71: fix batch
 
-## [1.22.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.22.0...v1.22.1) (2024-01-24)
+## [1.22.1](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.22.0...release-1.22.1) (2024-01-24)
 ### Bug
 * MED-71: fix summary calculator
 * MED-72: fix profiles when accessing summary page
 * MED-73: fix wording graph
 
-## [1.22.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.3...v1.22.0) (2024-01-12)
+## [1.22.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.21.3...release-1.22.0) (2024-01-12)
 ### Features
 * MED-5: Add export and final version of MED-5
 
-## [1.21.3](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.2...v1.21.3) (2023-12-21)
+## [1.21.3](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.21.2...release-1.21.3) (2023-12-21)
 ### Bug
 * fix bug in ac summary when deployed
 
-## [1.21.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.1...v1.21.2) (2023-12-15)
+## [1.21.2](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.21.1...release-1.21.2) (2023-12-15)
 ### Features
 * MED-5: add apis and init summary into database
 
-## [1.21.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.21.0...v1.21.1) (2023-11-14)
+## [1.21.1](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.21.0...release-1.21.1) (2023-11-14)
 ### Features
 * MED-5: change some texts in summary pages
 
-## [1.21.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.20.1...v1.21.0) (2023-10-31)
+## [1.21.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.20.1...release-1.21.0) (2023-10-31)
 ### Features
 * MED-5: add summary page and add roles for who will see the page
 
-## [1.20.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.2...v1.20.1) (2023-07-20)
+## [1.20.1](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.19.2...release-1.20.1) (2023-07-20)
 ### Bug Fixes
 * MED-65 : Supprimer Anapath des statistiques des vivants et de l'export également
 
-## [1.20.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.2...v1.20.0) (2023-06-27)
+## [1.20.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.19.2...release-1.20.0) (2023-06-27)
 ### Tech
 * MED-64 : upgrade next, react versions
 
-## [1.19.2](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.1...v1.19.2) (2023-05-25)
+## [1.19.2](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.19.1...release-1.19.2) (2023-05-25)
 ### Features
 * MED-53 (retour): fix delete and wording
 
-## [1.19.1](https://github.com/DNUM-SocialGouv/Medle/compare/v1.19.0...v1.19.1) (2023-05-16)
+## [1.19.1](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.19.0...release-1.19.1) (2023-05-16)
 ### Features
 * MED-53 : changer l'objet du mail
 
-## [1.19.0](https://github.com/DNUM-SocialGouv/Medle/compare/v1.18.1...v1.19.0) (2023-05-03)
+## [1.19.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.18.1...release-1.19.0) (2023-05-03)
 ### Features
 * MED-52 : augmentation de la taille des messages 500 -> 1000
 * MED-32 : voir faq que lorsqu'on est connecté
