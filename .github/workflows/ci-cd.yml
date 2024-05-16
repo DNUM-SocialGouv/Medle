@@ -1,0 +1,28 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build . --file Dockerfile.compose --tag medle:1.23.4
+
+      - name: SSH into remote machine
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-host: ${{ secrets.REMOTE_HOST }}
+          ssh-username: ${{ secrets.REMOTE_USERNAME }}
+
+      - name: Deploy Docker image to remote machine
+        run: |
+          ssh ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }} 'docker pull my-image && docker run -d -p 8067:8067 my-image'
