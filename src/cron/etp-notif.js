@@ -23,6 +23,7 @@ exports.etpNotif = async () => {
                         .andOn('e.year', '=', twoMonthsAgo.getFullYear())
                 })
                 .whereNull('e.hospital_id')
+                .whereNull('u.deleted_at')
                 .andWhere(function () {
                     this.whereIn('u.role', ['ADMIN_HOSPITAL', 'OPERATOR_GENERIC', 'OPERATOR_EMPLOYMENT'])
                 })
