@@ -1,3 +1,7 @@
+## [1.23.5](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.23.4...release-1.23.5) (2024-04-15)
+### Feature
+* MED-55: add deleted at as filter for sending mails 
+
 ## [1.23.4](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.23.3...release-1.23.4) (2024-04-25)
 ### Bug
 * MED-55: fix wording for email etp notif 
