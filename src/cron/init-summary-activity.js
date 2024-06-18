@@ -1,6 +1,16 @@
 
 exports.initSummaryActivity = async (knex) => {
     console.time('duration')
+
+    function getCurrentDateString() {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    }
+
     try {
         await new Promise(async (resolve, reject) => {
             try {
@@ -72,6 +82,13 @@ exports.initSummaryActivity = async (knex) => {
                 console.timeEnd('duration')
 
                 console.log('Act summary generation completed successfully.');
+
+                const currentDate = getCurrentDateString()
+
+                await knex("act_summary_last_update").where({ name: "last_update" })
+                    .update({
+                        value: currentDate
+                    });
                 resolve()
             } catch (error) {
                 console.error('Error generating act summary:', error);

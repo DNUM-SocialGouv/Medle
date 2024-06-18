@@ -7,6 +7,7 @@ import { CORS_ALLOW_ORIGIN, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_
 import { ACTIVITY_CONSULTATION } from "../../../utils/roles"
 import { isAllowedHospitals } from "../../../utils/scope"
 import { find } from "../../../services/hospitals"
+import getLastUpdate from "../../../services/acts-summary/last-update"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -23,6 +24,7 @@ const handler = async (req, res) => {
         if (hospitals && !isAllowedHospitals(currentUser, [Number(hospitals)])) return sendForbiddenError(res)
 
         const hospital = await find({ hid: hospitals })
+        const {value: lastUpdate} = await getLastUpdate()
 
         const {
           totalCount,
@@ -34,7 +36,7 @@ const handler = async (req, res) => {
 
         return res
           .status(STATUS_200_OK)
-          .json({ totalCount, currentPage: requestedPage, maxPage, byPage: LIMIT, elements: summaries, hospital })
+          .json({ totalCount, currentPage: requestedPage, maxPage, byPage: LIMIT, elements: summaries, hospital, lastUpdate })
       }
       default:
         if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)

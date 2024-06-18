@@ -31,7 +31,7 @@ const monthsOfYear = [
   "Décembre",
 ]
 
-const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differences, hospital, totalSummaryAct, headers }) => {
+const SummaryPage = ({ hospitalSummary = [], lastUpdate, currentUser, medicalSummary, differences, hospital, totalSummaryAct, headers }) => {
   const router = useRouter()
   const { hid } = router.query
   const years = Object.keys(medicalSummary)
@@ -66,7 +66,7 @@ const SummaryPage = ({ hospitalSummary = [], currentUser, medicalSummary, differ
         className="mt-5 mb-5 d-flex justify-content-between align-items-baseline"
       >
         <Title1>{`Synthèse de l'établissement ${hospital.name}`}</Title1>
-        <span>Dernière date de mise à jour : {new Date().toLocaleDateString()}</span>
+        <span>Dernière date de mise à jour : {lastUpdate}</span>
         {/* {(!!process.env.NEXT_PUBLIC_SUMMARY_RUN && currentUser.role === SUPER_ADMIN) && <button onClick={onUpdateData} disabled={loading}>{loading ? 'Chargement' : 'Mettre à jour'}</button>} */}
         <select defaultValue={selectedYear} value={selectedYear} onChange={handleChange}>
           {years.map((year, index) => (
@@ -205,7 +205,7 @@ SummaryPage.getInitialProps = async (ctx) => {
   const { hid: hospitalId } = ctx.query
   
   try {
-    const {elements: hospitalSummary, hospital} = await findSummaryByHospital({ hospitalId, headers })
+    const {elements: hospitalSummary, hospital, lastUpdate} = await findSummaryByHospital({ hospitalId, headers })
     const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
 
     function calculateSummaryValue(hospitalSummary, year, month) {
@@ -248,7 +248,7 @@ SummaryPage.getInitialProps = async (ctx) => {
     }
 
     const { result: differences, totalSummaryAct } = calculateDifferencesByYearOrdered(medicalSummary, hospitalSummary);
-    return { hospitalSummary, medicalSummary, differences, totalSummaryAct, hospital, headers }
+    return { hospitalSummary, medicalSummary, differences, totalSummaryAct, hospital, lastUpdate, headers }
   } catch (error) {
     logError(error)
     redirectIfUnauthorized(error, ctx)
