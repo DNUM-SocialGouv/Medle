@@ -17,7 +17,10 @@ function queryBuilder(table, startDate) {
   let query = knex(table)
 
   if (startDate) {
-    query = query.where("created_at", ">=", startDate)
+    query = query.where(function() {
+      this.where("created_at", ">=", startDate)
+      .orWhere("updated_at", ">=", startDate)
+    })
   }
 
   return query
@@ -37,13 +40,17 @@ exports.exportPilo = async () => {
       fs.mkdirSync(dirPath)
     }
     const promises = tables.map(async (table) => {
-      const tableData = await queryBuilder(table, startDate).where("created_at", "<=", endDate).select("*")
+      const tableData = await queryBuilder(table, startDate)
+      .where(function() {
+        this.where("created_at", "<=", endDate)
+        .orWhere("updated_at", "<=", endDate)
+      }).select("*")
 
       const [{ value: csvHeader }] = await knex("exportParams").where("name", `${table}_fields`).select("*")
       const csvBody = tableData.map((data) => csvHeader.map((header) => stringifyValue(data[header])))
       const csvData = [csvHeader, ...csvBody]
 
-      const csv = csvData.map((row) => row.map(String).join(",")).join("\r\n")
+      const csv = csvData.map((row) => row.map(String).join("|")).join("\r\n")
 
       const filePath = `./exports/${currentDate}_${table}_export.csv`
       fs.writeFileSync(filePath, csv)
