@@ -35,6 +35,8 @@ exports.exportPilo = async () => {
 
     const startDate = dateParam.value && new Date(dateParam.value)
     const endDate = new Date(currentDate)
+    endDate.setHours(23, 59, 59, 999); 
+
     const dirPath = "./exports"
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath)
