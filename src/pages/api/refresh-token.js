@@ -42,7 +42,7 @@ const handler = async (req, res) => {
           token = generateToken(user)
           res.setHeader("Set-Cookie", `token=${token}; Path=/; HttpOnly; Max-Age=${timeoutConfig.cookie}`)
 
-          return res.status(STATUS_200_OK).json(JSON.stringify({ user, token }))
+          return res.status(STATUS_200_OK).json({ user, token })
         }
       }
       default:
