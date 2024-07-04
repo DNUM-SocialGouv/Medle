@@ -1,3 +1,7 @@
+## [1.24.1](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.24.0...release-1.24.1) (2024-07-04)
+### Feature
+* MED-70: fix deconnexion
+
 ## [1.24.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.23.5...release-1.24.0) (2024-06-27)
 ### Feature
 * MED-80: fix summury date
