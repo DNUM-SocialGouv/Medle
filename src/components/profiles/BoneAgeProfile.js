@@ -47,7 +47,7 @@ const BoneAgeEdit = ({ dispatch, state, errors }) => {
       />
       <ActBlock
         type="location"
-        title="Lieu de l'examen"
+        title="Lieu de l'examen (facultatif)"
         values={[
           "Unité d'accueil enfants en danger (UAPED)",
         ]}
