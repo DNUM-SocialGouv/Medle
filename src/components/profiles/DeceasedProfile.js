@@ -82,7 +82,7 @@ const DeceasedEdit = ({ dispatch, state, errors, hospital }) => {
         type="personAgeTag"
         title={personTitle}
         subTitle="Âge"
-        values={["0-2 ans", "3-6 ans", "7-17 ans", "+ de 18 ans", "Non déterminé"]}
+        values={["0-2 ans", "3-5 ans", "6-10 ans", "11-14 ans", "15-17 ans", "+ de 18 ans", "Non déterminé"]}
         mode="toggle"
         dispatch={dispatch}
         state={state.personAgeTag || ""}
