@@ -150,7 +150,7 @@ const VictimEdit = ({ dispatch, state, errors }) => {
             type="personAgeTag"
             title={personTitle}
             subTitle="Âge"
-            values={["0-2 ans", "3-17 ans", "+ de 18 ans"]}
+            values={["0-2 ans", "3-5 ans", "6-10 ans", "11-14 ans", "15-17 ans", "+ de 18 ans"]}
             mode="toggle"
             dispatch={dispatch}
             state={state.personAgeTag || ""}
