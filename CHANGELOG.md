@@ -1,3 +1,7 @@
+## [1.26.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.25.0...release-1.26.0) (2024-08-26)
+### Feature
+* MED-67: add extended age to profiles
+
 ## [1.25.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.24.1...release-1.25.0) (2024-07-23)
 ### Feature
 * MED-85: add (facultatif) to 2 act profiles
