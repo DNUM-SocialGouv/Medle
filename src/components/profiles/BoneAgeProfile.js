@@ -13,107 +13,148 @@ const BoneAgeEdit = ({ dispatch, state, errors }) => {
 
   const personTitle = "Profil de la personne"
 
+  if (!state.honoredMeeting)
+    dispatch({
+      type: "honoredMeeting",
+      payload: {
+        mode: "toggle",
+        val: "Oui",
+      },
+    })
+
   return (
     <>
       <ActBlock
-        type="examinationTypes"
-        title="Type(s) d'acte"
-        detail="Note : l'examen psychiatrique est réalisé sur réquisition judiciaire par un psychiatre. Ne sont pas concernées : expertise pénale, évaluation psychologique."
-        values={["Somatique", "Psychiatrique"]}
-        mode="toggleMultiple"
-        dispatch={dispatch}
-        state={state.examinationTypes || []}
-        invalid={!!errors.examinationTypes}
-      />
-
-      <ActBlock
-        type="examinations"
-        title="Prélèvements et examens complémentaires"
-        values={["Scanner", "Radiographie", "Panoramique dentaire"]}
-        mode="toggleMultiple"
-        dispatch={dispatch}
-        state={state.examinations || []}
-        invalid={!!errors.examinations}
-      />
-
-      <ActBlock
-        type="periodOfDay"
-        title="Heure de l'examen"
-        values={periods}
+        type="honoredMeeting"
+        title="Le rendez-vous a-t-il été honoré ?"
+        detail="Si le rendez-vous était prévu mais que la personne ne s'est pas présentée ou n'a pu être vue, cochez Non."
+        values={["Oui", "Non"]}
         mode="toggle"
         dispatch={dispatch}
-        state={state.periodOfDay || ""}
-        invalid={!!errors.periodOfDay}
+        state={state.honoredMeeting}
+        invalid={!!errors.honoredMeeting}
       />
-      <ActBlock
-        type="location"
-        title="Lieu de l'examen (facultatif)"
-        values={[
-          "Unité d'accueil enfants en danger (UAPED)",
-        ]}
-        mode="toggle"
-        dispatch={dispatch}
-        state={state.location || ""}
-        invalid={!!errors.location}
-      />
-      <Title2 className="mt-5 mb-2">{personTitle}</Title2>
+      {state.honoredMeeting && state.honoredMeeting.includes("Oui") && (
+        <>
+          <ActBlock
+            type="examinationTypes"
+            title="Type(s) d'acte"
+            detail="Note : l'examen psychiatrique est réalisé sur réquisition judiciaire par un psychiatre. Ne sont pas concernées : expertise pénale, évaluation psychologique."
+            values={["Somatique", "Psychiatrique"]}
+            mode="toggleMultiple"
+            dispatch={dispatch}
+            state={state.examinationTypes || []}
+            invalid={!!errors.examinationTypes}
+          />
 
-      <ActBlock
-        type="personGender"
-        title={personTitle}
-        subTitle="Genre"
-        values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
-        mode="toggle"
-        dispatch={dispatch}
-        state={state.personGender || ""}
-        invalid={!!errors.personGender}
-      />
+          <ActBlock
+            type="examinations"
+            title="Prélèvements et examens complémentaires"
+            values={["Scanner", "Radiographie", "Panoramique dentaire"]}
+            mode="toggleMultiple"
+            dispatch={dispatch}
+            state={state.examinations || []}
+            invalid={!!errors.examinations}
+          />
+
+          <ActBlock
+            type="periodOfDay"
+            title="Heure de l'examen"
+            values={periods}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.periodOfDay || ""}
+            invalid={!!errors.periodOfDay}
+          />
+          <ActBlock
+            type="location"
+            title="Lieu de l'examen (facultatif)"
+            values={[
+              "Unité d'accueil enfants en danger (UAPED)",
+            ]}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.location || ""}
+            invalid={!!errors.location}
+          />
+          <Title2 className="mt-5 mb-2">{personTitle}</Title2>
+
+          <ActBlock
+            type="personGender"
+            title={personTitle}
+            subTitle="Genre"
+            values={["Féminin", "Masculin", "Autre genre", "Non déterminé"]}
+            mode="toggle"
+            dispatch={dispatch}
+            state={state.personGender || ""}
+            invalid={!!errors.personGender}
+          />
+        </>
+      )}
     </>
   )
 }
 
 const BoneAgeRead = (act) => {
-  return (
-    <>
-      <Row>
-        <Col className="mr-3">
-          <ColumnAct header={"Statut"} content={act && act.profile} />
-        </Col>
-        <Col className="mr-3">
-          <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
-        </Col>
-        <Col className="mr-3">
-          <ColumnAct header={"Prélèvements et examens complémentaires"} content={act && act.examinations} />
-        </Col>
-        <Col className="mr-3" />
-      </Row>
+  if (act.honoredMeeting === "Non")
+    return (
+      <>
+        <Row>
+          <Col className="mr-3">
+            <ColumnAct header={"Statut"} content={act && act.profile} />
+          </Col>
+          <Col className="mr-3">
+            <ColumnAct header={"Rendez-vous honoré"} content="Non" />
+          </Col>
+        </Row>
+      </>
+    )
+  else
+    return (
+      <>
+        <Row>
+          <Col className="mr-3">
+            <ColumnAct header={"Statut"} content={act && act.profile} />
+          </Col>
+          <Col className="mr-3">
+            <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
+          </Col>
+          <Col className="mr-3">
+            <ColumnAct header={"Prélèvements et examens complémentaires"} content={act && act.examinations} />
+          </Col>
+          <Col className="mr-3" />
+        </Row>
 
-      <Title2 className="pt-3">Profil</Title2>
+        <Title2 className="pt-3">Profil</Title2>
 
-      <Row>
-        <Col className="mr-3">
-          <ColumnAct header={"Genre"} content={act && act.personGender} />
-        </Col>
-        <Col className="mr-3" />
-        <Col className="mr-3" />
-        <Col className="mr-3" />
-      </Row>
-    </>
-  )
+        <Row>
+          <Col className="mr-3">
+            <ColumnAct header={"Genre"} content={act && act.personGender} />
+          </Col>
+          <Col className="mr-3" />
+          <Col className="mr-3" />
+          <Col className="mr-3" />
+        </Row>
+      </>
+    )
 }
 
 const hasErrors = (state) => {
   const errors = {}
-  if (!state.examinationTypes?.length) {
-    errors.examinationTypes = "Obligatoire"
+  if (!state.honoredMeeting) {
+    errors.honoredMeeting = "Obligatoire"
   }
-  if (!state.periodOfDay) {
-    errors.periodOfDay = "Obligatoire"
+  if (state.honoredMeeting === "Oui") {
+    if (!state.examinationTypes?.length) {
+      errors.examinationTypes = "Obligatoire"
+    }
+    if (!state.periodOfDay) {
+      errors.periodOfDay = "Obligatoire"
+    }
+    if (!state.personGender) {
+      errors.personGender = "Obligatoire"
+    }
   }
-  if (!state.personGender) {
-    errors.personGender = "Obligatoire"
-  }
-
   return errors
 }
 
