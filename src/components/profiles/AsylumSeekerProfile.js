@@ -124,6 +124,9 @@ const AsylumSeekerRead = (act) => {
             <ColumnAct header={"Statut"} content={act && act.profile} />
           </Col>
           <Col className="mr-3">
+            <ColumnAct header={"Rendez-vous honoré"} content="Oui" />
+          </Col>
+          <Col className="mr-3">
             <ColumnAct header={"Type(s) d'acte"} content={act && act.examinationTypes} />
           </Col>
           <Col className="mr-3">
