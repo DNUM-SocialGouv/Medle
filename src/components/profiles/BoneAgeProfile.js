@@ -7,7 +7,7 @@ import { getSituationDate, periodOfDayValues } from "../../utils/actsConstants"
 import ActBlock from "../ActBlock"
 import { Title2 } from "../StyledComponents"
 
-const BoneAgeEdit = ({ dispatch, state, errors }) => {
+const BoneAgeEdit = ({ dispatch, state, errors, profileLocations }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -50,6 +50,7 @@ const BoneAgeEdit = ({ dispatch, state, errors }) => {
         title="Lieu de l'examen (facultatif)"
         values={[
           "Unité d'accueil enfants en danger (UAPED)",
+          { title: "Autre lieu", subValues: profileLocations },
         ]}
         mode="toggle"
         dispatch={dispatch}
@@ -93,6 +94,9 @@ const BoneAgeRead = (act) => {
       <Row>
         <Col className="mr-3">
           <ColumnAct header={"Genre"} content={act && act.personGender} />
+        </Col>
+        <Col className="mr-3">
+          <ColumnAct header={"Lieu de l'examen"} content={act.location} />
         </Col>
         <Col className="mr-3" />
         <Col className="mr-3" />

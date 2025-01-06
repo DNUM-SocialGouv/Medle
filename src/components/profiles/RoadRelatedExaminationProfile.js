@@ -7,7 +7,7 @@ import ActBlock from "../ActBlock"
 import ColumnAct from "../ColumnAct"
 import { Title2 } from "../StyledComponents"
 
-const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
+const RoadRelatedExaminationEdit = ({ dispatch, state, errors, profileLocations }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -36,7 +36,9 @@ const RoadRelatedExaminationEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="location"
         title="Lieu de l'examen"
-        values={["UMJ", "Lieu de contrôle", "Commissariat", "Gendarmerie"]}
+        values={["UMJ", "Lieu de contrôle", "Commissariat", "Gendarmerie", 
+          { title: "Autre lieu", subValues: profileLocations },
+        ]}
         mode="toggle"
         dispatch={dispatch}
         state={state.location || ""}

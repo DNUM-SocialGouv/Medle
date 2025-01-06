@@ -7,7 +7,7 @@ import { getSituationDate, periodOfDayValues } from "../../utils/actsConstants"
 import ActBlock from "../ActBlock"
 import { Title2 } from "../StyledComponents"
 
-const RestrainedEdit = ({ dispatch, state, errors }) => {
+const RestrainedEdit = ({ dispatch, state, errors, profileLocations }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -37,7 +37,9 @@ const RestrainedEdit = ({ dispatch, state, errors }) => {
       <ActBlock
         type="location"
         title="Lieu de l'examen"
-        values={["UMJ", "Locaux douaniers", "Centre de rétention", "Commissariat", "Gendarmerie"]}
+        values={["UMJ", "Locaux douaniers", "Centre de rétention", "Commissariat", "Gendarmerie",
+          { title: "Autre lieu", subValues: profileLocations },
+        ]}
         mode="toggle"
         dispatch={dispatch}
         state={state.location || ""}

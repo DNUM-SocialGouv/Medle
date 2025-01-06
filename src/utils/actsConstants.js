@@ -165,7 +165,6 @@ export const isSubmittedActCorrect = (data) => {
     })
   }
   if (data.honoredMeeting && !actHonoredMeetings.includes(data.honoredMeeting)) actIsCorrect = false
-  if (data.location && !actLocations.includes(data.location)) actIsCorrect = false
   if (data.periodOfDay && !actPeriodOfDays.includes(data.periodOfDay)) actIsCorrect = false
   if (data.personAgeTag && !actPersonAgeTags.includes(data.personAgeTag)) actIsCorrect = false
   if (data.personGender && !actPersonGenders.includes(data.personGender)) actIsCorrect = false
@@ -242,22 +241,6 @@ export const actExaminationTypes = [
 ]
 
 export const actHonoredMeetings = ["Oui", "Non"]
-
-export const actLocations = [
-  "Centre de rétention",
-  "Commissariat",
-  "Établissement pénitentiaire",
-  "Gendarmerie",
-  "Lieu de contrôle",
-  "Locaux douaniers",
-  "Maison de retraite",
-  "Service d'hosp. privé",
-  "Service d'hosp. public",
-  "Service hosp. public",
-  "Tribunal",
-  "UMJ",
-  "Unité d'accueil enfants en danger (UAPED)"
-]
 
 export const actPeriodOfDays = ["Nuit profonde", "Journée", "Matin", "Après-midi", "Soirée"]
 

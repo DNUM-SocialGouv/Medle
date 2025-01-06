@@ -17,6 +17,7 @@ import { ISO_DATE, now } from "../../utils/date"
 import { logDebug, logError } from "../../utils/logger"
 import { deleteProperty, isEmpty } from "../../utils/misc"
 import { ACT_MANAGEMENT } from "../../utils/roles"
+import { fetchOtherActLocations } from "../../clients/locations"
 
 // internalNumber & pvNumber found by query, in update situation
 const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) => {
@@ -129,7 +130,7 @@ const reduceByMode = (state, action) => {
   }
 }
 
-const ActDeclaration = ({ act, currentUser }) => {
+const ActDeclaration = ({ act, currentUser, locations }) => {
   const router = useRouter()
   const { internalNumber, pvNumber } = router.query
   const refPerson = useRef(null)
@@ -206,7 +207,11 @@ const ActDeclaration = ({ act, currentUser }) => {
   )
 
   const getProfiledRender = ({ profile }) => {
-    return profiles[profile].edit({ dispatch, state, errors, hospital })
+    const profileLocations = locations?.filter((location) => {
+      return location.profile === profile 
+    }).map(({location}) => location)
+    
+    return profiles[profile].edit({ dispatch, state, errors, hospital, profileLocations })
   }
 
   const validAndSubmitAct = async () => {
@@ -482,11 +487,13 @@ ActDeclaration.getInitialProps = async (ctx) => {
   const { query } = ctx
 
   try {
-    if (!query || !query.id) return { act: {} }
+    const locations = await fetchOtherActLocations({ headers })
 
+    if (!query || !query.id) return { act: {}, locations }
+    
     const act = await findAct({ id: query.id, headers })
 
-    return { act: transformDBActForState(act) || {} }
+    return { act: transformDBActForState(act) || {}, locations }
   } catch (error) {
     logError(error)
     redirectIfUnauthorized(error, ctx)

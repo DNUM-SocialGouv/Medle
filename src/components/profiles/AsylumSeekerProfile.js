@@ -7,7 +7,7 @@ import ActBlock from "../ActBlock"
 import ColumnAct from "../ColumnAct"
 import { Title2 } from "../StyledComponents"
 
-const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
+const AsylumSeekerEdit = ({ dispatch, state, errors, profileLocations }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -47,6 +47,8 @@ const AsylumSeekerEdit = ({ dispatch, state, errors }) => {
         title="Lieu de l'examen (facultatif)"
         values={[
           "Unité d'accueil enfants en danger (UAPED)",
+          "Maison des femmes/santé",
+          { title: "Autre lieu", subValues: profileLocations },
         ]}
         mode="toggle"
         dispatch={dispatch}
@@ -103,6 +105,9 @@ const AsylumSeekerRead = (act) => {
         </Col>
         <Col className="mr-3">
           <ColumnAct header={"Âge"} content={act && act.personAgeTag} />
+        </Col>
+        <Col className="mr-3">
+          <ColumnAct header={"Lieu de l'examen"} content={act.location} />
         </Col>
         <Col className="mr-3" />
         <Col className="mr-3" />
