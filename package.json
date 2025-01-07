@@ -45,7 +45,7 @@
         "micro-cors": "^0.1.1",
         "moize": "^6.0.3",
         "moment": "^2.29.1",
-        "next": "13.2.4",
+        "next": "14.2.21",
         "next-connect": "^0.10.2",
         "next-cookies": "^2.0.3",
         "node-cron": "^3.0.2",
