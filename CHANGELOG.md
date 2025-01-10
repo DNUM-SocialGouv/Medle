@@ -1,3 +1,8 @@
+## [1.27.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.26.0...release-1.27.0) (2025-01-10)
+### Feature
+* MED-87: add static location maison des femmes and add button autre lieu to diffrent profiles 
+* MED-88: add component honored to examen pour ofpra and personne pour age osseux 
+
 ## [1.26.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.25.0...release-1.26.0) (2024-08-26)
 ### Feature
 * MED-67: add extended age to profiles
