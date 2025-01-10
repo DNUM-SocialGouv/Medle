@@ -10,7 +10,7 @@ import { getReferenceData } from "../../utils/init"
 import ActBlock from "../ActBlock"
 import { Title2 } from "../StyledComponents"
 
-const VictimEdit = ({ dispatch, state, errors }) => {
+const VictimEdit = ({ dispatch, state, errors, profileLocations }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -118,6 +118,8 @@ const VictimEdit = ({ dispatch, state, errors }) => {
               "Commissariat",
               "Gendarmerie",
               "Unité d'accueil enfants en danger (UAPED)",
+              "Maison des femmes/santé",
+              { title: "Autre lieu", subValues: profileLocations },
             ]}
             mode="toggle"
             dispatch={dispatch}

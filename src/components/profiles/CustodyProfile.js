@@ -7,7 +7,7 @@ import { getSituationDate, periodOfDayValues } from "../../utils/actsConstants"
 import ActBlock from "../ActBlock"
 import { Title2 } from "../StyledComponents"
 
-const CustodyEdit = ({ dispatch, state, errors }) => {
+const CustodyEdit = ({ dispatch, state, errors, profileLocations }) => {
   const situationDate = getSituationDate(state.examinationDate)
   const periods = periodOfDayValues[situationDate].period.map((elt) => ({ title: elt.title, subTitle: elt.subTitle }))
 
@@ -68,7 +68,9 @@ const CustodyEdit = ({ dispatch, state, errors }) => {
           <ActBlock
             type="location"
             title="Lieu de l'examen"
-            values={["UMJ", "Commissariat", "Gendarmerie", "Tribunal", "Service hosp. public", "Unité d'accueil enfants en danger (UAPED)"]}
+            values={["UMJ", "Commissariat", "Gendarmerie", "Tribunal", "Service hosp. public", "Unité d'accueil enfants en danger (UAPED)", 
+              { title: "Autre lieu", subValues: profileLocations },
+            ]}
             mode="toggle"
             dispatch={dispatch}
             state={state.location || ""}

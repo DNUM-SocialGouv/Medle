@@ -40,6 +40,7 @@ export const RESET_PWD_ENDPOINT = "/reset-password"
 export const FORGOT_PWD_ENDPOINT = "/forgot-password"
 
 export const ACTS_ENDPOINT = "/acts"
+export const LOCATIONS_ENDPOINT = "/locations"
 export const ACTS_SUMMARY_ENDPOINT = "/acts-summary"
 export const ASKERS_ENDPOINT = "/askers"
 export const EMPLOYMENTS_ENDPOINT = "/employments"
