@@ -215,6 +215,7 @@ const ActDeclaration = ({ act, currentUser, locations }) => {
   }
 
   const validAndSubmitAct = async () => {
+    let newState = {...state};
     setSaving(true)
     setErrors({})
 
@@ -231,29 +232,42 @@ const ActDeclaration = ({ act, currentUser, locations }) => {
       setErrors(errors)
       return
     }
-
+    console.log(state);
+    const forUpdate = {
+      id: newState.id,
+      userId: newState.userId
+    }
+    
+    if (state.honoredMeeting === "Non") {
+      newState = resetState(newState)
+      if (forUpdate.id) {
+        newState = {...newState, ...forUpdate}
+        }  
+      newState = {...newState, honoredMeeting: "Non"};
+    }
+    
     try {
       if (!state.id) {
-        const { id } = await createAct({ act: state })
+        const { id } = await createAct({ act: newState })
 
         logDebug("Created act id: ", id)
         return Router.push({
           pathname: "/acts/confirmation",
           query: {
-            internalNumber: state.internalNumber,
-            pvNumber: state.pvNumber,
+            internalNumber: newState.internalNumber,
+            pvNumber: newState.pvNumber,
           },
         })
       } else {
-        const { updated } = await updateAct({ act: state })
+        const { updated } = await updateAct({ act: newState })
 
         logDebug("Nb updated rows: ", updated)
 
         return Router.push({
           pathname: "/acts/confirmation",
           query: {
-            internalNumber: state.internalNumber,
-            pvNumber: state.pvNumber,
+            internalNumber: newState.internalNumber,
+            pvNumber: newState.pvNumber,
             edit: true,
           },
         })
