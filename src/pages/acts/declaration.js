@@ -32,6 +32,7 @@ const getInitialState = ({ act, internalNumber, pvNumber, userId, hospitalId }) 
       profile: "",
       addedBy: userId || "",
       hospitalId: hospitalId || "",
+      proofWithoutComplaint: false,
     }
   }
 }
