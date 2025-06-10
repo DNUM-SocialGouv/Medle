@@ -1,7 +1,6 @@
-## [1.27.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.27.0...release-1.28.0) (2025-04-18)
+## [1.27.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.28.0...release-1.29.0) (2025-06-10)
 ### Feature
-* MED-86: fix add user email minuscule 
-* MED-98: fix honored meeting 
+* MED-89: init proof without complaint 
 
 ## [1.27.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.26.0...release-1.27.0) (2025-01-10)
 ### Feature
