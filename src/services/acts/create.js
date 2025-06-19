@@ -1,6 +1,6 @@
 import knex from "../../knex/knex"
 import { untransform } from "../../models/acts"
-import { isSubmittedActCorrect } from "../../utils/actsConstants"
+import { isSubmittedActCorrect, schema } from "../../utils/actsConstants"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../../utils/http"
 
@@ -11,6 +11,17 @@ export const create = async (data, currentUser) => {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
+      detail: "hospitalId missing"
+    })
+  }
+
+  try {
+    await schema.validate(data, { abortEarly: false, strict: true });
+  } catch (error) {
+    throw new APIError({
+      status: STATUS_400_BAD_REQUEST,
+      message: "Bad request",
+      detail: error.errors
     })
   }
 

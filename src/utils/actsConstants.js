@@ -13,6 +13,7 @@ import RestrainedProfile from "../components/profiles/RestrainedProfile"
 import RoadRelatedExaminationProfile from "../components/profiles/RoadRelatedExaminationProfile"
 import VictimProfile from "../components/profiles/VictimProfile"
 import { ISO_DATE } from "./date"
+import * as yup from 'yup';
 
 export const orderedProfileValues = [
   "Victime (vivante)",
@@ -296,3 +297,234 @@ export const actViolenceNatures = [
   "Accident/Collectif",
   "Accident/Non collectif",
 ]
+
+const locations = [
+  [
+    "UMJ",
+    "Service d'hosp. public",
+    "Service d'hosp. privé",
+    "Établissement pénitentiaire",
+    "Centre de rétention",
+    "Maison de retraite",
+    "Commissariat",
+    "Gendarmerie",
+    "Unité d'accueil enfants en danger (UAPED)",
+    "Maison des femmes/santé",
+    "Tribunal",
+    "Locaux douaniers",
+    "Lieu de contrôle"
+  ]
+]
+
+export const schema = yup.object({
+  userId: yup.number().integer().required(),
+  addedBy: yup.number().integer().required(),
+  askerId: yup.number().integer().required(),
+  hospitalId: yup.number().integer().required(),
+  examinationDate: yup.string()
+    .required()
+    .test('is-date', 'Invalid date format', value =>
+      moment(value, 'YYYY-MM-DD', true).isValid()
+    ),
+
+  deathCause: yup.string().oneOf(actDeathCauses)
+    .when(
+      'profile', (profile, schema) => {
+        if ('Personne décédée' === profile) {
+          return schema.required('deathCause is required');
+        } else {
+          return schema.test(
+            'deathCause-not-allowed',
+            'deathCause must not be provided unless profile is Personne décédée',
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+  distance: yup.string().oneOf(actDistances)
+  .when(
+      'profile', (profile, schema) => {
+        const profiles = ["Autre activité/Assises", "Autre activité/Reconstitution"];
+        if (profiles.includes(profile)) {
+          return schema.required('distance is required');
+        } else {
+          return schema.test(
+            'distance-not-allowed',
+            'distance must not be provided unless profile is Personne décédée',
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+  duration: yup.string().oneOf(actDurations)
+  .when(
+      'profile', (profile, schema) => {
+        const profiles = ["Autre activité/Assises", "Autre activité/Reconstitution, Autre activité/Étude de dossier"];
+        if (profiles.includes(profile)) {
+          return schema.required('duration is required');
+        } else {
+          return schema.test(
+            'duration-not-allowed',
+            'duration must not be provided unless profile is Personne décédée',
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+
+  personIsPresent: yup.string().oneOf(actPersonIsPresents)
+    .when(
+      'profile', (profile, schema) => {
+        if ('Gardé.e à vue' === profile) {
+          return schema.required('personIsPresent is required');
+        } else {
+          return schema.test(
+            'personIsPresent-not-allowed',
+            'personIsPresent must not be provided unless profile is Gardé.e à vue',
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+
+  location: yup.string().oneOf(locations)
+    .when(
+      'profile', (profile, schema) => {
+        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
+        if (['Victime (vivante)', 'Gardé.e à vue', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'].includes(profile)) {
+          return schema.required('location is required');
+        } else if (['Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA'].includes(profile)) {
+          return schema.notRequired();
+        } else {
+          return schema.test(
+            'location-not-allowed',
+            `location must not be provided unless profile is ${profiles}`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+
+  examinations: yup.array().of(
+    yup.string().oneOf(actExaminations)
+  ).notRequired(),
+
+  examinationType: yup.array().of(
+    yup.string().oneOf(actExaminationTypes)
+  )
+    .when(
+      'profile', (profile, schema) => {
+        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
+        if (profiles.includes(profile)) {
+          return schema.required('examinationType is required');
+        } else {
+          return schema.test(
+            'examinationType-not-allowed',
+            `examinationType must not be provided unless profile is ${profiles}`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+
+  honoredMeeting: yup.string().oneOf(actHonoredMeetings)
+    .when(
+      'profile', (profile, schema) => {
+        if (['Victime (vivante)', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA'].includes(profile)) {
+          return schema.required('honoredMeeting is required');
+        } else {
+          return schema.test(
+            'honoredMeeting-not-allowed',
+            'honoredMeeting must not be provided unless profile is "Victime (vivante), Personne pour âge osseux (hors GAV), Examen pour OFPRA"',
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+
+  periodOfDay: yup.string().oneOf(actPeriodOfDays)
+    .when(
+      'profile', (profile, schema) => {
+        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
+        if (profiles.includes(profile)) {
+          return schema.required('periodOfDay is required');
+        } else {
+          return schema.test(
+            'periodOfDay-not-allowed',
+            `periodOfDay must not be provided unless profile is ${profiles}`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+  personAgeTag: yup.string().oneOf(actPersonAgeTags)
+    .when(
+      'profile', (profile, schema) => {
+        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
+        if (profiles.includes(profile)) {
+          return schema.required('personAgeTag is required');
+        } else {
+          return schema.test(
+            'personAgeTag-not-allowed',
+            `personAgeTag must not be provided unless profile is ${profiles}`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+  personGender: yup.string().oneOf(actPersonGenders)
+    .when(
+      'profile', (profile, schema) => {
+        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
+        if (profiles.includes(profile)) {
+          return schema.required('personGender is required');
+        } else {
+          return schema.test(
+            'personGender-not-allowed',
+            `personGender must not be provided unless profile is ${profiles}`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+  profile: yup.string().oneOf(actProfiles).required(),
+
+  violenceContexts: yup.array().of(
+    yup.string().oneOf(actViolenceContexts)
+  )
+    .when(
+      'profile', (profile, schema) => {
+        if ('Victime (vivante)' === profile) {
+          // TO DO : only one value is permitted, check no redundunce 
+          return schema.required('violenceContexts is required').min(1, 'At least one context is required');
+        } else {
+          return schema.test(
+            'violenceContexts-not-allowed',
+            `violenceContexts must not be provided unless profile is Victime (vivante)`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+
+  violenceNatures: yup.array().of(
+    yup.string().test(
+      'valid-nature',
+      'Nature must start with "Attentat/" or be in actViolenceNatures',
+      val => val && (val.startsWith('Attentat/') || actViolenceNatures.includes(val))
+    )
+  )
+    .when(
+      'profile', (profile, schema) => {
+        if ('Victime (vivante)' === profile) {
+          return schema.required('violenceNatures is required').min(1, 'At least one nature is required');
+        } else {
+          return schema.test(
+            'violenceNatures-not-allowed',
+            `violenceNatures must not be provided unless profile is Victime (vivante)`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+});
