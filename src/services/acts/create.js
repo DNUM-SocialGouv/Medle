@@ -41,7 +41,8 @@ export const create = async (data, currentUser) => {
       if (internalNumberExist) {
         throw new APIError({
           status: STATUS_400_BAD_REQUEST,
-          message: "Le numéro interne saisi existe déjà.",
+          message: "Bad request",
+          detail: "Le numéro interne (internalNumber) saisi existe déjà."
         })
       }
     })

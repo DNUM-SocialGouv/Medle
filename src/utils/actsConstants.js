@@ -321,6 +321,7 @@ export const schema = yup.object({
   addedBy: yup.number().integer().required(),
   askerId: yup.number().integer().required(),
   hospitalId: yup.number().integer().required(),
+  internalNumber: yup.string().required(),
   examinationDate: yup.string()
     .required()
     .test('is-date', 'Invalid date format', value =>
@@ -336,36 +337,6 @@ export const schema = yup.object({
           return schema.test(
             'deathCause-not-allowed',
             'deathCause must not be provided unless profile is Personne décédée',
-            (value) => value === undefined || value === ''
-          );
-        }
-      }
-    ),
-  distance: yup.string().oneOf(actDistances)
-  .when(
-      'profile', (profile, schema) => {
-        const profiles = ["Autre activité/Assises", "Autre activité/Reconstitution"];
-        if (profiles.includes(profile)) {
-          return schema.required('distance is required');
-        } else {
-          return schema.test(
-            'distance-not-allowed',
-            'distance must not be provided unless profile is Personne décédée',
-            (value) => value === undefined || value === ''
-          );
-        }
-      }
-    ),
-  duration: yup.string().oneOf(actDurations)
-  .when(
-      'profile', (profile, schema) => {
-        const profiles = ["Autre activité/Assises", "Autre activité/Reconstitution, Autre activité/Étude de dossier"];
-        if (profiles.includes(profile)) {
-          return schema.required('duration is required');
-        } else {
-          return schema.test(
-            'duration-not-allowed',
-            'duration must not be provided unless profile is Personne décédée',
             (value) => value === undefined || value === ''
           );
         }
@@ -409,18 +380,18 @@ export const schema = yup.object({
     yup.string().oneOf(actExaminations)
   ).notRequired(),
 
-  examinationType: yup.array().of(
+  examinationTypes: yup.array().of(
     yup.string().oneOf(actExaminationTypes)
-  )
+  ).min(1, 'At least examinationType is required')
     .when(
       'profile', (profile, schema) => {
         const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
         if (profiles.includes(profile)) {
-          return schema.required('examinationType is required');
+          return schema.required('examinationTypes is required');
         } else {
           return schema.test(
-            'examinationType-not-allowed',
-            `examinationType must not be provided unless profile is ${profiles}`,
+            'examinationTypes-not-allowed',
+            `examinationTypes must not be provided unless profile is ${profiles}`,
             (value) => value === undefined || value === ''
           );
         }
@@ -452,36 +423,6 @@ export const schema = yup.object({
           return schema.test(
             'periodOfDay-not-allowed',
             `periodOfDay must not be provided unless profile is ${profiles}`,
-            (value) => value === undefined || value === ''
-          );
-        }
-      }
-    ),
-  personAgeTag: yup.string().oneOf(actPersonAgeTags)
-    .when(
-      'profile', (profile, schema) => {
-        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
-        if (profiles.includes(profile)) {
-          return schema.required('personAgeTag is required');
-        } else {
-          return schema.test(
-            'personAgeTag-not-allowed',
-            `personAgeTag must not be provided unless profile is ${profiles}`,
-            (value) => value === undefined || value === ''
-          );
-        }
-      }
-    ),
-  personGender: yup.string().oneOf(actPersonGenders)
-    .when(
-      'profile', (profile, schema) => {
-        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
-        if (profiles.includes(profile)) {
-          return schema.required('personGender is required');
-        } else {
-          return schema.test(
-            'personGender-not-allowed',
-            `personGender must not be provided unless profile is ${profiles}`,
             (value) => value === undefined || value === ''
           );
         }
@@ -522,6 +463,68 @@ export const schema = yup.object({
           return schema.test(
             'violenceNatures-not-allowed',
             `violenceNatures must not be provided unless profile is Victime (vivante)`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+    personGender: yup.string().oneOf(actPersonGenders)
+    .when(
+      'profile', (profile, schema) => {
+        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
+        if (profiles.includes(profile)) {
+          return schema.required('personGender is required');
+        } else {
+          return schema.test(
+            'personGender-not-allowed',
+            `personGender must not be provided unless profile is ${profiles}`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+    personAgeTag: yup.string().oneOf(actPersonAgeTags)
+    .when(
+      'profile', (profile, schema) => {
+        const profiles = ['Victime (vivante)', 'Gardé.e à vue', 'Personne pour âge osseux (hors GAV)', 'Examen pour OFPRA', 'Personne décédée', 'Autre activité/Personne retenue', 'Autre activité/Examen lié à la route', 'Autre activité/IPM'];
+        if (profiles.includes(profile)) {
+          return schema.required('personAgeTag is required');
+        } else {
+          return schema.test(
+            'personAgeTag-not-allowed',
+            `personAgeTag must not be provided unless profile is ${profiles}`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+    duration: yup.string().oneOf(actDurations)
+  .when(
+      'profile', (profile, schema) => {
+        const profiles = ["Autre activité/Assises", "Autre activité/Reconstitution", "Autre activité/Étude de dossier"];
+        console.log(profiles.includes(profile), profile);
+         
+        if (profiles.includes(profile)) {
+          return schema.required('duration is required');
+        } else {
+          return schema.test(
+            'duration-not-allowed',
+            `duration must not be provided unless profile is ${profiles}`,
+            (value) => value === undefined || value === ''
+          );
+        }
+      }
+    ),
+    distance: yup.string().oneOf(actDistances)
+  .when(
+      'profile', (profile, schema) => {
+        const profiles = ["Autre activité/Assises", "Autre activité/Reconstitution"];
+        if (profiles.includes(profile)) {
+          return schema.required('distance is required');
+        } else {
+          return schema.test(
+            'distance-not-allowed',
+            `distance must not be provided unless profile is ${profiles}`,
             (value) => value === undefined || value === ''
           );
         }
