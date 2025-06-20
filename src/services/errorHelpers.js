@@ -16,7 +16,7 @@ export const sendAPIError = (error, res) => {
   logError(error)
 
   if (error instanceof APIError) {
-    return res.status(error.status).json(stringifyError(error))
+    return res.status(error.status).json(error)
   }
 
   // fallback error
