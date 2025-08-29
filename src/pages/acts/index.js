@@ -97,7 +97,6 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
 
   function toggleFilters() {
     setOpenedFilters((state) => !state)
-    onChange()
   }
 
   function onHospitalsChange(selectedOption) {
@@ -212,108 +211,106 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
                     )}
                   </Col>
                 </Row>
-                {isOpenFeature("export") && (
-                  <div
-                    className="p-3 mt-3 border rounded shadow-xl border-light bg-light"
-                    style={{ display: isOpenedFilters ? "block" : "none" }}
-                  >
-                    <Row>
-                      <Col sm="3">
-                        <Label htmlFor="startDate" className="text-dark">
-                          Date de début
-                        </Label>
-                        <InputDarker
-                          type="date"
-                          id="startDate"
-                          placeholder="Date de début"
-                          {...startDateReg}
-                          innerRef={startDateRef}
-                          onChange={onStartDateChange}
-                        />
-                      </Col>
-                      <Col sm="3">
-                        <Label htmlFor="endDate" className="text-dark">
-                          Date de fin
-                        </Label>
-                        <InputDarker
-                          type="date"
-                          id="endDate"
-                          placeholder="Date de fin"
-                          {...endDateReg}
-                          innerRef={endDateRef}
-                          onChange={onEndDateChange}
-                        />
-                      </Col>
-                    </Row>
-                    {hospitalsChoices?.length > 1 && (
-                      <Row className="mt-3">
-                        <Col>
-                          <Label className="text-dark" id="hospitalsLabel">
-                            Établissements
-                          </Label>
-                          <Select
-                            id="hospitals"
-                            options={hospitalsChoices}
-                            value={hospitals}
-                            isMulti
-                            onChange={onHospitalsChange}
-                            noOptionsMessage={() => "Aucun résultat"}
-                            placeholder="Choisissez un établissement de votre périmètre"
-                            isClearable={true}
-                            isSearchable={true}
-                            styles={colourStyles}
-                            aria-labelledby="hospitalsLabel"
-                            ariaLiveMessages={ariaLiveMessagesFR}
-                            theme={reactSelectCustomTheme}
-                          />
-                        </Col>
-                      </Row>
-                    )}{" "}
+                <div
+                  className="p-3 mt-3 border rounded shadow-xl border-light bg-light"
+                  style={{ display: isOpenedFilters ? "block" : "none" }}
+                >
+                  <Row>
+                    <Col sm="3">
+                      <Label htmlFor="startDate" className="text-dark">
+                        Date de début
+                      </Label>
+                      <InputDarker
+                        type="date"
+                        id="startDate"
+                        placeholder="Date de début"
+                        {...startDateReg}
+                        innerRef={startDateRef}
+                        onChange={onStartDateChange}
+                      />
+                    </Col>
+                    <Col sm="3">
+                      <Label htmlFor="endDate" className="text-dark">
+                        Date de fin
+                      </Label>
+                      <InputDarker
+                        type="date"
+                        id="endDate"
+                        placeholder="Date de fin"
+                        {...endDateReg}
+                        innerRef={endDateRef}
+                        onChange={onEndDateChange}
+                      />
+                    </Col>
+                  </Row>
+                  {hospitalsChoices?.length > 1 && (
                     <Row className="mt-3">
                       <Col>
-                        <Label className="text-dark" id="profilesLabel">
-                          Profils et autres activités
+                        <Label className="text-dark" id="hospitalsLabel">
+                          Établissements
                         </Label>
                         <Select
-                          id="profiles"
-                          options={existingProfiles}
-                          value={profiles}
+                          id="hospitals"
+                          options={hospitalsChoices}
+                          value={hospitals}
                           isMulti
-                          onChange={onProfilesChange}
+                          onChange={onHospitalsChange}
                           noOptionsMessage={() => "Aucun résultat"}
-                          placeholder="Choisissez un profil ou activité"
+                          placeholder="Choisissez un établissement de votre périmètre"
                           isClearable={true}
                           isSearchable={true}
                           styles={colourStyles}
-                          aria-labelledby="profilesLabel"
+                          aria-labelledby="hospitalsLabel"
                           ariaLiveMessages={ariaLiveMessagesFR}
                           theme={reactSelectCustomTheme}
                         />
                       </Col>
                     </Row>
-                    <Row className="mt-3">
-                      <Col>
-                        <Label className="text-dark" id="askerLabel">
-                          Demandeur
-                        </Label>
-                        <AsyncSelect
-                          id="asker"
-                          loadOptions={(search) => loadAskers(search)}
-                          placeholder="Tapez le nom du demandeur"
-                          noOptionsMessage={() => "Aucun résultat"}
-                          loadingMessage={() => "Chargement..."}
-                          onChange={onAskerChange}
-                          isClearable={true}
-                          isSearchable={true}
-                          value={asker}
-                          styles={colourStyles}
-                          aria-labelledby="askerLabel"
-                          ariaLiveMessages={ariaLiveMessagesFR}
-                        />
-                      </Col>
-                    </Row>
-                  </div>
-                )}
+                  )}{" "}
+                  <Row className="mt-3">
+                    <Col>
+                      <Label className="text-dark" id="profilesLabel">
+                        Profils et autres activités
+                      </Label>
+                      <Select
+                        id="profiles"
+                        options={existingProfiles}
+                        value={profiles}
+                        isMulti
+                        onChange={onProfilesChange}
+                        noOptionsMessage={() => "Aucun résultat"}
+                        placeholder="Choisissez un profil ou activité"
+                        isClearable={true}
+                        isSearchable={true}
+                        styles={colourStyles}
+                        aria-labelledby="profilesLabel"
+                        ariaLiveMessages={ariaLiveMessagesFR}
+                        theme={reactSelectCustomTheme}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mt-3">
+                    <Col>
+                      <Label className="text-dark" id="askerLabel">
+                        Demandeur
+                      </Label>
+                      <AsyncSelect
+                        id="asker"
+                        loadOptions={(search) => loadAskers(search)}
+                        placeholder="Tapez le nom du demandeur"
+                        noOptionsMessage={() => "Aucun résultat"}
+                        loadingMessage={() => "Chargement..."}
+                        onChange={onAskerChange}
+                        isClearable={true}
+                        isSearchable={true}
+                        value={asker}
+                        styles={colourStyles}
+                        aria-labelledby="askerLabel"
+                        ariaLiveMessages={ariaLiveMessagesFR}
+                      />
+                    </Col>
+                  </Row>
+                </div>
               </>
             )}
           </FormGroup>
@@ -353,21 +350,21 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
               </thead>
               <tbody>
                 {paginatedData.elements.map((act) => (
-                    <tr key={act.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/acts/${act.id}`)}>
-                      <td>
-                        <b>{act.internalNumber}</b>
-                      </td>
-                      <td>{act.pvNumber}</td>
-                      <td>{act.examinationDate && isoToFr(act.examinationDate)}</td>
-                      <td>{act.profile}</td>
-                      <td>{act.examinationTypes && <VerticalList content={act.examinationTypes} />}</td>
-                      <td className="text-decoration">
-                        <Link href="/acts/[id]" as={`/acts/${act.id}`}
-                           className="text-decoration-none" aria-label={"Voir l'acte numéro " + act.internalNumber}>
-                            Voir
-                        </Link>
-                      </td>
-                    </tr>
+                  <tr key={act.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/acts/${act.id}`)}>
+                    <td>
+                      <b>{act.internalNumber}</b>
+                    </td>
+                    <td>{act.pvNumber}</td>
+                    <td>{act.examinationDate && isoToFr(act.examinationDate)}</td>
+                    <td>{act.profile}</td>
+                    <td>{act.examinationTypes && <VerticalList content={act.examinationTypes} />}</td>
+                    <td className="text-decoration">
+                      <Link href="/acts/[id]" as={`/acts/${act.id}`}
+                        className="text-decoration-none" aria-label={"Voir l'acte numéro " + act.internalNumber}>
+                        Voir
+                      </Link>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </Table>
