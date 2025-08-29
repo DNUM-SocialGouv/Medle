@@ -18,7 +18,6 @@ import Pagination from "../../components/Pagination"
 import { InputDarker, Title1 } from "../../components/StyledComponents"
 import { VerticalList } from "../../components/VerticalList"
 import { isOpenFeature, LIMIT_EXPORT } from "../../config"
-import { useDebounce } from "../../hooks/useDebounce"
 import { usePaginatedData } from "../../hooks/usePaginatedData"
 import { profiles as profilesConstants } from "../../utils/actsConstants"
 import { buildAuthHeaders, redirectIfUnauthorized, withAuthentication } from "../../utils/auth"
@@ -29,6 +28,7 @@ import { ACT_CONSULTATION } from "../../utils/roles"
 import { buildScope } from "../../utils/scope"
 import { ariaLiveMessagesFR, mapArrayForSelect, reactSelectCustomTheme } from "../../utils/select"
 import { useRouter } from "next/router"
+import { useDebounce } from "../../hooks/useDebounce"
 
 const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   // const renderCount = React.useRef(0)
@@ -42,7 +42,6 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
   const [profiles, setProfiles] = useState([])
   const [asker, setAsker] = useState(null)
   const [search, setSearch] = useState("")
-  useDebounce(onChange, 500, [search])
   const scope = useMemo(() => buildScope(currentUser), [currentUser])
   const [errorExport, setErrorExport] = useState("")
 
@@ -91,6 +90,9 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     }
   }, [register, unregister])
 
+  const debouncedOnChange = useDebounce(onChange, 500);
+
+
   const numFilters = Object.values(getValues()).filter((val) => !!val).length
 
   function toggleFilters() {
@@ -128,6 +130,7 @@ const ActsListPage = ({ paginatedData: initialPaginatedData, currentUser }) => {
     const text = e?.target?.value || ""
     setSearch(text)
     setValue("search", text)
+    debouncedOnChange()
   }
 
   function onStartDateChange(e) {
