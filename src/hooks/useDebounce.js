@@ -1,17 +1,18 @@
-import React from "react"
+import { useState } from "react";
 
 /**
  * Debounce allows to prevent to call multiple times a function in a delay.
  *
  * @param {*} delay in ms
  * @param {*} fn the callback
- * @param {*} deps array of dependancies
  */
-export const useDebounce = (fn, delay, deps) => {
-  const cb = React.useCallback(fn, [...deps, fn])
+export const useDebounce = (func, delay) => {
+  const [debounceTimeoutId, setDebounceTimeoutId] = useState()
 
-  React.useEffect(() => {
-    const id = setTimeout(() => cb(), delay)
-    return () => clearTimeout(id)
-  }, [cb, delay])
-}
+  return (...args) => {
+    clearTimeout(debounceTimeoutId);
+    const id = setTimeout(() => func(...args), delay);
+    setDebounceTimeoutId(id)
+  };
+};
+
