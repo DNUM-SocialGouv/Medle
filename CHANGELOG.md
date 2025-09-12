@@ -1,3 +1,7 @@
+## [1.31.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.30.0...release-1.31.0) (2025-09-12)
+### Feature
+* MED-103: Correction de la navigation entre les pages dans l’onglet "Tous les actes" 
+
 ## [1.30.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.29.0...release-1.30.0) (2025-06-20)
 ### Feature
 * MED-90: add api validation to create acts 
