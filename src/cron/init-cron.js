@@ -6,27 +6,37 @@ const { initSummaryActivity } = require("./init-summary-activity")
 const { etpNotif } = require("./etp-notif")
 
 exports.initCrons = async () => {
+  const piloCronExpression = process.env.PILO_CRON || "0 0 1 * *";
+  const etpCronExpression = process.env.ETP_NOTIF_CRON || "0 0 1 6,12 *";
+  const summaryCronExpression = process.env.SUMMARY_CRON || "0 2 1 * *";
+
+  console.log("Lancement des CRON");
+  console.log(`Cron pilo configuré avec les valeurs ${piloCronExpression}`);
+  console.log(`Cron ETP configuré avec les valeurs ${etpCronExpression}`);
+  console.log(`Cron summary configuré avec les valeurs ${summaryCronExpression}`);
+
   cron
-    .schedule(process.env.PILO_CRON || "0 0 1 * *", () => {
+    .schedule(piloCronExpression, () => {
       console.log("Begin export PILO")
       exportPilo()
       console.log("Export PILO finished ")
     })
     .start()
 
-    cron
-    .schedule(process.env.ETP_NOTIF_CRON || "0 0 1 6,12 *", () => {
+  cron
+    .schedule(etpCronExpression, () => {
       console.log("Begin cron etp")
       etpNotif()
       console.log("Cron etp finished")
     })
     .start()
 
-    cron
-    .schedule(process.env.SUMMARY_CRON || "0 2 1 * *", () => {
+  cron
+    .schedule(summaryCronExpression, () => {
       console.log("Begin SUMMARY CRON")
-      initPreSummaryActivity().then((knex) => initSummaryActivity(knex))      
+      initPreSummaryActivity().then((knex) => initSummaryActivity(knex))
       console.log("Export SUMMARY finished")
     })
     .start()
+  console.log("Fin de lancement des CRON");
 }

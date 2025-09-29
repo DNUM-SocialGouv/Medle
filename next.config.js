@@ -1,5 +1,6 @@
 const images = require("remark-images")
 const emoji = require("remark-emoji")
+const { version } = require('./package.json');
 
 const withMDX = require("@next/mdx")({
   extension: /\.mdx?$/,
@@ -26,7 +27,7 @@ const nextConfig = {
     SENTRY_DSN: process.env.SENTRY_DSN,
     MAIL_CONTACT: process.env.MAIL_CONTACT,
     TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
-    MEDLE_VERSION: JSON.stringify(process.env.npm_package_version).split('"').join(""),
+    MEDLE_VERSION: version,
     AUTH_DURATION: process.env.AUTH_DURATION,
     AUTH_REFRESH_START: process.env.AUTH_REFRESH_START,
     AUTH_MAX_DURATION: process.env.AUTH_MAX_DURATION,
@@ -40,7 +41,6 @@ const nextConfig = {
   },
   webpack: (config, { isServer, buildId, webpack }) => {
     //config.optimization.minimizer = []
-  
     config.plugins.push(
       new webpack.DefinePlugin({
         // looks like it doesnt work for some reason
