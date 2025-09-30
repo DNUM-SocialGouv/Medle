@@ -15,16 +15,6 @@ export const create = async (data, currentUser) => {
     })
   }
 
-  try {
-    await schema.validate(data, { abortEarly: false, strict: true });
-  } catch (error) {
-    throw new APIError({
-      status: STATUS_400_BAD_REQUEST,
-      message: "Bad request",
-      detail: error.errors
-    })
-  }
-
   if (!isSubmittedActCorrect(data)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
