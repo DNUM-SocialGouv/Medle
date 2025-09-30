@@ -21,7 +21,7 @@ export const update = async ({ id }, data, currentUser) => {
   }
 
   await knex("acts")
-    .whereNot("id", data.id)
+    .whereNot("id", id)
     .where("internal_number", data.internalNumber)
     .where("hospital_id", data.hospitalId)
     .whereNull("deleted_at")
