@@ -1,3 +1,7 @@
+## [1.31.1](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.31.0...release-1.31.1) (2025-10-08)
+### Feature
+* MED-90: Correction de l’exposition des API 
+
 ## [1.31.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.30.0...release-1.31.0) (2025-09-12)
 ### Feature
 * MED-103: Correction de la navigation entre les pages dans l’onglet "Tous les actes" 
