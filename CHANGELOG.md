@@ -1,3 +1,8 @@
+## [1.32.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.31.1...release-1.32.0) (2025-10-24)
+### Feature
+* MED-100: Mise à jour Next.js : passage de la version 13.2.4 à 13.5.9
+* MED-101: Migration vers Next.js 14
+
 ## [1.31.1](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.31.0...release-1.31.1) (2025-10-08)
 ### Feature
 * MED-90: Correction de l’exposition des API 
