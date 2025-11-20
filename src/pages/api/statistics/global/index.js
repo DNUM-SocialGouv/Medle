@@ -32,17 +32,9 @@ const handler = async (req, res) => {
         if (scopeFilter && scopeFilter.length > 0 && !isAllowedHospitals(currentUser, scopeFilter))
           return sendForbiddenError(res)
 
-        const { inputs, globalCount, averageCount, profilesDistribution, actsWithSamePV, averageWithSamePV } =
-          await buildGlobalStatistics(req.body, currentUser)
+        const result = await buildGlobalStatistics(req.body, currentUser)
 
-        return res.status(STATUS_200_OK).json({
-          inputs,
-          globalCount,
-          averageCount,
-          profilesDistribution,
-          actsWithSamePV,
-          averageWithSamePV,
-        })
+        return res.status(STATUS_200_OK).json(result)
       }
       default:
         if (req.method !== METHOD_OPTIONS) return sendMethodNotAllowedError(res)

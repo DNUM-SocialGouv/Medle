@@ -283,8 +283,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               title="Actes réalisés"
               firstNumber={statistics?.globalCount}
               firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
-              secondNumber={statistics?.averageCount}
-              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
+              secondNumber={statistics?.globalProofWitoutComplain}
+              secondLabel={`Recueil${pluralize(statistics?.globalProofWitoutComplain)} de preuve sans plainte`}
+              thirdNumber={statistics?.averageCount}
+              thirdLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
             <StatBlockPieChart
               data={statistics?.profilesDistribution}
@@ -318,8 +320,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               title="Actes réalisés"
               firstNumber={statistics?.globalCount}
               firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
-              secondNumber={statistics?.averageCount}
-              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
+              secondNumber={statistics?.globalProofWitoutComplain}
+              secondLabel={`Recueil${pluralize(statistics?.globalProofWitoutComplain)} de preuve sans plainte`}
+              thirdNumber={statistics?.averageCount}
+              thirdLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
             <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
             <StatBlockPieChart
@@ -336,8 +340,10 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               title="Actes réalisés"
               firstNumber={statistics?.globalCount}
               firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
-              secondNumber={statistics?.averageCount}
-              secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
+              secondNumber={statistics?.globalProofWitoutComplain}
+              secondLabel={`Recueil${pluralize(statistics?.globalProofWitoutComplain)} de preuve sans plainte`}
+              thirdNumber={statistics?.averageCount}
+              thirdLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
             <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
             <StatBlockPieChart

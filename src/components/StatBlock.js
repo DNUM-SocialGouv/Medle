@@ -31,7 +31,7 @@ StatBlock.propTypes = {
   children: PropTypes.array,
 }
 
-export const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber, secondLabel }) => {
+export const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber, secondLabel, thirdNumber, thirdLabel }) => {
   return (
     <StatBlock>
       <div
@@ -66,7 +66,7 @@ export const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber,
             fontSize: 15,
             fontFamily: "Source Sans Pro",
           }}
-          className="mb-4"
+          className={thirdNumber === undefined ? "mb-4" : "mb-0"}
         >
           {firstLabel}
         </p>
@@ -79,9 +79,27 @@ export const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber,
             fontSize: 15,
             fontFamily: "Source Sans Pro",
           }}
+          className={thirdNumber === undefined ? "mb-4" : "mb-0"}
         >
           {secondLabel}
         </p>
+        {thirdNumber !== undefined && (
+          <>
+            <p style={{ color: "#2E384D", fontSize: 35, fontFamily: "Evolventa" }}>{thirdNumber}</p>
+            <p
+              style={{
+                color: "#4a4a4a",
+                marginTop: -25,
+                marginLeft: 2,
+                fontSize: 15,
+                fontFamily: "Source Sans Pro",
+              }}
+              className={thirdNumber === undefined ? "mb-4" : "mb-0"}
+            >
+              {thirdLabel}
+            </p>
+          </>
+        )}
       </div>
     </StatBlock>
   )
@@ -93,6 +111,8 @@ StatBlockNumbers.propTypes = {
   firstLabel: PropTypes.string,
   secondNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   secondLabel: PropTypes.string,
+  thirdNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  thirdLabel: PropTypes.string,
 }
 
 export const StatBlockPieChart = ({ data, labels = [], hoverTitle, title }) => {
