@@ -75,7 +75,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 
   const scope = useMemo(() => buildScope(currentUser), [currentUser])
 
-  const hospitalsChoices = useMemo(() => 
+  const hospitalsChoices = useMemo(() =>
     mapArrayForSelect(
       scope?.length === 0
         ? getReferenceData("hospitals")
@@ -321,16 +321,6 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               secondNumber={statistics?.averageCount}
               secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
             />
-            <StatBlockPieChart
-              data={statistics?.actsWithPv}
-              title="Numéro de réquisition"
-              labels={[
-                { "Avec réquisition": "Avec n° de réquisition" },
-                { "Sans réquisition": "Sans n° de réquisition" },
-                "Recueil de preuve sans plainte",
-              ]}
-              aria-label="Numéro de réquisition"
-            />
             <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
             <StatBlockPieChart
               data={statistics?.hours}
@@ -348,14 +338,6 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
               firstLabel={`Acte${pluralize(statistics?.globalCount)} au total (tous confondus).`}
               secondNumber={statistics?.averageCount}
               secondLabel={`Acte${pluralize(statistics?.averageCount)} par jour par ETS en moyenne.`}
-            />
-            <StatBlockPieChart
-              data={statistics?.actsWithPv}
-              title="Numéro de réquisition"
-              labels={[
-                { "Avec réquisition": "Avec n° de réquisition" },
-                { "Sans réquisition": "Sans n° de réquisition" },
-              ]}
             />
             <StatBlockPieChart data={statistics?.actTypes} title="Types d'actes" />
             <StatBlockPieChart
