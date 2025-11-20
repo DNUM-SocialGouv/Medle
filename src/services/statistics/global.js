@@ -112,7 +112,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
   scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
 
-  const { inputs, globalCount, averageCount, profilesDistribution, actsWithSamePV, averageWithSamePV } =
+  const { inputs, globalCount, globalProofWitoutComplain, averageCount, profilesDistribution, actsWithSamePV, averageWithSamePV } =
     await buildGlobalStatistics({ endDate, scopeFilter, startDate }, currentUser)
 
   const hospitals = await findListHospitals(scopeFilter)
@@ -134,6 +134,7 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
   addCellTitle(actsWorksheet, "Actes réalisés")
 
   actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
+  actsWorksheet.addRow({ name: "Recueil de preuve sans plainte", value: globalProofWitoutComplain })
   actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
   actsWorksheet.addRow({ name: "Nb actes portant le même n° de réquisition", value: actsWithSamePV })
   actsWorksheet.addRow({ name: "Moyenne des actes portant le même n° de réquisition", value: averageWithSamePV })

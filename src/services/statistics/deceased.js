@@ -124,7 +124,7 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
   scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
 
-  const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } =
+  const { inputs, globalCount, globalProofWitoutComplain, averageCount, actsWithPv, actTypes, hours, examinations } =
     await buildDeceasedStatistics({ endDate, scopeFilter, startDate }, currentUser)
 
   const hospitals = await findListHospitals(scopeFilter)
@@ -146,6 +146,7 @@ export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter
   addCellTitle(actsWorksheet, "Actes réalisés")
 
   actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
+  actsWorksheet.addRow({ name: "Recueil de preuve sans plainte", value: globalProofWitoutComplain })
   const avgRow = actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
   avgRow.getCell("value").alignment = { horizontal: "right" }
 

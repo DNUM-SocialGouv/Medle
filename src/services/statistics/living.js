@@ -147,7 +147,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
 
 export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter, profile }, currentUser) => {
   scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
-  const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } = await buildLivingStatistics(
+  const { inputs, globalCount, globalProofWitoutComplain, averageCount, actsWithPv, actTypes, hours, examinations } = await buildLivingStatistics(
     { endDate, profile, scopeFilter, startDate },
     currentUser,
   )
@@ -170,6 +170,7 @@ export const exportLivingStatistics = async ({ startDate, endDate, scopeFilter, 
 
   addCellTitle(actsWorksheet, "Actes réalisés")
   actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
+  actsWorksheet.addRow({ name: "Recueil de preuve sans plainte", value: globalProofWitoutComplain })
   actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
 
   addCellTitle(actsWorksheet, "Numéro de réquisitions")
