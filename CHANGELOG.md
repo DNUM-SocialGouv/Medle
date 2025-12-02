@@ -1,3 +1,7 @@
+## [1.33.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.32.0...release-1.33.0) (2025-10-24)
+### Feature
+* MED-91: Export des nouvelles données pour PILO et revue de l'écran de statistiques
+
 ## [1.32.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.31.1...release-1.32.0) (2025-10-24)
 ### Feature
 * MED-100: Mise à jour Next.js : passage de la version 13.2.4 à 13.5.9
