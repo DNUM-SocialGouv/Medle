@@ -32,6 +32,8 @@ export const exportActs = async (params, currentUser) => {
     { header: "Durée", key: "duration", width: 20 },
     { header: "Distance", key: "distance", width: 20 },
     { header: "Cause du décès", key: "deathCause", width: 20 },
+    { header: "Recueil de preuve sans plainte", key: "proofWithoutComplaint", width: 30 },
+    { header: "Rendez-vous honoré", key: "honoredMeeting", width: 20 },
   ]
 
   if (elements?.length) elements.forEach((element) => worksheet.addRow(element))

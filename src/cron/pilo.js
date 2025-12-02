@@ -17,13 +17,23 @@ function queryBuilder(table, startDate) {
   let query = knex(table)
 
   if (startDate) {
-    query = query.where(function() {
+    query = query.where(function () {
       this.where("created_at", ">=", startDate)
-      .orWhere("updated_at", ">=", startDate)
+        .orWhere("updated_at", ">=", startDate)
     })
   }
 
   return query
+}
+
+function extractExtraData(data) {
+  const result = []
+  if (data.extra_data) {
+    const extraData = data.extra_data
+    result.push(extraData.proofWithoutComplaint != null ? stringifyValue(extraData.proofWithoutComplaint) : "")
+    result.push(extraData.honoredMeeting ? stringifyValue(extraData.honoredMeeting) : "")
+  }
+  return result
 }
 
 exports.exportPilo = async () => {
@@ -35,7 +45,7 @@ exports.exportPilo = async () => {
 
     const startDate = dateParam.value && new Date(dateParam.value)
     const endDate = new Date(currentDate)
-    endDate.setHours(23, 59, 59, 999); 
+    endDate.setHours(23, 59, 59, 999);
 
     const dirPath = "./exports"
     if (!fs.existsSync(dirPath)) {
@@ -43,13 +53,26 @@ exports.exportPilo = async () => {
     }
     const promises = tables.map(async (table) => {
       const tableData = await queryBuilder(table, startDate)
-      .where(function() {
-        this.where("created_at", "<=", endDate)
-        .orWhere("updated_at", "<=", endDate)
-      }).select("*")
+        .where(function () {
+          this.where("created_at", "<=", endDate)
+            .orWhere("updated_at", "<=", endDate)
+        }).select("*")
 
       const [{ value: csvHeader }] = await knex("exportParams").where("name", `${table}_fields`).select("*")
-      const csvBody = tableData.map((data) => csvHeader.map((header) => stringifyValue(data[header])))
+      let csvBody;
+      if (table === "acts") {
+        csvBody = tableData.map((data) => {
+          const result = []
+          result.push(...csvHeader.map((header) => stringifyValue(data[header])))
+          result.push(...extractExtraData(data))
+          return result
+        })
+        // Ajout des Headers en plus à la fin pour qu’ils ne soient pas utilisées lors du parsing des data dans csvHeader
+        csvHeader.push("Hors réquisition judiciaire (recueil de preuve sans plainte)")
+        csvHeader.push("Rendez-vous honoré")
+      } else {
+        csvBody = tableData.map((data) => csvHeader.map((header) => stringifyValue(data[header])))
+      }
       const csvData = [csvHeader, ...csvBody]
 
       const csv = csvData.map((row) => row.map(String).join("|")).join("\r\n")

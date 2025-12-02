@@ -8,16 +8,16 @@ import { addCellTitle, intervalDays, normalizeInputs } from "./common"
 
 const makeWhereClause =
   ({ startDate, endDate, scopeFilter = [] }) =>
-  (builder) => {
-    builder
-      .whereNull("deleted_at")
-      .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-      .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+    (builder) => {
+      builder
+        .whereNull("deleted_at")
+        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
 
-    if (scopeFilter.length) {
-      builder.whereIn("hospital_id", scopeFilter)
+      if (scopeFilter.length) {
+        builder.whereIn("hospital_id", scopeFilter)
+      }
     }
-  }
 
 /**
  * Request and format the global statistics.
@@ -36,13 +36,18 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 
   const fetchGlobalCount = knex("acts").count().where(makeWhereClause({ endDate, scopeFilter, startDate }))
 
+  const fetchGlobalProofWitoutComplain = knex("acts")
+    .count()
+    .whereRaw("(extra_data->>'proofWithoutComplaint')::boolean = false")
+    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
+
   const fetchProfilesDistribution = knex("acts")
     .select(
       knex.raw(
         `count(1) filter (where profile not in ('Personne décédée', 'Autre activité/Assises', 'Autre activité/Reconstitution'))::integer as "Vivants",` +
-          `count(1) filter (where profile = 'Personne décédée')::integer as "Personne décédée",` +
-          `count(1) filter (where profile = 'Autre activité/Assises')::integer as "Autre activité/Assises",` +
-          `count(1) filter (where profile = 'Autre activité/Reconstitution')::integer as "Autre activité/Reconstitution"`,
+        `count(1) filter (where profile = 'Personne décédée')::integer as "Personne décédée",` +
+        `count(1) filter (where profile = 'Autre activité/Assises')::integer as "Autre activité/Assises",` +
+        `count(1) filter (where profile = 'Autre activité/Reconstitution')::integer as "Autre activité/Reconstitution"`,
       ),
     )
     .where(makeWhereClause({ endDate, scopeFilter, startDate }))
@@ -75,10 +80,11 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
   return await Promise.all([
     fetchCountHospitals,
     fetchGlobalCount,
+    fetchGlobalProofWitoutComplain,
     fetchProfilesDistribution,
     fetchActsWithSamePV,
     fetchAverageWithSamePV,
-  ]).then(([[countHospitals], [globalCount], [profilesDistribution], [actsWithSamePV], [averageWithSamePV]]) => {
+  ]).then(([[countHospitals], [globalCount], [globalProofWitoutComplain], [profilesDistribution], [actsWithSamePV], [averageWithSamePV]]) => {
     countHospitals = parseInt(countHospitals?.count, 10) || 0
     globalCount = parseInt(globalCount?.count, 10) || 0
 
@@ -92,6 +98,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
       averageWithSamePV: averageWithSamePV.avg || 0,
 
       globalCount,
+      globalProofWitoutComplain: parseInt(globalProofWitoutComplain?.count, 10) || 0,
       inputs: {
         endDate: endDate.format(ISO_DATE),
         scopeFilter,
@@ -105,7 +112,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
   scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
 
-  const { inputs, globalCount, averageCount, profilesDistribution, actsWithSamePV, averageWithSamePV } =
+  const { inputs, globalCount, globalProofWitoutComplain, averageCount, profilesDistribution, actsWithSamePV, averageWithSamePV } =
     await buildGlobalStatistics({ endDate, scopeFilter, startDate }, currentUser)
 
   const hospitals = await findListHospitals(scopeFilter)
@@ -127,6 +134,7 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
   addCellTitle(actsWorksheet, "Actes réalisés")
 
   actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
+  actsWorksheet.addRow({ name: "Recueil de preuve sans plainte", value: globalProofWitoutComplain })
   actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
   actsWorksheet.addRow({ name: "Nb actes portant le même n° de réquisition", value: actsWithSamePV })
   actsWorksheet.addRow({ name: "Moyenne des actes portant le même n° de réquisition", value: averageWithSamePV })

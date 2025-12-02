@@ -8,17 +8,17 @@ import { addCellTitle, intervalDays, normalizeInputs } from "./common"
 
 const makeWhereClause =
   ({ startDate, endDate, scopeFilter = [] }) =>
-  (builder) => {
-    builder
-      .whereNull("deleted_at")
-      .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-      .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
-      .where("profile", "Personne décédée")
+    (builder) => {
+      builder
+        .whereNull("deleted_at")
+        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
+        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
+        .where("profile", "Personne décédée")
 
-    if (scopeFilter.length) {
-      builder.whereIn("hospital_id", scopeFilter)
+      if (scopeFilter.length) {
+        builder.whereIn("hospital_id", scopeFilter)
+      }
     }
-  }
 
 /**
  * Request and format the deceased statistics.
@@ -37,12 +37,17 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 
   const fetchGlobalCount = knex("acts").count().where(makeWhereClause({ endDate, scopeFilter, startDate }))
 
+  const fetchGlobalProofWitoutComplain = knex("acts")
+    .count()
+    .whereRaw("(extra_data->>'proofWithoutComplaint')::boolean = false")
+    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
+
   const fetchActsWithPv = knex("acts")
     .select(
       knex.raw(
         `count(1) filter (where pv_number is not null and pv_number <> '')::integer as "Avec réquisition",` +
-          `count(1) filter (where asker_id is null)::integer as "Recueil de preuve sans plainte",` +
-          `count(1) filter (where pv_number is null or pv_number = '' )::integer as "Sans réquisition"`,
+        `count(1) filter (where asker_id is null)::integer as "Recueil de preuve sans plainte",` +
+        `count(1) filter (where pv_number is null or pv_number = '' )::integer as "Sans réquisition"`,
       ),
     )
     .where(makeWhereClause({ endDate, scopeFilter, startDate }))
@@ -51,10 +56,10 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
     .select(
       knex.raw(
         `count(1) filter (where extra_data->'examinationTypes' @> '["Examen externe"]')::integer as "Examen externe",` +
-          `count(1) filter (where extra_data->'examinationTypes' @> '["Levée de corps"]')::integer as "Levée de corps",` +
-          `count(1) filter (where extra_data->'examinationTypes' @> '["Autopsie"]')::integer as "Autopsie",` +
-          `count(1) filter (where extra_data->'examinationTypes' @> '["Anthropologie"]')::integer as "Anthropologie",` +
-          `count(1) filter (where extra_data->'examinationTypes' @> '["Odontologie"]')::integer as "Odontologie"`,
+        `count(1) filter (where extra_data->'examinationTypes' @> '["Levée de corps"]')::integer as "Levée de corps",` +
+        `count(1) filter (where extra_data->'examinationTypes' @> '["Autopsie"]')::integer as "Autopsie",` +
+        `count(1) filter (where extra_data->'examinationTypes' @> '["Anthropologie"]')::integer as "Anthropologie",` +
+        `count(1) filter (where extra_data->'examinationTypes' @> '["Odontologie"]')::integer as "Odontologie"`,
       ),
     )
     .where(makeWhereClause({ endDate, scopeFilter, startDate }))
@@ -63,11 +68,11 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
     .select(
       knex.raw(
         `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as "Biologie",` +
-          `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as "Imagerie",` +
-          `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as "Toxicologie",` +
-          `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
-          `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as "Génétique",` +
-          `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`,
+        `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as "Imagerie",` +
+        `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as "Toxicologie",` +
+        `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
+        `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as "Génétique",` +
+        `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`,
       ),
     )
     .where(makeWhereClause({ endDate, scopeFilter, startDate }))
@@ -77,8 +82,8 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
     .select(
       knex.raw(
         `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
-          `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
-          `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`,
+        `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
+        `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`,
       ),
     )
     .where(makeWhereClause({ endDate, scopeFilter, startDate }))
@@ -86,11 +91,12 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
   return await Promise.all([
     fetchCountHospitals,
     fetchGlobalCount,
+    fetchGlobalProofWitoutComplain,
     fetchActsWithPv,
     fetchActTypes,
     fetchHours,
     fetchExaminations,
-  ]).then(([[countHospitals], [globalCount], [actsWithPv], [actTypes], [hours], [examinations]]) => {
+  ]).then(([[countHospitals], [globalCount], [globalProofWitoutComplain], [actsWithPv], [actTypes], [hours], [examinations]]) => {
     countHospitals = parseInt(countHospitals?.count, 10) || 0
     globalCount = parseInt(globalCount?.count, 10) || 0
 
@@ -104,6 +110,7 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
         periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
       examinations,
       globalCount,
+      globalProofWitoutComplain: parseInt(globalProofWitoutComplain?.count, 10) || 0,
       hours,
       inputs: {
         endDate: endDate.format(ISO_DATE),
@@ -117,7 +124,7 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
   scopeFilter = scopeFilter && scopeFilter.split(",").map(Number)
 
-  const { inputs, globalCount, averageCount, actsWithPv, actTypes, hours, examinations } =
+  const { inputs, globalCount, globalProofWitoutComplain, averageCount, actsWithPv, actTypes, hours, examinations } =
     await buildDeceasedStatistics({ endDate, scopeFilter, startDate }, currentUser)
 
   const hospitals = await findListHospitals(scopeFilter)
@@ -139,6 +146,7 @@ export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter
   addCellTitle(actsWorksheet, "Actes réalisés")
 
   actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
+  actsWorksheet.addRow({ name: "Recueil de preuve sans plainte", value: globalProofWitoutComplain })
   const avgRow = actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
   avgRow.getCell("value").alignment = { horizontal: "right" }
 
