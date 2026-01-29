@@ -133,58 +133,61 @@ const getSituationDate = (dateStr) => {
 export { getSituationDate, periodOfDayValues }
 
 export const isSubmittedActCorrect = (data) => {
-  let actIsCorrect = true
+  let errors = [];
 
   // Vérification des champs attendus
   for (const field in data) {
     if (!actFields.includes(field)) {
-      actIsCorrect = false
+      errors.push(`Champ inattendu: ${field}`);
     }
   }
 
   // Vérification des champs correspondant à une colonne en base
-  if (data.id && !Number.isInteger(data.id)) actIsCorrect = false
-  if (data.userId && !Number.isInteger(data.userId)) actIsCorrect = false
-  if (data.addedBy && !Number.isInteger(data.addedBy)) actIsCorrect = false
-  if (data.askerId && !Number.isInteger(data.askerId)) actIsCorrect = false
-  if (data.examinationDate && !moment(data.examinationDate, "YYYY-MM-DD", true).isValid()) actIsCorrect = false
-  if (data.hospitalId && !Number.isInteger(data.hospitalId)) actIsCorrect = false
+  if (data.id && !Number.isInteger(data.id)) errors.push("id doit être un entier");
+  if (data.userId && !Number.isInteger(data.userId)) errors.push("userId doit être un entier");
+  if (data.addedBy && !Number.isInteger(data.addedBy)) errors.push("addedBy doit être un entier");
+  if (data.askerId && !Number.isInteger(data.askerId)) errors.push("askerId doit être un entier");
+  if (data.examinationDate && !moment(data.examinationDate, "YYYY-MM-DD", true).isValid()) errors.push("examinationDate doit être au format YYYY-MM-DD");
+  if (data.hospitalId && !Number.isInteger(data.hospitalId)) errors.push("hospitalId doit être un entier");
 
   // Vérification des valeurs attendues pour chaque champ de la colonne extra_data en base
-  if (data.deathCause && !actDeathCauses.includes(data.deathCause)) actIsCorrect = false
-  if (data.distance && !actDistances.includes(data.distance)) actIsCorrect = false
-  if (data.duration && !actDurations.includes(data.duration)) actIsCorrect = false
+  if (data.deathCause && !actDeathCauses.includes(data.deathCause)) errors.push("deathCause invalide");
+  if (data.distance && !actDistances.includes(data.distance)) errors.push("distance invalide");
+  if (data.duration && !actDurations.includes(data.duration)) errors.push("duration invalide");
   if (data.examinations) {
     data.examinations.forEach((examination) => {
-      if (!actExaminations.includes(examination)) actIsCorrect = false
-    })
+      if (!actExaminations.includes(examination)) errors.push(`examination invalide: ${examination}`);
+    });
   }
   if (data.examinationTypes) {
-    if (!data.examinationTypes.length > 0) actIsCorrect = false
+    if (!data.examinationTypes.length > 0) errors.push("examinationTypes doit contenir au moins une valeur");
     data.examinationTypes.forEach((types) => {
-      if (!actExaminationTypes.includes(types)) actIsCorrect = false
-    })
+      if (!actExaminationTypes.includes(types)) errors.push(`examinationType invalide: ${types}`);
+    });
   }
-  if (data.honoredMeeting && !actHonoredMeetings.includes(data.honoredMeeting)) actIsCorrect = false
-  if (data.periodOfDay && !actPeriodOfDays.includes(data.periodOfDay)) actIsCorrect = false
-  if (data.personAgeTag && !actPersonAgeTags.includes(data.personAgeTag)) actIsCorrect = false
-  if (data.personGender && !actPersonGenders.includes(data.personGender)) actIsCorrect = false
-  if (data.personIsPresent && !actPersonIsPresents.includes(data.personIsPresent)) actIsCorrect = false
-  if (data.profile && !actProfiles.includes(data.profile)) actIsCorrect = false
+  if (data.honoredMeeting && !actHonoredMeetings.includes(data.honoredMeeting)) errors.push("honoredMeeting invalide");
+  if (data.periodOfDay && !actPeriodOfDays.includes(data.periodOfDay)) errors.push("periodOfDay invalide");
+  if (data.personAgeTag && !actPersonAgeTags.includes(data.personAgeTag)) errors.push("personAgeTag invalide");
+  if (data.personGender && !actPersonGenders.includes(data.personGender)) errors.push("personGender invalide");
+  if (data.personIsPresent && !actPersonIsPresents.includes(data.personIsPresent)) errors.push("personIsPresent invalide");
+  if (data.profile && !actProfiles.includes(data.profile)) errors.push("profile invalide");
   if (data.violenceContexts) {
-    if (!data.violenceContexts.length > 0) actIsCorrect = false
+    if (!data.violenceContexts.length > 0) errors.push("violenceContexts doit contenir au moins une valeur");
     data.violenceContexts.forEach((context) => {
-      if (!actViolenceContexts.includes(context)) actIsCorrect = false
-    })
+      if (!actViolenceContexts.includes(context)) errors.push(`violenceContext invalide: ${context}`);
+    });
   }
   if (data.violenceNatures) {
-    if (!data.violenceNatures.length > 0) actIsCorrect = false
+    if (!data.violenceNatures.length > 0) errors.push("violenceNatures doit contenir au moins une valeur");
     data.violenceNatures.forEach((nature) => {
-      if (!nature.startsWith("Attentat/") && !actViolenceNatures.includes(nature)) actIsCorrect = false
-    })
+      if (!nature.startsWith("Attentat/") && !actViolenceNatures.includes(nature)) errors.push(`violenceNature invalide: ${nature}`);
+    });
   }
 
-  return actIsCorrect
+  return {
+    isOk: errors.length === 0,
+    message: errors.join("; ")
+  };
 }
 
 export const actFields = [

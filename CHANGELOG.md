@@ -1,3 +1,7 @@
+## [1.34.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.33.0...release-1.34.0) (2026-01-29)
+### Feature
+* MED-107: Passage à NodeJS 20
+
 ## [1.33.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.32.0...release-1.33.0) (2025-12-02)
 ### Feature
 * MED-91: Export des nouvelles données pour PILO et revue de l'écran de statistiques
