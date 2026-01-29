@@ -13,10 +13,12 @@ export const update = async ({ id }, data, currentUser) => {
     })
   }
 
-  if (!isSubmittedActCorrect(data)) {
+  const actValidation = isSubmittedActCorrect(data);
+  if (!actValidation.isOk) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",
+      detail: actValidation.message,
     })
   }
 
