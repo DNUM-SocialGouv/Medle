@@ -51,11 +51,10 @@ const handler = async (req, res) => {
         try {
           const user = await findByEmail(to)
 
+          // On ne renvoi pas de status de la demande.
+          // Que l’utilisateur existe ou non, on envoi «Ok»
           if (!user) {
-            return res.status(STATUS_404_NOT_FOUND).json({
-              message: `User with email ${to} doesn't exist.`,
-              status: STATUS_404_NOT_FOUND,
-            })
+            return res.status(STATUS_200_OK).json({})
           }
 
           const token = generateToken(user, { timeout: "1H" })
