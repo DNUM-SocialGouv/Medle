@@ -203,13 +203,19 @@ export const Footer = ({ currentUser }) => {
             <FooterDocument type={footerDocumentAccessibilite} label={"Accessibilité : Partiellement conforme"} />
           </li>
           <li className="mb-2">
-            <FooterDocument type={footerDocumentMentionsLegales} label={"Mentions légales"} />
+            <Link style={{ color: "black", padding: "0 15px" }} href={"/mentions-legales"}>
+              Mentions légales
+            </Link>
           </li>
           <li className="mb-2">
-            <FooterDocument type={footerDocumentDonneesPersonnelles} label={"Données personnelles"} />
+            <Link style={{ color: "black", padding: "0 15px" }} href={"/donnees-personnelles"}>
+              Données personnelles
+            </Link>
           </li>
           <li className="mb-2">
-            <FooterDocument type={footerDocumentGestionCookies} label={"Gestion des cookies"} />
+            <Link style={{ color: "black", padding: "0 15px" }} href={"/gestion-des-cookies"}>
+              Gestion des cookies
+            </Link>
           </li>
           {currentUser && (
             <>
