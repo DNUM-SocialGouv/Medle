@@ -1,19 +1,6 @@
 import Head from "next/head";
 
-import Total from "../components/accessibilite/Total";
-import Consultation from "../components/accessibilite/Consultation";
-import Cadres from "../components/accessibilite/Cadres";
-import Couleurs from "../components/accessibilite/Couleurs";
-import ElementsObligatoires from "../components/accessibilite/ElementsObligatoires";
-import Formulaires from "../components/accessibilite/Formulaires";
-import Images from "../components/accessibilite/Images";
-import Liens from "../components/accessibilite/Liens";
-import Multimedia from "../components/accessibilite/Multimedia";
-import Navigation from "../components/accessibilite/Navigation";
-import PresentationDeLinformation from "../components/accessibilite/PresentationDeLinformation";
-import Scripts from "../components/accessibilite/Scripts";
-import StructurationDeLinformation from "../components/accessibilite/StructurationDeLinformation";
-import Tableaux from "../components/accessibilite/Tableaux";
+import ReportTable from "../components/accessibilite/reportTable/ReportTable";
 import Layout from "../components/Layout";
 import { Title1 } from "../components/StyledComponents";
 import { useUser } from "../hooks/useUser";
@@ -215,44 +202,7 @@ export default function GestionDesCookies() {
           </ul>
 
           <h1>Tableau récapitulatif du taux de conformité RGAA :</h1>
-          <table>
-            <thead>
-              <tr>
-                <th>N° crit.</th>
-                <th>Thématique / intitulé du critère</th>
-                <th>Connexion</th>
-                <th>Accueil avec graphiques</th>
-                <th>Tous les actes</th>
-                <th>Ajout utilisateur</th>
-                <th>Détails utilisateur</th>
-                <th>Saisie ETP</th>
-                <th>Ajout acte</th>
-                <th>Mentions légales</th>
-                <th>FAQ</th>
-                <th>Plan de site</th>
-                <th>C</th>
-                <th>NC</th>
-                <th>NA</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <Images />
-              <Cadres />
-              <Couleurs />
-              <Multimedia />
-              <Tableaux />
-              <Liens />
-              <Scripts />
-              <ElementsObligatoires />
-              <StructurationDeLinformation />
-              <PresentationDeLinformation />
-              <Formulaires />
-              <Navigation />
-              <Consultation />
-              <Total />
-            </tbody>
-          </table>
+          <ReportTable />
         </div>
       </Layout >
 
