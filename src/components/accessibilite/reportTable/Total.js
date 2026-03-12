@@ -1,3 +1,5 @@
+import styles from "./ReportTable.module.css";
+
 export default function Total() {
   return (
     <tr>

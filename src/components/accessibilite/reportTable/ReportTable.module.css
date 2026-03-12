@@ -1,3 +1,10 @@
 .background-error {
   background-color: #ffdddd !important;
 }
+.background-warning {
+  background-color: #fffbe6 !important;
+}
+.background-ok {
+  background-color: #E3F6E2 !important;
+}
+

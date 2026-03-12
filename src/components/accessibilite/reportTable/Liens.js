@@ -27,20 +27,20 @@ export default function Liens() {
       <tr>
         <td>6.2</td>
         <td>Dans chaque page web, chaque lien a-t- il un intitulé ?</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
-        <td>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
         <td>10</td>
         <td>0</td>
         <td>0</td>
-        <td>Conforme</td>
+        <td className={styles["background-ok"]}>Conforme</td>
       </tr>
     </>
   )
