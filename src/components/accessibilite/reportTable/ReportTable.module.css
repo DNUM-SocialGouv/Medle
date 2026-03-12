@@ -15,7 +15,7 @@
   overflow-x: auto;
   overflow-y: auto;
   border: 1px solid #eee;
-  max-height: 1500px;
+  max-height: 1000px;
 }
 
 .reportTable {
@@ -65,4 +65,17 @@
 
 .reportTable tbody tr:nth-child(even) {
   background: #f9f9f9;
+}
+
+/* Coulers des colonnes de score */
+.reportTable tbody>tr>td:nth-child(13) {
+  background-color: #E3F6E2 !important;
+}
+
+.reportTable tbody>tr>td:nth-child(14) {
+  background-color: #ffdddd !important;
+}
+
+.reportTable tbody>tr>td:nth-child(15) {
+  background-color: #fffbe6 !important;
 }
