@@ -11,9 +11,14 @@
 }
 
 
+.scrollContainer {
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  max-height: 1500px;
+}
+
 .reportTable {
-  border-collapse: collapse;
-  width: 100%;
   font-size: 1rem;
   background: #fff;
 }
@@ -28,6 +33,39 @@
 .reportTable th {
   background: #f6f6f6;
   font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.reportTable th:first-child,
+.reportTable th:nth-child(2) {
+  z-index: 4;
+}
+
+.reportTable th:first-child,
+.reportTable td:first-child {
+  position: sticky;
+  left: 0;
+  background: #f6f6f6;
+}
+
+.reportTable th:nth-child(2),
+.reportTable td:nth-child(2) {
+  position: sticky;
+  left: 120px;
+  background: #f6f6f6;
+  min-width: 200px;
+}
+
+.reportTable th:first-child,
+.reportTable th:nth-child(2) {
+  z-index: 5;
+}
+
+.reportTable td:first-child,
+.reportTable td:nth-child(2) {
+  z-index: 3;
 }
 
 .reportTable tbody tr:nth-child(even) {

@@ -17,43 +17,45 @@ import Tableaux from "./Tableaux";
 
 export default function ReportTable() {
   return (
-    <table className={styles["reportTable"]}>
-      <thead>
-        <tr>
-          <th>N° crit.</th>
-          <th>Thématique / intitulé du critère</th>
-          <th>Connexion</th>
-          <th>Accueil avec graphiques</th>
-          <th>Tous les actes</th>
-          <th>Ajout utilisateur</th>
-          <th>Détails utilisateur</th>
-          <th>Saisie ETP</th>
-          <th>Ajout acte</th>
-          <th>Mentions légales</th>
-          <th>FAQ</th>
-          <th>Plan de site</th>
-          <th>C</th>
-          <th>NC</th>
-          <th>NA</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <Images />
-        <Cadres />
-        <Couleurs />
-        <Multimedia />
-        <Tableaux />
-        <Liens />
-        <Scripts />
-        <ElementsObligatoires />
-        <StructurationDeLinformation />
-        <PresentationDeLinformation />
-        <Formulaires />
-        <Navigation />
-        <Consultation />
-        <Total />
-      </tbody>
-    </table>
+    <div className={styles["scrollContainer"]}>
+      <table className={styles["reportTable"]}>
+        <thead>
+          <tr>
+            <th>N° crit.</th>
+            <th>Thématique / intitulé du critère</th>
+            <th>Connexion</th>
+            <th>Accueil avec graphiques</th>
+            <th>Tous les actes</th>
+            <th>Ajout utilisateur</th>
+            <th>Détails utilisateur</th>
+            <th>Saisie ETP</th>
+            <th>Ajout acte</th>
+            <th>Mentions légales</th>
+            <th>FAQ</th>
+            <th>Plan de site</th>
+            <th>C</th>
+            <th>NC</th>
+            <th>NA</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <Images />
+          <Cadres />
+          <Couleurs />
+          <Multimedia />
+          <Tableaux />
+          <Liens />
+          <Scripts />
+          <ElementsObligatoires />
+          <StructurationDeLinformation />
+          <PresentationDeLinformation />
+          <Formulaires />
+          <Navigation />
+          <Consultation />
+          <Total />
+        </tbody>
+      </table>
+    </div>
   );
 }
