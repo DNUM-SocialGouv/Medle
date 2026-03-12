@@ -4,7 +4,7 @@ export default function Navigation() {
   return (
     <>
       <tr>
-        <td>Navigation</td>
+        <td colSpan={16}>Navigation</td>
       </tr>
       <tr>
         <td>12.1</td>

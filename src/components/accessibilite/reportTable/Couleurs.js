@@ -4,7 +4,7 @@ export default function Couleurs() {
   return (
     <>
       <tr>
-        <td>Couleurs</td>
+        <td colSpan={16}>Couleurs</td>
       </tr>
       <tr>
         <td>3.1</td>

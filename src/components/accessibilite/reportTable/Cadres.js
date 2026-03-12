@@ -4,7 +4,7 @@ export default function Cadres() {
   return (
     <>
       <tr>
-        <td>Cadres</td>
+        <td colSpan={16}>Cadres</td>
       </tr>
       <tr>
         <td>2.1</td>

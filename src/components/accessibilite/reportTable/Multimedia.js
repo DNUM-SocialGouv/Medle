@@ -4,7 +4,7 @@ export default function Multimedia() {
   return (
     <>
       <tr>
-        <td>Multimédia</td>
+        <td colSpan={16}>Multimédia</td>
       </tr>
       <tr>
         <td>4.1</td>

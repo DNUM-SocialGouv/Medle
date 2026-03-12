@@ -4,7 +4,7 @@ export default function PresentationDeLinformation() {
   return (
     <>
       <tr>
-        <td>Présentation de l&apos;information</td>
+        <td colSpan={16}>Présentation de l&apos;information</td>
       </tr>
       <tr>
         <td>10.1</td>

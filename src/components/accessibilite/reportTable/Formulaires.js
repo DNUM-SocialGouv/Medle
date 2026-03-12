@@ -4,7 +4,7 @@ export default function Formulaires() {
   return (
     <>
       <tr>
-        <td>Formulaires</td>
+        <td colSpan={16}>Formulaires</td>
       </tr>
       <tr>
         <td>11.1</td>

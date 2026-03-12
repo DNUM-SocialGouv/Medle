@@ -4,7 +4,7 @@ export default function ElementsObligatoires() {
   return (
     <>
       <tr>
-        <td>Éléments obligatoires</td>
+        <td colSpan={16}>Éléments obligatoires</td>
       </tr>
       <tr>
         <td>8.1</td>

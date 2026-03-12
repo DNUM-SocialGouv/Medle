@@ -4,7 +4,7 @@ export default function Tableaux() {
   return (
     <>
       <tr>
-        <td>Tableaux</td>
+        <td colSpan={16}>Tableaux</td>
       </tr>
       <tr>
         <td>5.1</td>

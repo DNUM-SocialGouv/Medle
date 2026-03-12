@@ -4,7 +4,7 @@ export default function Liens() {
   return (
     <>
       <tr>
-        <td>Liens</td>
+        <td colSpan={16}>Liens</td>
       </tr>
       <tr>
         <td>6.1</td>

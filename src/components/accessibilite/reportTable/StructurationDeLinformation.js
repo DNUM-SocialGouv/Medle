@@ -4,7 +4,7 @@ export default function StructurationDeLinformation() {
   return (
     <>
       <tr>
-        <td>Structuration de l&apos;information</td>
+        <td colSpan={16}>Structuration de l&apos;information</td>
       </tr>
       <tr>
         <td>9.1</td>

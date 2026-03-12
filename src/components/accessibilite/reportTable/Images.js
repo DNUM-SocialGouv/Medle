@@ -4,7 +4,7 @@ export default function Images() {
   return (
     <>
       <tr>
-        <td>Images</td>
+        <td colSpan={16}>Images</td>
       </tr>
       <tr>
         <td>1.1</td>

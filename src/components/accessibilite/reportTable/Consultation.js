@@ -4,7 +4,7 @@ export default function Consultation() {
   return (
     <>
       <tr>
-        <td>Consultation</td>
+        <td colSpan={16}>Consultation</td>
       </tr>
       <tr>
         <td>13.1</td>

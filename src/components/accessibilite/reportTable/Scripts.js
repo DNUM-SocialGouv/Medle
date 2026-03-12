@@ -4,7 +4,7 @@ export default function Scripts() {
   return (
     <>
       <tr>
-        <td>Scripts</td>
+        <td colSpan={16}>Scripts</td>
       </tr>
       <tr>
         <td>7.1</td>
