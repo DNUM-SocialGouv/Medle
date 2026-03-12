@@ -4,6 +4,7 @@ export default function Total() {
   return (
     <tr>
       <td>Conformité*</td>
+      <td></td>
       <td>88%</td>
       <td>74%</td>
       <td>88%</td>
