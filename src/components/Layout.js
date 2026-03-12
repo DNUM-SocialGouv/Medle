@@ -200,7 +200,9 @@ export const Footer = ({ currentUser }) => {
             </Link>
           </li>
           <li className="mb-2">
-            <FooterDocument type={footerDocumentAccessibilite} label={"Accessibilité : Partiellement conforme"} />
+            <Link style={{ color: "black", padding: "0 15px" }} href={"/accessibilite"}>
+              Accessibilité : Partiellement conforme
+            </Link>
           </li>
           <li className="mb-2">
             <Link style={{ color: "black", padding: "0 15px" }} href={"/mentions-legales"}>
