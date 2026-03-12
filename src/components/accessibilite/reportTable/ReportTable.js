@@ -1,3 +1,5 @@
+import styles from "./ReportTable.module.css";
+
 import Total from "./Total";
 import Consultation from "./Consultation";
 import Cadres from "./Cadres";
@@ -15,7 +17,7 @@ import Tableaux from "./Tableaux";
 
 export default function ReportTable() {
   return (
-    <table>
+    <table className={styles["reportTable"]}>
       <thead>
         <tr>
           <th>N° crit.</th>
