@@ -5,7 +5,7 @@ import Layout from "../components/Layout";
 import { Title1 } from "../components/StyledComponents";
 import { useUser } from "../hooks/useUser";
 
-export default function GestionDesCookies() {
+export default function Accessibilite() {
   const currentUser = useUser();
 
   return (
