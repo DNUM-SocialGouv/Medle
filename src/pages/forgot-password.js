@@ -25,7 +25,7 @@ const ForgotPasswordPage = () => {
         await forgotPassword(email)
 
         trackEvent(CATEGORY.auth, ACTION.auth.oubliMdp, `${email} : OK`)
-        setStatus({ message: `Un courriel vous a été envoyé à ${email}.`, type: "success" })
+        setStatus({ message: "Si votre identifiant est correct, un lien de réinitialisation de votre mot de passe vient de vous être transmis sur l'adresse mail que vous nous avez communiquée.", type: "success" })
         setShowForm(false)
       } catch (error) {
         console.error(`Error when trying to send email to ${email}`, error)
