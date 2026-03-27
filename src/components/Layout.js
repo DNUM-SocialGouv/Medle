@@ -9,7 +9,6 @@ import FaceIcon from "@material-ui/icons/Face"
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
 import GroupIcon from "@material-ui/icons/Group"
 import ImageIcon from "@material-ui/icons/Image"
-import LinkRoundedIcon from "@material-ui/icons/LinkRounded"
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 import PhoneIcon from "@material-ui/icons/Phone"
@@ -21,7 +20,7 @@ import getConfig from "next/config"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
-import React, { useState } from "react"
+import { useState } from "react"
 import {
   Collapse,
   DropdownItem,
@@ -36,31 +35,19 @@ import {
   UncontrolledDropdown,
 } from "reactstrap"
 
+import Image from "next/image"
 import { isOpenFeature } from "../config"
 import { logout } from "../utils/auth"
-import {
-  footerDocumentAccessibilite,
-  footerDocumentDonneesPersonnelles,
-  footerDocumentFAQ,
-  footerDocumentGestionCookies,
-  footerDocumentMentionsLegales,
-  footerDocumentUserGuide,
-} from "../utils/documentsConstants"
 import {
   ACT_CONSULTATION,
   ACT_MANAGEMENT,
   ADMIN,
   EMPLOYMENT_CONSULTATION,
-  GUEST_HOSPITAL,
   isAllowed,
-  PUBLIC_SUPERVISOR,
-  REGIONAL_SUPERVISOR,
   startPageForRole,
-  SUPER_ADMIN,
+  SUPER_ADMIN
 } from "../utils/roles"
-import FooterDocument from "./FooterDocument"
 import Logo from "./Logo"
-import Image from "next/image"
 
 const { publicRuntimeConfig } = getConfig() || {}
 
@@ -222,10 +209,14 @@ export const Footer = ({ currentUser }) => {
           {currentUser && (
             <>
               <li className="mb-2">
-                <FooterDocument type={footerDocumentFAQ} label={"Foire aux questions"} />
+                <Link style={{ color: "black", padding: "0 15px" }} href={"/faq"}>
+                  Foire aux questions
+                </Link>
               </li>
               <li className="mb-2">
-                <FooterDocument type={footerDocumentUserGuide} label={"Guide utilisateurs"} />
+                <Link style={{ color: "black", padding: "0 15px" }} href={"/guide-utilisateur"}>
+                  Guide utilisateurs
+                </Link>
               </li>
             </>
           )}
@@ -508,18 +499,6 @@ const SidebarAdmin = ({ page, currentUser }) => {
           >
             <ImageIcon width={30} /> <br />
             Logos
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link
-            href="/administration/footer-documents"
-            className={
-              "list-group-item list-group-item-action " + (page === "footer-documents" ? "selected" : "unselected")
-            }
-            aria-current={page === "footer-documents" ? "true" : "false"}
-          >
-            <LinkRoundedIcon width={30} /> <br />
-            Documents du pied de page
           </Link>
         )}
         <Link href={startPageForRole(currentUser.role)} className="list-group-item list-group-item-action">

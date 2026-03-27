@@ -1,11 +1,9 @@
 import PropTypes from "prop-types"
-import React from "react"
 import { Col, Row } from "reactstrap"
 
+import Link from "next/link"
 import ColumnAct from "../../components/ColumnAct"
-import FooterDocument from "../../components/FooterDocument"
 import { getSituationDate, periodOfDayValues } from "../../utils/actsConstants"
-import { footerDocumentFAQ } from "../../utils/documentsConstants"
 import { getReferenceData } from "../../utils/init"
 import ActBlock from "../ActBlock"
 import { Title2 } from "../StyledComponents"
@@ -62,7 +60,9 @@ const VictimEdit = ({ dispatch, state, errors, profileLocations }) => {
                 Note : accident collectif = accident de grande ampleur, comme par exemple Lubrizol 2020, AZF 2001...Il
                 est donc à distinguer d&apos;un accident de la route, de la voie publique, etc. qui aurait entraîné
                 plusieurs victimes.&nbsp;
-                <FooterDocument color="#376FE6" type={footerDocumentFAQ} label={"Voir la foire aux questions"} />
+                <Link style={{ color: "#376FE6", padding: "0 15px" }} href={"/faq"}>
+                  Voir la foire aux questions
+                </Link>
               </span>
             }
             subTitle="Nature"
