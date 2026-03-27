@@ -42,8 +42,8 @@ const GuideUtilisateurPage = () => {
           </ul>
           <p>Concrètement, pour utiliser MedLé, l’établissement de santé désigne des personnes qui pourront avoir accès à MedLé dans chaque structure, qui seront considérées comme les utilisateurs (par exemple, un personnel administratif, un professionnel responsable de la structure, un membre du secrétariat Les utilisateurs peuvent avoir différents profils dans MedLé</p>
           <p>Droits ouverts à chaque profil utilisateur: </p>
-          <table>
-            <theader>
+          <table className="dsfr-table">
+            <thead>
               <tr>
                 <th>Type de profil</th>
                 <th>Saisir les actes</th>
@@ -51,7 +51,7 @@ const GuideUtilisateurPage = () => {
                 <th>Consulter les statistiques locales et nationales</th>
                 <th>Gérer les profils rattachés à la structure</th>
               </tr>
-            </theader>
+            </thead>
             <tbody>
               <tr>
                 <td>Gestionnaire d’actes</td>
@@ -150,16 +150,41 @@ const GuideUtilisateurPage = () => {
           margin: 0 auto;
         }
 
-        h2 {
-          color: #000091;
-        }
-
         .ko {
-          background-color: #e10000f;
+          background-color: #e1000f;
         }
 
         .ok {
           background-color: #1f8d49;
+        }
+
+        .dsfr-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 2rem 0;
+          font-size: 1rem;
+          background: #fff;
+        }
+
+        .dsfr-table th,
+        .dsfr-table td {
+          border: 1px solid #ddd;
+          padding: 0.75em 1em;
+          text-align: left;
+        }
+
+        .dsfr-table th {
+          background-color: #f6f6f6;
+          color: #161616;
+          font-weight: 700;
+        }
+
+        .dsfr-table tr:nth-child(even) {
+          background-color: #f9f9f9;
+        }
+
+        .dsfr-table tr:hover {
+          background-color: #e5e5e5;
         }
       `}</style>
     </>
