@@ -1,4 +1,7 @@
-## [1.35.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.34.0...release-1.35.0) (TODO)
+## [1.36.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.35.0...release-1.36.0) (TODO)
+### Feature
+
+## [1.35.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.34.0...release-1.35.0) (2026-04-10)
 ### Feature
 * MED-112: Correction des retours d’audit de sécurité
 * MED-115: Changement du message dans le mail suite à l’inscription
