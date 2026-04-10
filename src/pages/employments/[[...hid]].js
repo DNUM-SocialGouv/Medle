@@ -9,7 +9,6 @@ import { Alert, Col, Container, Form, FormGroup, Row, Table } from "reactstrap"
 
 import { exportEmployments, findLastEdit } from "../../clients/employments"
 import { CurrentMonthEmployments, PassedMonthEmployments } from "../../components/EmploymentMonthData"
-import FooterDocument from "../../components/FooterDocument"
 import { SearchButton } from "../../components/form/SearchButton"
 import Layout from "../../components/Layout"
 import { InputDarker, Title1, Title2 } from "../../components/StyledComponents"
@@ -17,7 +16,6 @@ import { START_YEAR_MEDLE } from "../../config"
 import { useDebounce } from "../../hooks/useDebounce"
 import { withAuthentication } from "../../utils/auth"
 import { extractMonthYear, isoToFr, NAME_MONTHS } from "../../utils/date"
-import { footerDocumentFAQ } from "../../utils/documentsConstants"
 import { getReferenceData } from "../../utils/init"
 import { castArrayInMap } from "../../utils/object"
 import { canAccessAllHospitals, EMPLOYMENT_CONSULTATION } from "../../utils/roles"
@@ -61,8 +59,8 @@ function describeRequest({ currentUser, selectedHospitalId }) {
       ? "SUPERVISOR_HAS_SELECTED"
       : "SUPERVISOR_HAS_NOT_SELECTED"
     : selectedHospitalId
-    ? "OPERATOR_HAS_EXPLICITLY_SELECTED"
-    : "OPERATOR_HAS_IMPLICITLY_SELECTED"
+      ? "OPERATOR_HAS_EXPLICITLY_SELECTED"
+      : "OPERATOR_HAS_IMPLICITLY_SELECTED"
 }
 
 function formatLastEdit({ edit, hospitalId }) {
@@ -73,9 +71,9 @@ function formatLastEdit({ edit, hospitalId }) {
     lastAddedMonth: !lastEdit?.month
       ? null
       : formatMonthYear({
-          month: lastEdit?.month,
-          year: lastEdit?.year,
-        }),
+        month: lastEdit?.month,
+        year: lastEdit?.year,
+      }),
     lastUpdated: !lastEdit?.lastupdated ? null : isoToFr(lastEdit?.lastupdated),
     month: lastEdit?.month,
     nbMonthsPreviousYear,
@@ -197,8 +195,8 @@ const ListEmploymentsHospital = ({ currentUser }) => {
     return !lastEdits[hospital.id]
       ? "UNKNOWN"
       : lastEdits[hospital.id].nbMonthsPreviousYear === 12
-      ? "COMPLETED"
-      : "UNCOMPLETED"
+        ? "COMPLETED"
+        : "UNCOMPLETED"
   }
 
   function buildLabelMissingMonths(hospital) {
@@ -247,26 +245,26 @@ const ListEmploymentsHospital = ({ currentUser }) => {
           </thead>
           <tbody>
             {hospitals.map((hospital) => (
-                <tr key={hospital.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/employments/${hospital?.id}`)}>
-                  <td>
-                    <span>{hospital.name}</span>
-                  </td>
-                  <td>
-                    {getStatusHospital(hospital) === "UNCOMPLETED" ? (
-                      <div style={{ color: "#EE0700" }}>{buildLabelMissingMonths(hospital)}</div>
-                    ) : (
-                      getStatusHospital(hospital) === "COMPLETED" && "Complète"
-                    )}
-                  </td>
-                  <td>{lastEdits[hospital.id]?.lastAddedMonth}</td>
-                  <td>{lastEdits[hospital.id]?.lastUpdated}</td>
-                  <td>
-                    <Link href="/employments/[[...hid]]" as={`/employments/${hospital?.id}`}
-                     className="text-decoration-none" aria-label={"Voir la déclaration de " + hospital.name}>
-                        Voir<span aria-hidden="true">&nbsp;&gt;</span>
-                    </Link>
-                  </td>
-                </tr>
+              <tr key={hospital.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/employments/${hospital?.id}`)}>
+                <td>
+                  <span>{hospital.name}</span>
+                </td>
+                <td>
+                  {getStatusHospital(hospital) === "UNCOMPLETED" ? (
+                    <div style={{ color: "#EE0700" }}>{buildLabelMissingMonths(hospital)}</div>
+                  ) : (
+                    getStatusHospital(hospital) === "COMPLETED" && "Complète"
+                  )}
+                </td>
+                <td>{lastEdits[hospital.id]?.lastAddedMonth}</td>
+                <td>{lastEdits[hospital.id]?.lastUpdated}</td>
+                <td>
+                  <Link href="/employments/[[...hid]]" as={`/employments/${hospital?.id}`}
+                    className="text-decoration-none" aria-label={"Voir la déclaration de " + hospital.name}>
+                    Voir<span aria-hidden="true">&nbsp;&gt;</span>
+                  </Link>
+                </td>
+              </tr>
             ))}
           </tbody>
         </Table>
@@ -357,11 +355,9 @@ const EmploymentsHospital = ({ currentUser, hospitalId }) => {
             <p className="mb-5 text-center">
               <small>
                 Attention, un ETP est un Équivalent Temps Plein et non un poste.{" "}
-                <FooterDocument
-                  color="#376FE6"
-                  type={footerDocumentFAQ}
-                  label={"+ d'informations dans la foire aux questions"}
-                />
+                <Link style={{ color: "black", padding: "0 15px" }} href={"/faq"}>
+                  + d’informations dans la foire aux questions
+                </Link>
                 .
               </small>
             </p>
