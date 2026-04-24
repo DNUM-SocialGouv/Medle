@@ -1,5 +1,6 @@
-## [1.36.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.35.0...release-1.36.0) (TODO)
+## [1.36.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.35.0...release-1.36.0) (2026-04-24)
 ### Feature
+* MED-112: Mise à jour de la page des données personnelles
 
 ## [1.35.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.34.0...release-1.35.0) (2026-04-10)
 ### Feature

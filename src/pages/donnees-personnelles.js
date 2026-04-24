@@ -2,6 +2,7 @@ import Head from "next/head";
 import Layout from "../components/Layout";
 import { Title1 } from "../components/StyledComponents";
 import { useUser } from "../hooks/useUser";
+import styles from "./donnees-personnelles.module.css";
 
 export default function DonneesPersonnelles() {
   const currentUser = useUser();
@@ -16,66 +17,38 @@ export default function DonneesPersonnelles() {
         <Title1 className="mt-5 mb-4">Traitement des données à caractère personnel</Title1>
 
         <div className="donnees-personnelles mt-5">
-          <p>Le responsable de traitement des données à caractère personnel collectées par la plateforme Medlé est Cécile LAMBERT, Directrice générale de l’offre de soins (DGOS) par intérim.</p>
+          <p>Le responsable de traitement des données à caractère personnel collectées par la plateforme MEDecine LEgale (Medlé) est la Direction générale de l’offre de soins (DGOS)</p>
 
           <h2>Finalités</h2>
-          <p>La plateforme Medlé est un outil de reporting de l’activité médico-légale permettant le suivi de cette activité. Elle peut traiter des données à caractère personnelles pour les finalités suivantes :</p>
+          <p>La plateforme Medlé est un outil de reporting de l’activité médico-légale permettant le suivi et le pilotage et le financement de l’activité des structures de médecine légale.</p>
+          <p>Elle traite des données à caractère personnel pour les finalités suivantes :</p>
           <ul>
-            <li>Permettre aux structures de médecine légale de consigner l’activité réalisée sur réquisition judiciaire et les personnels affectés ;</li>
-            <li>Faciliter la déclaration, la consultation et l’évaluation de toutes les activités médico-légales réalisées dans les structures hospitalières dédiées ;</li>
+            <li>Permettre aux structures de médecine légale de consigner l’activité réalisée sur réquisition judiciaire</li>
+            <li>Suivre le nombre de personnels affectés aux activités de médecine légale</li>
+            <li>Faciliter la déclaration, la consultation et l’évaluation de toutes les activités médico-légales réalisées dans les structures hospitalières dédiées</li>
             <li>Faciliter la déclaration, la consultation et l’évaluation des professionnels dédiés à ces activités.</li>
           </ul>
 
           <h2>Données à caractère personnel traitées</h2>
-          <p>La plateforme peut traiter les données à caractère personnel suivantes :</p>
+          <p>Les données à caractère personnel recueillies concernent uniquement les utilisateurs de la plateforme Medlé et sont les suivantes :</p>
           <ul>
-            <li>Données relatives à la personne examinée (sexe, genre, tranche d’âge, tranche horaire de l’examen, données de contexte de l’acte violent, lieu de l’examen) ;</li>
-            <li>Données relatives à l’acte violent (type de violence) ;</li>
-            <li>Données relatives aux agents utilisateurs (adresse e-mail, service) ;</li>
-            <li>Données d’hébergeur/de connexion ;</li>
+            <li>Données relatives aux utilisateurs de la plateforme Medlé : nom, prénom adresse e-mail professionnelle, numéro de département de l’établissement de santé</li>
             <li>Cookies</li>
           </ul>
 
           <h2>Bases juridiques des traitements de données</h2>
-          <p>Les données traitées par la plateforme ont plusieurs fondements juridiques :</p>
+          <p>Les données traitées par la plateforme s’appuient sur la mise en œuvre d’une mission de service public. Le traitement repose donc à la fois sur les notions d’intérêt public et de consentement des utilisateurs de la plateforme Medlé définies par le RGPD.</p>
+
+          <h2>Les fondements juridiques de ce traitement de données personnelles sont précisés ci-dessous :</h2>
+          <p>La mission d’intérêt public est notamment encadrée par :</p>
           <ul>
-            <li>Le consentement de la personne concernée pour une ou plusieurs finalités spécifiques au sens de l’article 6-a du RGPD et en application de l’article 5(3) de la directive 2002/58/CE modifiée ;</li>
-            <li>L’obligation légale à laquelle est soumise le responsable de traitements au sens de l’article 6-c du RGPD ;</li>
-            <li>L’exécution d’une mission d’intérêt public ou relevant de l’exercice de l’autorité publique dont est investi le responsable de traitement au sens de l’article 6-e du RPGD ;</li>
-            <li>Des motifs d’intérêt public dans le domaine de la santé publique au sens de l’article 9 paragraphe 2-i du RGPD.</li>
+            <li>Arrêté du 26 mars 2024 portant organisation de la direction générale de l’offre de soins en sous-directions (articles 3 et 4)</li>
+            <li>Circulaire du 27 décembre 2010 relative à la mise en œuvre de la réforme de la médecine légale</li>
+            <li>Circulaire du 28 décembre 2010 relative à la mise en œuvre de la réforme de la médecine légale</li>
+            <li>Circulaire du 25 avril 2012 relative à la mise en œuvre de la réforme de la médecine légale</li>
           </ul>
-
-          <h2>Ces fondements sont précisés ci-dessous :</h2>
-          <h3>a) Données relatives à la personne examinée</h3>
-          <p>Ce traitement est nécessaire à l’exécution d’une mission d’intérêt public ou relevant de l’exercice de l’autorité publique dont est investi le responsable de traitement au sens de l’article 6-e du règlement (UE) 2016/679 du Parlement européen et du Conseil du 27 avril 2016 relatif à la protection des personnes physiques à l’égard du traitement des données à caractère personnel et à la libre circulation de ces données.</p>
-          <p>Cette mission d’intérêt public est notamment posée par :</p>
-          <ul>
-            <li>les articles 3 et 4 de l’arrêté du 7 mai 2014 modifié portant organisation de la direction générale de l’offre de soins ;</li>
-            <li>la circulaire du 27 décembre 2010 relative à la mise en oeuvre de la réforme de la médecine légale.</li>
-          </ul>
-
-          <h3>b) Données relatives à l’acte violent</h3>
-          <p>Ce traitement est nécessaire pour des motifs d’intérêts publics dans le domaine de la santé publique au sens de l’article 9 paragraphe 2-i du règlement (UE) 2016/679 du Parlement européen et du Conseil du 27 avril 2016 relatif à la protection des personnes physiques à l’égard du traitement des données à caractère personnel et à la libre circulation de ces données.</p>
-          <p>Ces motifs d’intérêts publics dans le domaine de la santé figurent notamment dans :</p>
-          <ul>
-            <li>les articles 3 et 4 de l’arrêté du 7 mai 2014 modifié portant organisation de la direction générale de l’offre de soins ;</li>
-            <li>la circulaire du 27 décembre 2010 relative à la mise en oeuvre de la réforme de la médecine légale.</li>
-          </ul>
-
-          <h3>c) Données relatives aux agents utilisateurs</h3>
-          <p>Ce traitement est nécessaire à l’exécution d’une mission d’intérêt public ou relevant de l’exercice de l’autorité publique dont est investi le responsable de traitement au sens de l’article 6-e du règlement (UE) 2016/679 du Parlement européen et du Conseil du 27 avril 2016 relatif à la protection des personnes physiques à l’égard du traitement des données à caractère personnel et à la libre circulation de ces données.</p>
-          <p>Cette mission d’intérêt public est notamment posée par :</p>
-          <ul>
-            <li>les articles 3 et 4 de l’arrêté du 7 mai 2014 modifié portant organisation de la direction générale de l’offre de soins ;</li>
-            <li>la circulaire du 27 décembre 2010 relative à la mise en oeuvre de la réforme de la médecine légale.</li>
-          </ul>
-
-          <h3>d) Données d’hébergeur ou de connexion</h3>
-          <p>Ce traitement est nécessaire au respect d&apos;une obligation légale à laquelle le responsable de traitement est soumis au sens de l&apos;article 6-c du Règlement (UE) 2016/679 du Parlement européen et du Conseil du 27 avril 2016 relatif à la protection des personnes physiques à l&apos;égard du traitement des données à caractère personnel et à la libre circulation de ces données.</p>
-          <p>L&apos;obligation légale est posée par la loi LCEN n° 2004-575 du 21 juin 2004 pour la confiance dans l&apos;économie numérique et par les articles 1 et 3 du décret n°2011-219 du 25 février 2011.</p>
-
           <h2>Durée de conservation</h2>
-          <table>
+          <table className={styles["reportTable"]}>
             <thead>
               <tr>
                 <th>Type de données</th>
@@ -84,74 +57,45 @@ export default function DonneesPersonnelles() {
             </thead>
             <tbody>
               <tr>
-                <td>Données relatives à la personne examinée</td>
-                <td>3 ans, à compter de la consignation de l’examen médico-légal.</td>
+                <td>Données relatives à l’acte de médecine légale</td>
+                <td><strong>6 ans</strong>, à compter de la consignation de l’examen médico-légal.</td>
               </tr>
               <tr>
-                <td>Données relatives à l’acte violent</td>
-                <td>3 ans, à compter de la consignation de l’examen médico-légal.</td>
-              </tr>
-              <tr>
-                <td>Données relatives aux agents utilisateurs</td>
-                <td>1 an, à compter de la fin du contrat de l’agent.</td>
-              </tr>
-              <tr>
-                <td>Données d’hébergeur</td>
-                <td>1 an, conformément au décret n°2011-219 du 25 février 2011.</td>
+                <td>Données relatives aux utilisateurs de la plateforme Medlé</td>
+                <td><strong>Les données personnelles sont supprimées lors de la suppression du compte</strong></td>
               </tr>
             </tbody>
           </table>
+          <br />
+          <p>
+            Les données enregistrées sur la plateforme Medlé sont conservées 6 ans à compter de la consignation de l’examen médico-légal et ne peuvent être communiquées qu’aux utilisateurs de la plateforme Medlé à savoir les Ministères en charge de la Santé et de la Justice,
+            les référents de médecine légale des agences régionales de santé (ARS), les tribunaux judiciaires et les personnels du Centre Hospitalier ayant en leur sein une structure de médecine légale.
+          </p>
 
-          <h2>Droit des personnes concernées</h2>
-          <p>Vous disposez des droits suivants concernant vos données à caractère personnel :</p>
+          <h2>L’exercice des droits des utilisateurs de la plateforme Medlé</h2>
+          <p>
+            Ce traitement est fondé à la fois sur l’exercice d’une mission d’intérêt public et sur le consentement des utilisateurs de la plateforme Medlé dont les données à caractère personnel sont traitées (article 6.1.a) dans le cadre du Règlement général sur la protection des données (RGPD) du 27 avril 2016).
+            Ce traitement permet plus particulièrement la mise en œuvre de la mission de financement des établissements de santé dont font partie les services de médecine légale conformément aux textes suivants :
+          </p>
           <ul>
-            <li>Droit d’information et droit d’accès aux données</li>
-            <li>Droit de rectification et le cas échéant de suppression des données</li>
-            <li>Droit au retrait du consentement en matière de cookies uniquement</li>
+            <li>Arrêté du 26 mars 2024 portant organisation de la direction générale de l’offre de soins en sous-directions (articles 3 et 4)</li>
+            <li>Circulaire du 27 décembre 2010 relative à la mise en œuvre de la réforme de la médecine légale</li>
+            <li>Circulaire du 28 décembre 2010 relative à la mise en œuvre de la réforme de la médecine légale</li>
           </ul>
-
-          <p>Pour les exercer, faites-nous parvenir une demande en précisant la date et l’heure précise de la requête – ces éléments sont indispensables pour nous permettre de retrouver votre recherche – par voie électronique à l’adresse suivante :</p>
-          <a href="mailto:contact-medle@sante.gouv.fr">contact-medle@sante.gouv.fr</a>
-          <p>En raison de l’obligation de sécurité et de confidentialité dans le traitement des données à caractère personnel qui incombe au responsable de traitement, votre demande ne sera traitée que si vous apportez la preuve de votre identité.
-            Pour vous aider dans votre démarche, vous trouverez ici <a href="https://www.cnil.fr/fr/modele/courrier/exercer-son-droit-dacces">Exercer son droit d&apos;accès</a>, un modèle de courrier élaboré par la CNIL.</p>
-          <p>Le responsable de traitement s’engage à répondre dans un délai raisonnable qui ne saurait dépasser 1 mois à compter de la réception de votre demande.</p>
-
-          <h2>Destinataires des données</h2>
-          <p>Le responsable de traitement s’engage à ce que les données à caractères personnels soient traitées par les seules personnes autorisées.</p>
-
-          <h2>Sécurité et confidentialité des données</h2>
-          <p>Les mesures techniques et organisationnelles de sécurité adoptées pour assurer la confidentialité, l’intégrité et protéger l’accès des données sont notamment :</p>
-          <ul>
-            <li>Anonymisation</li>
-            <li>Stockage des données en base de données</li>
-            <li>Stockage des mots de passe en base sont hâchés</li>
-            <li>Cloisonnement des données</li>
-            <li>Mesures de traçabilité</li>
-            <li>Surveillance</li>
-            <li>Protection contre les virus, malwares et logiciels espions</li>
-            <li>Protection des réseaux</li>
-            <li>Sauvegarde</li>
-            <li>Mesures restrictives limitant l’accès physiques aux données à caractère personnel</li>
-          </ul>
-
-          <h2>Sous-traitants</h2>
-          <p>Certaines des données sont envoyées à des sous-traitants pour réaliser certaines missions. Le responsable de traitement s&apos;est assuré de la mise en oeuvre par ses sous-traitants de garanties adéquates et du respect de conditions strictes de confidentialité, d’usage et de protection des données.</p>
-          <table>
-            <thead>
-              <tr>
-                <th>Partenaire</th>
-                <th>Pays destinataire</th>
-                <th>Traitement réalisé</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Cegedim SA</td>
-                <td>France</td>
-                <td>Hébergement</td>
-              </tr>
-            </tbody>
-          </table>
+          <p>Exemple de mention d’information pour les utilisateurs de Medlé :</p>
+          <p>
+            Conformément au RGPD et à la loi n° 78-du 6 janvier 1978 relative à l’informatique, aux fichiers et aux libertés (loi informatique et libertés) et dans les conditions prévues par ces mêmes textes,
+            les utilisateurs de la plateforme disposent d’un droit d’accès (article 15 du RGPD), de rectification (article 16 du RGPD) et de limitation (article 18 du RGPD) des données vous concernant.
+          </p>
+          <p>Vous pouvez exercer vos droits, en vous adressant au responsable de la plateforme Medlé : par mail à l’adresse suivante contact-medle@sante.gouv.fr
+            ou en vous adressant au correspondant RGPD de la DGOS par mail à l’adresse suivante : dgos-rgpd@sante.gouv.fr ou par courrier à l’adresse suivante : Ministère chargé de la santé – DGOS – 14 avenue Duquesne 75007 Paris.
+          </p>
+          <p>
+            Un mail est systématiquement adressé à l’utilisateur lors de l’ouverture de son compte et libellé de la manière suivante : « La Direction générale de l’offre de soins procède à un traitement de vos données personnelles pour le suivi et pilotage de l’activité des structures de médecine légale.
+            Vous pouvez exercer vos droits, en vous adressant au responsable de la plateforme Medlé : par mail à l’adresse suivante contact-medle@sante.gouv.fr ou en vous adressant au correspondant RGPD de la DGOS par mail à l’adresse suivante : dgos-rgpd@sante.gouv.fr
+            ou par courrier à l’adresse suivante : Ministère chargé de la santé – DGOS – 14 avenue Duquesne 75007 Paris.
+          </p>
+          <p>Vous disposez également du droit d’introduire une réclamation auprès de la Commission nationale de l’informatique et des libertés (CNIL), si vous considérez que le traitement de données à caractère personnel vous concernant constitue une violation du RGPD et de la loi informatique et libertés. »</p>
         </div>
       </Layout>
 
