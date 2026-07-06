@@ -56,11 +56,11 @@ afterEach(() => {
 })
 
 it("should render CurrentMonthEmployments", async () => {
-  await waitFor(() =>
-    render(<CurrentMonthEmployments month={lambdaMonth} year={lambdaYear} hospitalId={lambdaHospitalId} />),
-  )
+  render(<CurrentMonthEmployments month={lambdaMonth} year={lambdaYear} hospitalId={lambdaHospitalId} />)
 
-  expect(screen.getByLabelText(/secrétaire/i)).toHaveValue(1.9)
+  await waitFor(() =>
+    expect(screen.getByLabelText(/secrétaire/i)).toHaveValue(1.9)
+  )
   expect(screen.getByLabelText(/reference.others/i).textContent).toMatchInlineSnapshot(`"1.5 ETP prévus"`)
 
   expect(auth.getCurrentUser).toHaveBeenCalled()

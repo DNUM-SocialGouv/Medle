@@ -27,7 +27,7 @@ describe("tests administration user", () => {
     render(<UserDetail currentUser={{ role: "ADMIN_HOSPITAL" }} />)
 
     expect(screen.queryByText("Zone dangereuse")).not.toBeInTheDocument()
-    expect(screen.queryByText("Retour à la liste")).not.toBeInTheDocument()
+    expect(screen.queryByText("Retour à la liste")).toBeInTheDocument()
     expect(screen.queryByText("Ajouter")).toBeInTheDocument()
 
   })
@@ -42,7 +42,7 @@ describe("tests administration user", () => {
   it("should display errors when clicking too early on Ajouter button", async () => {
     render(<UserDetail currentUser={{ role: "ADMIN_HOSPITAL" }} />)
 
-    expect(screen.queryByText("Retour à la liste")).not.toBeInTheDocument()
+    expect(screen.queryByText("Retour à la liste")).toBeInTheDocument()
 
     expect(screen.queryByText("Ajouter")).toBeInTheDocument()
 
@@ -51,6 +51,6 @@ describe("tests administration user", () => {
     await screen.findByText(/Le nom est obligatoire./i)
     await screen.findByText(/Courriel a un format incorrect./i)
 
-    expect(screen.queryByText("Retour à la liste")).not.toBeInTheDocument()
+    expect(screen.queryByText("Retour à la liste")).toBeInTheDocument()
   })
 })
