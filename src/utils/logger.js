@@ -8,6 +8,7 @@ const { publicRuntimeConfig } = getConfig() || {}
 export const logError = (...message) => console.error(moment().format(ISO_TIME), ...message)
 export const logInfo = (...message) => console.info(...message)
 export const logWarning = (...message) => console.warning(...message)
+export const logAudit = (...message) => console.info(`[Audit] ${moment().format(ISO_TIME)} ${message}`)
 
 export const logDebug = (...message) => {
   if (publicRuntimeConfig && publicRuntimeConfig.DEBUG_MODE && publicRuntimeConfig.DEBUG_MODE === "true") {

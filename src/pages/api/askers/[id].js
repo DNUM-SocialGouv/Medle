@@ -12,6 +12,8 @@ import {
   STATUS_200_OK,
 } from "../../../utils/http"
 import { ACT_MANAGEMENT, ADMIN } from "../../../utils/roles"
+import { logAudit } from "../../../utils/logger"
+
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -40,6 +42,8 @@ const handler = async (req, res) => {
 
         if (!deleted) return sendNotFoundError(res)
 
+        logAudit(`${currentUser.email}: Suppression du demandeur "${id}"`);
+
         return res.status(STATUS_200_OK).json({ deleted })
       }
       case METHOD_PUT: {
@@ -50,6 +54,9 @@ const handler = async (req, res) => {
         const updated = await update({ id }, req.body)
 
         if (!updated) return sendNotFoundError(res)
+        
+        logAudit(`${currentUser.email}: Modification du demandeur "${id}"`);
+
 
         return res.status(STATUS_200_OK).json({ updated })
       }

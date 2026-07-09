@@ -1,5 +1,7 @@
 ## [1.37.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.36.0...release-1.37.0) (TODO)
 ### Feature
+* MED-116: Définir et mettre en œuvre une politique de gestion et d'analyse des journaux
+
 
 ## [1.36.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.35.0...release-1.36.0) (2026-04-24)
 ### Feature

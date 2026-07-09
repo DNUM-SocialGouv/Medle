@@ -14,6 +14,7 @@ import {
   STATUS_404_NOT_FOUND,
 } from "../../../utils/http"
 import { ACT_CONSULTATION, ACT_MANAGEMENT } from "../../../utils/roles"
+import { logAudit } from "../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -43,12 +44,16 @@ const handler = async (req, res) => {
 
         const deleted = await del({ id }, currentUser)
 
+        logAudit(`${currentUser.email}: Suppression d'un acte "${id}"`);
+
         return res.status(STATUS_200_OK).json({ deleted })
       }
       case METHOD_PUT: {
         const currentUser = checkValidUserWithPrivilege(ACT_MANAGEMENT, req, res)
 
         const updated = await update({ id }, req.body, currentUser)
+
+        logAudit(`${currentUser.email}: Modification d'un acte "${id}"`);
 
         return res.status(STATUS_200_OK).json({ updated })
       }

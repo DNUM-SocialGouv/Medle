@@ -5,6 +5,7 @@ import { sendAPIError, sendMethodNotAllowedError } from "../../../services/error
 import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
 import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../utils/http"
 import { ACT_CONSULTATION, ADMIN } from "../../../utils/roles"
+import { logAudit } from "../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -27,6 +28,8 @@ const handler = async (req, res) => {
 
         const id = await create(req.body)
 
+        logAudit(`${currentUser.email}: Ajout d'un attentat "${id}"`);
+        
         return res.status(STATUS_200_OK).json({ id })
       }
       default:
