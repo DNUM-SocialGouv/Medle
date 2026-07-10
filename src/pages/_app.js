@@ -2,14 +2,11 @@ import "@socialgouv/bootstrap.core/dist/socialgouv-bootstrap.min.css"
 
 import * as Sentry from "@sentry/node"
 import App from "next/app"
-import getConfig from "next/config"
 import Head from "next/head"
 import React from "react"
 import { ThemeProvider } from "styled-components"
 
 import { initMatomo } from "../utils/matomo"
-
-const { publicRuntimeConfig } = getConfig()
 
 const theme = {
   colors: {
@@ -19,15 +16,15 @@ const theme = {
 
 /*
 Sentry.init({
-  dsn: publicRuntimeConfig.SENTRY_DSN,
+  dsn: process.env.SENTRY_DSN,
 })
 */
 
 export default class MyApp extends App {
   componentDidMount() {
     initMatomo({
-      piwikUrl: publicRuntimeConfig.MATOMO_URL,
-      siteId: publicRuntimeConfig.MATOMO_SITE_ID,
+      piwikUrl: process.env.MATOMO_URL,
+      siteId: process.env.MATOMO_SITE_ID,
     })
   }
 

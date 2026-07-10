@@ -16,7 +16,6 @@ import ReceiptIcon from "@material-ui/icons/Receipt"
 import SettingsIcon from "@material-ui/icons/Settings"
 import TableChartIcon from "@material-ui/icons/TableChart"
 import WhatshotIcon from "@material-ui/icons/Whatshot"
-import getConfig from "next/config"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
@@ -48,8 +47,6 @@ import {
   SUPER_ADMIN
 } from "../utils/roles"
 import Logo from "./Logo"
-
-const { publicRuntimeConfig } = getConfig() || {}
 
 export const Header = ({ currentUser }) => {
   const router = useRouter()
@@ -220,16 +217,16 @@ export const Footer = ({ currentUser }) => {
               </li>
             </>
           )}
-          {publicRuntimeConfig && publicRuntimeConfig.MAIL_CONTACT && (
+          {process.env.MAIL_CONTACT && (
             <li className="mb-2">
-              <a href={`mailto:${publicRuntimeConfig.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
+              <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
             </li>
           )}
           <li className="mb-2">
             <span
               className="version"
-              aria-label={`Version actuelle de Medlé : ${publicRuntimeConfig.MEDLE_VERSION}`}
-            >{`Version ${publicRuntimeConfig.MEDLE_VERSION}`}</span>
+              aria-label={`Version actuelle de Medlé : ${process.env.MEDLE_VERSION}`}
+            >{`Version ${process.env.MEDLE_VERSION}`}</span>
           </li>
         </ul>
       </Row>

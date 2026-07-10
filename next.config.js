@@ -1,5 +1,3 @@
-const images = require("remark-images")
-const emoji = require("remark-emoji")
 const { version } = require('./package.json');
 
 const commonSecurityHeaders = [
@@ -79,42 +77,19 @@ const productionSecurityHeaders = [...commonSecurityHeaders,
 ];
 
 
-const withMDX = require("@next/mdx")({
-  extension: /\.mdx?$/,
-  options: {
-    mdPlugins: [images, emoji],
-  },
-})
-
 const nextConfig = {
-  publicRuntimeConfig: {
-    // Will be available on both server and client. Needs getInitialProps on page to be available
-    // APP_BASE_URL variable is available on the deployment environment only
+  env: {
     API_URL: process.env.APP_BASE_URL ? `${process.env.APP_BASE_URL}${process.env.API_URL}` : process.env.API_URL,
+    AUTH_DURATION: process.env.AUTH_DURATION,
+    AUTH_MAX_DURATION: process.env.AUTH_MAX_DURATION,
+    AUTH_REFRESH_START: process.env.AUTH_REFRESH_START,
     DEBUG_MODE: process.env.DEBUG_MODE,
-    FEATURE_FLAGS: {
-      administration: true,
-      directory: false,
-      export: true,
-      notification: false,
-      resources: false,
-    },
+    MAIL_CONTACT: process.env.MAIL_CONTACT,
     MATOMO_SITE_ID: process.env.MATOMO_SITE_ID,
     MATOMO_URL: process.env.MATOMO_URL,
-    SENTRY_DSN: process.env.SENTRY_DSN,
-    MAIL_CONTACT: process.env.MAIL_CONTACT,
-    TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
     MEDLE_VERSION: version,
-    AUTH_DURATION: process.env.AUTH_DURATION,
-    AUTH_REFRESH_START: process.env.AUTH_REFRESH_START,
-    AUTH_MAX_DURATION: process.env.AUTH_MAX_DURATION,
-  },
-  serverRuntimeConfig: {
-    DATABASE_URL: process.env.DB_URI || process.env.DATABASE_URL,
-    // Will only be available on the server side. Needs getInitialProps on page to be available
-    // DB_URI variable is available on the deployment environment only
-    JWT_SECRET: process.env.JWT_SECRET,
-    POSTGRES_SSL: process.env.POSTGRES_SSL,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
   },
   webpack: (config, { isServer, buildId, webpack }) => {
     //config.optimization.minimizer = []
@@ -152,5 +127,4 @@ const nextConfig = {
   }
 }
 
-const plugins = [withMDX]
-module.exports = () => plugins.reduce((acc, next) => next(acc), nextConfig)
+module.exports = nextConfig
