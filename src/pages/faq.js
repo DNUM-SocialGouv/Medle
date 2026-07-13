@@ -18,16 +18,16 @@ const FaqPage = () => {
         <div className="faq mt-5">
           <h1>Sommaire:</h1>
           <ul>
-            <li><a href="#quest-medle">Qu’est-ce que MedLé ?</a></li>
-            <li><a href="#comment-medle">Comment utiliser MedLé ?</a></li>
-            <li><a href="#comment-act">Comment ajouter un acte ?</a></li>
-            <li><a href="#comment-stats">Comment consulter les statistiques ?</a></li>
-            <li><a href="#comment-employe">Comment déclarer le personnel employé ?</a></li>
+            <li><a href="#quest-medle">I-Qu’est-ce que MedLé ?</a></li>
+            <li><a href="#comment-medle">II-Comment utiliser MedLé ?</a></li>
+            <li><a href="#comment-act">III-Comment ajouter un acte ?</a></li>
+            <li><a href="#comment-stats">IV-Comment consulter les statistiques ?</a></li>
+            <li><a href="#comment-employe">V-Comment déclarer le personnel employé ?</a></li>
           </ul>
           <br />
           <br />
           <br />
-          <h1 id="quest-medle">Qu’est-ce que Medlé ?</h1>
+          <h1 id="quest-medle">I-Qu’est-ce que Medlé ?</h1>
           <h2>Qui peut utiliser Medlé ?</h2>
           <p>MedLé est accessible aux structures de médecine légale suivantes :</p>
           <ul>
@@ -56,7 +56,7 @@ const FaqPage = () => {
           </ul>
           <p>Les niveaux d’organisation de chaque structure et les effectifs afférents sont fixés à <a href="https://www.justice.gouv.fr/sites/default/files/migrations/textes/art_pix/JUSD1221959C.pdf" >l&apos;annexe 2 de la circulaire interministérielle du 25 avril 2012.</a></p>
 
-          <h1 id="comment-medle">Comment utiliser Medlé ?</h1>
+          <h1 id="comment-medle">II-Comment utiliser Medlé ?</h1>
           <h2>Comment me créer un compte ?</h2>
           <p>Toutes les demandes de création, modification ou suppression de compte doivent être envoyées par email à l&apos;adresse <a href="mailto:contact-medle@sante.gouv.fr">contact-medle@sante.gouv.fr</a>.</p>
           <p>Il est préférable de préciser l&apos;établissement auquel vous êtes rattaché, votre adresse email (qui vous servira d&apos;identifiant) et l&apos;objet de votre utilisation : déclaration des actes, déclaration des ETP, lecture seule, etc.</p>
@@ -89,7 +89,7 @@ const FaqPage = () => {
           <p>Il est recommandé de remplir MedLé au fur et à mesure, plutôt qu’en une seule fois en fin de mois.</p>
           <p>Pour information, le temps moyen constaté de remplissage est de 50 secondes par actes.</p>
 
-          <h1 id="comment-act">Comment ajouter un acte ?</h1>
+          <h1 id="comment-act">III-Comment ajouter un acte ?</h1>
           <h2>Numéro de dossier interne : que faire si mon service n’en a pas ?</h2>
           <p>La case «numéro de dossier interne» est obligatoire dans l’ajout d’actes et doit être unique pour chaque acte. Ce numéro permet de différencier les personnes, à l’inverse d’un numéro de PV unique qui peut concerner une affaire avec plusieurs personnes. Le numéro de dossier interne permet également de donner un numéro aux réquisitions qui n’en comportent pas.</p>
           <p>Cependant, certains établissements n’ont pas de numéro de dossier interne. Si cela est votre cas, vous pouvez dans la case «numéro de dossier interne», au choix :</p>
@@ -116,7 +116,7 @@ const FaqPage = () => {
           <p>Désormais, les UMJ ont la possibilité de mettre en place le recueil de preuves sans dépôt de plainte.</p>
           <p>Concrètement, il s’agit d’une avancée permettant à une victime majeure de violence conjugale, sexuelle et/ou intrafamiliale de consulter un médecin légiste même si elle ne souhaite pas déposer plainte dans l’immédiat, donc hors réquisition judiciaire. Ce médecin l’examinera, établira un certificat médical et fera des prélèvements si nécessaires. Si la victime porte plainte, les preuves recueillies pourront être utilisées ultérieurement dans le cadre de la procédure judiciaire.</p>
 
-          <h2>Dois-je enregistrer la prise en charge psychologique ?</h2>
+          <p><u>Dois-je enregistrer la prise en charge psychologique ?</u></p>
           <p>La prise en charge psychologique des victimes, telle que prévue dans le cadre du schéma directeur et qui est financée par l’assurance maladie à hauteur d’un équivalent temps plein (ETP) par structure de médecine légale du vivant, ne fait pas l’objet d’un recensement dans MedLé.</p>
           <p><b>Victime : précisions sur la rubrique «Types de violence» (sous-rubriques «Nature» et «Contexte»)</b></p>
           <p>Pour les victimes, le type de violence doit être précisé pour chaque acte. Plusieurs choix sont possibles, vous pouvez donc cocher plusieurs cases à la fois dans «nature de la violence» et dans «contexte de la violence».</p>
@@ -175,61 +175,61 @@ const FaqPage = () => {
               </ul>
             </li>
           </ul>
-          <p><b>Comment faire si deux examens doivent être réalisés pour une même personne avec une seule réquisition judiciaire (ex: examen de compatibilité GAV et examen en tant que victime) ?</b></p>
+          <p><u>Comment faire si deux examens doivent être réalisés pour une même personne avec une seule réquisition judiciaire (ex: examen de compatibilité GAV et examen en tant que victime) ?</u></p>
           <p>Il est nécessaire de noter 2 actes distincts dans MedLé, un en tant que gardé à vue, l’autre en tant que victime. Vous pourrez noter le même numéro de réquisition.</p>
 
-          <h2>Comment enregistrer les demandes d’âge osseux ?</h2>
+          <p><u>Comment enregistrer les demandes d’âge osseux ?</u></p>
           <p>Il est possible de différencier les demandes d’âge osseux réalisées dans le cadre de la GAV et hors GAV.</p>
           <ul>
             <li>Lorsqu’un examen d’une personne en GAV est demandé sur réquisition judiciaire et qu’il est nécessaire de réaliser un examen radiologique pour déterminer l’âge de la personne, il faut sélectionner la rubrique «gardé à vue», puis dans la rubrique «examens complémentaires demandés» de cocher «imagerie».</li>
             <li>Lorsqu’une demande d’examen d’âge osseux est demandée hors GAV, alors dans MedLé il est nécessaire de sélectionner dans «qui a été examiné» : «Personne pour âge osseux (hors GAV)».</li>
           </ul>
 
-          <h2>Qu’est-ce que l’examen médical d’une personne retenue (dans le menu déroulant «autre activité») ?</h2>
+          <p><u>Qu’est-ce que l’examen médical d’une personne retenue (dans le menu déroulant «autre activité») ?</u></p>
           <p>Un étranger peut être contrôlé directement par la police pour vérifier qu’il a bien un titre de séjour. Seul un officier de police judiciaire peut décider de la retenue d’un étranger sur le territoire national. Le procureur de la République est informé dès le début de la procédure.</p>
           <p>L’officier de police judiciaire informe aussitôt l’étranger du droit d’être examiné par un médecin désigné par l’officier de police judiciaire. Le médecin se prononce alors sur l’aptitude au maintien de la personne en retenue et procède à toutes constatations utiles.</p>
           <p>Les UMJ peuvent être requises dans ce cadre. La procédure est la même que pour la réquisition de tout acte de médecine légale.</p>
 
-          <h2 id="profil-dans-liste">IPM (ivresse publique et manifeste) : pourquoi ce profil est-il indiqué dans la liste ?</h2>
+          <p id="profil-dans-liste"><u>IPM (ivresse publique et manifeste) : pourquoi ce profil est-il indiqué dans la liste ?</u></p>
           <p>Les examens d’ivresse publique et manifeste ne sont pas des actes de médecine légale, mais des actes sous la compétence du ministère de l’intérieur, et financés par le ministère de l’intérieur. Cependant, dans des cours d’appel comme celle de Paris, les autorités judiciaires et celles du ministère de l’intérieur (préfecture de police de Paris) ont signé des conventions pour que ces actes soient réalisés par les services de médecine légale, dans les locaux de police et de gendarmerie. C’est la raison pour laquelle il est nécessaire de les comptabiliser dans MedLé.</p>
           <p>Ces examens ne sont pas rémunérés - ni aux médecins qui les réalisent ni aux établissements de santé siège des structures.</p>
 
-          <h2 id="exam-real-demande-ofpra">Qu’est-ce que les examens réalisés à la demande exclusive de l’OFPRA ?</h2>
+          <p id="exam-real-demande-ofpra"><u>Qu’est-ce que les examens réalisés à la demande exclusive de l’OFPRA ?</u></p>
           <p><a href="https://www.legifrance.gouv.fr/loda/id/JORFTEXT000035468390">L’arrêté du 23 août 2017</a>, pris pour l’application des articles L. 723-5 et L. 752-3 du code de l’entrée et du séjour des étrangers et du droit d’asile (CESEDA), prévoit que les examens médicaux visant à constater l’absence de mutilation sexuelle dans le cadre de la procédure d’asile et du maintien de la protection soient réalisés au sein des UMJ.</p>
           <p>Ces examens visant à constater l’absence de mutilation sexuelle dans le cadre de la procédure d’asile et du maintien de la protection doivent être réalisés à la demande exclusive de l’OFPRA et concernent uniquement les mineurs.</p>
 
-          <h2>Qu’est-ce que les « examens liés à la route » ?</h2>
+          <p><u>Qu’est-ce que les « examens liés à la route » ?</u></p>
           <p>Les examens liés à la route prévus dans la <a href="https://affairesjuridiques.aphp.fr/textes/circulaire-du-25-avril-2012-relative-a-la-mise-en-oeuvre-de-la-reforme-de-la-medecine-legale/">circulaire interministérielle du 25 avril 2012</a> sont les examens cliniques et les prélèvements biologiques exécutés sur réquisitions judiciaires en application des articles <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038312018/2019-03-25">L. 234-4</a> et <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038311991">L. 235-2 (4ème alinéa)</a> du code de la route, dans le cadre de la suspicion d’un état alcoolique ou de l’usage de stupéfiants.</p>
 
-          <h2>Comment définir un accident collectif ?</h2>
+          <p><u>Comment définir un accident collectif ?</u></p>
           <p>Extrait du guide méthodologique de novembre 2017 sur «La prise en charge des victimes d’accidents collectifs» :</p>
           <p><i>« Il s’agit d’un événement soudain provoquant directement ou indirectement des dommages humains ou matériels à l’égard <u>de nombreuses victimes</u>. Pouvant avoir pour origine ou pour facteur contributif une intervention ou une abstention humaine susceptible de recevoir une qualification pénale, cet événement nécessite, par son ampleur ou son impact, la mise en oeuvre de moyens importants et de mesures spécifiques pour la prise en charge des victimes, ainsi qu’une coordination des interventions et des accompagnements déployés. »</i></p>
           <p>Il est donc à distinguer d’un accident de la route.</p>
-          <p><b><u>PRECISIONS SUR LES ACTES DE THANATOLOGIE</u></b></p>
-          <p><b>Autopsie</b></p>
+          <p><b>PRECISIONS SUR LES ACTES DE THANATOLOGIE</b></p>
+          <p><u>Autopsie</u></p>
           <p>Lorsque les autopsies sont réalisées par deux médecins légistes, il est impératif de notifier un seul acte dans MedLé.</p>
-          <p><b>Levée de corps et autopsie</b></p>
+          <p><u>Levée de corps et autopsie</u></p>
           <p>Si une levée de corps est suivie d’une autopsie, il est nécessaire de noter 2 actes (1 levée de corps + 1 autopsie).</p>
-          <p><b>Levée de corps : quelle distance indiquer ?</b></p>
+          <p><u>Levée de corps : quelle distance indiquer ?</u></p>
           <p>Vous devez prendre en compte la distance entre l’UMJ ou l’IML et le lieu d’intervention (et donc ne pas compter l’aller-retour).</p>
-          <p><b>Examen externe de corps et autopsie</b></p>
+          <p><u>Examen externe de corps et autopsie</u></p>
           <p>Dans le cas où l’examen de corps est indépendant d’une autopsie réalisé dans un second temps, il est nécessaire de noter 2 actes.</p>
-          <p><b><u>ASSISES ET RECONSTITUTION</u></b></p>
-          <p><b>Durée : comment comptabiliser la durée de mobilisation ?</b></p>
+          <p><b>ASSISES ET RECONSTITUTION</b></p>
+          <p><u>Durée : comment comptabiliser la durée de mobilisation ?</u></p>
           <p>Le temps de mobilisation comprend le temps de déplacement (aller/retour), temps de présence et temps de rédaction du rapport.</p>
-          <p><b>Distance : quelle distance indiquer ?</b></p>
+          <p><u>Distance : quelle distance indiquer ?</u></p>
           <p>Vous devez prendre en compte la distance entre l’UMJ ou l’IML et le lieu d’intervention <b>(et donc ne pas compter l’aller-retour)</b>.</p>
-          <p><b>Assises et reconstitutions à noter dans MedLé</b></p>
+          <p><u>Assises et reconstitutions à noter dans MedLé</u></p>
           <p>Seules les assises et les reconstitutions qui font suite à des actes réalisés par la structure (UMJ-IML) sur réquisition judiciaire sont à noter dans MedLé.</p>
-          <p><b><u>PRECISIONS SUR LES PRÉLÈVEMENTS ET EXAMENS COMPLÉMENTAIRES</u></b></p>
-          <p><b>De quoi s’agit-il exactement ?</b></p>
+          <p><b>PRECISIONS SUR LES PRÉLÈVEMENTS ET EXAMENS COMPLÉMENTAIRES</b></p>
+          <p><u>De quoi s’agit-il exactement ?</u></p>
           <p>Il s’agit des prélèvements et des examens demandés sur réquisition judiciaire, comme les examens biologiques ou toxicologiques.</p>
           <p>Il n’est pas nécessaire d’inscrire le nombre d’examens complémentaires. Vous pouvez cliquer sur une ou plusieurs propositions, sans indiquer le nombre.</p>
-          <p><b><u>HORAIRE DE L’EXAMEN</u></b></p>
-          <p><b>Quelle heure indiquer ?</b></p>
+          <p><b>HORAIRE DE L’EXAMEN</b></p>
+          <p><u>Quelle heure indiquer ?</u></p>
           <p>L’heure à indiquer est celle du début de l’acte.</p>
 
-          <h1 id="comment-stats">Comment consulter les statistiques ?</h1>
+          <h1 id="comment-stats">IV-Comment consulter les statistiques ?</h1>
           <h2>Comment faire pour visualiser les données seulement sur une journée ?</h2>
           <p>En mettant la même date dans la case «date de début» et «date de fin», vous afficherez les statistiques sur une journée.</p>
 
@@ -239,13 +239,13 @@ const FaqPage = () => {
           <h2>Comment faire si je souhaite faire des analyses avec des paramètres qui ne sont pas prévus dans l’onglet « statistiques » ?</h2>
           <p>Dans l’onglet « tous les actes », vous pouvez effectuer une recherche d’actes par date et par type d’examens. En bas de la page, vous avez la possibilité de cliquer sur « exporter » afin de disposer de la liste des actes dans un tableur. Vous pouvez ensuite procéder à des analyses statistiques grâce aux outils du tableur (par exemple : tri, filtre, utilisation de formules, etc.).</p>
 
-          <h1 id="comment-employe">Comment déclarer le personnel employé ?</h1>
+          <h1 id="comment-employe">V-Comment déclarer le personnel employé ?</h1>
           <h2>ETP : de quoi parle-t-on ?</h2>
           <p>Il s’agit des équivalents temps plein (ETP) qui travaillent effectivement dans la structure, et non le nombre de personnes employées. Par exemple, 2 médecins peuvent travailler chacun à mi-temps, mais il s’agit au total d’un seul ETP.</p>
           <p>À noter que dans MedLé, vous déclarez le nombre total d’ETP par catégorie professionnelle pour l’UMJ et l’IML confondus.</p>
           <p><b>Attention : </b>Les internes en médecine, les élèves infirmiers, l’ETP de psychologue attribué dans le cadre de la réforme de la médecine légale (rémunéré par l’assurance maladie) ou autres ne doivent pas être inscrits dans les effectifs de MedLé.</p>
 
-          <h2>Profils particuliers :</h2>
+          <p><b>Profils particuliers :</b></p>
           <ul>
             <li>«Personnel autre» : dans le cadre de la réforme de la médecine légale en 2010, il est apparu que dans certaines structures, il existait soit du temps d’aide-soignant, soit de cadre de soins, etc. alloués au service. Il a donc été décidé de nommer un «personnel autre» dont le coût a été calculé (coût 2009) à partir 1/2 temps d’aide-soignant + 1/2 temps de cadre infirmier, soit 57 978,00 € (charges d’infrastructures de 20% comprises).</li>
             <li>Psychologue : l’ETP de psychologue financé par l’Assurance Maladie dans le cadre de la réforme de la médecine légale de 2010 à raison d’1 ETP par structure, n’entre pas dans les effectifs consignés dans MedLé.</li>
