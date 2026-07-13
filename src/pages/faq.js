@@ -258,7 +258,7 @@ const FaqPage = () => {
           <p>Le remplissage doit être fait à chaque fin de mois, avant le 5 du mois suivant.</p>
           <p>Par ailleurs, tous les ETP de l’année doivent obligatoirement être renseignés en janvier de l’année N+1 (par exemple, les ETP de l’année 2021 doivent être complets en janvier 2022).</p>
 
-          <h1>Je ne trouve pas de réponse à ma question : à qui m’adresser ?</h1>
+          <p><b>Je ne trouve pas de réponse à ma question : à qui m’adresser ?</b></p>
           <p>Pour toute question ou suggestion, merci d’adresser votre demande à l’adresse email <a href="mailto:contact-medle@sante.gouv.fr">contact-medle@sante.gouv.fr</a>.</p>
         </div>
       </Layout>
@@ -281,4 +281,4 @@ const FaqPage = () => {
   )
 }
 
-export default withAuthentication(FaqPage, ADMIN)
+export default withAuthentication(FaqPage)
