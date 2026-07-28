@@ -1,10 +1,7 @@
 import * as jwt from "jsonwebtoken"
 import moment from "moment"
-import getConfig from "next/config"
 
 import { timeoutConfig } from "../config"
-
-const { serverRuntimeConfig } = getConfig() || {}
 
 const jwtConfig = {
   options: {
@@ -12,7 +9,7 @@ const jwtConfig = {
     expiresIn: timeoutConfig.jwt,
   },
   // default value is only for development environment.
-  secret: (serverRuntimeConfig && serverRuntimeConfig.JWT_SECRET) || "JHo$aY@2&o7m",
+  secret: process.env.JWT_SECRET || "JHo$aY@2&o7m",
 }
 
 /**

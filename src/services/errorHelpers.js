@@ -1,5 +1,3 @@
-import getConfig from "next/config"
-
 import { APIError, InternalError, stringifyError } from "../utils/errors"
 import {
   STATUS_400_BAD_REQUEST,
@@ -9,8 +7,6 @@ import {
   STATUS_500_INTERNAL_SERVER_ERROR,
 } from "../utils/http"
 import { logError } from "../utils/logger"
-
-const { publicRuntimeConfig } = getConfig() || {}
 
 export const sendAPIError = (error, res) => {
   logError(error)
@@ -24,7 +20,7 @@ export const sendAPIError = (error, res) => {
     stringifyError(
       new InternalError({
         detail:
-          publicRuntimeConfig && publicRuntimeConfig.DEBUG_MODE && publicRuntimeConfig.DEBUG_MODE === "true"
+          process.env.DEBUG_MODE === "true"
             ? error.message
             : "Internal server error",
       }),

@@ -5,6 +5,11 @@
 * MED-112: Correction structure page FAQ
 
 
+
+
+
+* MED-108: Montée de version Next.Js de la 14 vers la 16
+
 ## [1.36.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.35.0...release-1.36.0) (2026-04-24)
 ### Feature
 * MED-112: Mise à jour de la page des données personnelles
