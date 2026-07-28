@@ -39,7 +39,7 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 
   const fetchGlobalProofWitoutComplain = knex("acts")
     .count()
-    .whereRaw("(extra_data->>'proofWithoutComplaint')::boolean = false")
+    .whereRaw("(extra_data->>'proofWithoutComplaint')::boolean = true")
     .where(makeWhereClause({ endDate, scopeFilter, startDate }))
 
   const fetchActsWithPv = knex("acts")

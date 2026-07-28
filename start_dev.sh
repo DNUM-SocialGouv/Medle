@@ -2,4 +2,4 @@
 
 yarn migrate:latest
 node scripts/server.js &
-NODE_ENV=development next dev
+NODE_ENV=development next dev --webpack

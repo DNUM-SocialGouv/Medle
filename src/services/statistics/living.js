@@ -48,7 +48,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
 
   const fetchGlobalProofWitoutComplain = knex("acts")
     .count()
-    .whereRaw("(extra_data->>'proofWithoutComplaint')::boolean = false")
+    .whereRaw("(extra_data->>'proofWithoutComplaint')::boolean = true")
     .where(makeWhereClause({ endDate, profile, scopeFilter, startDate }))
     .where((builder) => {
       builder.whereRaw(

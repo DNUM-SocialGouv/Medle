@@ -1,22 +1,26 @@
-import getConfig from "next/config"
-
-const { publicRuntimeConfig } = getConfig() || {}
-
 export const START_YEAR_MEDLE = 2020
 
 export const LIMIT_EXPORT = 150000
 
+const FEATURE_FLAGS = {
+  administration: true,
+  directory: false,
+  export: true,
+  notification: false,
+  resources: false,
+}
+
 // Timeout (in seconds) config : keep this timeout values in sync (30 minutes by default)
 export const timeoutConfig =
-  Number.isInteger(Number.parseInt(publicRuntimeConfig.AUTH_DURATION)) &&
-  Number.isInteger(Number.parseInt(publicRuntimeConfig.AUTH_REFRESH_START)) &&
-  Number.isInteger(Number.parseInt(publicRuntimeConfig.AUTH_MAX_DURATION))
+  Number.isInteger(Number.parseInt(process.env.AUTH_DURATION)) &&
+  Number.isInteger(Number.parseInt(process.env.AUTH_REFRESH_START)) &&
+  Number.isInteger(Number.parseInt(process.env.AUTH_MAX_DURATION))
     ? {
-        cookie: Number.parseInt(publicRuntimeConfig.AUTH_DURATION),
-        jwt: Number.parseInt(publicRuntimeConfig.AUTH_DURATION),
-        session: { seconds: Number.parseInt(publicRuntimeConfig.AUTH_DURATION) },
-        authRefreshStart: { seconds: Number.parseInt(publicRuntimeConfig.AUTH_REFRESH_START) },
-        authMaxDuration: { seconds: Number.parseInt(publicRuntimeConfig.AUTH_MAX_DURATION) },
+        cookie: Number.parseInt(process.env.AUTH_DURATION),
+        jwt: Number.parseInt(process.env.AUTH_DURATION),
+        session: { seconds: Number.parseInt(process.env.AUTH_DURATION) },
+        authRefreshStart: { seconds: Number.parseInt(process.env.AUTH_REFRESH_START) },
+        authMaxDuration: { seconds: Number.parseInt(process.env.AUTH_MAX_DURATION) },
       }
     : {
         cookie: 1800,
@@ -26,11 +30,10 @@ export const timeoutConfig =
         authMaxDuration: { seconds: 18000 },
       }
 
-export const API_URL = publicRuntimeConfig ? publicRuntimeConfig.API_URL : "http://localhost:3000/api"
+export const API_URL = process.env.API_URL || "http://localhost:3000/api"
 
 export const isOpenFeature = (feature) => {
-  const flags = publicRuntimeConfig?.FEATURE_FLAGS || {}
-  return !!flags[feature]
+  return !!FEATURE_FLAGS[feature]
 }
 
 export const LOGIN_ENDPOINT = "/login"

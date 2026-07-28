@@ -14,5 +14,5 @@
   },
   "editor.formatOnSave": false,
   "editor.lineNumbers": "relative",
-  "audioCues.volume": 0
+  "accessibility.signalOptions.volume": 0
 }

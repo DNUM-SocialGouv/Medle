@@ -2,6 +2,7 @@ import knex from "../../knex/knex"
 import { hashPassword } from "../../utils/bcrypt"
 import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
+import { validatePasswordFormat, getPasswordRequirements } from "../../utils/password"
 
 /**
  * Update the user's password based by id.
@@ -13,9 +14,17 @@ import { STATUS_400_BAD_REQUEST } from "../../utils/http"
  * @returns {Object} Modified user.
  */
 export const resetFromId = async ({ id, password }) => {
-  if (!id || isNaN(id)) {
+  if (!id || isNaN(id) || !password) {
     throw new APIError({
       message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
+    })
+  }
+
+  if (!validatePasswordFormat(password)) {
+    throw new APIError({
+      message: "Invalid password format",
+      detail: getPasswordRequirements(),
       status: STATUS_400_BAD_REQUEST,
     })
   }
@@ -39,9 +48,17 @@ export const resetFromId = async ({ id, password }) => {
  * @returns {Object} Modified user.
  */
 export const resetFromEmail = async ({ email, password }) => {
-  if (!email) {
+  if (!email || !password) {
     throw new APIError({
       message: "Bad request",
+      status: STATUS_400_BAD_REQUEST,
+    })
+  }
+
+  if (!validatePasswordFormat(password)) {
+    throw new APIError({
+      message: "Invalid password format",
+      detail: getPasswordRequirements(),
       status: STATUS_400_BAD_REQUEST,
     })
   }
