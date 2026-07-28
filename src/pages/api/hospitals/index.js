@@ -5,6 +5,7 @@ import { create, hospitalsOfUser } from "../../../services/hospitals"
 import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
 import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../utils/http"
 import { ADMIN, STATS_GLOBAL } from "../../../utils/roles"
+import { logAudit } from "../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -26,6 +27,8 @@ const handler = async (req, res) => {
         checkIsSuperAdmin(currentUser)
 
         const id = await create(req.body)
+
+        logAudit(`${currentUser.email}: Ajout d'un hôpital d'id ${id}`);
 
         return res.status(STATUS_200_OK).json({ id })
       }

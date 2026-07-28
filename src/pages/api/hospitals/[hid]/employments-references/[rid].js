@@ -5,6 +5,7 @@ import { sendAPIError, sendMethodNotAllowedError, sendNotFoundError } from "../.
 import { checkValidUserWithPrivilege } from "../../../../../utils/auth"
 import { METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_PUT, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../../utils/http"
 import { ADMIN } from "../../../../../utils/roles"
+import { logAudit } from "../../../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -24,20 +25,24 @@ const handler = async (req, res) => {
       }
 
       case METHOD_DELETE: {
-        checkValidUserWithPrivilege(ADMIN, req, res)
+        const currentUser =checkValidUserWithPrivilege(ADMIN, req, res)
         const deleted = await del({ hid, rid })
 
         if (!deleted) return sendNotFoundError(res)
+        
+        logAudit(`${currentUser.email}: Suppression d'une référence d'emploi d'id ${rid}`);
 
         return res.status(STATUS_200_OK).json({ deleted })
       }
 
       case METHOD_PUT: {
-        checkValidUserWithPrivilege(ADMIN, req, res)
+        const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
         const updated = await update({ hid, rid }, req.body)
 
         if (!updated) return sendNotFoundError(res)
+
+        logAudit(`${currentUser.email}: Modification d'une référence d'emploi d'id ${rid}`);
 
         return res.status(STATUS_200_OK).json({ updated })
       }

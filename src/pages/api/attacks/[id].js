@@ -12,6 +12,7 @@ import {
   STATUS_200_OK,
 } from "../../../utils/http"
 import { ACT_CONSULTATION, ADMIN } from "../../../utils/roles"
+import { logAudit } from "../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -39,6 +40,8 @@ const handler = async (req, res) => {
         const deleted = await del({ id })
 
         if (!deleted) return sendNotFoundError(res)
+        
+        logAudit(`${currentUser.email}: Suppression d'un attentat d'id ${id}`);
 
         return res.status(STATUS_200_OK).json({ deleted })
       }
@@ -50,6 +53,8 @@ const handler = async (req, res) => {
         const updated = await update({ id }, req.body)
 
         if (!updated) return sendNotFoundError(res)
+        
+        logAudit(`${currentUser.email}: Modification d'un attentat d'id ${id}`);
 
         return res.status(STATUS_200_OK).json({ updated })
       }

@@ -6,6 +6,7 @@ import { checkValidUserWithPrivilege } from "../../../../../utils/auth"
 import { METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../../../../utils/http"
 import { ADMIN, EMPLOYMENT_CONSULTATION } from "../../../../../utils/roles"
 import { isAllowedHospitals } from "../../../../../utils/scope"
+import { logAudit } from "../../../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -33,9 +34,11 @@ const handler = async (req, res) => {
 
           return res.status(STATUS_200_OK).json(references)
         } else {
-          checkValidUserWithPrivilege(ADMIN, req, res)
+          const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
 
           const id = await create(req.body)
+
+          logAudit(`${currentUser.email}: Ajout d'une référence d'emploi d'id ${id}`);
 
           return res.status(STATUS_200_OK).json({ id })
         }

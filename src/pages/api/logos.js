@@ -17,6 +17,7 @@ import {
   STATUS_404_NOT_FOUND,
 } from "../../utils/http"
 import { ADMIN } from "../../utils/roles"
+import { logAudit } from "../../utils/logger"
 
 const ADMIN_METHODS = [METHOD_POST]
 
@@ -95,7 +96,7 @@ const handler = async (req, res) => {
           }
 
           const [isLogoPresent] = await knex("documents").where("type", "logoMinistere").count()
-
+          const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
           if (isLogoPresent.count < 1) {
             await knex("documents").insert({
               type: "logoMinistere",
@@ -103,6 +104,7 @@ const handler = async (req, res) => {
               type_mime: files.file.mimetype,
               size: files.file.size,
             })
+            logAudit(`${currentUser.email}: Ajout d'un logo "${files.file.originalFilename}"`);
           } else {
             await knex("documents")
               .update({
@@ -112,6 +114,7 @@ const handler = async (req, res) => {
                 updated_at: now().format(ISO_TIME),
               })
               .where("type", "logoMinistere")
+              logAudit(`${currentUser.email}: Modification du logo Ministère "${files.file.originalFilename}"`);
           }
         })
 

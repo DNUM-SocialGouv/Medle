@@ -12,6 +12,7 @@ import {
   STATUS_200_OK,
 } from "../../../../utils/http"
 import { ADMIN } from "../../../../utils/roles"
+import { logAudit } from "../../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -37,6 +38,8 @@ const handler = async (req, res) => {
         const deleted = await del({ hid }, currentUser)
 
         if (!deleted) return sendNotFoundError(res)
+      
+        logAudit(`${currentUser.email}: Suppression d'un hôpital d'id ${hid}`);
 
         return res.status(STATUS_200_OK).json({ deleted })
       }
@@ -48,6 +51,8 @@ const handler = async (req, res) => {
         const updated = await update({ hid }, req.body)
 
         if (!updated) return sendNotFoundError(res)
+
+        logAudit(`${currentUser.email}: Modification d'un hôpital d'id ${hid}`);
 
         return res.status(STATUS_200_OK).json({ updated })
       }

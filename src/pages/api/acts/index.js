@@ -6,6 +6,7 @@ import { checkValidUserWithPrivilege } from "../../../utils/auth"
 import { CORS_ALLOW_ORIGIN, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
 import { ACT_CONSULTATION, ACT_MANAGEMENT } from "../../../utils/roles"
 import { isAllowedHospitals } from "../../../utils/scope"
+import { logAudit } from "../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -39,6 +40,8 @@ const handler = async (req, res) => {
         if (hospitals && !isAllowedHospitals(currentUser, hospitals)) return sendForbiddenError(res)
 
         const id = await create(req.body, currentUser)
+
+        logAudit(`${currentUser.email}: Ajout d'un acte d'id ${id}`);
 
         return res.status(STATUS_200_OK).json({ id })
       }

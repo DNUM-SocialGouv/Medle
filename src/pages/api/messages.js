@@ -6,6 +6,7 @@ import { checkIsSuperAdmin, checkValidUserWithPrivilege } from "../../utils/auth
 import { ISO_DATE, now } from "../../utils/date"
 import { METHOD_DELETE, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK, CORS_ALLOW_ORIGIN } from "../../utils/http"
 import { ADMIN } from "../../utils/roles"
+import { logAudit } from "../../utils/logger"
 
 const ADMIN_METHODS = [METHOD_DELETE, METHOD_POST]
 
@@ -49,12 +50,15 @@ const handler = async (req, res) => {
         return res.status(STATUS_200_OK).json(messages)
       }
       case METHOD_DELETE: {
+        const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
         const [deletedId] = await knex("messages").where("id", req.query.id).delete("id")
+        logAudit(`${currentUser.email}: Suppression de message d'id ${deletedId}`);
         return res.status(STATUS_200_OK).send({
           id: deletedId,
         })
       }
       case METHOD_POST: {
+        const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
         const [newId] = await knex("messages").insert(
           {
             start_date: req.body.start_date || null,
@@ -63,6 +67,7 @@ const handler = async (req, res) => {
           },
           "id"
         )
+        logAudit(`${currentUser.email}: Ajout de message d'id ${newId}`);
         return res.status(STATUS_200_OK).json({
           id: newId,
         })

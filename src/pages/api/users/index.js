@@ -6,6 +6,7 @@ import sendWelcomeMail from "../../../services/users/send-mail"
 import { checkIsAdmin, checkValidUserWithPrivilege } from "../../../utils/auth"
 import { CORS_ALLOW_ORIGIN, METHOD_GET, METHOD_OPTIONS, METHOD_POST, STATUS_200_OK } from "../../../utils/http"
 import { ADMIN } from "../../../utils/roles"
+import { logAudit } from "../../../utils/logger"
 
 const handler = async (req, res) => {
   res.setHeader("Content-Type", "application/json")
@@ -29,6 +30,8 @@ const handler = async (req, res) => {
         checkIsAdmin(currentUser)
 
         const id = await create(req.body, currentUser)
+
+        logAudit(`${currentUser.email}: Ajout d'un utilisateur d'id ${id}`);
 
         sendWelcomeMail(req.body.email)
 
