@@ -1,7 +1,7 @@
 ## [1.37.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.36.0...release-1.37.0) (TODO)
 ### Feature
 * MED-120: Inversion des chiffres du RPSP et non RPSP sur l'onglet statistiques
-
+* MED-117: Homologation M10 : Mettre en place un contrôle des critères de mot de passe au niveau du back
 * MED-112: Correction structure page FAQ
 
 
