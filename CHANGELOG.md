@@ -1,4 +1,7 @@
-## [1.37.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.36.0...release-1.37.0) (TODO)
+## [1.38.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.37.0...release-1.38.0) (TODO)
+### Feature
+
+## [1.37.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.36.0...release-1.37.0) (2026-07-28)
 ### Feature
 * MED-116: Définir et mettre en œuvre une politique de gestion et d'analyse des journaux
 * MED-120: Inversion des chiffres du RPSP et non RPSP sur l'onglet statistiques
