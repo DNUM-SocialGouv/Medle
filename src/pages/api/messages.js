@@ -52,7 +52,7 @@ const handler = async (req, res) => {
       case METHOD_DELETE: {
         const currentUser = checkValidUserWithPrivilege(ADMIN, req, res)
         const [deletedId] = await knex("messages").where("id", req.query.id).delete("id")
-        logAudit(`${currentUser.email}: Suppression d'un message "${deletedId}"`);
+        logAudit(`${currentUser.email}: Suppression de message d'id ${deletedId}`);
         return res.status(STATUS_200_OK).send({
           id: deletedId,
         })
@@ -67,7 +67,7 @@ const handler = async (req, res) => {
           },
           "id"
         )
-        logAudit(`${currentUser.email}: Ajout d'un message "${newId}"`);
+        logAudit(`${currentUser.email}: Ajout de message d'id ${newId}`);
         return res.status(STATUS_200_OK).json({
           id: newId,
         })

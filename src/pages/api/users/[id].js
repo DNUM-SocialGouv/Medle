@@ -43,7 +43,7 @@ const handler = async (req, res) => {
 
         if (!deleted) return sendNotFoundError(res)
         
-        logAudit(`${currentUser.email}: Suppression d'un utilisateur "${id}"`);
+        logAudit(`${currentUser.email}: Suppression d'un utilisateur d'id ${id}`);
 
         return res.status(STATUS_200_OK).json({ deleted })
       }
@@ -56,7 +56,7 @@ const handler = async (req, res) => {
 
         if (!updated) return sendNotFoundError(res)
 
-        logAudit(`${currentUser.email}: Modification d'un utilisateur "${id}"`);
+        logAudit(`${currentUser.email}: Modification d'un utilisateur d'id ${id}`);
 
         return res.status(STATUS_200_OK).json({ updated })
       }

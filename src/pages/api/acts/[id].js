@@ -44,7 +44,7 @@ const handler = async (req, res) => {
 
         const deleted = await del({ id }, currentUser)
 
-        logAudit(`${currentUser.email}: Suppression d'un acte "${id}"`);
+        logAudit(`${currentUser.email}: Suppression d'un acte d'id ${id}`);
 
         return res.status(STATUS_200_OK).json({ deleted })
       }
@@ -53,7 +53,7 @@ const handler = async (req, res) => {
 
         const updated = await update({ id }, req.body, currentUser)
 
-        logAudit(`${currentUser.email}: Modification d'un acte "${id}"`);
+        logAudit(`${currentUser.email}: Modification d'un acte d'id ${id}`);
 
         return res.status(STATUS_200_OK).json({ updated })
       }

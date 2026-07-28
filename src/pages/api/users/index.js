@@ -31,7 +31,7 @@ const handler = async (req, res) => {
 
         const id = await create(req.body, currentUser)
 
-        logAudit(`${currentUser.email}: Ajout d'un utilisateur "${id}"`);
+        logAudit(`${currentUser.email}: Ajout d'un utilisateur d'id ${id}`);
 
         sendWelcomeMail(req.body.email)
 

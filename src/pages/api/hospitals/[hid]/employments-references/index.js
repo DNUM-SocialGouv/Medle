@@ -38,7 +38,7 @@ const handler = async (req, res) => {
 
           const id = await create(req.body)
 
-          logAudit(`${currentUser.email}: Ajout d'une référence d'emploi "${id}"`);
+          logAudit(`${currentUser.email}: Ajout d'une référence d'emploi d'id ${id}`);
 
           return res.status(STATUS_200_OK).json({ id })
         }

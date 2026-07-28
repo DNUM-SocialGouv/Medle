@@ -28,7 +28,7 @@ const handler = async (req, res) => {
 
         const id = await create(req.body)
 
-        logAudit(`${currentUser.email}: Création d'un demandeur "${id}"`);
+        logAudit(`${currentUser.email}: Création d'un demandeur d'id ${id}`);
         
         return res.status(STATUS_200_OK).json({ id })
       }
