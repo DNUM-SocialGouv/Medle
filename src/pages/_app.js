@@ -16,15 +16,15 @@ const theme = {
 
 /*
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 })
 */
 
 export default class MyApp extends App {
   componentDidMount() {
     initMatomo({
-      piwikUrl: process.env.MATOMO_URL,
-      siteId: process.env.MATOMO_SITE_ID,
+      piwikUrl: process.env.NEXT_PUBLIC_MATOMO_URL,
+      siteId: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
     })
   }
 

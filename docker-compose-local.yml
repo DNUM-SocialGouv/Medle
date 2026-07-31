@@ -36,12 +36,21 @@ services:
         - MAIL_PASSWORD=
         - MAIL_FROM=Medlé <noreply@sante.gouv.fr>
         - MAIL_CONTACT=contact-medle@sante.gouv.fr
+        - NEXT_PUBLIC_MAIL_CONTACT=contact-medle@sante.gouv.fr
+        - NEXT_PUBLIC_SENTRY_DSN=
+        - NEXT_PUBLIC_MATOMO_SITE_ID=
+        - NEXT_PUBLIC_MATOMO_URL=
         - LOGIN_DELAY_ATTEMPTS=3
         - LOGIN_DELAY_SECONDS=60
-        - AUTH_DURATION=1800
-        - AUTH_REFRESH_START=1500
-        - AUTH_MAX_DURATION=10800
+        - NEXT_PUBLIC_AUTH_DURATION=1800
+        - NEXT_PUBLIC_AUTH_REFRESH_START=1500
+        - NEXT_PUBLIC_AUTH_MAX_DURATION=10800
+        - NEXT_PUBLIC_DEBUG_MODE=
+        - NEXT_PUBLIC_TEST_CURRENT_DATE=
         - DOCUMENTS_FS_PATH=./documents
+    environment:
+      - API_URL=/api
+      - APP_BASE_URL=http://localhost:3000
     ports:
       - 3000:3000
 

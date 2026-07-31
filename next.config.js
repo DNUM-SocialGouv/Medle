@@ -76,20 +76,9 @@ const productionSecurityHeaders = [...commonSecurityHeaders,
 },
 ];
 
-
 const nextConfig = {
   env: {
-    API_URL: process.env.APP_BASE_URL ? `${process.env.APP_BASE_URL}${process.env.API_URL}` : process.env.API_URL,
-    AUTH_DURATION: process.env.AUTH_DURATION,
-    AUTH_MAX_DURATION: process.env.AUTH_MAX_DURATION,
-    AUTH_REFRESH_START: process.env.AUTH_REFRESH_START,
-    DEBUG_MODE: process.env.DEBUG_MODE,
-    MAIL_CONTACT: process.env.MAIL_CONTACT,
-    MATOMO_SITE_ID: process.env.MATOMO_SITE_ID,
-    MATOMO_URL: process.env.MATOMO_URL,
     MEDLE_VERSION: version,
-    SENTRY_DSN: process.env.SENTRY_DSN,
-    TEST_CURRENT_DATE: process.env.TEST_CURRENT_DATE,
   },
   webpack: (config, { isServer, buildId, webpack }) => {
     //config.optimization.minimizer = []
