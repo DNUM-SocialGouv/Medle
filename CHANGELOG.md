@@ -1,5 +1,10 @@
-## [1.38.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.37.0...release-1.38.0) (TODO)
+## [1.39.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.38.0...release-1.39.0) (TODO)
 ### Feature
+
+## [1.38.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.37.0...release-1.38.0) (2026-07-31)
+### Feature
+
+* MED-108: Correction config env variables
 
 ## [1.37.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.36.0...release-1.37.0) (2026-07-28)
 ### Feature
