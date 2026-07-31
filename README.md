@@ -66,14 +66,14 @@ A blueprint of `env` can be seen with the file `.env.sample`.
 The variables are :
 
 - NODE_ENV=development or production
-- API_URL URL of the api (in local, it's http://localhost:3000/api)
+- API_URL URL path of the api (in local, it's /api)
 - APP_BASE_URL Base URL of the app (in local, it's http://localhost:3000)
 - POSTGRES_SSL mode to connect to Postgres (false in local,  true for for Azure hosted)
 - DATABASE_URL URL of Postgres DB
 - JWT_SECRET the secret for generating JWT tokens
-- MATOMO_SITE_ID site id on piwik instance
-- MATOMO_URL URL to your piwik instance
-- SENTRY_DSN DSN of your sentry project
+- NEXT_PUBLIC_MATOMO_SITE_ID site id on piwik instance
+- NEXT_PUBLIC_MATOMO_URL URL to your piwik instance
+- NEXT_PUBLIC_SENTRY_DSN DSN of your sentry project
 - MAIL_HOST SMTP host for mailing
 - MAIL_PORT port for SMTP server
 - MAIL_USERNAME username of SMTP server account
@@ -81,18 +81,21 @@ The variables are :
 - MAIL_FROM string used in from email
 - LOGIN_DELAY_ATTEMPTS number of attempts to start the login delay
 - LOGIN_DELAY_SECONDS duration of the login delay
-- AUTH_DURATION authentication duration, in seconds
-- AUTH_REFRESH_START based on the previous duration, when to start refreshing the authentication, in seconds
-- AUTH_MAX_DURATION maximum duration of authentication, in seconds
+- NEXT_PUBLIC_AUTH_DURATION authentication duration, in seconds
+- NEXT_PUBLIC_AUTH_REFRESH_START based on the previous duration, when to start refreshing the authentication, in seconds
+- NEXT_PUBLIC_AUTH_MAX_DURATION maximum duration of authentication, in seconds
+- NEXT_PUBLIC_MAIL_CONTACT public contact email address
+- NEXT_PUBLIC_DEBUG_MODE public debug mode flag
+- NEXT_PUBLIC_TEST_CURRENT_DATE public test date override
 - DOCUMENTS_FS_PATH documents path on the file system
 
-**Note** : AUTH_REFRESH_START < AUTH_DURATION < AUTH_MAX_DURATION
+**Note** : NEXT_PUBLIC_AUTH_REFRESH_START < NEXT_PUBLIC_AUTH_DURATION < NEXT_PUBLIC_AUTH_MAX_DURATION
 
 Besides, in some cases you may want to set :
 
 - DEBUG used to debug Knex (ex: knex:query to show SQL queries)
-- DEBUG_MODE set to true to console.debug
-- TEST_CURRENT_DATE useful to set a date in the past and have consistent result for tests using dates
+- NEXT_PUBLIC_DEBUG_MODE set to true to console.debug
+- NEXT_PUBLIC_TEST_CURRENT_DATE useful to set a date in the past and have consistent result for tests using dates
 - E2E_JEST_DATABASE_URL URL of Postgres DB for E2E tests
 
 

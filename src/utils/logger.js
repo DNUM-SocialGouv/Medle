@@ -8,7 +8,7 @@ export const logWarning = (...message) => console.warning(...message)
 export const logAudit = (...message) => console.info(`[Audit] ${moment().format(ISO_TIME)} ${message}`)
 
 export const logDebug = (...message) => {
-  if (process.env.DEBUG_MODE === "true") {
+  if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
     console.info("debug:", ...message)
   }
 }

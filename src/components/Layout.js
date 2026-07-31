@@ -217,9 +217,9 @@ export const Footer = ({ currentUser }) => {
               </li>
             </>
           )}
-          {process.env.MAIL_CONTACT && (
+          {process.env.NEXT_PUBLIC_MAIL_CONTACT && (
             <li className="mb-2">
-              <a href={`mailto:${process.env.MAIL_CONTACT}`}>Contactez&#8209;nous</a>
+              <a href={`mailto:${process.env.NEXT_PUBLIC_MAIL_CONTACT}`}>Contactez&#8209;nous</a>
             </li>
           )}
           <li className="mb-2">

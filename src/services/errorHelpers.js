@@ -20,7 +20,7 @@ export const sendAPIError = (error, res) => {
     stringifyError(
       new InternalError({
         detail:
-          process.env.DEBUG_MODE === "true"
+          process.env.NEXT_PUBLIC_DEBUG_MODE === "true"
             ? error.message
             : "Internal server error",
       }),

@@ -22,7 +22,8 @@ export const ISO_DATE = "YYYY-MM-DD"
 export const ISO_TIME = "YYYY-MM-DDTHH:mm:ssZ"
 
 export const now = () =>
-  (process.env.TEST_CURRENT_DATE && moment(process.env.TEST_CURRENT_DATE, FORMAT_DATE)) || moment()
+  (process.env.NEXT_PUBLIC_TEST_CURRENT_DATE && moment(process.env.NEXT_PUBLIC_TEST_CURRENT_DATE, FORMAT_DATE)) ||
+  moment()
 
 export const isValidIsoDate = (date) => date && moment(date, ISO_DATE, true).isValid()
 
