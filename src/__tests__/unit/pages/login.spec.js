@@ -23,7 +23,7 @@ test("it should display alerts", async () => {
             >
               Les ETP sont à remplir avant le mois de mars.
               <button
-                aria-label="Close"
+                aria-label="Fermer ce message"
                 class="close"
                 data-dismiss="alert"
                 type="button"
@@ -37,7 +37,7 @@ test("it should display alerts", async () => {
             </div>
           </div>,
           <div
-            class="mt-3 mb-0 alert alert-danger"
+            class="pt-10 mt-3 mb-0 alert alert-danger"
             role="alert"
           >
             Session terminée

@@ -1,0 +1,36 @@
+name: Install, build, lint and tests
+
+on: pull_request
+
+jobs:
+  tests-javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Enable Corepack
+        run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          cache: yarn
+          node-version-file: package.json
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+      - name: Run the tests
+        env:
+          NODE_ENV: test
+        run: yarn test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Enable Corepack
+        run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          cache: yarn
+          node-version-file: package.json
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+      - name: Build the app
+        run: yarn build

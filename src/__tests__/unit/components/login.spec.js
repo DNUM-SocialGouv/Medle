@@ -28,7 +28,7 @@ describe("<Login> component tests", () => {
 
     render(<Login authentication={noop} error={null} />)
 
-    userEvent.click(screen.getByText("Se connecter"))
+    userEvent.click(screen.getByRole('button', { name: /connexion/i }))
 
     await screen.findByTestId("loading")
 
@@ -41,7 +41,7 @@ describe("<Login> component tests", () => {
 
     render(<Login authentication={noop} error={"Erreur_xxx"} />)
 
-    userEvent.click(screen.getByText("Se connecter"))
+    userEvent.click(screen.getByRole('button', { name: /connexion/i }))
 
     await screen.findByTestId("loading")
 

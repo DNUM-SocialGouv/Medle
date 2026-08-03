@@ -69,23 +69,23 @@ it("should show an error if no email is given", () => {
 it("should render error if no user with this email is found in db", async () => {
   render(<ForgotPasswordPage />)
 
-  userEvent.type(screen.getByLabelText(/courriel/i), notFoundEmail)
+  await userEvent.type(screen.getByLabelText(/courriel/i), notFoundEmail)
 
-  userEvent.click(screen.getByRole("button", { name: /envoyer un email/i }))
+  await userEvent.click(screen.getByRole("button", { name: /envoyer un email/i }))
 
   await waitFor(() => {
-    expect(screen.getByRole("alert")).toHaveTextContent(/Le courriel ne semble pas exister/i)
+    expect(screen.getByRole("alert")).toHaveTextContent(/Erreur lors de l'envoi du courriel/i)
   })
 })
 
 it("should render correctly if user email is found", async () => {
   render(<ForgotPasswordPage />)
 
-  userEvent.type(screen.getByLabelText(/courriel/i), foundEmail)
+  await userEvent.type(screen.getByLabelText(/courriel/i), foundEmail)
 
-  userEvent.click(screen.getByRole("button", { name: /envoyer un email/i }))
+  await userEvent.click(screen.getByRole("button", { name: /envoyer un email/i }))
 
   await waitFor(() => {
-    expect(screen.getByRole("alert")).toHaveTextContent(/Un courriel vous a été envoyé/i)
+    expect(screen.getByRole("alert")).toHaveTextContent(/Si votre identifiant est correct/i)
   })
 })
