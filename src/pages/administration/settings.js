@@ -21,7 +21,7 @@ const SettingsPage = ({ appSettings = {}, currentUser }) => {
     setError("")
     setSuccess("")
 
-    const parsedUsersPurgeInactivityDays = parseInt(usersPurgeInactivityDays, 10)
+    const parsedUsersPurgeInactivityDays = Number.parseInt(usersPurgeInactivityDays, 10)
 
     if (!Number.isInteger(parsedUsersPurgeInactivityDays) || parsedUsersPurgeInactivityDays <= 0) {
       setError("La durée de non connexion doit être un nombre de jours strictement positif.")

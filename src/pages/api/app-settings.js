@@ -17,7 +17,7 @@ const getCurrentUser = (req, res) => {
 }
 
 const validateUsersPurgeInactivityDays = (value) => {
-  const usersPurgeInactivityDays = parseInt(value, 10)
+  const usersPurgeInactivityDays = Number.parseInt(value, 10)
 
   if (!Number.isInteger(usersPurgeInactivityDays) || usersPurgeInactivityDays <= 0) {
     throw new APIError({

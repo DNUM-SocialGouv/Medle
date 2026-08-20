@@ -2,7 +2,7 @@ const USERS_PURGE_INACTIVITY_DAYS = "users_purge_inactivity_days"
 const DEFAULT_USERS_PURGE_INACTIVITY_DAYS = 365
 
 const parsePositiveInteger = (value, defaultValue) => {
-  const parsedValue = parseInt(value, 10)
+  const parsedValue = Number.parseInt(value, 10)
   return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : defaultValue
 }
 

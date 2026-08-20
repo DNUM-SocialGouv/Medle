@@ -417,8 +417,31 @@ Sidebar.propTypes = {
   page: PropTypes.string,
 }
 
+const getAdminItemClass = (itemPage, currentPage) =>
+  `list-group-item list-group-item-action ${currentPage === itemPage ? "selected" : "unselected"}`
+
+const renderAdminLink = (href, label, Icon, pageKey, page, isVisible) => {
+  if (!isVisible) return null
+  return (
+    <Link
+      key={pageKey}
+      href={href}
+      className={getAdminItemClass(pageKey, page)}
+      id={pageKey === "users" ? "adminNavigation" : undefined}
+      aria-current={page === pageKey ? "true" : "false"}
+    >
+      <Icon width={30} /> <br />
+      {label}
+    </Link>
+  )
+}
+
 const SidebarAdmin = ({ page, currentUser }) => {
   if (!currentUser) return ""
+  
+  const isSuperAdmin = currentUser.role === SUPER_ADMIN
+  const isAdmin = isAllowed(currentUser.role, ADMIN)
+  
   return (
     <>
       <nav
@@ -426,88 +449,14 @@ const SidebarAdmin = ({ page, currentUser }) => {
         aria-label="Navigation latérale d'administration"
         className="text-center list-group list-group-flush"
       >
-        {isAllowed(currentUser.role, ADMIN) && (
-          <Link
-            href="/administration/users"
-            className={"list-group-item list-group-item-action " + (page === "users" ? "selected" : "unselected")}
-            id="adminNavigation"
-            aria-current={page === "users" ? "true" : "false"}
-          >
-            <FaceIcon width={30} />
-            <br />
-            Utilisateurs
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link
-            href="/administration/hospitals"
-            className={"list-group-item list-group-item-action " + (page === "hospitals" ? "selected" : "unselected")}
-            aria-current={page === "hospitals" ? "true" : "false"}
-          >
-            <ApartmentIcon width={30} /> <br />
-            Établissements
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link
-            href="/administration/askers"
-            className={"list-group-item list-group-item-action " + (page === "askers" ? "selected" : "unselected")}
-            aria-current={page === "askers" ? "true" : "false"}
-          >
-            <AccountBalanceIcon width={30} /> <br />
-            Demandeurs
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link
-            href="/administration/attacks"
-            className={"list-group-item list-group-item-action " + (page === "attacks" ? "selected" : "unselected")}
-            aria-current={page === "attacks" ? "true" : "false"}
-          >
-            <WhatshotIcon width={30} /> <br />
-            Attentats
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link
-            href="/administration/acts"
-            className={"list-group-item list-group-item-action " + (page === "acts" ? "selected" : "unselected")}
-            aria-current={page === "acts" ? "true" : "false"}
-          >
-            <ReceiptIcon width={30} /> <br />
-            Actes
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link
-            href="/administration/messages"
-            className={"list-group-item list-group-item-action " + (page === "messages" ? "selected" : "unselected")}
-            aria-current={page === "messages" ? "true" : "false"}
-          >
-            <AnnouncementIcon width={30} /> <br />
-            Messages
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link
-            href="/administration/logos"
-            className={"list-group-item list-group-item-action " + (page === "logos" ? "selected" : "unselected")}
-            aria-current={page === "logos" ? "true" : "false"}
-          >
-            <ImageIcon width={30} /> <br />
-            Logos
-          </Link>
-        )}
-        {currentUser.role === SUPER_ADMIN && (
-          <Link
-            href="/administration/settings"
-            className={"list-group-item list-group-item-action " + (page === "settings" ? "selected" : "unselected")}
-            aria-current={page === "settings" ? "true" : "false"}
-          >
-            <SettingsIcon width={30} /> <br />
-            Paramètres
-          </Link>
-        )}
+        {renderAdminLink("/administration/users", "Utilisateurs", FaceIcon, "users", page, isAdmin)}
+        {renderAdminLink("/administration/hospitals", "Établissements", ApartmentIcon, "hospitals", page, isSuperAdmin)}
+        {renderAdminLink("/administration/askers", "Demandeurs", AccountBalanceIcon, "askers", page, isSuperAdmin)}
+        {renderAdminLink("/administration/attacks", "Attentats", WhatshotIcon, "attacks", page, isSuperAdmin)}
+        {renderAdminLink("/administration/acts", "Actes", ReceiptIcon, "acts", page, isSuperAdmin)}
+        {renderAdminLink("/administration/messages", "Messages", AnnouncementIcon, "messages", page, isSuperAdmin)}
+        {renderAdminLink("/administration/logos", "Logos", ImageIcon, "logos", page, isSuperAdmin)}
+        {renderAdminLink("/administration/settings", "Paramètres", SettingsIcon, "settings", page, isSuperAdmin)}
         <Link href={startPageForRole(currentUser.role)} className="list-group-item list-group-item-action">
           <ArrowBackIcon width={30} /> <br />
           Retour
