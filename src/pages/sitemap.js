@@ -123,6 +123,11 @@ const SiteMapPage = () => {
                       )}
                       {currentUser.role === SUPER_ADMIN && (
                         <li>
+                          <Link href="/administration/settings">Administration des paramètres</Link>
+                        </li>
+                      )}
+                      {currentUser.role === SUPER_ADMIN && (
+                        <li>
                           <Link href="/administration/footer-documents">Administration des documents du pied de page</Link>
                         </li>
                       )}

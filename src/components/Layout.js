@@ -498,6 +498,16 @@ const SidebarAdmin = ({ page, currentUser }) => {
             Logos
           </Link>
         )}
+        {currentUser.role === SUPER_ADMIN && (
+          <Link
+            href="/administration/settings"
+            className={"list-group-item list-group-item-action " + (page === "settings" ? "selected" : "unselected")}
+            aria-current={page === "settings" ? "true" : "false"}
+          >
+            <SettingsIcon width={30} /> <br />
+            Paramètres
+          </Link>
+        )}
         <Link href={startPageForRole(currentUser.role)} className="list-group-item list-group-item-action">
           <ArrowBackIcon width={30} /> <br />
           Retour
