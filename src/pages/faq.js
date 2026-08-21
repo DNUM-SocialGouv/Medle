@@ -118,7 +118,7 @@ const FaqPage = () => {
 
           <h4 style={{color: '#000091'}}>Dois-je enregistrer la prise en charge psychologique ?</h4>
           <p>La prise en charge psychologique des victimes, telle que prévue dans le cadre du schéma directeur et qui est financée par l’assurance maladie à hauteur d’un équivalent temps plein (ETP) par structure de médecine légale du vivant, ne fait pas l’objet d’un recensement dans MedLé.</p>
-          <p style={{color: '#000091'}}><b>Victime : précisions sur la rubrique «Types de violence» (sous-rubriques «Nature» et «Contexte»)</b></p>
+          <h4 style={{color: '#000091'}}>Victime : précisions sur la rubrique «Types de violence» (sous-rubriques «Nature» et «Contexte»)</h4>
           <p>Pour les victimes, le type de violence doit être précisé pour chaque acte. Plusieurs choix sont possibles, vous pouvez donc cocher plusieurs cases à la fois dans «nature de la violence» et dans «contexte de la violence».</p>
           <p>Voici quelques précisions concernant les items listés dans la rubrique «Types de violence» :</p>
           <ul>
