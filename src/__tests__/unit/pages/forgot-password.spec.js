@@ -1,12 +1,14 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import faker from "faker"
-import { rest } from "msw"
-import { setupServer } from "msw/node"
 import React from "react"
 
 import { API_URL, FORGOT_PWD_ENDPOINT } from "../../../config"
 import ForgotPasswordPage from "../../../pages/forgot-password"
+
+// Mock isomorphic-unfetch before importing components
+jest.mock("isomorphic-unfetch")
+import fetch from "isomorphic-unfetch"
 
 const originalWindow = { ...window }
 const originalConsoleError = { ...console.error }
@@ -16,17 +18,40 @@ const foundEmail = "xx" + notFoundEmail // Ensure to have consistently a differe
 
 const url = `${API_URL}${FORGOT_PWD_ENDPOINT}`
 
-const server = setupServer(
-  rest.post(url, (req, res, ctx) => {
-    if (req.body?.email === notFoundEmail) {
-      return res(ctx.status(404), ctx.json({ message: `User with email ${notFoundEmail} doesn't exist.`, status: 404 }))
+// Setup fetch mock
+fetch.mockImplementation((fetchUrl, options) => {
+  if (fetchUrl === url && options?.method === "POST") {
+    let body = {}
+    try {
+      body = typeof options.body === 'string' ? JSON.parse(options.body) : options.body
+    } catch (e) {
+      // If body parsing fails, treat as empty
     }
-    return res(ctx.status(200), ctx.json({}))
-  }),
-)
+    
+    if (body?.email === notFoundEmail) {
+      return Promise.resolve({
+        ok: false,
+        status: 404,
+        json: () => Promise.resolve({ message: `User with email ${notFoundEmail} doesn't exist.`, status: 404 }),
+      })
+    }
+    
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({}),
+    })
+  }
+  
+  // Default response for other requests
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve({}),
+  })
+})
 
 beforeAll(() => {
-  server.listen()
   // Disable window._paq.push used by Matomo.
   if (!window?._paq?.push) {
     window._paq = {
@@ -37,13 +62,11 @@ beforeAll(() => {
 })
 
 afterEach(() => {
-  server.resetHandlers()
   jest.clearAllMocks()
 })
 
 afterAll(() => {
-  server.close()
-  // eslint-disable-next-line no-global-assign
+   
   window = originalWindow
   console.error = originalConsoleError
 })
