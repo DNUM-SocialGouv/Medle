@@ -48,6 +48,8 @@ export const authenticate = async (email, password) => {
      */
     if (loginDelayConfig && !(await userCanLogin(dbUser, loginDelayConfig))) notifyDelay(loginDelayConfig)
 
+    await updateLastLogin(dbUser)
+
     const user = transform(dbUser)
     const token = user.resetPassword ? generateToken(user, { timeout: "5m" }) : generateToken(user)
     return { user, token }
@@ -136,6 +138,13 @@ const cleanLoginDelay = async (dbUser) => {
     .where("id", dbUser.id)
     .whereNull("deleted_at")
     .update({ login_attempts: null, login_last_attempt_at: null })
+}
+
+const updateLastLogin = async (dbUser) => {
+  await knex("users")
+    .where("id", dbUser.id)
+    .whereNull("deleted_at")
+    .update({ last_login_at: knex.fn.now() })
 }
 
 const notifyDelay = (loginDelayConfig) => {

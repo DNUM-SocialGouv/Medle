@@ -79,6 +79,7 @@ export const EMPLOYMENTS_ENDPOINT = "/employments"
 export const ATTACKS_ENDPOINT = "/attacks"
 export const HOSPITALS_ENDPOINT = "/hospitals"
 export const USERS_ENDPOINT = "/users"
+export const APP_SETTINGS_ENDPOINT = "/app-settings"
 
 export const GLOBAL_STATISTICS_ENDPOINT = "/statistics/global"
 export const LIVING_STATISTICS_ENDPOINT = "/statistics/living"
