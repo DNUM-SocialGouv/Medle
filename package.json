@@ -3,7 +3,7 @@
     "version": "1.39.0",
     "private": true,
     "engines": {
-        "node": ">=20.9.0"
+        "node": ">=24 <25"
     },
     "scripts": {
         "seal-secrets": "sre-secrets --to=./.socialgouv",
