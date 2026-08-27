@@ -10,7 +10,7 @@ describe("transform", () => {
     }
 
     expect(transform(modelDB)).toMatchInlineSnapshot(`
-      Object {
+      {
         "depCode": "94",
         "id": 5,
         "name": "Commissariat de police de Vincennes",
@@ -30,7 +30,7 @@ describe("untransform", () => {
     }
 
     expect(untransform(modelJS)).toMatchInlineSnapshot(`
-      Object {
+      {
         "dep_code": "41",
         "id": 3,
         "name": "Brigade de gendarmerie de Saint-Aignan sur Cher",

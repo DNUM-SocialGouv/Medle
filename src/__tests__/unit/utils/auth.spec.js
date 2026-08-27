@@ -21,6 +21,6 @@ describe("checkValidUserWithPrivilege", () => {
     expect(checkValidUserWithPrivilege(ACT_MANAGEMENT, req)).toHaveProperty("email", "aze@aze.fr")
   })
   it("should not let pass the user because he has not the privilege EMPLOYMENT_MANAGEMENT", async () => {
-    expect(() => checkValidUserWithPrivilege(EMPLOYMENT_MANAGEMENT, req)).toThrowError("Not allowed role (aze@aze.fr)")
+    expect(() => checkValidUserWithPrivilege(EMPLOYMENT_MANAGEMENT, req)).toThrow("Not allowed role (aze@aze.fr)")
   })
 })

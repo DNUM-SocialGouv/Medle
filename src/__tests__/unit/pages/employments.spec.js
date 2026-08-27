@@ -1,7 +1,8 @@
 import "@testing-library/jest-dom/extend-expect"
 
-import { build, fake, oneOf, sequence } from "@jackfranklin/test-data-bot"
+import { build, oneOf, perBuild, sequence } from "@jackfranklin/test-data-bot"
 import { render, screen, waitFor } from "@testing-library/react"
+import faker from "faker"
 import * as nextRouter from "next/router"
 import React from "react"
 
@@ -23,13 +24,13 @@ afterEach(() => {
 
 const userBuilder = build("User", {
   fields: {
-    firstName: fake((f) => f.name.firstName()),
+    firstName: perBuild(() => faker.name.firstName()),
     hospital: {
       id: sequence(),
     },
     id: sequence(),
-    lastName: fake((f) => f.name.lastName()),
-    role: oneOf([EMPLOYMENT_CONSULTATION, SUPER_ADMIN, REGIONAL_SUPERVISOR, PUBLIC_SUPERVISOR]),
+    lastName: perBuild(() => faker.name.lastName()),
+    role: oneOf(EMPLOYMENT_CONSULTATION, SUPER_ADMIN, REGIONAL_SUPERVISOR, PUBLIC_SUPERVISOR),
     scope: [],
   },
 })
@@ -59,7 +60,7 @@ const regionalSupervisorBuilder = (options) => {
 const hospitalBuilder = build({
   fields: {
     id: sequence(),
-    name: fake((f) => f.address.city()),
+    name: perBuild(() => faker.address.city()),
   },
 })
 
