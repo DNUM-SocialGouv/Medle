@@ -1,5 +1,9 @@
-## [1.40.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.39.0...release-1.40.0) (TODO)
+## [1.41.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.40.0...release-1.41.0) (TODO)
 ### Feature
+
+## [1.40.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.39.0...release-1.40.0) (2026-09-25)
+### Feature
+* MED-110: Prévoir un système de purge des utilisateurs
 
 ## [1.39.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.38.0...release-1.39.0) (2026-08-26)
 ### Feature
