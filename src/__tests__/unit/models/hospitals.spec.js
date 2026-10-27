@@ -17,7 +17,7 @@ describe("transform tests", () => {
     }
 
     expect(transform(dbHospital)).toMatchInlineSnapshot(`
-      Object {
+      {
         "addr1": "30 bis rue du Général de Gaulle",
         "addr2": "",
         "canDoPostMortem": false,
@@ -33,7 +33,7 @@ describe("transform tests", () => {
 
   test("transform should return nothing if null is passed", () => {
     expect(transform(null)).toMatchInlineSnapshot(`null`)
-    expect(transform({})).toMatchInlineSnapshot(`Object {}`)
+    expect(transform({})).toMatchInlineSnapshot(`{}`)
   })
 })
 
@@ -52,11 +52,11 @@ describe("untransform tests", () => {
     }
 
     expect(untransform(jsData)).toMatchInlineSnapshot(`
-      Object {
+      {
         "addr1": "30 bis rue du Général de Gaulle",
         "addr2": "",
         "dep_code": "94",
-        "extra_data": Object {
+        "extra_data": {
           "canDoPostMortem": false,
         },
         "finesse_number": "1273768",
@@ -81,11 +81,11 @@ describe("untransform tests", () => {
     }
 
     expect(untransform(jsData)).toMatchInlineSnapshot(`
-      Object {
+      {
         "addr1": "30 bis rue du Général de Gaulle",
         "addr2": "",
         "dep_code": "94",
-        "extra_data": Object {
+        "extra_data": {
           "canDoPostMortem": false,
         },
         "finesse_number": "1273768",
@@ -110,11 +110,11 @@ describe("untransform tests", () => {
     }
 
     expect(untransform(jsData)).toMatchInlineSnapshot(`
-      Object {
+      {
         "addr1": "30 bis rue du Général de Gaulle",
         "addr2": "",
         "dep_code": "94",
-        "extra_data": Object {
+        "extra_data": {
           "canDoPostMortem": false,
         },
         "finesse_number": "1273768",
@@ -127,7 +127,7 @@ describe("untransform tests", () => {
 
   test("untransform should return nothing if null is passed", () => {
     expect(untransform(null)).toMatchInlineSnapshot(`null`)
-    expect(untransform({})).toMatchInlineSnapshot(`Object {}`)
+    expect(untransform({})).toMatchInlineSnapshot(`{}`)
   })
 
   test("untransform", () => {
@@ -144,11 +144,11 @@ describe("untransform tests", () => {
     }
 
     expect(untransform(jsData)).toMatchInlineSnapshot(`
-      Object {
+      {
         "addr1": "30 Voie Romaine",
         "addr2": "",
         "dep_code": "06",
-        "extra_data": Object {
+        "extra_data": {
           "canDoPostMortem": true,
         },
         "finesse_number": "060785003",
@@ -196,8 +196,8 @@ test("transformAll", () => {
   ]
 
   expect(transformAll(entities)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "addr1": "30 Voie Romaine",
         "addr2": "",
         "canDoPostMortem": true,
@@ -208,12 +208,12 @@ test("transformAll", () => {
         "postalCode": "06000",
         "town": "Nice",
       },
-      Object {
+      {
         "addr1": "28 rue de la Fraternité",
         "addr2": "",
         "canDoPostMortem": false,
         "depCode": "94",
-        "etp": Object {
+        "etp": {
           "doctors": 1.3,
           "ides": 2,
         },
@@ -243,20 +243,20 @@ describe("validate tests", () => {
       town: "Nice",
     }
     await expect(validate(model)).resolves.toMatchInlineSnapshot(`
-            Object {
-              "addr1": "30 Voie Romaine",
-              "addr2": "",
-              "dep_code": "06",
-              "extra_data": Object {
-                "canDoPostMortem": true,
-              },
-              "finesse_number": "060785003",
-              "id": 32,
-              "name": "Nice",
-              "postal_code": "06000",
-              "town": "Nice",
-            }
-          `)
+      {
+        "addr1": "30 Voie Romaine",
+        "addr2": "",
+        "dep_code": "06",
+        "extra_data": {
+          "canDoPostMortem": true,
+        },
+        "finesse_number": "060785003",
+        "id": 32,
+        "name": "Nice",
+        "postal_code": "06000",
+        "town": "Nice",
+      }
+    `)
   })
 
   test("validate ko", async () => {
