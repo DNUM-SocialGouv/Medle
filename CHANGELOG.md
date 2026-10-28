@@ -1,6 +1,11 @@
-## [1.41.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.40.0...release-1.41.0) (TODO)
+## [1.42.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.41.0...release-1.42.0) (TODO)
 ### Feature
-* MED-107: Passage à NodeJS 24 LTS
+* MED-124: Corrections des nouvelles règles Sonar 
+
+## [1.41.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.40.0...release-1.41.0) (2026-10-27)
+### Feature
+* MED-121: Passage à NodeJS 24 LTS
+* MED-122: Montée de version des deps
 
 ## [1.40.0](https://github.com/DNUM-SocialGouv/Medle/compare/release-1.39.0...release-1.40.0) (2026-09-25)
 ### Feature
