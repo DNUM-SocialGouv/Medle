@@ -38,7 +38,7 @@ const ForgotPasswordPage = () => {
         })
       }
     }
-    sendEmail()
+    void sendEmail()
   }, [status, email])
 
   async function handleSubmit(event) {

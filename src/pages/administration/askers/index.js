@@ -41,10 +41,10 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
       >
         <Title1 className="">{"Administration des demandeurs"}</Title1>
         <Link href="/administration/askers/[id]" as={`/administration/askers/new`}>
-            <SearchButton className="btn-outline-primary">
-              <AddIcon />
-              &nbsp; Ajouter
-            </SearchButton>
+          <SearchButton className="btn-outline-primary">
+            <AddIcon />
+            &nbsp; Ajouter
+          </SearchButton>
         </Link>
       </Container>
 
@@ -92,18 +92,18 @@ const AdminAskerPage = ({ paginatedData: initialPaginatedData, currentUser }) =>
               </thead>
               <tbody>
                 {paginatedData.elements.map((asker) => (
-                    <tr key={asker.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/askers/${asker.id}`)}>
-                      <td>
-                        <b>{`${asker.name}`}</b>
-                      </td>
-                      <td>{asker.depCode}</td>
-                      <td>
-                        <Link href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}
-                           className="text-decoration-none" aria-label={"Voir le demandeur " + asker.name}>
-                            Voir
-                        </Link>
-                      </td>
-                    </tr>
+                  <tr key={asker.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/askers/${asker.id}`)}>
+                    <td>
+                      <b>{`${asker.name}`}</b>
+                    </td>
+                    <td>{asker.depCode}</td>
+                    <td>
+                      <Link href="/administration/askers/[id]" as={`/administration/askers/${asker.id}`}
+                        className="text-decoration-none" aria-label={"Voir le demandeur " + asker.name}>
+                        Voir
+                      </Link>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </Table>
@@ -123,7 +123,7 @@ AdminAskerPage.getInitialProps = async (ctx) => {
   } catch (error) {
     logError("APP error", error)
 
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
   }
   return {}
 }

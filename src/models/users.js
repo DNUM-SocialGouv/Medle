@@ -9,21 +9,21 @@ export const transform = (knexData) => {
   return !knexData
     ? null
     : {
-        id: knexData.id,
-        firstName: knexData.first_name,
-        lastName: knexData.last_name,
-        email: knexData.email,
-        role: knexData.role,
-        scope: knexData.scope,
-        hospital: !knexData.hospital_id
-          ? null
-          : {
-              id: knexData.hospital_id,
-              name: knexData.hospital_name || "",
-              ...knexData.hospital_extra_data,
-            },
-        resetPassword: knexData.reset_password
-      }
+      id: knexData.id,
+      firstName: knexData.first_name,
+      lastName: knexData.last_name,
+      email: knexData.email,
+      role: knexData.role,
+      scope: knexData.scope,
+      hospital: !knexData.hospital_id
+        ? null
+        : {
+          id: knexData.hospital_id,
+          name: knexData.hospital_name || "",
+          ...knexData.hospital_extra_data,
+        },
+      resetPassword: knexData.reset_password
+    }
 }
 
 export const transformAll = (list) => list.map((model) => transform(model))
@@ -35,7 +35,7 @@ export const untransform = (model) => {
     last_name: model.lastName,
     email: model.email,
     role: model.role,
-    scope: !model.scope?.length ? null : JSON.stringify(model.scope.map((curr) => parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
+    scope: !model.scope?.length ? null : JSON.stringify(model.scope.map((curr) => Number.parseInt(curr.id, 10))), // Array needs to be explicitly stringified in PG
     hospital_id: (model.hospital && model.hospital.id) || null,
     reset_password: model.resetPassword
   }
@@ -66,7 +66,7 @@ const schema = yup.object().shape({
       name: yup.string(),
     })
     .nullable(),
-    resetPassword: yup.bool(),
+  resetPassword: yup.bool(),
 })
 
 const configValidate = {

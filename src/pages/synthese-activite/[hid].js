@@ -47,13 +47,6 @@ const SummaryPage = ({ hospitalSummary = [], lastUpdate, currentUser, medicalSum
     await fetchExport(selectedYear, hid, headers)
   }
 
-  async function onUpdateData() {
-    setLoading(true)
-    runSummary(headers).then(() => {
-      setLoading(false);
-    })
-  }
-
   const cellsStyle = { minWidth: "90px", textAlign: "center" }
 
   return (
@@ -67,7 +60,6 @@ const SummaryPage = ({ hospitalSummary = [], lastUpdate, currentUser, medicalSum
       >
         <Title1>{`Synthèse de l'établissement ${hospital.name}`}</Title1>
         <span>Dernière date de mise à jour : {lastUpdate}</span>
-        {/* {(!!process.env.NEXT_PUBLIC_SUMMARY_RUN && currentUser.role === SUPER_ADMIN) && <button onClick={onUpdateData} disabled={loading}>{loading ? 'Chargement' : 'Mettre à jour'}</button>} */}
         <select defaultValue={selectedYear} value={selectedYear} onChange={handleChange}>
           {years.map((year, index) => (
             <option key={index} value={year}>{year}</option>
@@ -85,60 +77,60 @@ const SummaryPage = ({ hospitalSummary = [], lastUpdate, currentUser, medicalSum
 
         {!!hospitalSummary.length && (
           <>
-            {Object.keys(medicalSummary).length === 0 ? 
-            <span>La synthèse ne peut pas s&apos;afficher car aucun ETP n&apos;a été renseigné dans cette structure pour l&apos;année choisie .</span> :
-            <>
-            <Table responsive className="table-hover">
-              <thead>
-                <tr className="table-light">
-                  <th scope="col" style={cellsStyle} />
-                  {monthsOfYear.map((month, index) => (
-                    <th key={index} style={cellsStyle} scope="col">
-                      {month}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <td style={cellsStyle}>
-                  Adéquation de la charge et de la capacité de travail (en jours)
-                </td>
-                {monthsOfYear.map((month, index) => {
-                  const charge = differences[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)];
-                  return <td key={index} style={cellsStyle} className={typeof charge !== "string" ? (charge > 0 ? "text-success" : "text-danger") : ""}>
-                    {differences[selectedYear] ? charge : ""}
-                  </td>
-                })}
-              </tbody>
-            </Table>
+            {Object.keys(medicalSummary).length === 0 ?
+              <span>La synthèse ne peut pas s&apos;afficher car aucun ETP n&apos;a été renseigné dans cette structure pour l&apos;année choisie .</span> :
+              <>
+                <Table responsive className="table-hover">
+                  <thead>
+                    <tr className="table-light">
+                      <th scope="col" style={cellsStyle} />
+                      {monthsOfYear.map((month, index) => (
+                        <th key={index} style={cellsStyle} scope="col">
+                          {month}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <td style={cellsStyle}>
+                      Adéquation de la charge et de la capacité de travail (en jours)
+                    </td>
+                    {monthsOfYear.map((month, index) => {
+                      const charge = differences[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)];
+                      return <td key={index} style={cellsStyle} className={typeof charge !== "string" ? (charge > 0 ? "text-success" : "text-danger") : ""}>
+                        {differences[selectedYear] ? charge : ""}
+                      </td>
+                    })}
+                  </tbody>
+                </Table>
 
-            <Table responsive className="table-hover">
-              <thead>
-                <tr className="table-light">
-                  <th scope="col" style={cellsStyle}>
-                    {"Personnel médical (en jours travaillés)"}
-                  </th>
-                  {monthsOfYear.map((month, index) => (
-                    <th key={index} style={cellsStyle} scope="col">
-                      {month}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <td style={cellsStyle}>
-                  Capacité à fournir
-                </td>
-                {monthsOfYear.map((month, index) => {
-                  const etp = medicalSummary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)] || 0;
-                  return <td key={index} style={cellsStyle}>
-                    {medicalSummary[selectedYear] ?
-                      Math.round(etp) : ""}
-                  </td>
-                })}
-              </tbody>
-            </Table>
-            </>}
+                <Table responsive className="table-hover">
+                  <thead>
+                    <tr className="table-light">
+                      <th scope="col" style={cellsStyle}>
+                        {"Personnel médical (en jours travaillés)"}
+                      </th>
+                      {monthsOfYear.map((month, index) => (
+                        <th key={index} style={cellsStyle} scope="col">
+                          {month}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <td style={cellsStyle}>
+                      Capacité à fournir
+                    </td>
+                    {monthsOfYear.map((month, index) => {
+                      const etp = medicalSummary[selectedYear][month.charAt(0).toLowerCase() + month.slice(1)] || 0;
+                      return <td key={index} style={cellsStyle}>
+                        {medicalSummary[selectedYear] ?
+                          Math.round(etp) : ""}
+                      </td>
+                    })}
+                  </tbody>
+                </Table>
+              </>}
 
             <Table responsive className="table-hover" style={{ maxHeight: '600px' }}>
               <thead>
@@ -184,13 +176,13 @@ const SummaryPage = ({ hospitalSummary = [], lastUpdate, currentUser, medicalSum
         )}
 
         <div className="mt-5 d-flex justify-content-center">
-        {isOpenFeature("export") && (
-              <>
-                  <Button className="btn-outline-primary mr-3" onClick={onExport}>
-                    <ListAltIcon /> Exporter les données
-                  </Button>
-              </>
-            )}
+          {isOpenFeature("export") && (
+            <>
+              <Button className="btn-outline-primary mr-3" onClick={onExport}>
+                <ListAltIcon /> Exporter les données
+              </Button>
+            </>
+          )}
           <Button onClick={() => router.push(`/synthese-activite/graph/${hid}`)} className="btn-outline-primary">
             <ListAltIcon /> Graphique de synthèse
           </Button>
@@ -203,9 +195,9 @@ const SummaryPage = ({ hospitalSummary = [], lastUpdate, currentUser, medicalSum
 SummaryPage.getInitialProps = async (ctx) => {
   const headers = buildAuthHeaders(ctx)
   const { hid: hospitalId } = ctx.query
-  
+
   try {
-    const {elements: hospitalSummary, hospital, lastUpdate} = await findSummaryByHospital({ hospitalId, headers })
+    const { elements: hospitalSummary, hospital, lastUpdate } = await findSummaryByHospital({ hospitalId, headers })
     const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
 
     function calculateSummaryValue(hospitalSummary, year, month) {
@@ -213,7 +205,7 @@ SummaryPage.getInitialProps = async (ctx) => {
 
       for (const obj of hospitalSummary) {
         if (obj.summary && obj.summary[year] && obj.summary[year][month] !== undefined) {
-          sum += parseFloat(obj.summary[year][month]) || 0;
+          sum += Number.parseFloat(obj.summary[year][month]) || 0;
         }
       }
 
@@ -226,7 +218,7 @@ SummaryPage.getInitialProps = async (ctx) => {
 
       for (const year in medicalSummary) {
         const differencesByMonth = monthsOfYear.map((month) => month.charAt(0).toLowerCase() + month.slice(1)).map((month) => {
-          const medicalSummaryByMonth = parseFloat(medicalSummary[year][month]) || 0;
+          const medicalSummaryByMonth = Number.parseFloat(medicalSummary[year][month]) || 0;
           const hospitalSummaryBymonth = calculateSummaryValue(hospitalSummary, year, month);
 
           if (!totalSummaryAct[year]) {
@@ -251,7 +243,7 @@ SummaryPage.getInitialProps = async (ctx) => {
     return { hospitalSummary, medicalSummary, differences, totalSummaryAct, hospital, lastUpdate, headers }
   } catch (error) {
     logError(error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
 
     const message = error.status && error.status === 404 ? "La synthèse n'a pu être trouvé." : "Erreur serveur."
 

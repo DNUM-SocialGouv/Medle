@@ -82,7 +82,7 @@ SettingsPage.getInitialProps = async (ctx) => {
   const currentUser = getCurrentUser(ctx)
 
   if (currentUser?.role !== SUPER_ADMIN) {
-    isomorphicRedirect(ctx, "/permissionError")
+    await isomorphicRedirect(ctx, "/permissionError")
     return {}
   }
 
@@ -91,7 +91,7 @@ SettingsPage.getInitialProps = async (ctx) => {
     return { appSettings }
   } catch (error) {
     logError("APP error", error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
   }
 
   return {}

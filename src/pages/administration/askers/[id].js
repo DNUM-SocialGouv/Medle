@@ -63,13 +63,13 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
       try {
         const { deleted } = await deleteAsker({ id })
         logDebug(`Nb deleteAsker rows: ${deleted}`)
-        router.push("/administration/askers")
-      } catch (error) {
+        await router.push("/administration/askers")
+      } catch {
         setError("Erreur serveur.")
       }
     }
 
-    del(id)
+    void del(id)
   }
 
   const onSubmit = async (asker) => {
@@ -103,7 +103,7 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
   const { ref: depCodeRef, ...depCodeReg } = register("depCode", {
     required: false,
     pattern: {
-      value: /^2A|2B|[0-9]{2,3}$/i,
+      value: /^(?:2A|2B|\d{2,3})$/i,
     },
   })
 
@@ -116,8 +116,8 @@ const AskerDetail = ({ asker = {}, currentUser, error: initialError }) => {
         <div className="d-flex justify-content-between">
           <Link href="/administration/askers"
             style={{ color: "#376FE6" }}>
-              <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour à la liste
+            <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+            Retour à la liste
           </Link>
           <Title1>{asker?.id ? "Détails du demandeur " + asker?.name : "Ajouter un demandeur"}</Title1>
           <span>&nbsp;</span>
@@ -243,14 +243,14 @@ AskerDetail.getInitialProps = async (ctx) => {
 
   const { id } = ctx.query
 
-  if (!id || isNaN(id)) return { asker: {}, key: Number(new Date()) }
+  if (!id || Number.isNaN(id)) return { asker: {}, key: Number(new Date()) }
 
   try {
     const asker = await findAsker({ id, headers })
     return { asker }
   } catch (error) {
     logError(error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
 
     return { error: "Erreur serveur" }
   }

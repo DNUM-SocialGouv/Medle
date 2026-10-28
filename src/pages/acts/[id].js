@@ -38,14 +38,14 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
         const { deleted } = await deleteAct({ id })
         logDebug(`Nb deleted rows: ${deleted}`)
 
-        router.push("/acts")
+        await router.push("/acts")
       } catch (error) {
         logError(error)
         setIsError(error)
       }
     }
 
-    del(id)
+    void del(id)
   }
 
   const editAct = (id) => {
@@ -60,12 +60,11 @@ const ActDetail = ({ initialAct: act, id, error, currentUser }) => {
       <Container style={{ maxWidth: 780 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
           <Link href="/acts">
-              <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour à la liste
+            <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+            Retour à la liste
           </Link>
-          <Title1 aria-label={`Acte numéro ${(act && act.internalNumber) || ""}`}>{`Acte n° ${
-            (act && act.internalNumber) || ""
-          }`}</Title1>
+          <Title1 aria-label={`Acte numéro ${(act && act.internalNumber) || ""}`}>{`Acte n° ${(act && act.internalNumber) || ""
+            }`}</Title1>
           <span>&nbsp;</span>
         </div>
 
@@ -150,7 +149,7 @@ ActDetail.getInitialProps = async (ctx) => {
     return { initialAct: act, id }
   } catch (error) {
     logError(error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
 
     const message = error.status && error.status === 404 ? "L'acte n'a pu être trouvé." : "Erreur serveur."
 

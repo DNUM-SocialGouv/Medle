@@ -1,101 +1,89 @@
 
 exports.initSummaryActivity = async (knex) => {
-    console.time('duration')
+  console.time('duration')
 
-    function getCurrentDateString() {
-        const today = new Date();
-        const day = String(today.getDate()).padStart(2, '0');
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const year = today.getFullYear();
+  function getCurrentDateString() {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
 
-        return `${day}/${month}/${year}`;
-    }
+    return `${day}/${month}/${year}`;
+  }
 
-    try {
-        await new Promise(async (resolve, reject) => {
-            try {
-                await knex('act_summary').delete()
-                const hospitalsWithActs = await knex('hospitals')
-                    .select(
-                        'hospitals.id as hospital_id',
-                        'subquery.act_category',
-                        knex.raw(
-                            "jsonb_agg(jsonb_build_object('id_act', subquery.id_act, 'act_category', subquery.act_category, 'examination_date', subquery.examination_date, 'act_duration', subquery.act_duration )) as acts"
-                        )
-                    )
-                    .join(
-                        knex.raw(
-                            `(SELECT act_pre_summary.hospital_id, act_pre_summary.id as id_act, act_pre_summary.examined || ' - ' || act_pre_summary.act_type as act_category, act_pre_summary.examination_date, act_pre_summary.act_duration
+  await knex('act_summary').delete()
+  const hospitalsWithActs = await knex('hospitals')
+    .select(
+      'hospitals.id as hospital_id',
+      'subquery.act_category',
+      knex.raw(
+        "jsonb_agg(jsonb_build_object('id_act', subquery.id_act, 'act_category', subquery.act_category, 'examination_date', subquery.examination_date, 'act_duration', subquery.act_duration )) as acts"
+      )
+    )
+    .join(
+      knex.raw(
+        `(SELECT act_pre_summary.hospital_id, act_pre_summary.id as id_act, act_pre_summary.examined || ' - ' || act_pre_summary.act_type as act_category, act_pre_summary.examination_date, act_pre_summary.act_duration
                             FROM act_pre_summary
                             GROUP BY act_pre_summary.hospital_id, act_pre_summary.id, act_pre_summary.examined, act_pre_summary.act_type
         ) as subquery`
-                        ),
-                        'hospitals.id',
-                        'subquery.hospital_id'
-                    )
-                    .groupBy('hospitals.id', 'subquery.act_category');
+      ),
+      'hospitals.id',
+      'subquery.hospital_id'
+    )
+    .groupBy('hospitals.id', 'subquery.act_category');
 
-                const insertData = [];
-                for (const hospital of hospitalsWithActs) {
-                    const hospitalActs = hospital.acts;
-                    const summary = {};
+  const insertData = [];
+  for (const hospital of hospitalsWithActs) {
+    const hospitalActs = hospital.acts;
+    const summary = {};
 
-                    for (const act of hospitalActs) {
-                        const year = new Date(act.examination_date).getFullYear();
-                        const month = new Date(act.examination_date).toLocaleString('fr-FR', { month: 'long' });
+    for (const act of hospitalActs) {
+      const year = new Date(act.examination_date).getFullYear();
+      const month = new Date(act.examination_date).toLocaleString('fr-FR', { month: 'long' });
 
-                        if (!summary[year]) {
-                            summary[year] = {};
-                        }
+      if (!summary[year]) {
+        summary[year] = {};
+      }
 
-                        if (!summary[year][month]) {
-                            summary[year][month] = 0;
-                        }
+      if (!summary[year][month]) {
+        summary[year][month] = 0;
+      }
 
-                        summary[year][month] += act.act_duration / 480;
-                    }
-                    function roundNumericValues(obj) {
-                        const newObj = {};
-                        for (let key in obj) {
-                            if (typeof obj[key] === 'object') {
-                                // Recursively round numeric values in nested objects
-                                newObj[key] = roundNumericValues(obj[key]);
-                            } else if (typeof obj[key] === 'number') {
-                                // Round numeric values
-                                newObj[key] = Math.floor(obj[key]);
-                            } else {
-                                newObj[key] = obj[key];
-                            }
-                        }
-                        return newObj;
-                    }
-
-
-                    insertData.push({
-                        hospital_id: hospital.hospital_id,
-                        category: hospital.act_category,
-                        summary: JSON.stringify(roundNumericValues(summary))
-                    });
-                }
-                await knex.batchInsert('act_summary', insertData);
-
-                console.timeEnd('duration')
-
-                console.log('Act summary generation completed successfully.');
-
-                const currentDate = getCurrentDateString()
-
-                await knex("act_summary_last_update").where({ name: "last_update" })
-                    .update({
-                        value: currentDate
-                    });
-                resolve()
-            } catch (error) {
-                console.error('Error generating act summary:', error);
-                reject()
-            }
-        })
-    } catch (error) {
-        console.error('Error generating act summary:', error);
+      summary[year][month] += act.act_duration / 480;
     }
+    function roundNumericValues(obj) {
+      const newObj = {};
+      for (let key in obj) {
+        if (typeof obj[key] === 'object') {
+          // Recursively round numeric values in nested objects
+          newObj[key] = roundNumericValues(obj[key]);
+        } else if (typeof obj[key] === 'number') {
+          // Round numeric values
+          newObj[key] = Math.floor(obj[key]);
+        } else {
+          newObj[key] = obj[key];
+        }
+      }
+      return newObj;
+    }
+
+
+    insertData.push({
+      hospital_id: hospital.hospital_id,
+      category: hospital.act_category,
+      summary: JSON.stringify(roundNumericValues(summary))
+    });
+  }
+  await knex.batchInsert('act_summary', insertData);
+
+  console.timeEnd('duration')
+
+  console.log('Act summary generation completed successfully.');
+
+  const currentDate = getCurrentDateString()
+
+  await knex("act_summary_last_update").where({ name: "last_update" })
+    .update({
+      value: currentDate
+    });
 };

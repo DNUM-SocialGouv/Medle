@@ -105,14 +105,14 @@ export const search = async (params, currentUser) => {
 
   const [actsCount] = await knex("acts").where(makeWhereClause(params)).count()
 
-  const totalCount = parseInt(actsCount.count, 10)
+  const totalCount = Number.parseInt(actsCount.count, 10)
   const maxPage = Math.ceil(totalCount / LIMIT)
 
   let { requestedPage } = params
 
   // set default to 1 if not correct or too little, set default to maxPage if too big
   requestedPage =
-    !requestedPage || isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage > maxPage ? maxPage : requestedPage
+    !requestedPage || Number.isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage > maxPage ? maxPage : requestedPage
 
   const offset = (requestedPage - 1) * LIMIT
 

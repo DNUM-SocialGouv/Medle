@@ -5,7 +5,7 @@ import { buildScope } from "../../utils/scope"
 import { makeWhereClause } from "./common"
 
 export const del = async ({ id }, currentUser) => {
-  if (!id || isNaN(id)) {
+  if (!id || Number.isNaN(id)) {
     throw new APIError({
       message: "Bad request",
       status: STATUS_400_BAD_REQUEST,

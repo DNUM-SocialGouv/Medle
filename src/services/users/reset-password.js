@@ -14,7 +14,7 @@ import { validatePasswordFormat, getPasswordRequirements } from "../../utils/pas
  * @returns {Object} Modified user.
  */
 export const resetFromId = async ({ id, password }) => {
-  if (!id || isNaN(id) || !password) {
+  if (!id || Number.isNaN(id) || !password) {
     throw new APIError({
       message: "Bad request",
       status: STATUS_400_BAD_REQUEST,

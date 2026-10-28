@@ -209,14 +209,14 @@ const ActDeclaration = ({ act, currentUser, locations }) => {
 
   const getProfiledRender = ({ profile }) => {
     const profileLocations = locations?.filter((location) => {
-      return location.profile === profile 
-    }).map(({location}) => location)
-    
+      return location.profile === profile
+    }).map(({ location }) => location)
+
     return profiles[profile].edit({ dispatch, state, errors, hospital, profileLocations })
   }
 
   const validAndSubmitAct = async () => {
-    let newState = {...state};
+    let newState = { ...state };
     setSaving(true)
     setErrors({})
 
@@ -238,15 +238,15 @@ const ActDeclaration = ({ act, currentUser, locations }) => {
       id: newState.id,
       userId: newState.userId
     }
-    
+
     if (state.honoredMeeting === "Non") {
       newState = resetState(newState)
       if (forUpdate.id) {
-        newState = {...newState, ...forUpdate}
-        }  
-      newState = {...newState, honoredMeeting: "Non"};
+        newState = { ...newState, ...forUpdate }
+      }
+      newState = { ...newState, honoredMeeting: "Non" };
     }
-    
+
     try {
       if (!state.id) {
         const { id } = await createAct({ act: newState })
@@ -505,13 +505,13 @@ ActDeclaration.getInitialProps = async (ctx) => {
     const locations = await fetchOtherActLocations({ headers })
 
     if (!query || !query.id) return { act: {}, locations }
-    
+
     const act = await findAct({ id: query.id, headers })
 
     return { act: transformDBActForState(act) || {}, locations }
   } catch (error) {
     logError(error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
   }
 }
 

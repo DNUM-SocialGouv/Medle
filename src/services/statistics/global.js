@@ -85,8 +85,8 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
     fetchActsWithSamePV,
     fetchAverageWithSamePV,
   ]).then(([[countHospitals], [globalCount], [globalProofWitoutComplain], [profilesDistribution], [actsWithSamePV], [averageWithSamePV]]) => {
-    countHospitals = parseInt(countHospitals?.count, 10) || 0
-    globalCount = parseInt(globalCount?.count, 10) || 0
+    countHospitals = Number.parseInt(countHospitals?.count, 10) || 0
+    globalCount = Number.parseInt(globalCount?.count, 10) || 0
 
     const scopeFilterLength = scopeFilter.length || countHospitals
     const periodInDays = intervalDays({ endDate, startDate })
@@ -98,7 +98,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
       averageWithSamePV: averageWithSamePV.avg || 0,
 
       globalCount,
-      globalProofWitoutComplain: parseInt(globalProofWitoutComplain?.count, 10) || 0,
+      globalProofWitoutComplain: Number.parseInt(globalProofWitoutComplain?.count, 10) || 0,
       inputs: {
         endDate: endDate.format(ISO_DATE),
         scopeFilter,

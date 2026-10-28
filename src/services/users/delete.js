@@ -18,7 +18,7 @@ const makeWhereClause = (currentUser) => (builder) => {
 }
 
 export const del = async ({ id, currentUser }) => {
-  if (!id || isNaN(id)) {
+  if (!id || Number.isNaN(id)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",

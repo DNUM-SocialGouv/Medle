@@ -4,7 +4,6 @@ import { build, oneOf, perBuild, sequence } from "@jackfranklin/test-data-bot"
 import { render, screen, waitFor } from "@testing-library/react"
 import faker from "faker"
 import * as nextRouter from "next/router"
-import React from "react"
 
 import * as clientEmployments from "../../../clients/employments"
 import { EmploymentsPage } from "../../../pages/employments/[[...hid]]"
@@ -76,7 +75,7 @@ it("should render employments page with list for ministere people", async () => 
 
   // query without parameters
   nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query: {} })
-  await waitFor(() => render(<EmploymentsPage currentUser={user} />))
+  render(<EmploymentsPage currentUser={user} />)
 
   // We should go on list.
   expect(screen.queryByRole("heading", { name: /tous les établissements/i })).toBeInTheDocument()
@@ -99,7 +98,7 @@ it("should render employments page with list for regional people if no query", a
 
   // query without parameters
   nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query: {} })
-  await waitFor(() => render(<EmploymentsPage currentUser={user} />))
+  render(<EmploymentsPage currentUser={user} />)
 
   // We should go on list.
   expect(screen.queryByRole("heading", { name: /tous les établissements/i })).toBeInTheDocument()
@@ -121,7 +120,7 @@ it("should render error in employments page for regional people if query for an 
 
   // Query explicitly set to the hospitalWithNoAcess id.
   nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query: { hid: [hospitalWithNoAcess.id] } })
-  await waitFor(() => render(<EmploymentsPage currentUser={user} />))
+  render(<EmploymentsPage currentUser={user} />)
 
   // We should go on error.
   expect(screen.queryByRole("heading", { name: /tous les établissements/i })).not.toBeInTheDocument()
@@ -144,7 +143,7 @@ it("should render the employments detail for regional people if query is correct
 
   // Query explicitly set to the hospital1 id.
   nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query: { hid: [hospital1.id] } })
-  await waitFor(() => render(<EmploymentsPage currentUser={user} />))
+  render(<EmploymentsPage currentUser={user} />)
 
   // We should go on detail page.
   expect(screen.queryByRole("heading", { name: /tous les établissements/i })).not.toBeInTheDocument()

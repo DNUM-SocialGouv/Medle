@@ -8,7 +8,7 @@ import { makeWhereClause } from "./common"
 export const find = async ({ id }, currentUser) => {
   const reachableScope = buildScope(currentUser)
 
-  if (!id || isNaN(id)) {
+  if (!id || Number.isNaN(id)) {
     throw new APIError({
       message: "Bad request",
       status: STATUS_400_BAD_REQUEST,

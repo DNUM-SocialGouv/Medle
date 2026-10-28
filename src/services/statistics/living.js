@@ -116,8 +116,8 @@ export const buildLivingStatistics = async (filters, currentUser) => {
     fetchHours,
     fetchExaminations,
   ]).then(([[countHospitals], [globalCount], [globalProofWitoutComplain], [actsWithPv], [actTypes], [hours], [examinations]]) => {
-    countHospitals = parseInt(countHospitals?.count, 10) || 0
-    globalCount = parseInt(globalCount?.count, 10) || 0
+    countHospitals = Number.parseInt(countHospitals?.count, 10) || 0
+    globalCount = Number.parseInt(globalCount?.count, 10) || 0
 
     const scopeFilterLength = scopeFilter.length || countHospitals
     const periodInDays = intervalDays({ endDate, startDate })
@@ -133,7 +133,7 @@ export const buildLivingStatistics = async (filters, currentUser) => {
 
       examinations,
       globalCount,
-      globalProofWitoutComplain: parseInt(globalProofWitoutComplain?.count, 10) || 0,
+      globalProofWitoutComplain: Number.parseInt(globalProofWitoutComplain?.count, 10) || 0,
       hours,
       inputs: {
         endDate: endDate.format(ISO_DATE),

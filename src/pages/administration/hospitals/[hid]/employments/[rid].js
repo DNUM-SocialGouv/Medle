@@ -85,13 +85,13 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
         const { deleted } = await deleteReference({ hospitalId: hid, referencesId: data?.id })
         logDebug(`Nb deleted rows: ${deleted}`)
 
-        router.push("/administration/hospitals/[hid]/employments", `/administration/hospitals/${hid}/employments`)
-      } catch (error) {
+        await router.push("/administration/hospitals/[hid]/employments", `/administration/hospitals/${hid}/employments`)
+      } catch {
         setError(genericError)
       }
     }
 
-    del()
+    void del()
   }
 
   const onSubmit = async (formData) => {
@@ -152,8 +152,8 @@ const EmploymentsReferencesDetailPage = ({ data, currentUser }) => {
         <div className="d-flex justify-content-between">
           <Link href="/administration/hospitals/[hid]/employments" as={`/administration/hospitals/${hid}/employments`}
             style={{ color: "#376FE6" }}>
-              <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour
+            <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+            Retour
           </Link>
         </div>
 
@@ -400,7 +400,7 @@ EmploymentsReferencesDetailPage.getInitialProps = async (ctx) => {
 
   // Initialise key prop with a fresh new value, to make possible to have a new blank page
   // see https://kentcdodds.com/blog/understanding-reacts-key-prop
-  if (!rid || isNaN(rid)) return { key: Number(new Date()) }
+  if (!rid || Number.isNaN(rid)) return { key: Number(new Date()) }
 
   try {
     const data = await findReference({ headers, hospitalId: hid, referencesId: rid })
@@ -408,7 +408,7 @@ EmploymentsReferencesDetailPage.getInitialProps = async (ctx) => {
   } catch (error) {
     logError("APP error", error)
 
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
   }
   return {}
 }

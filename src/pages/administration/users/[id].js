@@ -123,15 +123,15 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   const customRulesAdminHospital =
     currentUser?.role === ADMIN_HOSPITAL
       ? {
-          hospitalDisabled: true,
-          hospitalValue: mapForSelect(
-            currentUser.hospital,
-            (elt) => elt.id,
-            (elt) => elt.name,
-          ),
+        hospitalDisabled: true,
+        hospitalValue: mapForSelect(
+          currentUser.hospital,
+          (elt) => elt.id,
+          (elt) => elt.name,
+        ),
 
-          scopeDisabled: true,
-        }
+        scopeDisabled: true,
+      }
       : {}
 
   const customRuleOwnRecord = currentUser?.id === initialUser.id ? { roleDisabled: true } : {}
@@ -149,7 +149,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       }
     }
 
-    res()
+    void res()
   }
 
   const onDeleteUser = () => {
@@ -159,13 +159,13 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       try {
         const { deleted } = await deleteUser({ id: formId })
         logDebug(`Nb deleted rows: ${deleted}`)
-        router.push("/administration/users")
+        await router.push("/administration/users")
       } catch (error) {
         setError(error.message || "Erreur serveur.")
       }
     }
 
-    del()
+    void del()
   }
 
   const onSubmit = async (user) => {
@@ -208,7 +208,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   }
 
   const onRoleChange = (selectedOption) => {
-    // eslint-disable-next-line no-unused-vars
+
     setErrors(({ role, ...errors }) => ({ errors }))
 
     if (selectedOption?.value) {
@@ -235,7 +235,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   }
 
   const onHospitalChange = (selectedOption) => {
-    // eslint-disable-next-line no-unused-vars
+
     setErrors(({ hospital, ...errors }) => ({ errors }))
 
     // Needs transformation between format of react-select to expected format for API call
@@ -243,9 +243,9 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       "hospital",
       selectedOption?.value
         ? {
-            id: selectedOption.value,
-            name: selectedOption.label,
-          }
+          id: selectedOption.value,
+          name: selectedOption.label,
+        }
         : null,
     )
     // Needs to sync specifically the value to the react-select as well
@@ -253,7 +253,7 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
   }
 
   const onScopeChange = (selectedOption) => {
-    // eslint-disable-next-line no-unused-vars
+
     setErrors(({ scope, ...errors }) => ({ errors }))
 
     // Needs transformation between format of react-select to expected format for API call
@@ -313,9 +313,9 @@ const UserDetail = ({ initialUser = {}, currentUser, error: initialError }) => {
       <Container style={{ maxWidth: 720 }} className="mt-5 mb-4">
         <div className="d-flex justify-content-between">
           <Link href="/administration/users"
-             style={{ color: "#376FE6" }}>
-              <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour à la liste
+            style={{ color: "#376FE6" }}>
+            <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+            Retour à la liste
           </Link>
           <Title1>
             {initialUser?.id
@@ -560,14 +560,14 @@ UserDetail.getInitialProps = async (ctx) => {
 
   // Initialise key prop with a fresh new value, to make possible to have a new blank page
   // see https://kentcdodds.com/blog/understanding-reacts-key-prop
-  if (!id || isNaN(id)) return { initialUser: {}, key: Number(new Date()) }
+  if (!id || Number.isNaN(id)) return { initialUser: {}, key: Number(new Date()) }
 
   try {
     const user = await findUser({ id, headers })
     return { initialUser: user }
   } catch (error) {
     logError(error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
 
     return { error: "Erreur serveur" }
   }

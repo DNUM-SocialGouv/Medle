@@ -3,7 +3,7 @@ import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import PropTypes from "prop-types"
-import React, { useState } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import {
   Alert,
@@ -63,13 +63,13 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
       try {
         const { deleted } = await deleteAttack({ id })
         logDebug(`Nb deleteAttack rows: ${deleted}`)
-        router.push("/administration/attacks")
-      } catch (error) {
+        await router.push("/administration/attacks")
+      } catch {
         setError("Erreur serveur.")
       }
     }
 
-    del(id)
+    void del(id)
   }
 
   const onSubmit = async (attack) => {
@@ -116,8 +116,8 @@ const AttackDetail = ({ attack = {}, currentUser, error: initialError }) => {
         <div className="d-flex justify-content-between">
           <Link href="/administration/attacks"
             style={{ color: "#376FE6" }}>
-              <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour à la liste
+            <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+            Retour à la liste
           </Link>
           <Title1>{attack?.id ? "Détails de l'attentat " + attack?.name : "Ajouter un attentat"}</Title1>
           <span>&nbsp;</span>
@@ -244,14 +244,14 @@ AttackDetail.getInitialProps = async (ctx) => {
 
   const { id } = ctx.query
 
-  if (!id || isNaN(id)) return { attack: {}, key: Number(new Date()) }
+  if (!id || Number.isNaN(id)) return { attack: {}, key: Number(new Date()) }
 
   try {
     const attack = await findAttack({ id, headers })
     return { attack }
   } catch (error) {
     logError(error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
 
     return { error: "Erreur serveur" }
   }

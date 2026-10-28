@@ -48,10 +48,10 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
       >
         <Title1 className="">{"Administration des établissements"}</Title1>
         <Link href="/administration/hospitals/[id]" as={`/administration/hospitals/new`}>
-            <SearchButton className="btn-outline-primary">
-              <AddIcon />
-              &nbsp; Ajouter
-            </SearchButton>
+          <SearchButton className="btn-outline-primary">
+            <AddIcon />
+            &nbsp; Ajouter
+          </SearchButton>
         </Link>
       </Container>
 
@@ -100,23 +100,23 @@ const AdminHospitalPage = ({ hospitals: initialHospitals, currentUser }) => {
               </thead>
               <tbody>
                 {hospitals.map((hospital) => (
-                    <tr 
+                  <tr
                     key={hospital.id}
                     style={{ cursor: "pointer" }}
                     onClick={() => router.push(`/administration/hospitals/${hospital.id}`)}>
-                      <td>
-                        <b>{`${hospital.name}`}</b>
-                      </td>
-                      <td>{hospital.finesseNumber}</td>
-                      <td>{hospital.town}</td>
-                      <td>{hospital.postalCode}</td>
-                      <td>
-                        <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hospital.id}`}
-                           className="text-decoration-none" aria-label={"Voir l'établissement " + hospital.name}>
-                            Voir
-                        </Link>
-                      </td>
-                    </tr>
+                    <td>
+                      <b>{`${hospital.name}`}</b>
+                    </td>
+                    <td>{hospital.finesseNumber}</td>
+                    <td>{hospital.town}</td>
+                    <td>{hospital.postalCode}</td>
+                    <td>
+                      <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hospital.id}`}
+                        className="text-decoration-none" aria-label={"Voir l'établissement " + hospital.name}>
+                        Voir
+                      </Link>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </Table>
@@ -136,7 +136,7 @@ AdminHospitalPage.getInitialProps = async (ctx) => {
   } catch (error) {
     logError("APP error", error)
 
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
   }
   return {}
 }

@@ -5,7 +5,7 @@ import { STATUS_400_BAD_REQUEST, STATUS_403_FORBIDDEN } from "../../utils/http"
 
 export const update = async ({ id }, attack) => {
   // Check if query and body are consistent
-  if (!id || isNaN(id) || !attack || parseInt(id, 10) !== parseInt(attack.id, 10)) {
+  if (!id || Number.isNaN(id) || !attack || Number.parseInt(id, 10) !== Number.parseInt(attack.id, 10)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",

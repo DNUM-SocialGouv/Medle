@@ -41,10 +41,10 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
       >
         <Title1 className="">{"Administration des attentats"}</Title1>
         <Link href="/administration/attacks/[id]" as={`/administration/attacks/new`}>
-            <SearchButton className="btn-outline-primary">
-              <AddIcon />
-              &nbsp; Ajouter
-            </SearchButton>
+          <SearchButton className="btn-outline-primary">
+            <AddIcon />
+            &nbsp; Ajouter
+          </SearchButton>
         </Link>
       </Container>
 
@@ -92,20 +92,20 @@ const AdminAttackPage = ({ paginatedData: initialPaginatedData, currentUser }) =
               </thead>
               <tbody>
                 {paginatedData.elements.map((attack, index) => (
-                    <tr key={index} style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/attacks/${attack.id}`)}>
-                      <td>
-                        <b>{`${attack.name}`}</b>
-                      </td>
-                      <td>
-                        <b>{attack.year}</b>
-                      </td>
-                      <td>
-                        <Link href="/administration/attacks/[id]" as={`/administration/attacks/${attack.id}`}
-                         className="text-decoration-none" aria-label={"Voir l'attentat " + attack.name}>
-                            Voir
-                        </Link>
-                      </td>
-                    </tr>
+                  <tr key={index} style={{ cursor: "pointer" }} onClick={() => router.push(`/administration/attacks/${attack.id}`)}>
+                    <td>
+                      <b>{`${attack.name}`}</b>
+                    </td>
+                    <td>
+                      <b>{attack.year}</b>
+                    </td>
+                    <td>
+                      <Link href="/administration/attacks/[id]" as={`/administration/attacks/${attack.id}`}
+                        className="text-decoration-none" aria-label={"Voir l'attentat " + attack.name}>
+                        Voir
+                      </Link>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </Table>
@@ -125,7 +125,7 @@ AdminAttackPage.getInitialProps = async (ctx) => {
   } catch (error) {
     logError("APP error", error)
 
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
   }
   return {}
 }

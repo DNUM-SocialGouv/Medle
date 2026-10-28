@@ -70,14 +70,14 @@ export const search = async (params, currentUser) => {
   params = await normalizeParams(params, currentUser)
   const [actsCount] = await knex("act_summary").where(makeWhereClause(params)).count()
 
-  const totalCount = parseInt(actsCount.count, 10)
+  const totalCount = Number.parseInt(actsCount.count, 10)
   const maxPage = Math.ceil(totalCount / LIMIT)
 
   let { requestedPage } = params
 
   // set default to 1 if not correct or too little, set default to maxPage if too big
   requestedPage =
-    !requestedPage || isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage > maxPage ? maxPage : requestedPage
+    !requestedPage || Number.isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage > maxPage ? maxPage : requestedPage
 
   const offset = (requestedPage - 1) * LIMIT
 
@@ -150,7 +150,7 @@ export const searchForExport = async (params, currentUser, headers) => {
 
     for (const obj of hospitalSummary) {
       if (obj.summary && obj.summary[year] && obj.summary[year][month] !== undefined) {
-        sum += parseFloat(obj.summary[year][month]) || 0;
+        sum += Number.parseFloat(obj.summary[year][month]) || 0;
       }
     }
 

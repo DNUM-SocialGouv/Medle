@@ -22,7 +22,7 @@ const Logo = ({ currentUser }) => {
   }
 
   useEffect(() => {
-    fetchLogo()
+    void fetchLogo()
   }, [])
 
   return (

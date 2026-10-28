@@ -40,7 +40,7 @@ export const handleAPIResponse = async (response) => {
     const error = new APIError(json)
     logError(error)
     // TODO : problème si SSR et problème 401, car ça devrait rediriger mais il n'y a pas de contexte...
-    redirectIfUnauthorized(error)
+    await redirectIfUnauthorized(error)
     return
   }
   return response.json()

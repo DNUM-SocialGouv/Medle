@@ -5,7 +5,7 @@ import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 export const update = async ({ hid }, hospital) => {
 
-  if (!hid || isNaN(hid) || !hospital || parseInt(hid, 10) !== parseInt(hospital.id, 10)) {
+  if (!hid || Number.isNaN(hid) || !hospital || Number.parseInt(hid, 10) !== Number.parseInt(hospital.id, 10)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",

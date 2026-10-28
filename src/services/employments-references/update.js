@@ -8,12 +8,12 @@ export const update = async ({ hid, rid }, data) => {
   // Check if query and body are consistent
   if (
     !rid ||
-    isNaN(rid) ||
+    Number.isNaN(rid) ||
     !hid ||
-    isNaN(hid) ||
+    Number.isNaN(hid) ||
     !data ||
-    parseInt(rid, 10) !== parseInt(data.id, 10) ||
-    parseInt(hid, 10) !== parseInt(data.hospitalId, 10)
+    Number.parseInt(rid, 10) !== Number.parseInt(data.id, 10) ||
+    Number.parseInt(hid, 10) !== Number.parseInt(data.hospitalId, 10)
   ) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,

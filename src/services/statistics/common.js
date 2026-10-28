@@ -52,7 +52,7 @@ export const normalizeInputs = ({ startDate, endDate, scopeFilter = [], profile 
 export const averageOf = (arr) => {
   if (!arr?.length) return 0
   const sum = arr.reduce((acc, curr) => acc + curr)
-  return parseFloat((sum / arr.length).toFixed(2), 10)
+  return Number.parseFloat((sum / arr.length).toFixed(2), 10)
 }
 
 export const intervalDays = ({ startDate = now(), endDate = now() }) => {

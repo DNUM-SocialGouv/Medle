@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import AsyncSelect from "react-select/async"
 
 import { memoizedFindAsker, memoizedSearchAskers } from "../clients/askers"
@@ -21,7 +21,7 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
       )
     }
     const fetchPreviousValues = async () => {
-      Promise.all(memoizedFindAsker.values()).then((arr) => {
+      await Promise.all(memoizedFindAsker.values()).then((arr) => {
         setPreviousValues(
           mapArrayForSelect(
             arr,
@@ -32,8 +32,8 @@ const AskerSelect = ({ dispatch, disabled, askerId }) => {
       })
     }
 
-    fetchAskerValue(askerId)
-    fetchPreviousValues()
+    void fetchAskerValue(askerId)
+    void fetchPreviousValues()
   }, [askerId])
 
   const onChange = (e) => {

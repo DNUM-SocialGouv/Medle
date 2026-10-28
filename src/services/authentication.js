@@ -85,11 +85,11 @@ const userCanLogin = async (dbUser, loginDelayConfig) => {
          * la dernière tentative ainsi que le nombre de tentatives suite
          * à cette connexion réussie, et on l'autorise à se connecter
          */
-        cleanLoginDelay(dbUser)
+        await cleanLoginDelay(dbUser)
         return true
       } else {
         // L'utilisateur n'a pas assez attendu : on temporise de nouveau...
-        addAttempt(dbUser)
+        await addAttempt(dbUser)
         return false
       }
     } else {
@@ -97,7 +97,7 @@ const userCanLogin = async (dbUser, loginDelayConfig) => {
        * Sinon on nettoie la date de la dernière tentative ainsi que
        * le nombre de tentatives suite à cette connexion réussie
        */
-      cleanLoginDelay(dbUser)
+      await cleanLoginDelay(dbUser)
       return true
     }
   } else {
@@ -114,14 +114,14 @@ const checkLoginDelay = async (dbUser, loginDelayConfig) => {
      * Le nombre de tentatives dépasse celui autorisé :
      * on temporise et on ajoute une tentative de connexion
      */
-    addAttempt(dbUser)
+    await addAttempt(dbUser)
     return true
   } else {
     /**
      * Sinon, on ajoute une tentative de connexion à
      * l'utilisateur en base, mais on ne temporise pas
      */
-    addAttempt(dbUser)
+    await addAttempt(dbUser)
     return false
   }
 }
