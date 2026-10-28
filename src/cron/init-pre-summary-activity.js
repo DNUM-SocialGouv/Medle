@@ -85,11 +85,11 @@ exports.initPreSummaryActivity = async () => {
 
                     if (examined === "Personne décédée") {
                         actTypeMatch.forEach(actType => {
-                            processAct(actType, parameters);
+                            processAct(actType);
                         });
                     } else {
                         const actType = actTypeMatch ? actTypeMatch[0] || '' : '';
-                        processAct(actType, parameters);
+                        processAct(actType);
                     }
 
 
