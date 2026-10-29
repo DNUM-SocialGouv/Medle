@@ -3,6 +3,7 @@ import * as yup from "yup"
 import { LIMIT_EXPORT } from "../../config"
 import knex from "../../knex/knex"
 import { normalize } from "../normalize"
+import { computeRequestedPage, makeHospitalFilter, normalizeHospitalsAndScope } from "../search-helpers"
 import { APIError } from "../../utils/errors"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
 import { findEmploymentsByHospitalId } from "../../clients/employments"
@@ -24,27 +25,7 @@ const monthsOfYear = [
   "Décembre",
 ]
 
-export const makeWhereClause = ({
-  scope,
-  hospitals,
-}) => (builder) => {
-  let queriedHospitals = []
-
-  if (hospitals?.length) {
-    // For valid hospital filter, filter on it
-    queriedHospitals = hospitals
-  } else if (scope?.length) {
-    // Otherwise, for scoped user, filter on his scope
-    queriedHospitals = scope
-  }
-  // Otherwise, do not filter at all
-
-  if (queriedHospitals?.length) {
-    builder.where(
-      knex.raw("act_summary.hospital_id in (" + queriedHospitals.map(() => "?").join(",") + ")", [...queriedHospitals]),
-    )
-  }
-}
+export const makeWhereClause = makeHospitalFilter("act_summary.hospital_id")
 
 const searchSchema = yup.object().shape({
   currentUser: yup.object(),
@@ -53,15 +34,7 @@ const searchSchema = yup.object().shape({
 })
 
 export const normalizeParams = async (params, currentUser) => {
-  // Wrap supposed array fields with array litteral syntax for yup try to cast
-  params.hospitals = params.hospitals ? params.hospitals.split(",").map(Number) : []
-  params.scope = currentUser?.scope || []
-  if (currentUser?.hospital?.id) params.scope = [...params.scope, currentUser.hospital.id]
-
-  // For user having a scope (non super admin, non national user), then restrict potentially their hospital filter
-  if (params.hospitals?.length && params.scope?.length) {
-    params.hospitals = params.hospitals.filter((hospital) => params.scope.includes(hospital))
-  }
+  normalizeHospitalsAndScope(params, currentUser)
 
   return normalize(searchSchema)(params)
 }
@@ -71,15 +44,7 @@ export const search = async (params, currentUser) => {
   const [actsCount] = await knex("act_summary").where(makeWhereClause(params)).count()
 
   const totalCount = Number.parseInt(actsCount.count, 10)
-  const maxPage = Math.ceil(totalCount / LIMIT)
-
-  let { requestedPage } = params
-
-  // set default to 1 if not correct or too little, set default to maxPage if too big
-  requestedPage =
-    !requestedPage || Number.isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage > maxPage ? maxPage : requestedPage
-
-  const offset = (requestedPage - 1) * LIMIT
+  const { maxPage, offset, page: requestedPage } = computeRequestedPage(params.requestedPage, totalCount, LIMIT)
 
   // SQL query
   const actsSummary = await knex("act_summary")

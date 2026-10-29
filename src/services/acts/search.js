@@ -4,6 +4,7 @@ import { LIMIT_EXPORT } from "../../config"
 import knex from "../../knex/knex"
 import { transformAll, transformAllForExport } from "../../models/acts"
 import { normalize } from "../../services/normalize"
+import { computeRequestedPage, makeHospitalFilter, normalizeHospitalsAndScope } from "../search-helpers"
 import { ISO_DATE, isValidIsoDate } from "../../utils/date"
 import { APIError } from "../../utils/errors"
 import { STATUS_406_NOT_ACCEPTABLE } from "../../utils/http"
@@ -11,35 +12,14 @@ import { normalizeKeepCase } from "normalize-diacritics-es"
 
 const LIMIT = 50
 
-export const makeWhereClause = ({
-  scope,
-  startDate,
-  endDate,
-  internalNumber,
-  pvNumber,
-  fuzzy,
-  asker,
-  hospitals,
-  profiles,
-}) => (builder) => {
+const makeHospitalIdFilter = makeHospitalFilter("acts.hospital_id")
+
+export const makeWhereClause = (params) => (builder) => {
+  const { startDate, endDate, internalNumber, pvNumber, fuzzy, asker, profiles } = params
+
   builder.whereNull("acts.deleted_at")
 
-  let queriedHospitals = []
-
-  if (hospitals?.length) {
-    // For valid hospital filter, filter on it
-    queriedHospitals = hospitals
-  } else if (scope?.length) {
-    // Otherwise, for scoped user, filter on his scope
-    queriedHospitals = scope
-  }
-  // Otherwise, do not filter at all
-
-  if (queriedHospitals?.length) {
-    builder.where(
-      knex.raw("acts.hospital_id in (" + queriedHospitals.map(() => "?").join(",") + ")", [...queriedHospitals]),
-    )
-  }
+  makeHospitalIdFilter(params)(builder)
 
   if (startDate) {
     builder.whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate)
@@ -87,15 +67,8 @@ const searchSchema = yup.object().shape({
 
 export const normalizeParams = async (params, currentUser) => {
   // Wrap supposed array fields with array litteral syntax for yup try to cast
-  params.hospitals = params.hospitals ? params.hospitals.split(",").map(Number) : []
   params.profiles = params.profiles ? params.profiles.split(",") : []
-  params.scope = currentUser?.scope || []
-  if (currentUser?.hospital?.id) params.scope = [...params.scope, currentUser.hospital.id]
-
-  // For user having a scope (non super admin, non national user), then restrict potentially their hospital filter
-  if (params.hospitals?.length && params.scope?.length) {
-    params.hospitals = params.hospitals.filter((hospital) => params.scope.includes(hospital))
-  }
+  normalizeHospitalsAndScope(params, currentUser)
 
   return normalize(searchSchema)(params)
 }
@@ -106,15 +79,7 @@ export const search = async (params, currentUser) => {
   const [actsCount] = await knex("acts").where(makeWhereClause(params)).count()
 
   const totalCount = Number.parseInt(actsCount.count, 10)
-  const maxPage = Math.ceil(totalCount / LIMIT)
-
-  let { requestedPage } = params
-
-  // set default to 1 if not correct or too little, set default to maxPage if too big
-  requestedPage =
-    !requestedPage || Number.isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage > maxPage ? maxPage : requestedPage
-
-  const offset = (requestedPage - 1) * LIMIT
+  const { maxPage, offset, page: requestedPage } = computeRequestedPage(params.requestedPage, totalCount, LIMIT)
 
   // SQL query
   const acts = await knex("acts")
