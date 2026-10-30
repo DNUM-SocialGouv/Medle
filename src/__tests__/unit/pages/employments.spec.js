@@ -4,7 +4,6 @@ import { build, oneOf, perBuild, sequence } from "@jackfranklin/test-data-bot"
 import { render, screen, waitFor } from "@testing-library/react"
 import faker from "faker"
 import * as nextRouter from "next/router"
-import React from "react"
 
 import * as clientEmployments from "../../../clients/employments"
 import { EmploymentsPage } from "../../../pages/employments/[[...hid]]"
@@ -64,93 +63,101 @@ const hospitalBuilder = build({
   },
 })
 
-it("should render employments page with list for ministere people", async () => {
+const setupHospitals = () => {
   const hospital1 = hospitalBuilder()
   const hospital2 = hospitalBuilder()
 
-  const user = publicSupervisorBuilder()
-
   scope.hospitalsOfUser.mockReturnValue([hospital1, hospital2])
+
+  return [hospital1, hospital2]
+}
+
+const renderEmploymentsPage = (user, query = {}) => {
+  nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query })
+  render(<EmploymentsPage currentUser={user} />)
+}
+
+const expectListView = () => {
+  expect(screen.queryByRole("heading", { name: /tous les établissements/i })).toBeInTheDocument()
+  expect(screen.queryByRole("heading", { name: /déclaration du personnel/i })).not.toBeInTheDocument()
+  expect(screen.queryByText(/Vous n'êtes pas autorisé à voir cet hôpital/i)).not.toBeInTheDocument()
+}
+
+const expectDetailView = () => {
+  expect(screen.queryByRole("heading", { name: /tous les établissements/i })).not.toBeInTheDocument()
+  expect(screen.queryByRole("heading", { name: /déclaration du personnel/i })).toBeInTheDocument()
+  expect(screen.queryByText(/Vous n'êtes pas autorisé à voir cet hôpital/i)).not.toBeInTheDocument()
+}
+
+const expectErrorView = () => {
+  expect(screen.queryByRole("heading", { name: /tous les établissements/i })).not.toBeInTheDocument()
+  expect(screen.queryByRole("heading", { name: /déclaration du personnel/i })).not.toBeInTheDocument()
+  expect(screen.queryByText(/Vous n'êtes pas autorisé à voir cet hôpital/i)).toBeInTheDocument()
+}
+
+it("should render employments page with list for ministere people", async () => {
+  setupHospitals()
+
+  const user = publicSupervisorBuilder()
 
   clientEmployments.findLastEdit.mockImplementation(async () => ({}))
 
   // query without parameters
-  nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query: {} })
-  await waitFor(() => render(<EmploymentsPage currentUser={user} />))
+  renderEmploymentsPage(user)
 
   // We should go on list.
-  expect(screen.queryByRole("heading", { name: /tous les établissements/i })).toBeInTheDocument()
-  expect(screen.queryByRole("heading", { name: /déclaration du personnel/i })).not.toBeInTheDocument()
+  expectListView()
 
   expect(clientEmployments.findLastEdit).toHaveBeenCalledTimes(2)
 })
 
 it("should render employments page with list for regional people if no query", async () => {
-  const hospital1 = hospitalBuilder()
-  const hospital2 = hospitalBuilder()
+  const [hospital1, hospital2] = setupHospitals()
 
   const user = regionalSupervisorBuilder({
     scope: [hospital1.id, hospital2.id],
   })
 
-  scope.hospitalsOfUser.mockReturnValue([hospital1, hospital2])
-
   clientEmployments.findLastEdit.mockImplementation(async () => ({}))
 
   // query without parameters
-  nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query: {} })
-  await waitFor(() => render(<EmploymentsPage currentUser={user} />))
+  renderEmploymentsPage(user)
 
   // We should go on list.
-  expect(screen.queryByRole("heading", { name: /tous les établissements/i })).toBeInTheDocument()
-  expect(screen.queryByRole("heading", { name: /déclaration du personnel/i })).not.toBeInTheDocument()
+  expectListView()
 
   expect(clientEmployments.findLastEdit).toHaveBeenCalledTimes(2)
 })
 
 it("should render error in employments page for regional people if query for an inaccessible hospital", async () => {
-  const hospital1 = hospitalBuilder()
-  const hospital2 = hospitalBuilder()
+  const [hospital1, hospital2] = setupHospitals()
   const hospitalWithNoAcess = hospitalBuilder()
 
   const user = regionalSupervisorBuilder({
     scope: [hospital1.id, hospital2.id],
   })
 
-  scope.hospitalsOfUser.mockReturnValue([hospital1, hospital2])
-
   // Query explicitly set to the hospitalWithNoAcess id.
-  nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query: { hid: [hospitalWithNoAcess.id] } })
-  await waitFor(() => render(<EmploymentsPage currentUser={user} />))
+  renderEmploymentsPage(user, { hid: [hospitalWithNoAcess.id] })
 
   // We should go on error.
-  expect(screen.queryByRole("heading", { name: /tous les établissements/i })).not.toBeInTheDocument()
-  expect(screen.queryByRole("heading", { name: /déclaration du personnel/i })).not.toBeInTheDocument()
-
-  expect(screen.queryByText(/Vous n'êtes pas autorisé à voir cet hôpital/i)).toBeInTheDocument()
+  expectErrorView()
 
   expect(clientEmployments.findLastEdit).toHaveBeenCalledTimes(0)
 })
 
 it("should render the employments detail for regional people if query is correct", async () => {
-  const hospital1 = hospitalBuilder()
-  const hospital2 = hospitalBuilder()
+  const [hospital1, hospital2] = setupHospitals()
 
   const user = regionalSupervisorBuilder({
     scope: [hospital1.id, hospital2.id],
   })
 
-  scope.hospitalsOfUser.mockReturnValue([hospital1, hospital2])
-
   // Query explicitly set to the hospital1 id.
-  nextRouter.useRouter.mockReturnValue({ ...mockRouterImplementation, query: { hid: [hospital1.id] } })
-  await waitFor(() => render(<EmploymentsPage currentUser={user} />))
+  renderEmploymentsPage(user, { hid: [hospital1.id] })
 
   // We should go on detail page.
-  expect(screen.queryByRole("heading", { name: /tous les établissements/i })).not.toBeInTheDocument()
-  expect(screen.queryByRole("heading", { name: /déclaration du personnel/i })).toBeInTheDocument()
-
-  expect(screen.queryByText(/Vous n'êtes pas autorisé à voir cet hôpital/i)).not.toBeInTheDocument()
+  expectDetailView()
 
   expect(clientEmployments.findLastEdit).toHaveBeenCalledTimes(0)
 })

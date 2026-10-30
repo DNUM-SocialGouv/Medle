@@ -36,8 +36,8 @@ const EmploymentsPage = ({ currentUser, references }) => {
       >
         <div className="d-flex justify-content-between">
           <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/${hid}`}>
-              <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour aux détails
+            <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+            Retour aux détails
           </Link>
         </div>
         <Title1>Hôpital {hospital?.name}</Title1>
@@ -45,10 +45,10 @@ const EmploymentsPage = ({ currentUser, references }) => {
           href={`/administration/hospitals/[hid]/employments/[rid]`}
           as={`/administration/hospitals/${hid}/employments/new`}
         >
-            <SearchButton className="btn-outline-primary">
-              <AddIcon />
-              &nbsp; Ajouter
-            </SearchButton>
+          <SearchButton className="btn-outline-primary">
+            <AddIcon />
+            &nbsp; Ajouter
+          </SearchButton>
         </Link>
       </Container>
 
@@ -87,12 +87,12 @@ const EmploymentsPage = ({ currentUser, references }) => {
                         <Link
                           href={`/administration/hospitals/[hid]/employments/[rid]`}
                           as={`/administration/hospitals/${hid}/employments/${reference.id}`}
-                            className="text-decoration-none"
-                            aria-label={
-                              "Voir ou modifier la référence " + NAME_MONTHS[reference.month] + " " + reference.year
-                            }
-                          >
-                            Voir / Modifier
+                          className="text-decoration-none"
+                          aria-label={
+                            "Voir ou modifier la référence " + NAME_MONTHS[reference.month] + " " + reference.year
+                          }
+                        >
+                          Voir / Modifier
                         </Link>
                       </td>
                     </tr>
@@ -123,7 +123,7 @@ EmploymentsPage.getInitialProps = async (ctx) => {
   } catch (error) {
     logError("APP error", error)
 
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
   }
   return {}
 }

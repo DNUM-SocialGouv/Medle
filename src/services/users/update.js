@@ -13,7 +13,7 @@ export const update = async ({ id }, user, currentUser) => {
     })
   }
 
-  if (!id || isNaN(id) || !user || parseInt(id, 10) !== parseInt(user.id, 10)) {
+  if (!id || Number.isNaN(id) || !user || Number.parseInt(id, 10) !== Number.parseInt(user.id, 10)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",

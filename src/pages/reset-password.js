@@ -84,7 +84,7 @@ const UserReset = () => {
                   invalid={!!formErrors.firstValue}
                   aria-required="true"
                   onChange={e => {
-                    firstValueReg.onChange(e)
+                    firstValueReg.onChange(e).catch((error) => logError(error));
                     handleChangeFirstValue(e);
                   }}
                 />

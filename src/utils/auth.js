@@ -32,13 +32,13 @@ export const logout = async () => {
   await Router.push("/")
 }
 
-export const registerAndRedirectUser = (user, token) => {
+export const registerAndRedirectUser = async (user, token) => {
   sessionStorage.setItem("currentUser", JSON.stringify(user))
   if (user.resetPassword) {
-    Router.push(`/reset-password?loginToken=${token}`)
+    await Router.push(`/reset-password?loginToken=${token}`)
   } else {
-    fetchReferenceData()
-    Router.push(startPageForRole(user.role))
+    await fetchReferenceData()
+    await Router.push(startPageForRole(user.role))
   }
 }
 
@@ -93,19 +93,19 @@ export const buildAuthHeaders = (ctx) => {
   const token = getTokenFromCookie(ctx)
   return token
     ? {
-        cookie: `token=${token}`,
-      }
+      cookie: `token=${token}`,
+    }
     : {}
 }
 
-export const isomorphicRedirect = (ctx, url) => {
+export const isomorphicRedirect = async (ctx, url) => {
   if (ctx?.req) {
     // Server side navigation
     ctx.res.writeHead(302, { Location: url })
     ctx.res.end()
   } else {
     // Client side navigation
-    Router.push(url)
+    await Router.push(url)
   }
 }
 
@@ -130,19 +130,19 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege, { redire
     if (redirect) {
       if (!currentUser || sessionTooOld(currentUser)) {
         logError("Pas de currentUser trouvé en cookie ou en SessionStorage. Redirection sur index")
-        isomorphicRedirect(ctx, "/?sessionTimeout=1")
+        await isomorphicRedirect(ctx, "/?sessionTimeout=1")
         return {}
       }
 
       if (requiredPrivilege && !isAllowed(currentUser.role, requiredPrivilege)) {
         logError("Rôle incorrect. Redirection sur page permissionError")
-        isomorphicRedirect(ctx, "/permissionError")
+        await isomorphicRedirect(ctx, "/permissionError")
         return {}
       }
 
       if (currentUser.resetPassword) {
         logError("L'utilisateur doit changer de mot de passe avant d'accéder au site. Redirection sur index")
-        isomorphicRedirect(ctx, "/?sessionTimeout=1")
+        await isomorphicRedirect(ctx, "/?sessionTimeout=1")
         return {}
       }
     }
@@ -155,7 +155,7 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege, { redire
         afterRefreshToken(user)
       } catch {
         logError("Le token n'a pas pu être réactualisé. Redirection sur index")
-        isomorphicRedirect(ctx, "/?sessionTimeout=1")
+        await isomorphicRedirect(ctx, "/?sessionTimeout=1")
         return {}
       }
     }
@@ -168,9 +168,9 @@ export const withAuthentication = (WrappedComponent, requiredPrivilege, { redire
   return Wrapper
 }
 
-export const redirectIfUnauthorized = (error, ctx) => {
+export const redirectIfUnauthorized = async (error, ctx) => {
   if (error?.status === 401) {
-    isomorphicRedirect(ctx, "/?sessionTimeout=1")
+    await isomorphicRedirect(ctx, "/?sessionTimeout=1")
   }
 }
 

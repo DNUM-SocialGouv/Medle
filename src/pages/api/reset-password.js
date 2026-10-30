@@ -41,8 +41,8 @@ const handler = async (req, res) => {
       }
       case METHOD_POST: {
         checkValidUserWithPrivilege(ADMIN, req, res)
-        
-        const { id } = req?.body.id
+
+        const { id } = req?.body.id || undefined;
 
         try {
           const user = await findById(id)

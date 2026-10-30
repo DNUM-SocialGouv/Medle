@@ -1,24 +1,25 @@
-import Excel from "exceljs"
-
 import knex from "../../knex/knex"
-import { ISO_DATE, now } from "../../utils/date"
 import { buildScope } from "../../utils/scope"
 import { findList as findListHospitals } from "../hospitals"
-import { addCellTitle, intervalDays, normalizeInputs } from "./common"
+import {
+  addActsRealisesSection,
+  addCellTitle,
+  addExaminationsSection,
+  addHoursSection,
+  addInputsWorksheet,
+  addRequisitionsSection,
+  createStatisticsWorkbook,
+  fetchExaminations,
+  fetchStatistics,
+  makeBaseWhereClause,
+  normalizeInputs,
+} from "./common"
 
-const makeWhereClause =
-  ({ startDate, endDate, scopeFilter = [] }) =>
-    (builder) => {
-      builder
-        .whereNull("deleted_at")
-        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
-        .where("profile", "Personne décédée")
-
-      if (scopeFilter.length) {
-        builder.whereIn("hospital_id", scopeFilter)
-      }
-    }
+const makeWhereClause = (filters) =>
+  (builder) => {
+    makeBaseWhereClause(filters)(builder)
+    builder.where("profile", "Personne décédée")
+  }
 
 /**
  * Request and format the deceased statistics.
@@ -33,26 +34,9 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
 
   const { startDate, endDate, scopeFilter } = normalizeInputs(filters, reachableScope)
 
-  const fetchCountHospitals = knex("hospitals").whereNull("deleted_at").count()
+  const whereClause = makeWhereClause({ endDate, scopeFilter, startDate })
 
-  const fetchGlobalCount = knex("acts").count().where(makeWhereClause({ endDate, scopeFilter, startDate }))
-
-  const fetchGlobalProofWitoutComplain = knex("acts")
-    .count()
-    .whereRaw("(extra_data->>'proofWithoutComplaint')::boolean = true")
-    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
-
-  const fetchActsWithPv = knex("acts")
-    .select(
-      knex.raw(
-        `count(1) filter (where pv_number is not null and pv_number <> '')::integer as "Avec réquisition",` +
-        `count(1) filter (where asker_id is null)::integer as "Recueil de preuve sans plainte",` +
-        `count(1) filter (where pv_number is null or pv_number = '' )::integer as "Sans réquisition"`,
-      ),
-    )
-    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
-
-  const fetchActTypes = knex("acts")
+  const fetchActTypesPromise = knex("acts")
     .select(
       knex.raw(
         `count(1) filter (where extra_data->'examinationTypes' @> '["Examen externe"]')::integer as "Examen externe",` +
@@ -62,63 +46,11 @@ export const buildDeceasedStatistics = async (filters, currentUser) => {
         `count(1) filter (where extra_data->'examinationTypes' @> '["Odontologie"]')::integer as "Odontologie"`,
       ),
     )
-    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
+    .where(whereClause)
 
-  const fetchExaminations = knex("acts")
-    .select(
-      knex.raw(
-        `count(1) filter (where extra_data->'examinations' @> '["Biologie"]')::integer as "Biologie",` +
-        `count(1) filter (where extra_data->'examinations' @> '["Imagerie"]')::integer as "Imagerie",` +
-        `count(1) filter (where extra_data->'examinations' @> '["Toxicologie"]')::integer as "Toxicologie",` +
-        `count(1) filter (where extra_data->'examinations' @> '["Anapath"]')::integer as "Anapath",` +
-        `count(1) filter (where extra_data->'examinations' @> '["Génétique"]')::integer as "Génétique",` +
-        `count(1) filter (where extra_data->'examinations' @> '["Autres"]')::integer as "Autres"`,
-      ),
-    )
-    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
+  const fetchExaminationsPromise = fetchExaminations(knex, whereClause)
 
-  const fetchHours = knex("acts")
-    .whereNull("deleted_at")
-    .select(
-      knex.raw(
-        `count(1) filter (where extra_data->'periodOfDay' <@ '["Matin", "Après-midi", "Journée"]')::integer as "Journée",` +
-        `count(1) filter (where extra_data->>'periodOfDay' = 'Soirée')::integer as "Soirée",` +
-        `count(1) filter (where extra_data->>'periodOfDay' = 'Nuit profonde')::integer as "Nuit profonde"`,
-      ),
-    )
-    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
-
-  return await Promise.all([
-    fetchCountHospitals,
-    fetchGlobalCount,
-    fetchGlobalProofWitoutComplain,
-    fetchActsWithPv,
-    fetchActTypes,
-    fetchHours,
-    fetchExaminations,
-  ]).then(([[countHospitals], [globalCount], [globalProofWitoutComplain], [actsWithPv], [actTypes], [hours], [examinations]]) => {
-    countHospitals = parseInt(countHospitals?.count, 10) || 0
-    globalCount = parseInt(globalCount?.count, 10) || 0
-
-    const scopeFilterLength = scopeFilter.length || countHospitals
-    const periodInDays = intervalDays({ endDate, startDate })
-
-    return {
-      actTypes,
-      actsWithPv,
-      averageCount:
-        periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
-      examinations,
-      globalCount,
-      globalProofWitoutComplain: parseInt(globalProofWitoutComplain?.count, 10) || 0,
-      hours,
-      inputs: {
-        endDate: endDate.format(ISO_DATE),
-        scopeFilter,
-        startDate: startDate.format(ISO_DATE),
-      },
-    }
-  })
+  return fetchStatistics(knex, whereClause, { endDate, scopeFilter, startDate }, { fetchActTypesPromise, fetchExaminationsPromise })
 }
 
 export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter }, currentUser) => {
@@ -129,35 +61,10 @@ export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter
 
   const hospitals = await findListHospitals(scopeFilter)
 
-  const workbook = new Excel.Workbook()
+  const { actsWorksheet, workbook } = createStatisticsWorkbook("Statistiques thanato")
 
-  workbook.created = now()
-  workbook.modified = now()
-
-  const actsWorksheet = workbook.addWorksheet("Statistiques thanato")
-
-  actsWorksheet.columns = [
-    { header: "Statistique", key: "name", width: 40 },
-    { header: "Valeur", key: "value", width: 10 },
-  ]
-
-  actsWorksheet.getColumn("B").alignment = { horizontal: "right" }
-
-  addCellTitle(actsWorksheet, "Actes réalisés")
-
-  actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
-  actsWorksheet.addRow({ name: "Recueil de preuve sans plainte", value: globalProofWitoutComplain })
-  const avgRow = actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
-  avgRow.getCell("value").alignment = { horizontal: "right" }
-
-  addCellTitle(actsWorksheet, "Numéro de réquisitions")
-
-  actsWorksheet.addRow({ name: "Nb actes avec n° de réquisition", value: actsWithPv?.["Avec réquisition"] })
-  actsWorksheet.addRow({ name: "Nb actes sans n° de réquisition", value: actsWithPv?.["Sans réquisition"] })
-  actsWorksheet.addRow({
-    name: "Nb actes avec recueil de preuves sans plainte",
-    value: actsWithPv?.["Recueil de preuve sans plainte"],
-  })
+  addActsRealisesSection(actsWorksheet, { averageCount, globalCount, globalProofWitoutComplain })
+  addRequisitionsSection(actsWorksheet, actsWithPv)
 
   addCellTitle(actsWorksheet, "Types d'actes")
 
@@ -167,31 +74,11 @@ export const exportDeceasedStatistics = async ({ startDate, endDate, scopeFilter
   actsWorksheet.addRow({ name: "Nb actes avec anthropologie", value: actTypes?.["Anthropologie"] })
   actsWorksheet.addRow({ name: "Nb actes avec odontologie", value: actTypes?.["Odontologie"] })
 
-  addCellTitle(actsWorksheet, "Horaires")
-  actsWorksheet.addRow({ name: "Nb actes en journées", value: hours?.["Journée"] })
-  actsWorksheet.addRow({ name: "Nb actes en soirée", value: hours?.["Soirée"] })
-  actsWorksheet.addRow({ name: "Nb actes en nuit profonde", value: hours?.["Nuit profonde"] })
+  addHoursSection(actsWorksheet, hours)
 
-  addCellTitle(actsWorksheet, "Examens complémentaires")
-  actsWorksheet.addRow({ name: "Nb actes mentionnant biologie", value: examinations?.["Biologie"] })
-  actsWorksheet.addRow({ name: "Nb actes mentionnant imagerie", value: examinations?.["Imagerie"] })
-  actsWorksheet.addRow({ name: "Nb actes mentionnant toxicologie", value: examinations?.["Toxicologie"] })
-  actsWorksheet.addRow({ name: "Nb actes mentionnant anapath", value: examinations?.["Anapath"] })
-  actsWorksheet.addRow({ name: "Nb actes mentionnant génétique", value: examinations?.["Génétique"] })
-  actsWorksheet.addRow({ name: "Nb actes mentionnant autres", value: examinations?.["Autres"] })
+  addExaminationsSection(actsWorksheet, examinations)
 
-  const inputsWorksheet = workbook.addWorksheet("Paramètres de l'export")
-  inputsWorksheet.columns = [
-    { header: "Paramètre", key: "name", width: 40 },
-    { header: "Valeur", key: "value", width: 80 },
-  ]
-
-  inputsWorksheet.addRow({ name: "Date de début", value: inputs?.startDate })
-  inputsWorksheet.addRow({ name: "Date de fin", value: inputs?.endDate })
-  inputsWorksheet.addRow({
-    name: "Périmètre",
-    value: inputs?.scopeFilter ? hospitals.map((elt) => elt?.name) : "National",
-  })
+  addInputsWorksheet(workbook, inputs, hospitals)
 
   return workbook
 }

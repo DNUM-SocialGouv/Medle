@@ -3,7 +3,7 @@ import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 export const del = async ({ id }) => {
-  if (!id || isNaN(id)) {
+  if (!id || Number.isNaN(id)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",

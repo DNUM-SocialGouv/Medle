@@ -3,7 +3,7 @@ import EditOutlinedIcon from "@material-ui/icons/Edit"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded"
 import PropTypes from "prop-types"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Alert, Button, Col, Form, Input, Row } from "reactstrap"
 
 import { findEmployment, updateEmployment } from "../clients/employments"
@@ -238,7 +238,7 @@ export const PassedMonthEmployments = ({ month, year, hospitalId, readOnly = fal
     <Form
       onSubmit={(event) => {
         event.preventDefault()
-        handleSubmit(event)
+        void handleSubmit(event)
         toggleReadOnly()
       }}
     >
@@ -334,7 +334,7 @@ function useEmployments({ month, year, hospitalId }) {
       }
     }
 
-    fetchData()
+    void fetchData()
   }, [hospitalId, month, year])
 
   const handleChange = (event) => {

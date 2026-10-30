@@ -33,7 +33,7 @@ const handler = async (req, res) => {
 
         logAudit(`${currentUser.email}: Ajout d'un utilisateur d'id ${id}`);
 
-        sendWelcomeMail(req.body.email)
+        await sendWelcomeMail(req.body.email)
 
         return res.status(STATUS_200_OK).json({ id })
       }

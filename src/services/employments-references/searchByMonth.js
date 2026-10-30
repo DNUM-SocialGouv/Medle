@@ -5,7 +5,7 @@ import { APIError } from "../../utils/errors"
 import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 export const searchByMonth = async ({ hid }, { year, month }) => {
-  if (!hid || !year || isNaN(year) || !month || isNaN(month) || !isYearValid(year) || !isMonthValid(month))
+  if (!hid || !year || Number.isNaN(year) || !month || Number.isNaN(month) || !isYearValid(year) || !isMonthValid(month))
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",

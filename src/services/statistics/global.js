@@ -1,23 +1,20 @@
-import Excel from "exceljs"
-
 import knex from "../../knex/knex"
-import { ISO_DATE, now } from "../../utils/date"
+import { ISO_DATE } from "../../utils/date"
 import { buildScope } from "../../utils/scope"
 import { findList as findListHospitals } from "../hospitals"
-import { addCellTitle, intervalDays, normalizeInputs } from "./common"
-
-const makeWhereClause =
-  ({ startDate, endDate, scopeFilter = [] }) =>
-    (builder) => {
-      builder
-        .whereNull("deleted_at")
-        .whereRaw(`examination_date >= TO_DATE(?, '${ISO_DATE}')`, startDate.format(ISO_DATE))
-        .whereRaw(`examination_date <= TO_DATE(?, '${ISO_DATE}')`, endDate.format(ISO_DATE))
-
-      if (scopeFilter.length) {
-        builder.whereIn("hospital_id", scopeFilter)
-      }
-    }
+import {
+  addActsRealisesSection,
+  addCellTitle,
+  addInputsWorksheet,
+  computeAverageCount,
+  createStatisticsWorkbook,
+  fetchCountHospitals,
+  fetchGlobalCount,
+  fetchGlobalProofWitoutComplain,
+  intervalDays,
+  makeBaseWhereClause,
+  normalizeInputs,
+} from "./common"
 
 /**
  * Request and format the global statistics.
@@ -32,14 +29,11 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
 
   const { startDate, endDate, scopeFilter } = normalizeInputs(filters, reachableScope)
 
-  const fetchCountHospitals = knex("hospitals").whereNull("deleted_at").count()
+  const whereClause = makeBaseWhereClause({ endDate, scopeFilter, startDate })
 
-  const fetchGlobalCount = knex("acts").count().where(makeWhereClause({ endDate, scopeFilter, startDate }))
-
-  const fetchGlobalProofWitoutComplain = knex("acts")
-    .count()
-    .whereRaw("(extra_data->>'proofWithoutComplaint')::boolean = true")
-    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
+  const fetchCountHospitalsPromise = fetchCountHospitals(knex)
+  const fetchGlobalCountPromise = fetchGlobalCount(knex, whereClause)
+  const fetchGlobalProofWitoutComplainPromise = fetchGlobalProofWitoutComplain(knex, whereClause)
 
   const fetchProfilesDistribution = knex("acts")
     .select(
@@ -50,14 +44,14 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
         `count(1) filter (where profile = 'Autre activité/Reconstitution')::integer as "Autre activité/Reconstitution"`,
       ),
     )
-    .where(makeWhereClause({ endDate, scopeFilter, startDate }))
+    .where(whereClause)
 
   const fetchActsWithSamePV = knex
     .with("acts_with_same_pv", (builder) => {
       builder
         .select(knex.raw("pv_number, count(1) as count"))
         .from("acts")
-        .where(makeWhereClause({ endDate, scopeFilter, startDate }))
+        .where(whereClause)
         .whereRaw("pv_number is not null and pv_number <> ''")
         .groupBy("pv_number")
         .havingRaw("count(1) > 1")
@@ -70,7 +64,7 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
       builder
         .select(knex.raw("count(*) as count"))
         .from("acts")
-        .where(makeWhereClause({ endDate, scopeFilter, startDate }))
+        .where(whereClause)
         .whereRaw("pv_number is not null and pv_number <> ''")
         .groupBy("pv_number")
     })
@@ -78,27 +72,25 @@ export const buildGlobalStatistics = async (filters, currentUser) => {
     .from("acts_with_same_pv")
 
   return await Promise.all([
-    fetchCountHospitals,
-    fetchGlobalCount,
-    fetchGlobalProofWitoutComplain,
+    fetchCountHospitalsPromise,
+    fetchGlobalCountPromise,
+    fetchGlobalProofWitoutComplainPromise,
     fetchProfilesDistribution,
     fetchActsWithSamePV,
     fetchAverageWithSamePV,
   ]).then(([[countHospitals], [globalCount], [globalProofWitoutComplain], [profilesDistribution], [actsWithSamePV], [averageWithSamePV]]) => {
-    countHospitals = parseInt(countHospitals?.count, 10) || 0
-    globalCount = parseInt(globalCount?.count, 10) || 0
+    countHospitals = Number.parseInt(countHospitals?.count, 10) || 0
+    globalCount = Number.parseInt(globalCount?.count, 10) || 0
 
-    const scopeFilterLength = scopeFilter.length || countHospitals
     const periodInDays = intervalDays({ endDate, startDate })
 
     return {
       actsWithSamePV: actsWithSamePV.sum || 0,
-      averageCount:
-        periodInDays === 0 || scopeFilterLength === 0 ? 0 : (globalCount / periodInDays / scopeFilterLength).toFixed(2),
+      averageCount: computeAverageCount({ countHospitals, globalCount, periodInDays, scopeFilter }),
       averageWithSamePV: averageWithSamePV.avg || 0,
 
       globalCount,
-      globalProofWitoutComplain: parseInt(globalProofWitoutComplain?.count, 10) || 0,
+      globalProofWitoutComplain: Number.parseInt(globalProofWitoutComplain?.count, 10) || 0,
       inputs: {
         endDate: endDate.format(ISO_DATE),
         scopeFilter,
@@ -117,25 +109,9 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
 
   const hospitals = await findListHospitals(scopeFilter)
 
-  const workbook = new Excel.Workbook()
+  const { actsWorksheet, workbook } = createStatisticsWorkbook("Statistiques globales")
 
-  workbook.created = now()
-  workbook.modified = now()
-
-  const actsWorksheet = workbook.addWorksheet("Statistiques globales")
-
-  actsWorksheet.columns = [
-    { header: "Statistique", key: "name", width: 40 },
-    { header: "Valeur", key: "value", width: 10 },
-  ]
-
-  actsWorksheet.getColumn("B").alignment = { horizontal: "right" }
-
-  addCellTitle(actsWorksheet, "Actes réalisés")
-
-  actsWorksheet.addRow({ name: "Nb actes au total", value: globalCount })
-  actsWorksheet.addRow({ name: "Recueil de preuve sans plainte", value: globalProofWitoutComplain })
-  actsWorksheet.addRow({ name: "Nb actes par jour en moyenne", value: averageCount })
+  addActsRealisesSection(actsWorksheet, { averageCount, globalCount, globalProofWitoutComplain })
   actsWorksheet.addRow({ name: "Nb actes portant le même n° de réquisition", value: actsWithSamePV })
   actsWorksheet.addRow({ name: "Moyenne des actes portant le même n° de réquisition", value: averageWithSamePV })
 
@@ -150,18 +126,7 @@ export const exportGlobalStatistics = async ({ startDate, endDate, scopeFilter }
   })
   actsWorksheet.addRow({ name: "Nb actes assises", value: profilesDistribution?.["Autre activité/Assises"] })
 
-  const inputsWorksheet = workbook.addWorksheet("Paramètres de l'export")
-  inputsWorksheet.columns = [
-    { header: "Paramètre", key: "name", width: 40 },
-    { header: "Valeur", key: "value", width: 80 },
-  ]
-
-  inputsWorksheet.addRow({ name: "Date de début", value: inputs?.startDate })
-  inputsWorksheet.addRow({ name: "Date de fin", value: inputs?.endDate })
-  inputsWorksheet.addRow({
-    name: "Périmètre",
-    value: inputs?.scopeFilter ? hospitals.map((elt) => elt?.name) : "National",
-  })
+  addInputsWorksheet(workbook, inputs, hospitals)
 
   return workbook
 }

@@ -67,7 +67,7 @@ const StatisticsPage = ({ statistics: _statistics, currentUser }) => {
 
     if (isEmpty(errors)) {
       setErrors({})
-      syncUI()
+      void syncUI()
     } else {
       setErrors(errors)
     }

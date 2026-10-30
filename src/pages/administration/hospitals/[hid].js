@@ -45,8 +45,8 @@ const schema = yup.object({
   depCode: yup
     .string()
     .required("Le département est obligatoire.")
-    .matches(/^2A|2B|[0-9]{2,3}$/i, "Le département a un format incorrect."),
-  postalCode: yup.string().matches(/^[0-9]{5}$/i, "Le code postal a un format incorrect."),
+    .matches(/^(?:2A|2B|\d{2,3})$/i, "Le département a un format incorrect."),
+  postalCode: yup.string().matches(/^\d{5}$/i, "Le code postal a un format incorrect."),
   etp: yup.object({
     doctors: yup.number().typeError("Le nombre d'ETP est incorrect."),
     secretaries: yup.number().typeError("Le nombre d'ETP est incorrect."),
@@ -97,13 +97,13 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
       try {
         const { deleted } = await deleteHospital({ id })
         logDebug(`Nb deleted rows: ${deleted}`)
-        router.push("/administration/hospitals")
+        await router.push("/administration/hospitals")
       } catch (error) {
         setError("Erreur serveur.")
       }
     }
 
-    del(id)
+    void del(id)
   }
 
   const onSubmit = async (hospital) => {
@@ -150,9 +150,9 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
         <div className="d-flex justify-content-between">
           <Link href="/administration/hospitals"
             style={{ color: "#376FE6" }}>
-              <ArrowBackIosIcon width={30} style={{ width: 15 }} />
-              Retour à la liste
-            
+            <ArrowBackIosIcon width={30} style={{ width: 15 }} />
+            Retour à la liste
+
           </Link>
         </div>
 
@@ -178,7 +178,7 @@ const HospitalDetail = ({ hospital = {}, currentUser, error: initialError }) => 
             <div>
               <Link href="/administration/hospitals">
                 <Button className="mr-3" color="primary">
-                 Retour à la liste
+                  Retour à la liste
                 </Button>
               </Link>
               <Link href="/administration/hospitals/[hid]" as={`/administration/hospitals/new`}>
@@ -375,7 +375,7 @@ HospitalDetail.getInitialProps = async (ctx) => {
 
   const { hid } = ctx.query
 
-  if (!hid || isNaN(hid)) return { hospital: {}, key: Number(new Date()) }
+  if (!hid || Number.isNaN(hid)) return { hospital: {}, key: Number(new Date()) }
 
   try {
     const hospital = await findHospital({ id: hid, headers })
@@ -383,7 +383,7 @@ HospitalDetail.getInitialProps = async (ctx) => {
     return { hospital }
   } catch (error) {
     logError(error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
 
     return { error: "Erreur serveur" }
   }

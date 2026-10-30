@@ -21,7 +21,7 @@ exports.initCrons = async () => {
   cron
     .schedule(piloCronExpression, () => {
       console.log("Begin export PILO")
-      exportPilo()
+      void exportPilo()
       console.log("Export PILO finished ")
     })
     .start()
@@ -29,7 +29,7 @@ exports.initCrons = async () => {
   cron
     .schedule(etpCronExpression, () => {
       console.log("Begin cron etp")
-      etpNotif()
+      void etpNotif()
       console.log("Cron etp finished")
     })
     .start()
@@ -37,7 +37,7 @@ exports.initCrons = async () => {
   cron
     .schedule(summaryCronExpression, () => {
       console.log("Begin SUMMARY CRON")
-      initPreSummaryActivity().then((knex) => initSummaryActivity(knex))
+      void initPreSummaryActivity().then((knex) => initSummaryActivity(knex))
       console.log("Export SUMMARY finished")
     })
     .start()
@@ -45,7 +45,7 @@ exports.initCrons = async () => {
   cron
     .schedule(purgeUsersCronExpression, () => {
       console.log("Begin purge users")
-      purgeDeletedUsers()
+      void purgeDeletedUsers()
       console.log("Purge users finished")
     })
     .start()

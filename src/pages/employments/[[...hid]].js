@@ -163,7 +163,7 @@ const ListEmploymentsHospital = ({ currentUser }) => {
         })
         .catch((error) => console.error("Erreur lors de la récupération des last edits", error))
     }
-    fetchData()
+    void fetchData()
   }, [filterHospitals])
 
   const yearsOptions = computeYearsOptions(currentYear)

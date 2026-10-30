@@ -37,7 +37,7 @@ const SummaryGraphPage = ({ currentUser, formattedGraphData, hospital }) => {
   const years = Object.keys(formattedGraphData)
   const [selectedYear, setSelectedYear] = useState(String(years[years.length - 1]));
   const { hid } = router.query
-  
+
   const handleChange = (event) => {
     setSelectedYear(event.target.value);
   };
@@ -103,7 +103,7 @@ SummaryGraphPage.getInitialProps = async (ctx) => {
   const { hid: hospitalId } = ctx.query
 
   try {
-    const {elements: hospitalSummary, hospital} = await findSummaryByHospital({ hospitalId, headers })
+    const { elements: hospitalSummary, hospital } = await findSummaryByHospital({ hospitalId, headers })
     const medicalSummary = await findEmploymentsByHospitalId({ hospitalId, headers })
 
     function calculateSummaryValue(hospitalSummary, year, month) {
@@ -111,7 +111,7 @@ SummaryGraphPage.getInitialProps = async (ctx) => {
 
       for (const obj of hospitalSummary) {
         if (obj.summary && obj.summary[year] && obj.summary[year][month] !== undefined) {
-          sum += parseFloat(obj.summary[year][month]) || 0;
+          sum += Number.parseFloat(obj.summary[year][month]) || 0;
         }
       }
 
@@ -125,11 +125,11 @@ SummaryGraphPage.getInitialProps = async (ctx) => {
         const valuesByYear = monthsOfYear
           .map((month) => month.charAt(0).toLowerCase() + month.slice(1))
           .map((month) => {
-            const medicalSummaryByMonth = parseFloat(medicalSummary[year][month]) || 0;
+            const medicalSummaryByMonth = Number.parseFloat(medicalSummary[year][month]) || 0;
             const hospitalSummaryBymonth = calculateSummaryValue(hospitalSummary, year, month);
-            return {name: month,  "Capacité à fournir": Math.round(medicalSummaryByMonth), "Activité": hospitalSummaryBymonth}
+            return { name: month, "Capacité à fournir": Math.round(medicalSummaryByMonth), "Activité": hospitalSummaryBymonth }
           });
-          result[year] = valuesByYear
+        result[year] = valuesByYear
       }
       return result;
     }
@@ -140,7 +140,7 @@ SummaryGraphPage.getInitialProps = async (ctx) => {
   } catch (error) {
     logError("APP error", error)
 
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
   }
   return {}
 }

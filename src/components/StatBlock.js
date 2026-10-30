@@ -53,7 +53,7 @@ export const StatBlockNumbers = ({ title, firstNumber, firstLabel, secondNumber,
           {title}
         </span>
       </div>
-      <div aria-labelledby="statNumbersTitle" tabIndex="0">
+      <div aria-labelledby="statNumbersTitle">
         <span id="statNumbersTitle" className="sr-only">
           Données {title}
         </span>
@@ -120,7 +120,7 @@ export const StatBlockPieChart = ({ data, labels = [], hoverTitle, title }) => {
 
   return (
     <StatBlock>
-      <div aria-labelledby="statPieChartTitle" aria-describedby="statPieChartDescription" tabIndex="0">
+      <div aria-labelledby="statPieChartTitle" aria-describedby="statPieChartDescription">
         <span id="statPieChartTitle" className="sr-only">
           Graphique {title} {hoverTitle ? "(" + hoverTitle + ")" : ""}
         </span>

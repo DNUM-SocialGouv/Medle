@@ -4,7 +4,7 @@ import { STATUS_400_BAD_REQUEST } from "../../utils/http"
 
 export const del = async ({ hid, rid }) => {
   // Check if query and body are consistent
-  if (!rid || isNaN(rid) || !hid || isNaN(hid)) {
+  if (!rid || Number.isNaN(rid) || !hid || Number.isNaN(hid)) {
     throw new APIError({
       status: STATUS_400_BAD_REQUEST,
       message: "Bad request",

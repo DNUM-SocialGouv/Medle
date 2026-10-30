@@ -6,7 +6,7 @@ import { STATUS_400_BAD_REQUEST, STATUS_401_UNAUTHORIZED } from "../../utils/htt
 import { buildScope } from "../../utils/scope"
 
 export const update = async ({ id }, data, currentUser) => {
-  if (!id || isNaN(id) || !data || !data.hospitalId) {
+  if (!id || Number.isNaN(id) || !data || !data.hospitalId) {
     throw new APIError({
       message: "Bad request",
       status: STATUS_400_BAD_REQUEST,

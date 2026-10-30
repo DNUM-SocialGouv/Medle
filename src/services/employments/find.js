@@ -28,32 +28,32 @@ export const findByHospitalId = async ({ hospitalId }) => {
       status: STATUS_400_BAD_REQUEST,
     })
 
-    const results = await knex('employments')
+  const results = await knex('employments')
     .select(
       'year',
       'month',
       knex.raw('SUM(CAST(data_month->>\'doctors\' AS NUMERIC) * 20) as total_doctors')
-      )
+    )
     .where("hospital_id", hospitalId)
     .groupBy('year', 'month')
     .then((result) => {
       const formattedResult = {};
-  
+
       result.forEach((row) => {
         const { year, month, total_doctors } = row;
-  
+
         if (!formattedResult[year]) {
           formattedResult[year] = {};
         }
-  
+
         const monthName = (() => {
           const months = [
             'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
             'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
           ];
-          return months[parseInt(month) - 1];
+          return months[Number.parseInt(month) - 1];
         })();
-  
+
         formattedResult[year][monthName] = total_doctors;
       });
       return formattedResult
@@ -62,7 +62,7 @@ export const findByHospitalId = async ({ hospitalId }) => {
 }
 
 export const findLastEdit = async (hospitalId) => {
-  if (isNaN(hospitalId) || Number(hospitalId) < 1) {
+  if (Number.isNaN(hospitalId) || Number(hospitalId) < 1) {
     throw new APIError({
       message: "Bad request",
       status: STATUS_400_BAD_REQUEST,
@@ -84,7 +84,7 @@ export const findLastEdit = async (hospitalId) => {
     .where("hospital_id", hospitalId)
     .count()
 
-  const nbMonthsPreviousYear = isNaN(nbMonths?.count) ? 0 : Number(nbMonths?.count)
+  const nbMonthsPreviousYear = Number.isNaN(nbMonths?.count) ? 0 : Number(nbMonths?.count)
 
-  return { lastEdit: results, nbMonthsPreviousYear, previousYear } || {}
+  return { lastEdit: results, nbMonthsPreviousYear, previousYear }
 }

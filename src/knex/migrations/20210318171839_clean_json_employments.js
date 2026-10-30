@@ -1,7 +1,7 @@
 // For historic reasons, the data_month in employments table were at start as string, with commas or points.
 const cleanAndNumberify = (input) => {
   if (typeof input === "string") input = input.replace(",", ".")
-  return isNaN(input) ? null : Number(input)
+  return Number.isNaN(input) ? null : Number(input)
 }
 
 exports.up = async function (knex) {

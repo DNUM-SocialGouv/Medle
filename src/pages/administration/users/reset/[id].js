@@ -15,7 +15,7 @@ import { logDebug, logError } from "../../../../utils/logger"
 import { isEmpty } from "../../../../utils/misc"
 import { ADMIN } from "../../../../utils/roles"
 
-const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
+const UserReset = ({ initialUser = {}, currentUser, error: initialError }) => {
   const {
     handleSubmit,
     register,
@@ -26,7 +26,7 @@ const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
   const [success, setsuccess] = useState("")
   const router = useRouter()
   const { id } = router.query
-  
+
   const [password, setPassword] = useState("")
 
   const onSubmit = async (data) => {
@@ -38,7 +38,7 @@ const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
         setsuccess("Mot de passe mis à jour.")
       }
     } catch (error) {
-        setError("Erreur serveur")
+      setError("Erreur serveur")
     }
   }
 
@@ -93,14 +93,14 @@ const UserReset = ({initialUser = {}, currentUser, error: initialError}) => {
                 innerRef={firstValueRef}
                 invalid={!!formErrors.firstValue}
                 onChange={e => {
-                  firstValueReg.onChange(e)
+                  firstValueReg.onChange(e).catch((error) => logError(error));
                   handleChangeFirstValue(e);
                 }}
                 aria-required="true"
               />
               {
-                  password != "" &&
-                  <PasswordForce password={password}></PasswordForce>
+                password != "" &&
+                <PasswordForce password={password}></PasswordForce>
               }
               <FormFeedback>
                 {formErrors.firstValue && "Mot de passe invalide. Le mot de passe doit être composé d'au moins 12 caractères dont: 1 lettre minuscule, 1 lettre majuscule, 1 chiffre et 1 caractère spécial."}
@@ -146,14 +146,14 @@ UserReset.getInitialProps = async (ctx) => {
 
   // Initialise key prop with a fresh new value, to make possible to have a new blank page
   // see https://kentcdodds.com/blog/understanding-reacts-key-prop
-  if (!id || isNaN(id)) return { initialUser: {}, key: Number(new Date()) }
+  if (!id || Number.isNaN(id)) return { initialUser: {}, key: Number(new Date()) }
 
   try {
     const user = await findUser({ id, headers })
     return { initialUser: user }
   } catch (error) {
     logError(error)
-    redirectIfUnauthorized(error, ctx)
+    await redirectIfUnauthorized(error, ctx)
 
     return { error: "Erreur serveur" }
   }
