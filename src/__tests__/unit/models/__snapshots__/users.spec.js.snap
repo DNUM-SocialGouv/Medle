@@ -1,10 +1,10 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`transform should transform in a model entity 1`] = `
-Object {
+{
   "email": "john.mclane@proton.mail",
   "firstName": "John",
-  "hospital": Object {
+  "hospital": {
     "id": 3,
     "name": "",
   },
@@ -17,7 +17,7 @@ Object {
 `;
 
 exports[`untransform should untransform in a Knex entity even without id and password 1`] = `
-Object {
+{
   "email": "doc.brown@yahoo.com",
   "first_name": "Doc",
   "hospital_id": null,
@@ -29,7 +29,7 @@ Object {
 `;
 
 exports[`untransform should untransform in a Knex entity even without id and wih a password 1`] = `
-Object {
+{
   "email": "doc.brown@yahoo.com",
   "first_name": "Doc",
   "hospital_id": null,
@@ -43,7 +43,7 @@ Object {
 `;
 
 exports[`untransform should untransform in a Knex entity with an id and without a password 1`] = `
-Object {
+{
   "email": "marty.macfly@gmail.com",
   "first_name": "Marty",
   "hospital_id": null,

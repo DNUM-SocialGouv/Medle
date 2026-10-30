@@ -23,6 +23,10 @@ exports.purgeDeletedUsers = async () => {
       await knex("acts")
         .whereIn("added_by", userIdsToDelete)
         .update({ added_by: null })
+
+      await knex("act_pre_summary")
+        .whereIn("added_by", userIdsToDelete)
+        .update({ added_by: null })
     }
 
     // Delete the users completely
