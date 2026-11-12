@@ -1,0 +1,37 @@
+default:
+  image: node:24.22-alpine
+  cache:  # Cache modules in between jobs
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - .yarn-cache
+  before_script:
+    - corepack enable
+    - yarn install --frozen-lockfile --cache-folder .yarn-cache
+
+stages:
+  - lint
+  - test
+  - build
+
+lint-node:
+  stage: lint
+  script:
+    - yarn lint --format gitlab
+  artifacts:
+    reports:
+      codequality: gl-codequality.json
+
+test-node:
+  stage: test
+  script:
+    - yarn test --maxWorkers=2 --ci
+
+build-node:
+  stage: build
+  tags:
+    - socialgouv-linux-small-amd64
+  script:
+    - yarn build
+
