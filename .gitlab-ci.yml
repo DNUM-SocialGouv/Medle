@@ -27,6 +27,12 @@ test-node:
   stage: test
   script:
     - yarn test --maxWorkers=2 --ci
+  coverage: '/^Statements\s*:\s*([^%]+)/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
 
 build-node:
   stage: build
