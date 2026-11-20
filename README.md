@@ -10,15 +10,15 @@ As a prerequisite, install git, yarn, docker, docker-compose with [brew](https:/
 
 First, you need a database. A docker container is made for that.
 
-You only have to run the db container (and not the app): `docker-compose up --build -d db`
+You only have to run the db container (and not the app): `docker-compose up -d db`
 
-Then, the DB is exposed on port 5434 and the app is accessible on port 80.
+Then, the DB is exposed on port 5436 and the app is accessible on port 80.
 
 Next, you have to create the database named medle and the app user.
 At start, there is a user with the name `user` and the password `password`.
 
 So, connect to the db container : `psql postgres://user:password@localhost:5436`
-Alternatively, if you don't have `psql` CLI, you can use : `docker exec -it medle_db_1 psql -U user`
+Alternatively, if you don't have `psql` CLI, you can use : `docker exec -it medle-db-1 psql -U user`
 
 Create the medle database and the user medle with the password of your choice.
 
@@ -38,6 +38,7 @@ Set some environment variables (see next paragraph how) for accessing this Postg
 For DATABASE_URL, be sure to use the matching password you have just created before.
 
 For example :
+
 ```
 DATABASE_URL=psql://medle:jJFWsfW5ePbN7J@db:5432/medle
 POSTGRES_SSL=false
@@ -67,8 +68,8 @@ The variables are :
 
 - NODE_ENV=development or production
 - API_URL URL path of the api (in local, it's /api)
-- APP_BASE_URL Base URL of the app (in local, it's http://localhost:3000)
-- POSTGRES_SSL mode to connect to Postgres (false in local,  true for for Azure hosted)
+- APP_BASE_URL Base URL of the app (in local, it's <http://localhost:3000>)
+- POSTGRES_SSL mode to connect to Postgres (false in local, true for for Azure hosted)
 - DATABASE_URL URL of Postgres DB
 - JWT_SECRET the secret for generating JWT tokens
 - NEXT_PUBLIC_MATOMO_SITE_ID site id on piwik instance
@@ -98,30 +99,31 @@ Besides, in some cases you may want to set :
 - NEXT_PUBLIC_TEST_CURRENT_DATE useful to set a date in the past and have consistent result for tests using dates
 - E2E_JEST_DATABASE_URL URL of Postgres DB for E2E tests
 
-
 ## 🏗️ Development usage
 
-In local development usage, you don't have to use docker-compose for all the ops stuff.
+In local development usage, you don't have to use docker-compose for the app.
 
-For example, you can manually apply the last migration in db with : `yarn migrate:latest`.
+Launch the database container with `docker-compose up -d db`.
 
-And a minimal set of data : `yarn seed:run:dev`
+You need to manually apply the last migration in db with : `yarn migrate:latest`.
 
-Second, the front office in Next. With `yarn dev`, you will benefit from the hot reload/fast refresh offered by Next.
+Add a minimal set of data : `yarn seed:run:dev`
+
+Second, the front office in Next. You will benefit from the hot reload/fast refresh offered by Next.
 
 With this configuration, the API will run on `localhost:3000` and the database will be a Docker container running on your machine.
 
 Now run `yarn` to install the dependencies, then `yarn dev`.
 
-At the end, the app is running at http://localhost:3000.
+At the end, the app is running at <http://localhost:3000>.
 
-*Nota bene*
+_Nota bene_
 
 Be careful. If you use the app from the container (as we advise you), it is considered inside the docker network.
-So you have to use an DATABASE_URL with __5432__ port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@db:5432/medle`.
+So you have to use an DATABASE_URL with **5432** port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@db:5432/medle`.
 
 On the other hand, when you use `yarn dev`, the node process is on localhost and is therefore outside the docker network.
-In this case, you need to use a DATABASE_URL with __5434__ port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@localhost:5434/medle`.
+In this case, you need to use a DATABASE_URL with **5436** port, like `DATABASE_URL=psql://medle:bHrdeGk63cHQa7@localhost:5436/medle`.
 
 Don't forgete also that in Docker, the db is not in non SSL mode.
 So the `POSTGRES_SSL` must be set to false.
@@ -166,7 +168,7 @@ In VM mode, for applying the staging seeds:
 
 Never, never, never <strike>give up</strike> apply this seeds in real production environment (under penalty of fetching a Postgres backup in Azure 😭).
 
-Knex migration tips: https://medium.com/@j3y/beyond-basic-knex-js-database-migrations-22263b0fcd7c
+Knex migration tips: <https://medium.com/@j3y/beyond-basic-knex-js-database-migrations-22263b0fcd7c>
 
 ### Migrations organization
 
@@ -179,12 +181,12 @@ For example, see this migration file named `20200312161718_create_function_avg_a
 ```js
 const v1 = require("../versions/functions/avg_acts/v1")
 
-exports.up = async function(knex) {
-   await knex.raw(v1.up)
+exports.up = async function (knex) {
+  await knex.raw(v1.up)
 }
 
-exports.down = async function(knex) {
-   await knex.raw(v1.down)
+exports.down = async function (knex) {
+  await knex.raw(v1.down)
 }
 ```
 
@@ -193,11 +195,13 @@ This way allows us to see the entire history of things like functions or views, 
 ## 🧪 How to test
 
 In development mode:
+
 1. `yarn dev`
 2. `yarn seed:run:staging` (will remove all data on env.DATABASE_URL and reset with the default data)
 3. `yarn test` (will use env.API_URL for tests involving API endpoints)
 
 In staging mode:
+
 1. `sudo docker-compose up --build -d app`
 2. `sudo docker-compose exec app yarn seed:run:staging` (will remove all data on env.DATABASE_URL and reset with the default data)
 3. `sudo docker-compose exec app yarn test` (will use env.API_URL for tests involving API endpoints)
@@ -234,7 +238,7 @@ NB : The Gitlab CI configuration uses semantic release. If you want to have auto
 - test: Adding missing tests or correcting existing tests
 - chore: for tedious and necessary work, not listed before (try to minimize the use of this umbrella term)
 
-As a reference see https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-angular.
+As a reference see <https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-angular>.
 
 ## Conventions for closing automatically issues
 
@@ -245,24 +249,25 @@ Add in commit message "Closes #123" where 123 is the issues's id to close.
 `trackEvent(category, action, [name], [value])`
 
 avec :
+
 - category/action:
-    - acte
-        - déclaration
-        - suppression
-        - modification
-        - lecture
-    - etp
-        - déclaration
-        - modification
-        - validation annuelle
-    - stat
-        - lecture vivant
-        - lecture thanato
-        - lecture globale
-    - authentification
-        - connexion
-        - déconnexion
-        - erreur
+  - acte
+    - déclaration
+    - suppression
+    - modification
+    - lecture
+  - etp
+    - déclaration
+    - modification
+    - validation annuelle
+  - stat
+    - lecture vivant
+    - lecture thanato
+    - lecture globale
+  - authentification
+    - connexion
+    - déconnexion
+    - erreur
 
 ## Annex
 
@@ -271,4 +276,3 @@ avec :
 ```sql
 INSERT INTO askers (name, type) VALUES ('CRS autoroutière', 'primary');
 ```
-
