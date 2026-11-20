@@ -85,10 +85,16 @@ The variables are :
 - NEXT_PUBLIC_AUTH_DURATION authentication duration, in seconds
 - NEXT_PUBLIC_AUTH_REFRESH_START based on the previous duration, when to start refreshing the authentication, in seconds
 - NEXT_PUBLIC_AUTH_MAX_DURATION maximum duration of authentication, in seconds
+- MAIL_CONTACT contact email address used as sender for cron notifications (e.g. ETP reminders)
 - NEXT_PUBLIC_MAIL_CONTACT public contact email address
 - NEXT_PUBLIC_DEBUG_MODE public debug mode flag
 - NEXT_PUBLIC_TEST_CURRENT_DATE public test date override
 - DOCUMENTS_FS_PATH documents path on the file system
+- NEXT_PUBLIC_SUMMARY_RUN flag to enable the summary update button
+- PILO_CRON cron expression for the PILO export job (defaults to `0 0 1 * *`)
+- SUMMARY_CRON cron expression for the activity summary job (defaults to `0 2 1 * *`)
+- USERS_PURGE_CRON cron expression for the deleted users purge job (defaults to `0 3 1 * *`)
+- ETP_NOTIF_CRON cron expression for the ETP notification job (defaults to `0 0 1 6,12 *`)
 
 **Note** : NEXT_PUBLIC_AUTH_REFRESH_START < NEXT_PUBLIC_AUTH_DURATION < NEXT_PUBLIC_AUTH_MAX_DURATION
 
